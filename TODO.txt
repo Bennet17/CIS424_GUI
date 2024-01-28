@@ -9,5 +9,5 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
 
 ## List 
 
-### Poopy Broswer Icon - `favicon.ico` is blurry and unrecognizeable. Could
+### Poopy broswer icon - `favicon.ico` is blurry and unrecognizeable. Could
     be a number of things. Maybe try the svg file? (`src\logo.svg`)

@@ -1,7 +1,5 @@
-/* Include Tailwind CSS framework */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+/* Import Tailwind CSS */
+@import './styles/tailwind.css';
 
 /* Default Tailwind stylings */
 body {
