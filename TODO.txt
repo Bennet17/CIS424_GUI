@@ -1,0 +1,13 @@
+# TODO 
+
+## Objective
+TM: I'm using this as a rolling list of tasks that need to be closed.
+    Feel free to add to it or tackle something on it. Just make sure
+    to communicate in one of our channels so we don't double-book.
+    No need to use it if you don't like, it's more here for my 
+    convenience than anything. Whatever suits your flow :)
+
+## List 
+
+### Poopy Broswer Icon - `favicon.ico` is blurry and unrecognizeable. Could
+    be a number of things. Maybe try the svg file? (`src\logo.svg`)

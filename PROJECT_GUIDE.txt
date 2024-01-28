@@ -1,0 +1,77 @@
+# PROJECT GUIDE
+    
+## Project Overview
+Welcome to the Cash Tracking Web Application project for Plato's Closet stores! 
+
+I'm aware that not everyone is well-versed in frontend development, so this guide is designed to help you navigate 
+through the project structure and understand the purpose of each directory and key files.
+
+## Project Structure
+
+### node_modules\: This directory contains all the project dependencies (third-party packages). It is created and 
+    managed by npm (generated at `npm install`). Do not modify or delete it, as it is crucial for the project to run.
+    "Pay no attention to that man behind the curtain" sorta deal.
+
+### public\
+- **favicon.ico:** The icon that appears in the browser tab. Gotta keep 'em engaged, visually and whatnot.
+- **index.html:** The main HTML file that serves as the entry point for the application. It contains the root DOM 
+    element where your React app will be mounted. Where it all began, you might say.
+- **manifest.json:** A Web App Manifest file providing metadata about the application, such as its name, icons, 
+    and theme colors. A quick rundown of the need-to-knows.
+- **robots.txt:** A file for instructing web crawlers on which pages or files they can or cannot request from your 
+    site. Primarily used for search engine optimization. I just shut them all off, buncha creeps if you ask me.
+
+### src\
+- **components\:** Contains (or it will, at least) reusable React components used throughout the application. Thees'a 
+    where we make'a the pizza pie.
+- **styles\:** Houses Tailwind CSS stylesheets for styling the application. The pizza toppings.
+- **app.css:** A CSS file for styling the main application component. Don't think we need it but
+    I'm gonna leave it here for now. Ignorance is bliss but recovering files is not.
+- **app.js:** The main React component where you define the structure and behavior of your application. The top-level
+    where we will define routing and state management. As far as components go, he is big papa.
+- **index.css:** Global styles applied to your application. *Editor's Note:* See `app.css`, sentences 2-3.
+- **index.js:** The entry point for your React application, responsible for rendering the root component (`app.js`)
+    into the HTML file. The pearly whites. Or the brimstone reds if you know how to have a good time.
+- **logo.svg:** Plato's Closet logo in scalable vector graphic format, which is widely used for web graphics due to 
+    its scalability and easy manipulation. Nothing but the best for my favorite little coders.
+
+### .\ (Root folder files)
+- **.gitignore:** Specifies intentionally untracked files to be ignored by Git. Helps manage what files should not 
+    be included in version control, such as `node_modules`. Telling VCS to turn the other virtual cheek, if you may.
+- **package-lock.json:** Provides version information for all project dependencies. Ensures consistent installations
+    across different environments. Very organized, factual, and cleanly, like a little Node IRS agent. Who moonlights 
+    as a maid in a maid outfit. With a monocle.
+- **package.json:** The main configuration file for the project. Includes metadata, dependencies, scripts, and other 
+    settings. So in the above analogy, they're the IRS. But no maid outfit. Way less fun, I know.
+- **postcss.config.js:** Configuration file for PostCSS, a tool for transforming CSS with JavaScript plugins. 
+    *Editor's Note:* Once again, see `app.css`, sentences 2-3. But this one feels slightly more important, we may end
+    up using other PostCSS-related configurations. Gotta keep an open mind in engineering, ya know?
+    *Edited Editor's Note:* We're totally using this, don't delete lol.
+- **tailwind.config.js:** Configuration file for Tailwind CSS, a utility-first CSS framework we will be using to style
+    our project. Sounds customizeable and fun, should allow for some child-like wonder and creativity in our designs.
+
+## Developer Instructions
+
+### Running the Application
+1. Clone the repository: `git clone https://github.com/Bennet17/CIS424_GUI.git`
+2. Navigate to the project directory: `cd cash-tracking-app`
+3. Install dependencies: `npm install`
+4. Start the development server: `npm start`
+5. Open the application in your browser at `http://localhost:3000`
+
+### Adding New Features
+1. Create new components in the `src/components/` directory.
+2. Implement new styles in the `src/styles/` directory.
+3. Follow established naming conventions for files and components.
+4. ...
+
+### Styling
+- Tailwind CSS is used for styling. Refer to the `src/styles/` directory for stylesheets.
+
+### Important Notes
+- It is incredibly important that at all times during development you remember to have fun.
+
+## Contact
+If you have any questions or need further clarification, feel free to reach out to Tristan.
+
+Happy coding!

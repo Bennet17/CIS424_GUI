@@ -1,23 +1,17 @@
-import logo from './logo.svg';
 import './App.css';
+// Base is a solid example of a simple component use
+// Import Base from the components directory
+import Base from './components/Base';
+
+//Just for gigs while we haven't started the GUI
+import FunSpinnyLogo from './components/FunSpinnyLogo'
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* Use it inside your App component */}
+      <Base />
+      <FunSpinnyLogo />
     </div>
   );
 }
