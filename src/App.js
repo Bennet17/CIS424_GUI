@@ -7,10 +7,8 @@ import HomePage from './components/HomePage';
 function App() {
   return (
     <div className="App">
-      {/* Use it inside your App component */}
-      {/*<Base />
-      <FunSpinnyLogo />*/}
-      <HomePage />
+      {<HomePage />}
+      {/*<LoginPage />*/}
     </div>
   );
 }

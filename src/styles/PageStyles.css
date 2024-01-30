@@ -1,12 +1,11 @@
-.Logo{
-    position: relative;
-    top: -4rem;
+.logo {
+    margin-bottom: 3rem;
 }
 .HomeStoreLabel {
     font-size: 1.5rem;
     float: left;
     margin-top: 2rem;
-    margin-left: 4rem;
+    margin-left: 3rem;
 }
 .NavPanel {
     float: left;
@@ -14,18 +13,27 @@
     border-color: rgb(57, 70, 83);
     background-color: rgb(228, 231, 233);
     width: 15rem;
-}
-.MainButton {
-    border-width: 2px;
-    border-color: rgb(57, 70, 83);
     text-align: left;
 }
-.MainButton:hover{
+.MenuButtonParent {
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    background-color: white;
+    border-color: rgb(57, 70, 83);
+    width: 100%;
+    font-size: 1.25rem;
+}
+.MenuButtonContent {
+    display:none;
+    position:absolute;
+    /*left: 15rem;*/
+    border-width: 2px;
+    border-color: rgb(57, 70, 83);
+    background-color: white;
+}
+.MenuButtonParent:hover .MenuButtonContent {
+    display: inline;
+}
+.MenuButtonParent:hover .MenuButtonContent:hover{
     background-color: rgb(217, 219, 221);
-}
-.MainButton:disabled{
-
-}
-.buttonVital {
-
 }
