@@ -2,6 +2,7 @@ import "../styles/PageStyles.css";
 import logo from '../Logo.png';
 
 let testPermissions = 0;
+let username = "ZippyDee";
 
 const HomePage = () =>{
     return (
@@ -19,11 +20,17 @@ const HomePage = () =>{
                 <div className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
                     <p className="text-xl text-left translate-x-4">Transfer Funds</p>
                 </div>
-                <div className="box-border border-border-color border-2 hover:bg-nav-bg bg-white" >
-                    <p className="text-xl text-left translate-x-4">Open Day</p>
-                    <div className="box-border border-border-color border-2 hover:bg-nav-bg bg-white">
-                        <p className="text-xl text-left translate-x-4">test</p>
+                <div className="group box-border border-border-color border-2 hover:bg-nav-bg bg-white" >
+                    <p className="text-xl text-left translate-x-4">yo mama</p>
+                    <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+                        <p className="text-xl text-left translate-x-8">chungus</p>
                     </div>
+                    <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+                        <p className="text-xl text-left translate-x-8">amongus</p>
+                    </div>
+                    {testPermissions && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+                        <p className="text-xl text-left translate-x-8">sus</p>
+                    </div>}
                 </div>
                 <div className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
                     <p className="text-xl text-left translate-x-4">Sign Out</p>
