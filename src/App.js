@@ -1,4 +1,5 @@
 import './App.css';
+import LoginPage from './components/LoginPage'
 // Base is a solid example of a simple component use
 // Import Base from the components directory
 import Base from './components/Base';
@@ -10,8 +11,10 @@ function App() {
   return (
     <div className="App">
       {/* Use it inside your App component */}
-      <Base />
-      <FunSpinnyLogo />
+      <Base/>
+      <FunSpinnyLogo/>
+      {/*Below is the commented out Login Component. Uncomment to check it out */}
+      {/*<LoginPage/> */}
     </div>
   );
 }
