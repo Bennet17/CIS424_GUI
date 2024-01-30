@@ -1,0 +1,27 @@
+.HomeStoreLabel {
+    font-size: 1.5rem;
+    float: left;
+    margin-top: 2rem;
+    margin-left: 4rem;
+}
+.NavPanel {
+    float: left;
+    border-width: 2px;
+    border-color: rgb(57, 70, 83);
+    background-color: rgb(228, 231, 233);
+    width: 15rem;
+}
+.MainButton {
+    border-width: 2px;
+    border-color: rgb(57, 70, 83);
+    text-align: left;
+}
+.MainButton:hover{
+    background-color: rgb(217, 219, 221);
+}
+.MainButton:disabled{
+
+}
+.buttonVital {
+
+}
