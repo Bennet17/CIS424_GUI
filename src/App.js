@@ -8,7 +8,7 @@ import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 
 function App() {
-  const [post, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   useEffect(() => {
     axios.get('')
       .then(response => {
@@ -21,11 +21,11 @@ function App() {
 
   return (
     <div className="App">
-      {postcss.map(post => (
+      {/*posts.map(post => (
         <></>
-      ))}
+      ))*/}
 
-      {<LoginPage />}
+      {/*<LoginPage />*/}
       {<HomePage />}
     </div>
   );
