@@ -7,11 +7,14 @@ import './App.css';
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 
+let username, password = "";
+
 function App() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    axios.get('')
+    axios.post('http://10.8.30.57:80/SVSU_CIS424/AuthenticateUser', {username, password})
       .then(response => {
+        console.log(response);
         setPosts(response.data);
       })
       .catch(error => {
@@ -25,8 +28,8 @@ function App() {
         <></>
       ))*/}
 
-      {/*<LoginPage />*/}
-      {<HomePage />}
+      {<LoginPage />}
+      {/*<HomePage />*/}
     </div>
   );
 }
