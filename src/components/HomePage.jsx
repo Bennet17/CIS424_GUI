@@ -5,7 +5,7 @@ const HomePage = () =>{
     return (
         <div>
             <div className="NavPanel">
-                <img src={logo} alt="logo" />
+                <img src={logo} className="Logo" alt="logo" />
                 <button className="mainButton" type="button">sampletext</button><br/>
                 <button className="mainButton" type="button">sampletext</button>
             </div>
