@@ -18,7 +18,7 @@ module.exports = {
       'main-color': '#607d97',
     },
     extend: {
-      
+      display: ["group-click"],
     },
   },
   plugins: [],
