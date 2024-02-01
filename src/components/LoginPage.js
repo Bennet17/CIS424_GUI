@@ -12,8 +12,7 @@ function LoginPage() {
 
     //handle validation
     useEffect(() => {
-      axios.post('http://10.8.30.57:80/SVSU_CIS424/AuthenticateUser', 
-      {
+      axios.post('http://10.8.30.57:80/SVSU_CIS424/AuthenticateUser', {
         "username" : username,
         "password" : password
       })
@@ -25,7 +24,7 @@ function LoginPage() {
         console.error(error);
       }
     );
-    })
+    }, [])
   }
 
   return (

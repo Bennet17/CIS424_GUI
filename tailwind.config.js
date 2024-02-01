@@ -13,6 +13,7 @@ module.exports = {
     },
     colors: {
       'white': '#ffffff',
+      'text-faded': '#999999',
       'nav-bg': '#e4e7e9',
       'border-color': '#374858',
       'main-color': '#607d97',

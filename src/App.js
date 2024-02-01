@@ -28,8 +28,8 @@ function App() {
         <></>
       ))*/}
 
-      {<LoginPage />}
-      {/*<HomePage />*/}
+      {/*<LoginPage />*/}
+      {<HomePage />}
     </div>
   );
 }
