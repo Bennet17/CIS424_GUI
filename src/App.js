@@ -1,20 +1,35 @@
-import './App.css';
-import LoginPage from './components/LoginPage'
-// Base is a solid example of a simple component use
-// Import Base from the components directory
-import Base from './components/Base';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 
-//Just for gigs while we haven't started the GUI
-import FunSpinnyLogo from './components/FunSpinnyLogo'
+import './App.css';
+
+// page components
+import LoginPage from './components/LoginPage';
+import HomePage from './components/HomePage';
+
+let username, password = "";
 
 function App() {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    axios.post('http://10.8.30.57:80/SVSU_CIS424/AuthenticateUser', {username, password})
+      .then(response => {
+        console.log(response);
+        setPosts(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  });
+
   return (
     <div className="App">
-      {/* Use it inside your App component */}
-      <Base/>
-      <FunSpinnyLogo/>
-      {/*Below is the commented out Login Component. Uncomment to check it out */}
-      {/*<LoginPage/> */}
+      {/*posts.map(post => (
+        <></>
+      ))*/}
+
+      {<LoginPage />}
+      {/*<HomePage />*/}
     </div>
   );
 }
