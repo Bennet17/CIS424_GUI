@@ -4,28 +4,21 @@ import Logo from '../Logo.png'; // Adjust the path accordingly
 
 //creates a function that returns the login page area
 function LoginPage() {
-  
+
   const [username, setUsername] = useState([]);
   const [password, setPassword] = useState([]);
-  const SubmitLogin = e => {
-    e.preventDefault();
 
-    //handle validation
-    useEffect(() => {
-      axios.post('http://10.8.30.57:80/SVSU_CIS424/AuthenticateUser', {
-        "username" : username,
-        "password" : password
-      })
-      .then(response => {
-        console.log(response);
-        //setPosts(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      }
-    );
-    }, [])
-  }
+  function Submit(event){
+    event.preventDefault();
+
+    axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser', {"username":"poopshitter","password":"chungus"})
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }  
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8"> 
@@ -42,7 +35,7 @@ function LoginPage() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="" method="post" onSubmit={SubmitLogin}>
+        <form className="space-y-6" onSubmit={Submit}>
           <div>
             <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900 text-left">
               Employee ID

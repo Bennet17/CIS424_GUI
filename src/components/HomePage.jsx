@@ -31,11 +31,11 @@ const HomePage = () =>{
                 </div>
                 <div className="group box-border border-border-color border-2 hover:bg-nav-bg bg-white" >
                     <p className="text-xl text-left translate-x-4">Security</p>
-                    {testPermissions == 0 && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
-                        <p className="text-xl text-left translate-x-8">sus</p>
+                    {testPermissions == 1 && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+                        <p className="text-xl text-left translate-x-8">User management</p>
                     </div>}
                     {testPermissions == 1 && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
-                        <p className="text-xl text-left translate-x-8">peepeepoopoodoodooballs</p>
+                        <p className="text-xl text-left translate-x-8">POS Management</p>
                     </div>}
                 </div>
                 <div className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
