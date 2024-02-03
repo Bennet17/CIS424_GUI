@@ -1,17 +1,28 @@
 import "../styles/PageStyles.css";
+import {useNavigate} from 'react-router-dom';
+import routes from '../routes.js';
 import logo from '../Logo.png';
 
+//test variables
 let testPermissions = 0;
 let username = "ZippyDee";
+let ranking = "(<employee ranking>)";
 
 const HomePage = () =>{
+    //used to navigate to a new route page when calling a function
+    const navigate = useNavigate();
+
+    //functions to navigate user through pages. See html code below for calling these
+    function toOpenDay() {
+        navigate(routes.openday);
+    }
+
     return (
         <div>
-            <p className="-translate-x-60 translate-y-24 text-2xl text-main-color">PLATO'S CLOSET - {"ZippyDee (<employee ranking>)"}</p>
+            <p className="-translate-x-60 translate-y-24 text-2xl text-main-color">PLATO'S CLOSET - {username} {ranking}</p>
             <div className="float-left border-box border-border-color h-dvh w-64 border-2 bg-nav-bg">
-
                 <img src={logo} alt="logo" />
-                <div className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
+                <div onClick={toOpenDay} className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
                     <p className="text-xl text-left translate-x-4">Open Day</p>
                 </div>
                 <div className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
