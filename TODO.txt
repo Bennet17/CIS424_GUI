@@ -11,3 +11,57 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
 
 ### Poopy broswer icon - `favicon.ico` is blurry and unrecognizeable. Could
     be a number of things. Maybe try the svg file? (`src\logo.svg`)
+
+
+
+# NOTES
+
+## team members
+- open day at their current store
+- close day at their current store
+- can transfer funds from POS, safe, and bank
+- cash manager
+    - perform safe audit
+- view their current store
+
+## manager
+- open day at their current store
+- close day at their current store
+- can transfer funds from POS, safe, and bank
+- cash manager 
+    - perform safe audit
+    - variance audit (+ 7-day variance report)
+    - deposit history report
+    - deposits
+- security
+    - add new employee to their store
+- view their current store
+
+## district manager
+- open day at their assigned stores
+- close day at their assigned stores
+- can transfer funds from POS, safe, and bank
+- cash manager 
+    - perform safe audit
+    - variance audit (+ 7-day variance report)
+    - deposit history report
+    - deposits
+- security
+    - add new employee to their assigned stores
+- view their assigned stores
+
+## owner
+- open day at all stores
+- close day at all stores
+- can transfer funds from POS, safe, and bank
+- cash manager 
+    - perform safe audit
+    - variance audit (+ 7-day variance report)
+    - deposit history report
+    - deposits
+- security
+    - add new employee to all stores
+    - remove employees from all stores
+    - view and change rankings of employees from all stores
+- view all stores
+- basically, fucking everything everywhere
