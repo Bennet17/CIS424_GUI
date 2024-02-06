@@ -20,7 +20,7 @@ function App() {
         Lastly, note the index property for the login page instead of a path. This means that the path
         for this page will be on the root "localhost:3000" url */}
         <Route index element={<LoginPage />} />
-        <Route path={routes.home} element={<HomePage />} />
+        <Route path={routes.home} element={<HomePage />} />       {/* change this to contain a component that holds a graph of info */}
         <Route path={routes.openday} element={<OpenDayPage />} />
         {/* below could be an idea for a 404 error page, but depends if we actually need it.
         Notice how the path is *. This means it will show this element if any other url is entered
