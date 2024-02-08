@@ -100,6 +100,8 @@ const OpenDayPage = () =>{
                             </tr>
                             <tr>
                                 <td>
+                                    <label>Pennies (rolled)</label>
+                                    <input className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                 </td>
                                 <td>
                                     <label>$50s</label>
@@ -108,9 +110,21 @@ const OpenDayPage = () =>{
                             </tr>
                             <tr>
                                 <td>
+                                    <label>Nickles (rolled)</label>
+                                    <input className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                 </td>
                                 <td>
                                     <label>$100s</label>
+                                    <input className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Dimes (rolled)</label>
+                                    <input className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                </td>
+                                <td>
+                                    <label>Quarters (rolled)</label>
                                     <input className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                 </td>
                             </tr>

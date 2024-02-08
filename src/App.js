@@ -22,6 +22,7 @@ function App() {
         <Route index element={<LoginPage />} />
         <Route path={routes.home} element={<HomePage />} />       {/* change this to contain a component that holds a graph of info */}
         <Route path={routes.openday} element={<OpenDayPage />} />
+        <Route path={routes.closeday} element={<OpenDayPage />} />
         {/* below could be an idea for a 404 error page, but depends if we actually need it.
         Notice how the path is *. This means it will show this element if any other url is entered
         that is not explicitly defined */}
