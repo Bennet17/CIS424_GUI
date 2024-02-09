@@ -1,13 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import './App.css';
-import routes from './routes.js';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+import routes from "./routes.js";
 // page components
-import LoginPage from './components/LoginPage';
-import HomePage from './components/HomePage';
-import OpenDayPage from './components/OpenDay';
+import LoginPage from "./components/LoginPage";
+import HomePage from "./components/HomePage";
+import OpenDayPage from "./components/OpenDay";
 
-let username, password = "";
+let username,
+  password = "";
 
 function App() {
   return (
