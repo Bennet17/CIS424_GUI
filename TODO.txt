@@ -12,6 +12,9 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
 ### Poopy broswer icon - `favicon.ico` is blurry and unrecognizeable. Could
     be a number of things. Maybe try the svg file? (`src\logo.svg`)
 
+### Handle invalid user login
+
+### Refactor assets into their own directory
 
 
 # NOTES
