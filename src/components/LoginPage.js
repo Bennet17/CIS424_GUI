@@ -28,7 +28,7 @@ function LoginPage() {
       console.log(response);
       //see discord behind-the-scenes channel for test username/passwords to use
       //if we return true as our response, route the user to the main screen
-      if (response.data.IsValid){
+      if (response.data.IsValid == true){
         navigate(routes.home);
       }else{
         //do logic for invalid user, i dunno can't test this yet cuz back-end people are

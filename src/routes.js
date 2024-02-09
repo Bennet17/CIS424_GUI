@@ -4,6 +4,7 @@
 const routes = {
     home: "/Home",
     openday: "/OpenDay",
+    closeday: "/CloseDay",
     //add more here
 }
 
