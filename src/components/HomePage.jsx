@@ -21,6 +21,10 @@ const HomePage = () =>{
         navigate(routes.closeday);
     }
 
+    function toTransferFunds() {
+        navigate(routes.fundstransfer);
+    }
+
     return (
         <div>
             <p className="translate-x-72 translate-y-24 text-2xl text-main-color">PLATO'S CLOSET - {username} {ranking}</p>
@@ -29,10 +33,10 @@ const HomePage = () =>{
                 <div onClick={toOpenDay} className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
                     <p className="text-xl text-left translate-x-4">Open Day</p>
                 </div>
-                <div  onClick={yo_mama} className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
+                <div onClick={yo_mama} className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
                     <p className="text-xl text-left translate-x-4">Close Day</p>
                 </div>
-                <div className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
+                <div onClick={toTransferFunds} className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
                     <p className="text-xl text-left translate-x-4">Transfer Funds</p>
                 </div>
                 <div className="group box-border border-border-color border-2 hover:bg-nav-bg bg-white" >
