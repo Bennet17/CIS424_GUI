@@ -31,8 +31,10 @@ const FundsTransferPage = () =>{
         allowLeadingZeroes: false
     }
 
-    // State to hold the report message
+    const [status, setStatus] = useState("");
     const [report, setReport] = useState("");
+    const successClass = "text-green-500";
+    const errorClass = "text-red-500";
 
     // Function to handle changes in the form fields
     const HandleChange = (event) => {
@@ -42,20 +44,44 @@ const FundsTransferPage = () =>{
             [name]: value
         });
 
-        // Remove error class when the field is filled
+        // Remove error class when the field is filled for empty fields
         if (value !== "") {
             event.target.classList.remove("error");
+        }
+
+        // If the source or destination field is changed, remove the error class from both
+        if (name === "source" || name === "destination") {
+            const otherField = name === "source" ? "destination" : "source";
+            const otherValue = formData[otherField];
+            
+            // If the other field is already filled and does not match the current field, remove the error class from both
+            if (value !== otherValue && otherValue !== "") {
+                document.getElementById("source_select").classList.remove("error");
+                document.getElementById("destination_select").classList.remove("error");
+            }
         }
     };
 
     // Function to handle form submission
     const HandleSubmit = (event) => {
         event.preventDefault();
-        let hasError = false;
+        let blnError = false;
+
+
+        // Check if the source and destination are the same
+        if (formData.source === formData.destination) {
+            blnError = true;
+            setStatus("Source and destination cannot be the same.");
+
+            document.getElementById("source_select").classList.add("error");
+            document.getElementById("destination_select").classList.add("error");
+        }
 
         // Check if any field is empty
         if (formData.source === "" || formData.destination === "" || formData.amount === "") {
-            hasError = true;
+            blnError = true;
+            setStatus("Please fill in all fields correctly.");
+
             // Highlight empty fields with red border
             if (formData.source === "") {
                 document.getElementById("source_select").classList.add("error");
@@ -68,28 +94,21 @@ const FundsTransferPage = () =>{
             }
         }
 
-        // Check if the source and destination are the same
-        if (formData.source === formData.destination) {
-            hasError = true;
-            document.getElementById("source_select").classList.add("error");
-            document.getElementById("destination_select").classList.add("error");
-        }
-
         // If any field is empty, return without submitting the form
-        if (hasError) {
+        if (blnError) {
             return;
         }
 
         // Otherwise, proceed with form submission
-        console.log("Form submitted successfully!");
-        console.log("Source: " + formData.source, "Destination: " + formData.destination, "Amount: " + formData.amount);
-
         // Reset the form fields
         setFormData({
             source: '',
             destination: '',
             amount: ''
         });
+
+        // Set the status message
+        setStatus("Successfully submitted transfer!");
 
         // Generate the report
         const reportText = GenerateReport();
@@ -123,6 +142,10 @@ const FundsTransferPage = () =>{
         `;
         return transferDetails;
     };
+
+    // Determine the class based on the status
+    const statusClass = status.startsWith("Successfully") ? successClass : errorClass;
+
 
     return (
         <div>
@@ -201,6 +224,9 @@ const FundsTransferPage = () =>{
                         </tbody>
                     </table>
                 </form>
+                <p className={`mt-4 ml-6 ${statusClass}`}>
+                    {status}
+                </p>
                 {report && (
                     <div className="report">
                         <pre>{report}</pre>
