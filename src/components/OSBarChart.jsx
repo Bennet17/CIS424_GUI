@@ -9,32 +9,36 @@ import {
   Legend,
 } from "recharts";
 
-const BarChartComponent = () => {
+const OSBarChart = () => {
   // Filled w/ sample data for now
   const data = [
-    { name: "A", value: 100 },
-    { name: "B", value: 200 },
-    { name: "C", value: 300 },
-    { name: "D", value: 400 },
-    { name: "E", value: 500 },
+    { day: "Sunday", variance: 66.6 },
+    { day: "Monday", variance: 4.2 },
+    { day: "Tuesday", variance: 69 },
+    { day: "Wednesday", variance: 8.008135 },
+    { day: "Thursday", variance: 0.6 },
+    { day: "Friday", variance: 17.38 },
+    { day: "Saturday", variance: 0.08 },
   ];
 
   return (
-    <BarChart width={600} height={300} data={data}>
-      {/* X-axis */}
-      <XAxis dataKey="name" />
-      {/* Y-axis */}
-      <YAxis />
-      {/* Grid */}
-      <CartesianGrid strokeDasharray="3 3" />
-      {/* Tooltips */}
-      <Tooltip />
-      {/* Legend */}
-      <Legend />
-      {/* Bar */}
-      <Bar dataKey="value" fill="#8884d8" />
-    </BarChart>
+    <div>
+      <BarChart width={600} height={300} data={data}>
+        {/* X-axis */}
+        <XAxis dataKey="day" />
+        {/* Y-axis */}
+        <YAxis />
+        {/* Grid */}
+        <CartesianGrid strokeDasharray="3 3" />
+        {/* Tooltips --- Recharts tooltips are apparently highly customizable */}
+        <Tooltip />
+        {/* Legend */}
+        <Legend />
+        {/* Bar */}
+        <Bar dataKey="variance" fill="#8884d8" className="hover:bg-blue-500" />
+      </BarChart>
+    </div>
   );
 };
 
-export default BarChartComponent;
+export default OSBarChart;
