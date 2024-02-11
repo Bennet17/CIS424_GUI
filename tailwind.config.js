@@ -1,15 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './public/index.html',
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
     screens: {
-      sm: '480px',
-      md: '768px',
-      lg: '976px',
-      xl: '1440px',
+      sm: "480px",
+      md: "768px",
+      lg: "976px",
+      xl: "1440px",
     },
     extend: {
       display: ["group-click"],
@@ -20,8 +17,10 @@ module.exports = {
         'border-color': '#374858',
         'main-color': '#607d97',
       },
+      backgroundColor: {
+        "blue-350": "#79C0F1",
+      }
     },
   },
   plugins: [],
-}
-
+};
