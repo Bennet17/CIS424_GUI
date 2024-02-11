@@ -2,6 +2,7 @@ import "../styles/PageStyles.css";
 import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import logo from '../Logo.png';
+import HorizontalNav from './HorizontalNav.js';
 
 //test variables
 let testPermissions = 0;
@@ -21,8 +22,10 @@ const HomePage = () =>{
         navigate(routes.closeday);
     }
 
+
     return (
-        <div>
+              <div>
+            <div><HorizontalNav></HorizontalNav></div>
             <p className="translate-x-72 translate-y-24 text-2xl text-main-color">PLATO'S CLOSET - {username} {ranking}</p>
             <div className="float-left border-box border-border-color h-dvh w-64 border-2 bg-nav-bg">
                 <img src={logo} alt="logo" />
@@ -53,9 +56,7 @@ const HomePage = () =>{
                         <p className="text-xl text-left translate-x-8">POS Management</p>
                     </div>}
                 </div>
-                <div className="box-border cursor-pointer border-border-color border-2 hover:bg-nav-bg bg-white" >
-                    <p className="text-xl text-left translate-x-4">Sign Out</p>
-                </div>
+
             </div>
         </div>
     );

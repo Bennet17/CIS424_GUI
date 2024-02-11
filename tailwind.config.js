@@ -17,11 +17,9 @@ module.exports = {
         'border-color': '#374858',
         'main-color': '#607d97',
       },
-    },
-    extend: {
       backgroundColor: {
         "blue-350": "#79C0F1",
-      },
+      }
     },
   },
   plugins: [],
