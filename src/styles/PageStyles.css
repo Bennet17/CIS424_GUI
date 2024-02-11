@@ -43,7 +43,6 @@
 }
 
 .report {
-    font-family: 'Courier New', Courier, monospace;
     font-size: 1.1rem;
     margin-top: 1rem;
     margin-right: 3rem;
@@ -51,4 +50,8 @@
     border-width: 1px;
     border-color: rgb(57, 70, 83);
     background-color: rgb(228, 231, 233);
+}
+
+pre {
+    font-family: 'Roboto Mono', monospace;
 }

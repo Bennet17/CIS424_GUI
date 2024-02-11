@@ -31,13 +31,14 @@ const FundsTransferPage = () =>{
         allowLeadingZeroes: false
     }
 
-    const [status, setStatus] = useState("");
-    const [report, setReport] = useState("");
-    const successClass = "text-green-500";
-    const errorClass = "text-red-500";
+    const [status, setStatus] = useState("");   // Status message to display after form submission
+    const [report, setReport] = useState("");   // Report message to display after form submission
+    const successClass = "text-green-500";      // CSS class for success
+    const errorClass = "text-red-500";          // CSS class for error
 
     // Function to handle changes in the form fields
     const HandleChange = (event) => {
+        // Get the field name and value
         const { name, value } = event.target;
         setFormData({
             ...formData,
@@ -65,20 +66,63 @@ const FundsTransferPage = () =>{
     // Function to handle form submission
     const HandleSubmit = (event) => {
         event.preventDefault();
-        let blnError = false;
 
+        // Declares the source, destination, and amount variables to store the form data
+        let strSource = '';
+        let strDestination = '';
+        let fltAmount = 0;
+
+        // Check if any field is invalid
+        if (CheckFields()) {
+            return;
+        }
+
+        // Stores the form data in the variables
+        strSource = formData.source;
+        strDestination = formData.destination;
+        
+        // Remove the dollar sign and commas from the amount and add decimal point if not present
+        fltAmount = parseFloat(formData.amount.replace(/[$,]/g, ''));
+        if (fltAmount % 1 === 0) {
+            fltAmount = fltAmount.toFixed(2);
+        }
+
+        // Submit the form data
+        SubmitTransfer(event, strSource, strDestination, fltAmount);
+
+        // Reset the form fields
+        setFormData({
+            source: '',
+            destination: '',
+            amount: ''
+        });
+
+        // Set the status message
+        setStatus("Successfully submitted transfer!");
+
+        // Generate the report
+        const reportText = GenerateReport(strSource, strDestination, fltAmount);
+        setReport(reportText);
+    };
+
+    function CheckFields() {
+        // blnError is true if any field is invalid
+        let blnError = false;
 
         // Check if the source and destination are the same
         if (formData.source === formData.destination) {
+            // Set the status message
             blnError = true;
             setStatus("Source and destination cannot be the same.");
 
+            // Highlight the source and destination fields with red border
             document.getElementById("source_select").classList.add("error");
             document.getElementById("destination_select").classList.add("error");
         }
 
         // Check if any field is empty
         if (formData.source === "" || formData.destination === "" || formData.amount === "") {
+            // Set the status message
             blnError = true;
             setStatus("Please fill in all fields correctly.");
 
@@ -94,58 +138,75 @@ const FundsTransferPage = () =>{
             }
         }
 
-        // If any field is empty, return without submitting the form
+        // If any field is invalid, return true to stop form submission
         if (blnError) {
-            return;
+            return true;
         }
 
-        // Otherwise, proceed with form submission
-        // Reset the form fields
-        setFormData({
-            source: '',
-            destination: '',
-            amount: ''
+        // If no field is invalid, return false to submit the form
+        return false;
+    }
+
+    // Axios post request to submit the transfer
+    function SubmitTransfer(event, strSource, strDestination, fltAmount) {
+        event.preventDefault();
+    
+        // Submit the form data
+        axios.post('', {
+            source: strSource,
+            destination: strDestination,
+            amount: fltAmount
+        })
+        .then(response => {
+          console.log(response);
+
+          // Check if the transfer was successful
+          if (response.data.IsValid == true) {
+            console.log("Success");
+          }
+          else {
+            console.log("Error");
+          }
+        })
+        .catch(error => {
+          console.error(error);
         });
-
-        // Set the status message
-        setStatus("Successfully submitted transfer!");
-
-        // Generate the report
-        const reportText = GenerateReport();
-        setReport(reportText);
-    };
+    }
 
     // Generate the report message
-    const GenerateReport = () => {
+    const GenerateReport = (strSource, strDestination, fltAmount) => {
+        // Get the current date and user details
         const currentDate = new Date().toLocaleDateString();
-        const userDetails = "User: John";
+        const userDetails = "User: John"; // Replace with actual user details from the session
+
+        // Report details
         const transferDetails = `
             Transfer of Funds Report
+
             User Details:
-            ${userDetails}
+            User: ${userDetails}
             Date: ${currentDate}
 
             Transfer Details:
-            Source: ${formData.source}
-            Destination: ${formData.destination}
-            Amount: ${formData.amount}
+            Source: ${strSource}
+            Destination: ${strDestination}
+            Amount: $${fltAmount}
 
             Source Details:
-            Expected Amount in ${formData.source} before transfer: <Amount here>
-            Expected Amount in ${formData.source} after transfer: <Amount here>
-            Actual Amount in ${formData.source} after transfer: <Amount here>
+            Expected Amount in ${strSource} before transfer: <Amount here>
+            Expected Amount in ${strSource} after transfer: <Amount here>
+            Actual Amount in ${strSource} after transfer: <Amount here>
 
             Destination Details:
-            Expected Amount in ${formData.destination} before transfer: <Amount here>
-            Expected Amount in ${formData.destination} after transfer: <Amount here>
-            Actual Amount in ${formData.destination} after transfer: <Amount here>
+            Expected Amount in ${strDestination} before transfer: <Amount here>
+            Expected Amount in ${strDestination} after transfer: <Amount here>
+            Actual Amount in ${strDestination} after transfer: <Amount here>
         `;
         return transferDetails;
     };
 
     // Determine the class based on the status
     const statusClass = status.startsWith("Successfully") ? successClass : errorClass;
-
 
     return (
         <div>
@@ -224,9 +285,13 @@ const FundsTransferPage = () =>{
                         </tbody>
                     </table>
                 </form>
+
+                {/* Shows submission status */}
                 <p className={`mt-4 ml-6 ${statusClass}`}>
                     {status}
                 </p>
+
+                {/* Shows report with successful submissions */}
                 {report && (
                     <div className="report">
                         <pre>{report}</pre>
