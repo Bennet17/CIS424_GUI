@@ -3,9 +3,9 @@ import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import logo from '../Logo.png';
 import HorizontalNav from './HorizontalNav.js';
-
+import UserManagementPage from "./userManagement.js";
 //test variables
-let testPermissions = 0;
+let testPermissions = 1;
 let username = "ZippyDee";
 let ranking = "(<employee ranking>)";
 
@@ -21,7 +21,10 @@ const HomePage = () =>{
     function yo_mama() {
         navigate(routes.closeday);
     }
-
+    function toUserManagement(){
+        navigate(routes.usermanagement);
+    }
+    
 
     return (
               <div>
@@ -49,7 +52,7 @@ const HomePage = () =>{
                 </div>
                 <div className="group box-border border-border-color border-2 hover:bg-nav-bg bg-white" >
                     <p className="text-xl text-left translate-x-4">Security</p>
-                    {testPermissions == 1 && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+                    {testPermissions == 1 && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white" onClick={toUserManagement}>
                         <p className="text-xl text-left translate-x-8">User management</p>
                     </div>}
                     {testPermissions == 1 && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">

@@ -5,7 +5,8 @@ const routes = {
     home: "/Home",
     openday: "/OpenDay",
     closeday: "/CloseDay",
-    signout: "/"
+    signout: "/",
+    usermanagement:"/Security/UserManagement"
     //add more here
 }
 
