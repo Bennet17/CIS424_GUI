@@ -3,7 +3,8 @@ import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import logo from '../Logo.png';
 import HorizontalNav from './HorizontalNav.js';
-import UserManagementPage from "./userManagement.js";
+import UserManagementPage from './UserManagement.js' 
+
 //test variables
 let testPermissions = 1;
 let username = "ZippyDee";
