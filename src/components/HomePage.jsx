@@ -23,19 +23,26 @@ const HomePage = () => {
   }
 
   return (
-    <div>
-      {/* I believe this is where the header will go */}
-      <p className="translate-x-72 translate-y-24 text-2xl text-main-color">
-        PLATO'S CLOSET - {username} {ranking}
-      </p>
-
+    <div className="flex h-screen">
       <NavBar
         toOpenDay={toOpenDay}
         yo_mama={yo_mama}
         testPermissions={testPermissions}
       />
 
-      <OSBarChart />
+      <div className="flex flex-col w-full">
+        {/* I believe this is where the header will go - Brianna is working on it now */}
+        <div>
+          <p className="text-2xl text-main-color">
+            PLATO'S CLOSET - {username} {ranking}
+          </p>
+        </div>
+
+        {/* Content area */}
+        <div className="flex flex-grow justify-center items-center">
+          <OSBarChart />
+        </div>
+      </div>
     </div>
   );
 };
