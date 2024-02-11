@@ -68,6 +68,12 @@ through the project structure and understand the purpose of each directory and k
 ### Styling
 - Tailwind CSS is used for styling. Refer to the `src/styles/` directory for stylesheets.
 
+### Tips & Tricks (May be VSCode specific)
+- Looking for a file? [Ctrl+P] will bring a search bar for all project files.
+- Lost your terminal? [Ctrl+`], or navigate to {View->Terminal}.
+- Want to edit multiple instances of the same word? [Ctrl+D] * n instances (with cursor placed at the end of the word),
+    next n instances will be selected. [Esc] to deselect.
+
 ### Important Notes
 - It is incredibly important that at all times during development you remember to have fun.
 
