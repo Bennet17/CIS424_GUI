@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import routes from "../routes.js";
 import NavBar from "./NavBar.jsx";
 import OSBarChart from "./OSBarChart.jsx";
-import HorizontalNav from './HorizontalNav.js';
+import HorizontalNav from "./HorizontalNav.js";
 
 //test variables
 let testPermissions = 0;
@@ -23,12 +23,12 @@ const HomePage = () => {
     navigate(routes.closeday);
   }
 
-    function toTransferFunds() {
-        navigate(routes.fundstransfer);
-    }
+  function toTransferFunds() {
+    navigate(routes.fundstransfer);
+  }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-custom-primary">
       <NavBar
         toOpenDay={toOpenDay}
         yo_mama={yo_mama}
@@ -36,11 +36,8 @@ const HomePage = () => {
       />
 
       <div className="flex flex-col w-full">
-      <div><HorizontalNav></HorizontalNav></div>
         <div>
-          <p className="text-2xl text-main-color">
-            PLATO'S CLOSET - {username} {ranking}
-          </p>
+          <HorizontalNav></HorizontalNav>
         </div>
 
         {/* Content area */}
