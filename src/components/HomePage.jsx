@@ -28,7 +28,7 @@ const HomePage = () => {
   }
 
   return (
-    <div className="flex h-screen bg-custom-primary">
+    <div className="flex h-screen bg-custom-accent">
       <NavBar
         toOpenDay={toOpenDay}
         yo_mama={yo_mama}
