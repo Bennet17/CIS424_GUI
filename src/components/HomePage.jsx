@@ -1,42 +1,13 @@
 import "../styles/PageStyles.css";
-
-import { useNavigate } from "react-router-dom";
-import routes from "../routes.js";
-import NavBar from "./NavBar.jsx";
+import Navbar from "./Navbar.jsx";
 import OSBarChart from "./OSBarChart.jsx";
 import HorizontalNav from "./HorizontalNav.js";
-import UserManagementPage from './UserManagement.js' 
-
-//test variables
-let testPermissions = 1;
-let username = "ZippyDee";
-let ranking = "(<employee ranking>)";
-
 
 const HomePage = () => {
-  //used to navigate to a new route page when calling a function
-  const navigate = useNavigate();
-
-  //functions to navigate user through pages. See html code below for calling these
-  function toOpenDay() {
-    navigate(routes.openday);
-  }
-
-  function yo_mama() {
-    navigate(routes.closeday);
-  }
-
-  function toTransferFunds() {
-    navigate(routes.fundstransfer);
-  }
 
   return (
     <div className="flex h-screen bg-custom-accent">
-      <NavBar
-        toOpenDay={toOpenDay}
-        yo_mama={yo_mama}
-        testPermissions={testPermissions}
-      />
+      <Navbar/>
 
       <div className="flex flex-col w-full">
         <div>

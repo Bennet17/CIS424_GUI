@@ -1,7 +1,7 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useState} from 'react';
-import HomePage from './HomePage';
+import NavBar from './Navbar';
 import HorizotalNav from "./HorizontalNav";
 import OpenDayPage from "./OpenDay";
 import { Fragment } from 'react'
@@ -18,7 +18,8 @@ const UserManagementPage = () =>{
     return (
        
             <div>
-                <HomePage></HomePage>
+                <NavBar></NavBar>
+                <HorizotalNav />
                 <div class="flex flex-col mt-32 px-6">
                     <div> <EmployeeTable></EmployeeTable></div>
                     <div class="flex flex-row mt-20"><AddUser></AddUser><EditUser></EditUser></div>
