@@ -12,13 +12,15 @@ import routes from '../routes.js';
 import AddUser from "./AddUser.js";
 import EmployeeTable from "./EmployeeTable.js";
 import EditUser from "./EditUser.js";
+import NavBar from "./NavBar.jsx";
 
 const UserManagementPage = () =>{
 
     return (
        
             <div>
-                <HomePage></HomePage>
+                <HorizotalNav></HorizotalNav>
+                <NavBar></NavBar>
                 <div class="flex flex-col mt-32 px-6">
                     <div> <EmployeeTable></EmployeeTable></div>
                     <div class="flex flex-row mt-20"><AddUser></AddUser><EditUser></EditUser></div>

@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "../Logo.png";
 
-const NavBar = ({ toOpenDay, yo_mama, testPermissions }) => {
+const NavBar = ({ toOpenDay, yo_mama, testPermissions, toUserManagement }) => {
   return (
     <div className="float-left border-box border-border-color h-dvh w-64 border-2 bg-nav-bg">
       <img src={logo} alt="logo" />
@@ -48,7 +48,9 @@ const NavBar = ({ toOpenDay, yo_mama, testPermissions }) => {
       <div className="group box-border border-border-color border-2 hover:bg-nav-bg bg-white">
         <p className="text-xl text-left translate-x-4">Security</p>
         {testPermissions == 1 && (
-          <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+          <div 
+          onClick={toUserManagement}
+          className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
             <p className="text-xl text-left translate-x-8">User management</p>
           </div>
         )}

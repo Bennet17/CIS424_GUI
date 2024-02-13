@@ -29,6 +29,9 @@ const HomePage = () => {
   function toTransferFunds() {
     navigate(routes.fundstransfer);
   }
+  function toUserManagement(){
+    navigate(routes.usermanagement);
+  }
 
   return (
     <div className="flex h-screen bg-custom-accent">
@@ -36,6 +39,7 @@ const HomePage = () => {
         toOpenDay={toOpenDay}
         yo_mama={yo_mama}
         testPermissions={testPermissions}
+        toUserManagement={toUserManagement}
       />
 
       <div className="flex flex-col w-full">

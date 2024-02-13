@@ -6,7 +6,6 @@ const routes = {
     openday: "/OpenDay",
     closeday: "/CloseDay",
     usermanagement:"/Security/UserManagement",
-
     fundstransfer: "/FundsTransfer",
     signout: "/"
 
