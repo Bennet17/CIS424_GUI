@@ -11,6 +11,7 @@ import OpenDayPage from './components/OpenDay';
 import FundsTransferPage from './components/FundsTransferPage';
 import UserManagementPage from "./components/UserManagement.js";
 import SafeAudit from './components/SafeAudit';
+import NotFound from './components/NotFound';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         </Route>
         <Route path={routes.fundstransfer} element={<FundsTransferPage />} />
         <Route path={routes.safeaudit} element={<SafeAudit />} />
+        <Route path="*" element={<NotFound />}/>
         {/* below could be an idea for a 404 error page, but depends if we actually need it.
         Notice how the path is *. This means it will show this element if any other url is entered
         that is not explicitly defined */}
