@@ -12,7 +12,7 @@ import routes from '../routes.js';
 import AddUser from "./AddUser.js";
 import EmployeeTable from "./EmployeeTable.js";
 import EditUser from "./EditUser.js";
-import NavBar from "./NavBar.jsx";
+import NavBar from "./Navbar.jsx";
 
 const UserManagementPage = () =>{
 
