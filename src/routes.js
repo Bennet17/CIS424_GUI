@@ -5,6 +5,8 @@ const routes = {
     home: "/Home",
     openday: "/OpenDay",
     closeday: "/CloseDay",
+    transferfunds: "/TransferFunds",
+    safeaudit: "/SafeAudit",
     //add more here
 }
 

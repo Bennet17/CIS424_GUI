@@ -6,8 +6,8 @@ import routes from './routes.js';
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 import OpenDayPage from './components/OpenDay';
-
-let username, password = "";
+import TransferFunds from './components/TransferFunds';
+import SafeAudit from './components/SafeAudit';
 
 function App() {
   return (
@@ -23,6 +23,8 @@ function App() {
         <Route path={routes.home} element={<HomePage />} />       {/* change this to contain a component that holds a graph of info */}
         <Route path={routes.openday} element={<OpenDayPage />} />
         <Route path={routes.closeday} element={<OpenDayPage />} />
+        <Route path={routes.transferfunds} element={<TransferFunds />} />
+        <Route path={routes.safeaudit} element={<SafeAudit />} />
         {/* below could be an idea for a 404 error page, but depends if we actually need it.
         Notice how the path is *. This means it will show this element if any other url is entered
         that is not explicitly defined */}
