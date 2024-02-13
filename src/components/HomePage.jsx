@@ -14,6 +14,7 @@ const HomePage = () => {
           <HorizontalNav></HorizontalNav>
         </div>
 
+
         {/* Content area */}
         <div className="flex flex-grow justify-center items-center">
           <OSBarChart />
