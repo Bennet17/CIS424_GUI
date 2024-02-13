@@ -16,6 +16,15 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
 
 ### Refactor assets into their own directory
 
+### Function to find weekday value of given date in `OSBarChart.jsx` --- Sample
+    data has weekday values but input will inevitably be in date format
+
+### `OSBarChart.jsx` annotation text --- Conditionally format above or below 
+    x-axis inversely to data value as to not cover up the info - May not be necessary - 
+
+### `OSBarChart.jsx` tooltips are rounding to whole numbers... need to be 2 decimal (currency)
+
+### `OSBarChart.jsx` needs to be plugged into middleware routes... just sample data now
 
 # NOTES
 

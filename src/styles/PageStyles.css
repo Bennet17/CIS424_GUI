@@ -37,3 +37,21 @@
 .MenuButtonParent:hover .MenuButtonContent:hover{
     background-color: rgb(217, 219, 221);
 }
+
+.error {
+    border-color: red;
+}
+
+.report {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    margin-right: 3rem;
+    margin-bottom: 1rem;
+    border-width: 1px;
+    border-color: rgb(57, 70, 83);
+    background-color: rgb(228, 231, 233);
+}
+
+pre {
+    font-family: 'Roboto Mono', monospace;
+}
