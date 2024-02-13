@@ -5,8 +5,9 @@ const routes = {
     home: "/Home",
     openday: "/OpenDay",
     closeday: "/CloseDay",
-    transferfunds: "/TransferFunds",
+    fundstransfer: "/TransferFunds",
     safeaudit: "/SafeAudit",
+    signout: "/"
     //add more here
 }
 
