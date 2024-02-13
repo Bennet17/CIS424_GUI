@@ -27,7 +27,7 @@ const Navbar = () =>{
         navigate(routes.safeaudit);
     }
     function toUserManagement(){
-        navigate (routes.usermanage);
+        navigate (routes.usermanagement);
     }
     function signOut(){
         navigate(routes.signout);
