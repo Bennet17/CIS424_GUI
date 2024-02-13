@@ -2,6 +2,7 @@ import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useState} from 'react';
 import Navbar from './Navbar';
+import HorizontalNav from "./HorizontalNav";
 
 const OpenDayPage = () =>{
     //sample data to demonstrate how this all works. In reality, we would get all the POS data with a post get request to the db and store it in an array
@@ -55,7 +56,8 @@ const OpenDayPage = () =>{
     return (
         <div>
             <Navbar />
-            <div className="text-main-color float-left ml-8 mt-32">
+            <HorizontalNav />
+            <div className="text-main-color float-left ml-8 mt-12">
                 <p className="text-2xl mb-2">Select a POS to open</p>
                 {poss.map(item => (
                     <>
@@ -69,7 +71,7 @@ const OpenDayPage = () =>{
                     </>
                 ))}
             </div>
-            <div className="text-main-color float-left ml-16 mt-32">
+            <div className="text-main-color float-left ml-16 mt-12">
                 <p className="text-3xl" >Enter denominations for POS # {currentPos.id}</p>
                 <br/><hr/><br/>
                 <form onSubmit={Submit}>

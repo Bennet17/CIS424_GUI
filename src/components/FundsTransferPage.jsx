@@ -3,7 +3,8 @@ import axios from "axios";
 import React, {useState} from 'react';
 import MaskedInput from 'react-text-mask'
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
-import HomePage from './HomePage';
+import Navbar from './Navbar';
+import HorizontalNav from "./HorizontalNav";
 
 const FundsTransferPage = () =>{
     // Arrays to hold the source and destination options
@@ -210,7 +211,8 @@ const FundsTransferPage = () =>{
 
     return (
         <div>
-            <HomePage />
+            <Navbar />
+            <HorizontalNav />
             <div className="text-main-color float-left ml-8 mt-32">
                 <form onSubmit={HandleSubmit}>
                     <table>

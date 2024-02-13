@@ -2,6 +2,7 @@ import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useState} from 'react';
 import Navbar from './Navbar';
+import HorizontalNav from "./HorizontalNav";
 
 const SafeAuditPage = () =>{
     const [startDay, setStartDay] = useState();
@@ -10,13 +11,10 @@ const SafeAuditPage = () =>{
 
     //changes the start day, end day, and current day
     function changeDayStart(){
-        //setStartDay();
     }
     function changeDayEnd(){
-        
     }
     function changeDayCurrent(){
-        
     }
 
     function Submit(event){
@@ -41,11 +39,12 @@ const SafeAuditPage = () =>{
     return (
         <div>
             <Navbar />
-            <div className="float-left ml-32 mt-32">
+            <HorizontalNav />
+            <div className="float-left ml-32 mt-12">
                 <label className="text-main-color text-2xl mb-2">Start Date:</label>
                 <input onChange={changeDayStart} className="box-border text-center mb-4 ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" type="date" name="start"></input>
             </div>
-            <div className="float-left ml-10 mt-32">
+            <div className="float-left ml-10 mt-12">
                 <label className="text-main-color text-2xl mb-2">End Date:</label>
                 <input onChange={changeDayEnd} className="box-border text-center mb-4 ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" type="date" name="start"></input>
             </div>
