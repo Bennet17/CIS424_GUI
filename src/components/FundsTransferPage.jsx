@@ -218,7 +218,8 @@ const FundsTransferPage = () =>{
 
     return (
         <div>
-            <HomePage />
+            <Navbar />
+            <HorizontalNav />
             <div className="text-main-color float-left ml-8 mt-32">
                 <form onSubmit={HandleSubmit}>
                     <table>

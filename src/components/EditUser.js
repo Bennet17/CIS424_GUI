@@ -1,10 +1,19 @@
 
-function AddUser() {
+function EditUser(user, onClose, onConfirm) {
+
+      // Implement your edit form logic here
+  const handleConfirm = () => {
+    // Call the onConfirm function passed from the parent component
+    onConfirm();
+  };
+  const handleClose = () => {
+    onClose();
+  };
     return (
 
         <table >
 <tbody>
-<h2 className="text-lg font-bold mb-2">Add User</h2>
+<h2 className="text-lg font-bold mb-2">Edit User</h2>
     <tr>
         <td>
             <label>First Name</label>
@@ -45,10 +54,10 @@ function AddUser() {
 
     <tr>
         <td>
-            <button type="cancel"value="cancel" className="flex w-5/6  justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Cancel</button>
+            <button type="cancel"value="cancel" className="flex w-5/6  justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onclick={handleClose}>Cancel</button>
         </td>
         <td>
-            <button type="submit" value="submit" className="flex w-5/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Employee</button>
+            <button type="submit" value="submit" className="flex w-5/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"onclick={handleConfirm}>Confirm Edits</button>
         </td>
     </tr>
 </tbody>
@@ -57,4 +66,4 @@ function AddUser() {
     )
 }
   
-export default AddUser;
+export default EditUser;
