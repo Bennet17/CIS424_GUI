@@ -153,9 +153,11 @@ const FundsTransferPage = () =>{
     
         // Submit the form data
         axios.post('', {
-            source: strSource,
+            usrID: "3", // Replace with actual user ID from the session
+            origin: strSource,
             destination: strDestination,
-            amount: fltAmount
+            total: fltAmount
+            // Add denominations here
         })
         .then(response => {
           console.log(response);
