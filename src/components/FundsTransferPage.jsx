@@ -1,8 +1,7 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useState} from 'react';
-import MaskedInput from 'react-text-mask'
-import createNumberMask from 'text-mask-addons/dist/createNumberMask'
+import { formatValue } from "react-currency-input-field";
 import HomePage from './HomePage';
 
 const FundsTransferPage = () =>{
@@ -16,20 +15,6 @@ const FundsTransferPage = () =>{
         destination: '',
         amount: ''
     });
-
-    // Mask options for the amount input
-    const maskOptions = {
-        prefix: '$',
-        suffix: '',
-        includeThousandsSeparator: true,
-        thousandsSeparatorSymbol: ',',
-        allowDecimal: true,
-        decimalSymbol: '.',
-        decimalLimit: 2,
-        integerLimit: 9,
-        allowNegative: false,
-        allowLeadingZeroes: false
-    }
 
     const [status, setStatus] = useState("");   // Status message to display after form submission
     const [report, setReport] = useState("");   // Report message to display after form submission
@@ -80,11 +65,13 @@ const FundsTransferPage = () =>{
         // Stores the form data in the variables
         strSource = formData.source;
         strDestination = formData.destination;
-        
-        // Remove the dollar sign and commas from the amount and add decimal point if not present
-        fltAmount = parseFloat(formData.amount.replace(/[$,]/g, ''));
-        if (fltAmount % 1 === 0) {
-            fltAmount = fltAmount.toFixed(2);
+        fltAmount = parseFloat(formData.amount).toFixed(2);
+
+        // If the amount is >= $1000, display a 'Are you sure?' warning message
+        if (fltAmount >= 1000.00) {
+            if (!window.confirm("You are about transfer $1000.00 or more from " + strSource + " to " + strDestination + ". Are you sure?")) {
+                return;
+            }
         }
 
         // Submit the form data
@@ -156,8 +143,24 @@ const FundsTransferPage = () =>{
             usrID: "3", // Replace with actual user ID from the session
             origin: strSource,
             destination: strDestination,
-            total: fltAmount
-            // Add denominations here
+            total: fltAmount,
+            hundred: 0,
+            fifty: 0,
+            twenty: 0,
+            ten: 0,
+            five: 0,
+            two: 0,
+            one: 0,
+            dollarCoin: 0,
+            halfDollar: 0,
+            quarter: 0,
+            dime: 0,
+            nickel: 0,
+            penny: 0,
+            quarterRoll: 0,
+            dimeRoll: 0,
+            nickelRoll: 0,
+            pennyRoll: 0
         })
         .then(response => {
           console.log(response);
@@ -192,7 +195,10 @@ const FundsTransferPage = () =>{
             Transfer Details:
             Source: ${strSource}
             Destination: ${strDestination}
-            Amount: $${fltAmount}
+            Amount: $${formatValue({ 
+                value: fltAmount, 
+                groupSeparator: ",", 
+                decimalSeparator: "."})}
 
             Source Details:
             Expected Amount in ${strSource} before transfer: <Amount here>
@@ -265,14 +271,16 @@ const FundsTransferPage = () =>{
                                 {/* Amount input */}
                                 <td>
                                     <strong>
-                                        <label htmlFor="amount_input">Amount: </label>
+                                        <label htmlFor="amount_input">Amount: $</label>
                                     </strong>
-                                    <MaskedInput
-                                        mask={createNumberMask(maskOptions)}
-                                        placeholder="$0.00"
-                                        id="amount_input"
-                                        name="amount"
-                                        className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-2 mr-10 w-22"
+                                    <input 
+                                        type="number" 
+                                        name="amount" 
+                                        id="amount_input" 
+                                        placeholder="0.00"
+                                        step={0.01}
+                                        min={0.00}
+                                        className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-2 mr-10 w-50"
                                         value={formData.amount}
                                         onChange={HandleChange}
                                     />
