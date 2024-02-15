@@ -9,13 +9,15 @@ const FundsTransferPage = () =>{
     // Arrays to hold the source and destination options
     let arrSources = ["POS1", "POS2", "POS3", "Safe", "Bank"];
     let arrDestinations = ["POS1", "POS2", "POS3", "Safe", "Bank"];
+
+    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer";
     
     // Const to hold the form data
     const [formData, setFormData] = useState({
         user: 0,
-        strSource: '',
-        strDestination: '',
-        fltAmount: '',
+        source: '',
+        destination: '',
+        amount: '',
         hundred: 0,
         fifty: 0,
         twenty: 0,
@@ -43,14 +45,59 @@ const FundsTransferPage = () =>{
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("+ Show extras");
 
+    const CalculateAmount = (formData) => {
+        // Object to hold the denominations and their values. 
+        const denominations = {
+            "hundred": 100,
+            "fifty": 50,
+            "twenty": 20,
+            "ten": 10,
+            "five": 5,
+            "two": 2,
+            "one": 1,
+            "dollarCoin": 1,
+            "halfDollar": 0.5,
+            "quarter": 0.25,
+            "dime": 0.1,
+            "nickel": 0.05,
+            "penny": 0.01,
+            "quarterRoll": 10,
+            "dimeRoll": 5,
+            "nickelRoll": 2,
+            "pennyRoll": 0.5
+        };
+
+        // Variable to hold the total amount
+        let total = 0;
+
+        // Calculate the total amount based on the denomination fields by
+        // multiplying the count with the value of the denomination
+        // and adding it to the total amount.
+        for (const [key, value] of Object.entries(formData)) {
+            if (denominations[key]) {
+                total += value * denominations[key];
+            }
+        }
+
+        // Update the amount field in the form data
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            amount: total.toFixed(2)
+        }));
+
+        return total;
+    }
+
     // Function to handle changes in the form fields
     const HandleChange = (event) => {
         // Get the field name and value
         const { name, value } = event.target;
-        setFormData({
-            ...formData,
+
+        // Update the form data
+        setFormData((prevFormData) => ({
+            ...prevFormData,
             [name]: value
-        });
+        }));
 
         // Remove error class when the field is filled for empty fields
         if (value !== "") {
@@ -68,6 +115,12 @@ const FundsTransferPage = () =>{
                 document.getElementById("destination_select").classList.remove("error");
             }
         }
+
+        // Calculate the amount based on the denomination fields
+        CalculateAmount({
+            ...formData,
+            [name]: value
+        });
     };
 
     // Function to filter out non-zero currency fields from the form data and return them
@@ -87,7 +140,7 @@ const FundsTransferPage = () =>{
         let blnError = false;
 
         // Check if the source and destination are the same
-        if (formData.strSource === formData.strDestination) {
+        if (formData.source === formData.destination) {
             // Set the status message
             blnError = true;
             setStatus("Source and destination cannot be the same.");
@@ -98,30 +151,28 @@ const FundsTransferPage = () =>{
         }
 
         // Check if any field is empty
-        if (formData.strSource === "" || formData.strDestination === "" || formData.fltAmount === "") {
+        if (formData.source === "" || formData.destination === "" || formData.amount === "") {
             // Set the status message
             blnError = true;
             setStatus("Please fill in all fields correctly.");
 
             // Highlight empty fields with red border
-            if (formData.strSource === "") {
+            if (formData.source === "") {
                 document.getElementById("source_select").classList.add("error");
             }
-            if (formData.strDestination === "") {
+            if (formData.destination === "") {
                 document.getElementById("destination_select").classList.add("error");
             }
-            if (formData.fltAmount === "") {
+            if (formData.amount === "") {
                 document.getElementById("amount_input").classList.add("error");
             }
         }
 
         // If any field is invalid, return true to stop form submission
-        if (blnError) {
+        if (blnError) 
             return true;
-        }
-
-        // If no field is invalid, return false to submit the form
-        return false;
+        else
+            return false;
     }
 
     // Const to handle form submission
@@ -134,26 +185,26 @@ const FundsTransferPage = () =>{
         }
 
         // Stores the form data in the variables
-        let { user, strSource, strDestination, fltAmount, ...currencyFields } = formData;
-        fltAmount = parseFloat(formData.fltAmount).toFixed(2);
+        let { user, source, destination, amount: fltAmount, ...currencyFields } = formData;
+        fltAmount = parseFloat(formData.amount).toFixed(2);
         let newCurrencyFields = FilterDenominations(currencyFields);
 
         // If the amount is >= $1000, display a 'Are you sure?' warning message
         if (fltAmount >= 1000.00) {
-            if (!window.confirm(`You are about transfer $${fltAmount} or more from ${strSource} to ${strDestination}. Are you sure?`)) {
+            if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) {
                 return;
             }
         }
 
         // Submit the form data
-        SubmitTransfer(event, user, strSource, strDestination, fltAmount, newCurrencyFields);
+        SubmitTransfer(event, user, source, destination, fltAmount, newCurrencyFields);
 
         // Reset the form fields
         setFormData({
             user: 0,
-            strSource: '',
-            strDestination: '',
-            fltAmount: '',
+            source: '',
+            destination: '',
+            amount: '',
             ...Object.keys(currencyFields).reduce((acc, key) => {
                 acc[key] = 0;
                 return acc;
@@ -164,7 +215,7 @@ const FundsTransferPage = () =>{
         setStatus("Successfully submitted transfer!");
 
         // Generate the report
-        const reportText = GenerateReport(user, strSource, strDestination, fltAmount, newCurrencyFields);
+        const reportText = GenerateReport(user, source, destination, fltAmount, newCurrencyFields);
         setReport(reportText);
     };
 
@@ -182,7 +233,7 @@ const FundsTransferPage = () =>{
         }
     
         // Submit the form data
-        axios.post('', request).then(response => {
+        axios.post(FundTransferURL, request).then(response => {
             console.log(response);
 
             // Check if the transfer was successful
@@ -212,21 +263,42 @@ const FundsTransferPage = () =>{
         // Get the current date and user details
         const currentDate = new Date().toLocaleDateString();
 
-        let arrCurrencies = ["100", "50", "20", "10", "5", "2", "1", "1 coin", "0.5 coin", "0.25", "0.1", "0.05", "0.01"];
+        // Array of denominations
+        const denominations = {
+            "hundred": 100,
+            "fifty": 50,
+            "twenty": 20,
+            "ten": 10,
+            "five": 5,
+            "two": 2,
+            "one": 1,
+            "dollarCoin": 1,
+            "halfDollar": 0.5,
+            "quarter": 0.25,
+            "dime": 0.1,
+            "nickel": 0.05,
+            "penny": 0.01,
+            "quarterRoll": 10,
+            "dimeRoll": 5,
+            "nickelRoll": 2,
+            "pennyRoll": 0.5
+        };
 
-        // Prepare the denominations details
-        let denominationsDetails = '';
-        if (newCurrencyFields) {
-            denominationsDetails = Object.entries(newCurrencyFields)
-                .map(([denominations, count], index) => {
-                    const currencyName = arrCurrencies[index];
-                    return `${count} x $${currencyName}`;
-                }).join('\n' + ' '.repeat(27));
+        // Generate the denominations details
+        let denominationsDetails = "";
+
+        // Loop through the currency fields and add the non-zero denominations to the report
+        for (const [key, value] of Object.entries(newCurrencyFields)) {
+            if (denominations[key]) {
+                denominationsDetails += `${value} x $${denominations[key]}, `;
+            }
         }
 
+        // TODO - Format into a table
         // Report details
         const transferDetails = `
             Transfer of Funds Report
+            Store: <Store Name>
 
             User Details:
             User: ${user}
@@ -272,10 +344,10 @@ const FundsTransferPage = () =>{
                                         <label htmlFor="source_select">Source: </label>
                                     </strong>
                                     <select
-                                        name="strSource"
+                                        name="source"
                                         id="source_select"
                                         className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-2 mr-10 w-50"
-                                        value={formData.strSource}
+                                        value={formData.source}
                                         onChange={HandleChange}
                                     >
                                         <option value="">&lt;Please select a source&gt;</option>
@@ -294,10 +366,10 @@ const FundsTransferPage = () =>{
                                         <label htmlFor="destination_select" className="">Destination: </label>
                                     </strong>
                                     <select
-                                        name="strDestination"
+                                        name="destination"
                                         id="destination_select"
                                         className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-2 mr-10 w-50"
-                                        value={formData.strDestination}
+                                        value={formData.destination}
                                         onChange={HandleChange}
                                     >
                                         <option value="">&lt;Please select a destination&gt;</option>
@@ -316,15 +388,13 @@ const FundsTransferPage = () =>{
                                         <label htmlFor="amount_input">Amount: $</label>
                                     </strong>
                                     <input
-                                        type="number"
-                                        name="fltAmount"
+                                        type="text"
+                                        name="amount"
                                         id="amount_input"
                                         placeholder="0.00"
-                                        step={0.01}
-                                        min={0}
+                                        readOnly={true}
                                         className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                                        value={formData.fltAmount}
-                                        onChange={HandleChange}
+                                        value={formData.amount}
                                     />
                                 </td>
                             </tr>
@@ -531,7 +601,7 @@ const FundsTransferPage = () =>{
                                     <label htmlFor="oneCoin_input">$1 coin</label>
                                     <input 
                                         type="number"
-                                        name="oneCoin"
+                                        name="dollarCoin"
                                         id="oneCoin_input"
                                         step={1}
                                         min={0}
