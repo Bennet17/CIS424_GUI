@@ -27,7 +27,10 @@ const Navbar = () =>{
         navigate(routes.safeaudit);
     }
     function toUserManagement(){
-        navigate (routes.usermanage);
+        navigate (routes.usermanagement);
+    }
+    function toPOSManagement(){
+        navigate (routes.posmanagement);
     }
     function signOut(){
         navigate(routes.signout);
@@ -63,7 +66,7 @@ const Navbar = () =>{
                     {testPermissions == 1 && <div onClick={toUserManagement} className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
                         <p className="text-xl text-left translate-x-8">User management</p>
                     </div>}
-                    {testPermissions == 1 && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+                    {testPermissions == 1 && <div onClick={toPOSManagement} className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
                         <p className="text-xl text-left translate-x-8">POS Management</p>
                     </div>}
                 </div>

@@ -11,6 +11,7 @@ import OpenDayPage from './components/OpenDay';
 import FundsTransferPage from './components/FundsTransferPage';
 import UserManagementPage from "./components/UserManagement.js";
 import SafeAudit from './components/SafeAudit';
+import POSManagementPage from "./components/POSManagement.jsx";
 import NotFound from './components/NotFound';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path={routes.closeday} element={<OpenDayPage />} />
         <Route path={routes.security} >
           <Route path={routes.usermanagement} element={<UserManagementPage/>} />
+          <Route path={routes.posmanagement} element={<POSManagementPage/>} />
         </Route>
         <Route path={routes.fundstransfer} element={<FundsTransferPage />} />
         <Route path={routes.safeaudit} element={<SafeAudit />} />

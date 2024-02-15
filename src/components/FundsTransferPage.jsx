@@ -1,8 +1,7 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useState} from 'react';
-import MaskedInput from 'react-text-mask'
-import createNumberMask from 'text-mask-addons/dist/createNumberMask'
+import { formatValue } from "react-currency-input-field";
 import Navbar from './Navbar';
 import HorizontalNav from "./HorizontalNav";
 
@@ -10,41 +9,95 @@ const FundsTransferPage = () =>{
     // Arrays to hold the source and destination options
     let arrSources = ["POS1", "POS2", "POS3", "Safe", "Bank"];
     let arrDestinations = ["POS1", "POS2", "POS3", "Safe", "Bank"];
+
+    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer";
     
     // Const to hold the form data
     const [formData, setFormData] = useState({
+        user: 0,
         source: '',
         destination: '',
-        amount: ''
+        amount: '',
+        hundred: 0,
+        fifty: 0,
+        twenty: 0,
+        ten: 0,
+        five: 0,
+        two: 0,
+        one: 0,
+        dollarCoin: 0,
+        halfDollar: 0,
+        quarter: 0,
+        dime: 0,
+        nickel: 0,
+        penny: 0,
+        quarterRoll: 0,
+        dimeRoll: 0,
+        nickelRoll: 0,
+        pennyRoll: 0
     });
-
-    // Mask options for the amount input
-    const maskOptions = {
-        prefix: '$',
-        suffix: '',
-        includeThousandsSeparator: true,
-        thousandsSeparatorSymbol: ',',
-        allowDecimal: true,
-        decimalSymbol: '.',
-        decimalLimit: 2,
-        integerLimit: 9,
-        allowNegative: false,
-        allowLeadingZeroes: false
-    }
 
     const [status, setStatus] = useState("");   // Status message to display after form submission
     const [report, setReport] = useState("");   // Report message to display after form submission
     const successClass = "text-green-500";      // CSS class for success
     const errorClass = "text-red-500";          // CSS class for error
+    
+    const [showExtraChange, setShowExtraChange] = useState(false);
+    const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("+ Show extras");
+
+    const CalculateAmount = (formData) => {
+        // Object to hold the denominations and their values. 
+        const denominations = {
+            "hundred": 100,
+            "fifty": 50,
+            "twenty": 20,
+            "ten": 10,
+            "five": 5,
+            "two": 2,
+            "one": 1,
+            "dollarCoin": 1,
+            "halfDollar": 0.5,
+            "quarter": 0.25,
+            "dime": 0.1,
+            "nickel": 0.05,
+            "penny": 0.01,
+            "quarterRoll": 10,
+            "dimeRoll": 5,
+            "nickelRoll": 2,
+            "pennyRoll": 0.5
+        };
+
+        // Variable to hold the total amount
+        let total = 0;
+
+        // Calculate the total amount based on the denomination fields by
+        // multiplying the count with the value of the denomination
+        // and adding it to the total amount.
+        for (const [key, value] of Object.entries(formData)) {
+            if (denominations[key]) {
+                total += value * denominations[key];
+            }
+        }
+
+        // Update the amount field in the form data
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            amount: total.toFixed(2)
+        }));
+
+        return total;
+    }
 
     // Function to handle changes in the form fields
     const HandleChange = (event) => {
         // Get the field name and value
         const { name, value } = event.target;
-        setFormData({
-            ...formData,
+
+        // Update the form data
+        setFormData((prevFormData) => ({
+            ...prevFormData,
             [name]: value
-        });
+        }));
 
         // Remove error class when the field is filled for empty fields
         if (value !== "") {
@@ -62,50 +115,26 @@ const FundsTransferPage = () =>{
                 document.getElementById("destination_select").classList.remove("error");
             }
         }
-    };
 
-    // Function to handle form submission
-    const HandleSubmit = (event) => {
-        event.preventDefault();
-
-        // Declares the source, destination, and amount variables to store the form data
-        let strSource = '';
-        let strDestination = '';
-        let fltAmount = 0;
-
-        // Check if any field is invalid
-        if (CheckFields()) {
-            return;
-        }
-
-        // Stores the form data in the variables
-        strSource = formData.source;
-        strDestination = formData.destination;
-        
-        // Remove the dollar sign and commas from the amount and add decimal point if not present
-        fltAmount = parseFloat(formData.amount.replace(/[$,]/g, ''));
-        if (fltAmount % 1 === 0) {
-            fltAmount = fltAmount.toFixed(2);
-        }
-
-        // Submit the form data
-        SubmitTransfer(event, strSource, strDestination, fltAmount);
-
-        // Reset the form fields
-        setFormData({
-            source: '',
-            destination: '',
-            amount: ''
+        // Calculate the amount based on the denomination fields
+        CalculateAmount({
+            ...formData,
+            [name]: value
         });
-
-        // Set the status message
-        setStatus("Successfully submitted transfer!");
-
-        // Generate the report
-        const reportText = GenerateReport(strSource, strDestination, fltAmount);
-        setReport(reportText);
     };
 
+    // Function to filter out non-zero currency fields from the form data and return them
+    function FilterDenominations(currencyFields) {
+        // Filter out non-zero currency fields
+        let nonZeroCurrencyFields = Object.keys(currencyFields).reduce((acc, key) => {
+            if (currencyFields[key] !== 0) acc[key] = currencyFields[key];
+                return acc;
+        }, {});
+
+        return nonZeroCurrencyFields;
+    }
+
+    // Function to check if any field is invalid
     function CheckFields() {
         // blnError is true if any field is invalid
         let blnError = false;
@@ -140,58 +169,149 @@ const FundsTransferPage = () =>{
         }
 
         // If any field is invalid, return true to stop form submission
-        if (blnError) {
+        if (blnError) 
             return true;
-        }
-
-        // If no field is invalid, return false to submit the form
-        return false;
+        else
+            return false;
     }
 
-    // Axios post request to submit the transfer
-    function SubmitTransfer(event, strSource, strDestination, fltAmount) {
+    // Const to handle form submission
+    const HandleSubmit = (event) => {
         event.preventDefault();
+
+        // Check if any field is invalid
+        if (CheckFields()) {
+            return;
+        }
+
+        // Stores the form data in the variables
+        let { user, source, destination, amount: fltAmount, ...currencyFields } = formData;
+        fltAmount = parseFloat(formData.amount).toFixed(2);
+        let newCurrencyFields = FilterDenominations(currencyFields);
+
+        // If the amount is >= $1000, display a 'Are you sure?' warning message
+        if (fltAmount >= 1000.00) {
+            if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) {
+                return;
+            }
+        }
+
+        // Submit the form data
+        SubmitTransfer(event, user, source, destination, fltAmount, newCurrencyFields);
+
+        // Reset the form fields
+        setFormData({
+            user: 0,
+            source: '',
+            destination: '',
+            amount: '',
+            ...Object.keys(currencyFields).reduce((acc, key) => {
+                acc[key] = 0;
+                return acc;
+            }, {})
+        });
+
+        // Set the status message
+        setStatus("Successfully submitted transfer!");
+
+        // Generate the report
+        const reportText = GenerateReport(user, source, destination, fltAmount, newCurrencyFields);
+        setReport(reportText);
+    };
+
+    // Axios post request to submit the transfer
+    function SubmitTransfer(event, user, strSource, strDestination, fltAmount, newCurrencyFields) {
+        event.preventDefault();
+
+        // Request object
+        const request = {
+            usrID: user,
+            origin: strSource,
+            destination: strDestination,
+            total: fltAmount,
+            ...newCurrencyFields
+        }
     
         // Submit the form data
-        axios.post('', {
-            source: strSource,
-            destination: strDestination,
-            amount: fltAmount
-        })
-        .then(response => {
-          console.log(response);
+        axios.post(FundTransferURL, request).then(response => {
+            console.log(response);
 
-          // Check if the transfer was successful
-          if (response.data.IsValid == true) {
-            console.log("Success");
-          }
-          else {
-            console.log("Error");
-          }
+            // Check if the transfer was successful
+            if (response.data.IsValid == true) 
+                console.log("Success");
+            else 
+                console.log("Error");
         })
         .catch(error => {
-          console.error(error);
+            console.error(error);
         });
     }
 
+    //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
+    //(also change arrow text thing)
+    function ToggleExtraChange(){
+        setShowExtraChange(!showExtraChange);
+        if (!showExtraChange){
+            setShowExtraChangeTxt("- Hide extras");
+        }else{
+            setShowExtraChangeTxt("+ Show extras");
+        }
+    }
+
     // Generate the report message
-    const GenerateReport = (strSource, strDestination, fltAmount) => {
+    const GenerateReport = (user, strSource, strDestination, fltAmount, newCurrencyFields) => {
         // Get the current date and user details
         const currentDate = new Date().toLocaleDateString();
-        const userDetails = "User: John"; // Replace with actual user details from the session
 
+        // Array of denominations
+        const denominations = {
+            "hundred": 100,
+            "fifty": 50,
+            "twenty": 20,
+            "ten": 10,
+            "five": 5,
+            "two": 2,
+            "one": 1,
+            "dollarCoin": 1,
+            "halfDollar": 0.5,
+            "quarter": 0.25,
+            "dime": 0.1,
+            "nickel": 0.05,
+            "penny": 0.01,
+            "quarterRoll": 10,
+            "dimeRoll": 5,
+            "nickelRoll": 2,
+            "pennyRoll": 0.5
+        };
+
+        // Generate the denominations details
+        let denominationsDetails = "";
+
+        // Loop through the currency fields and add the non-zero denominations to the report
+        for (const [key, value] of Object.entries(newCurrencyFields)) {
+            if (denominations[key]) {
+                denominationsDetails += `${value} x $${denominations[key]}, `;
+            }
+        }
+
+        // TODO - Format into a table
         // Report details
         const transferDetails = `
             Transfer of Funds Report
+            Store: <Store Name>
 
             User Details:
-            User: ${userDetails}
+            User: ${user}
             Date: ${currentDate}
 
             Transfer Details:
             Source: ${strSource}
             Destination: ${strDestination}
-            Amount: $${fltAmount}
+            Amount: $${formatValue({ 
+                value: fltAmount, 
+                groupSeparator: ",", 
+                decimalSeparator: "."})}
+            Denominations: ${denominationsDetails}
 
             Source Details:
             Expected Amount in ${strSource} before transfer: <Amount here>
@@ -265,18 +385,264 @@ const FundsTransferPage = () =>{
                                 {/* Amount input */}
                                 <td>
                                     <strong>
-                                        <label htmlFor="amount_input">Amount: </label>
+                                        <label htmlFor="amount_input">Amount: $</label>
                                     </strong>
-                                    <MaskedInput
-                                        mask={createNumberMask(maskOptions)}
-                                        placeholder="$0.00"
-                                        id="amount_input"
+                                    <input
+                                        type="text"
                                         name="amount"
-                                        className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-2 mr-10 w-22"
+                                        id="amount_input"
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                                         value={formData.amount}
+                                    />
+                                </td>
+                            </tr>
+
+                            {/* Denominations */}
+                            <tr>
+                                <td>
+                                    <label htmlFor="penny_input">Pennies</label>
+                                    <input 
+                                        type="number"
+                                        name="penny"
+                                        id="penny_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.penny}
                                         onChange={HandleChange}
                                     />
                                 </td>
+                                <td>
+                                    <label htmlFor="one_input">$1's</label>
+                                    <input 
+                                        type="number"
+                                        name="one"
+                                        id="one_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.one}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="nickel_input">Nickels</label>
+                                    <input 
+                                        type="number"
+                                        name="nickel"
+                                        id="nickel_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.nickel}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <label htmlFor="five_input">$5's</label>
+                                    <input 
+                                        type="number"
+                                        name="five"
+                                        id="five_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.five}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="dime_input">Dimes</label>
+                                    <input 
+                                        type="number"
+                                        name="dime"
+                                        id="dime_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.dime}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <label htmlFor="ten_input">$10's</label>
+                                    <input 
+                                        type="number"
+                                        name="ten"
+                                        id="ten_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.ten}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="quarter_input">Quarters</label>
+                                    <input 
+                                        type="number"
+                                        name="quarter"
+                                        id="quarter_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.quarter}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <label htmlFor="twenty_input">$20's</label>
+                                    <input 
+                                        type="number"
+                                        name="twenty"
+                                        id="twenty_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.twenty}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="pennyRoll_input">Pennies (rolled)</label>
+                                    <input 
+                                        type="number"
+                                        name="pennyRoll"
+                                        id="pennyRoll_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.pennyRoll}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <label htmlFor="fifty_input">$50's</label>
+                                    <input 
+                                        type="number"
+                                        name="fifty"
+                                        id="fifty_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.fifty}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="nickelRoll_input">Nickels (rolled)</label>
+                                    <input 
+                                        type="number"
+                                        name="nickelRoll"
+                                        id="nickelRoll_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.nickelRoll}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <label htmlFor="hundred_input">$100's</label>
+                                    <input 
+                                        type="number"
+                                        name="hundred"
+                                        id="hundred_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.hundred}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="dimeRoll_input">Dimes (rolled)</label>
+                                    <input
+                                        type="number"   
+                                        name="dimeRoll"
+                                        id="dimeRoll_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                        value={formData.dimeRoll}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <label htmlFor="quarterRoll_input">Quarters (rolled)</label>
+                                    <input
+                                        type="number"
+                                        name="quarterRoll"
+                                        id="quarterRoll_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                        value={formData.quarterRoll}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                            </tr>
+                            {showExtraChange == true &&<tr>
+                                <td>
+                                    <label htmlFor="oneCoin_input">$1 coin</label>
+                                    <input 
+                                        type="number"
+                                        name="dollarCoin"
+                                        id="oneCoin_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.dollarCoin}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <label htmlFor="">$2's</label>
+                                    <input 
+                                        type="number"
+                                        name="two"
+                                        id="two_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.two}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                            </tr>}
+                            {showExtraChange == true &&<tr>
+                                <td>
+                                    <label htmlFor="halfDollar_input">$1/2 coin</label>
+                                    <input 
+                                        type="number"
+                                        name="halfDollar"
+                                        id="halfDollar_input"
+                                        step={1}
+                                        min={0}
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        value={formData.halfDollar}
+                                        onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                </td>
+                            </tr>}
+                            <tr>
+                                <td colSpan="2"><p className="cursor-pointer w-full mb-4 text-center hover:bg-nav-bg bg-white text-xl" onClick={ToggleExtraChange}>{showExtraChangeTxt}</p></td>
                             </tr>
                             <tr>
                                 <td>
