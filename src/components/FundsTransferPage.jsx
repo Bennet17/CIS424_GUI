@@ -5,6 +5,8 @@ import { formatValue } from "react-currency-input-field";
 import Navbar from './Navbar';
 import HorizontalNav from "./HorizontalNav";
 
+// TODO - Put labels ontop of select and input fields
+
 const FundsTransferPage = () =>{
     // Arrays to hold the source and destination options
     let arrSources = ["POS1", "POS2", "POS3", "Safe", "Bank"];
@@ -121,6 +123,11 @@ const FundsTransferPage = () =>{
             ...formData,
             [name]: value
         });
+
+        // If the amount field is changed from the denominations, remove the error class from the amount field
+        if (name !== "source" || name !== "destination") {
+            document.getElementById("amount_input").classList.remove("error");
+        }
     };
 
     // Function to filter out non-zero currency fields from the form data and return them
@@ -150,8 +157,10 @@ const FundsTransferPage = () =>{
             document.getElementById("destination_select").classList.add("error");
         }
 
+        console.log(formData.amount)
+
         // Check if any field is empty
-        if (formData.source === "" || formData.destination === "" || formData.amount === "") {
+        if (formData.source === "" || formData.destination === "" || formData.amount === "0.00") {
             // Set the status message
             blnError = true;
             setStatus("Please fill in all fields correctly.");
@@ -163,7 +172,7 @@ const FundsTransferPage = () =>{
             if (formData.destination === "") {
                 document.getElementById("destination_select").classList.add("error");
             }
-            if (formData.amount === "") {
+            if (formData.amount === "0.00") {
                 document.getElementById("amount_input").classList.add("error");
             }
         }
@@ -219,6 +228,44 @@ const FundsTransferPage = () =>{
         setReport(reportText);
     };
 
+    const HandleReset = (event) => {
+        // Reset the form fields
+        setFormData({
+            user: 0,
+            source: '',
+            destination: '',
+            amount: '',
+            hundred: 0,
+            fifty: 0,
+            twenty: 0,
+            ten: 0,
+            five: 0,
+            two: 0,
+            one: 0,
+            dollarCoin: 0,
+            halfDollar: 0,
+            quarter: 0,
+            dime: 0,
+            nickel: 0,
+            penny: 0,
+            quarterRoll: 0,
+            dimeRoll: 0,
+            nickelRoll: 0,
+            pennyRoll: 0
+        });
+
+        // Reset the status message
+        setStatus("");
+
+        // Reset the report message
+        setReport("");
+
+        // Remove error class from all fields
+        document.getElementById("source_select").classList.remove("error");
+        document.getElementById("destination_select").classList.remove("error");
+        document.getElementById("amount_input").classList.remove("error");
+    };
+
     // Axios post request to submit the transfer
     function SubmitTransfer(event, user, strSource, strDestination, fltAmount, newCurrencyFields) {
         event.preventDefault();
@@ -232,8 +279,9 @@ const FundsTransferPage = () =>{
             ...newCurrencyFields
         }
     
+        // FundTransferURL
         // Submit the form data
-        axios.post(FundTransferURL, request).then(response => {
+        axios.post('', request).then(response => {
             console.log(response);
 
             // Check if the transfer was successful
@@ -333,69 +381,75 @@ const FundsTransferPage = () =>{
         <div>
             <Navbar />
             <HorizontalNav />
-            <div className="text-main-color float-left ml-8 mt-32">
-                <form onSubmit={HandleSubmit}>
+            <div className="text-main-color float-left ml-8 mt-12">
+                <form onSubmit={HandleSubmit} onReset={HandleReset}>
                     <table>
                         <tbody>
                             <tr>
                                 {/* Source selection */}
                                 <td>
-                                    <strong>
-                                        <label htmlFor="source_select">Source: </label>
-                                    </strong>
-                                    <select
-                                        name="source"
-                                        id="source_select"
-                                        className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-2 mr-10 w-50"
-                                        value={formData.source}
-                                        onChange={HandleChange}
-                                    >
-                                        <option value="">&lt;Please select a source&gt;</option>
-                                        {arrSources.map((item, index) => (
-                                            <option
-                                                key={item}
-                                                value={item}
-                                            >{item}</option>
-                                        ))}
-                                    </select>
+                                    <div className="label-above-select">
+                                        <strong>
+                                            <label htmlFor="source_select">Source: </label>
+                                        </strong>
+                                        <select
+                                            name="source"
+                                            id="source_select"
+                                            className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-0 mr-10 w-50"
+                                            value={formData.source}
+                                            onChange={HandleChange}
+                                        >
+                                            <option value="">&lt;Please select a source&gt;</option>
+                                            {arrSources.map((item, index) => (
+                                                <option
+                                                    key={item}
+                                                    value={item}
+                                                >{item}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </td>
 
                                 {/* Destination selection */}
                                 <td>
-                                    <strong>
-                                        <label htmlFor="destination_select" className="">Destination: </label>
-                                    </strong>
-                                    <select
-                                        name="destination"
-                                        id="destination_select"
-                                        className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-2 mr-10 w-50"
-                                        value={formData.destination}
-                                        onChange={HandleChange}
-                                    >
-                                        <option value="">&lt;Please select a destination&gt;</option>
-                                        {arrDestinations.map((item, index) => (
-                                            <option
-                                                key={item}
-                                                value={item}
-                                            >{item}</option>
-                                        ))}
-                                    </select>
+                                    <div className="label-above-select">
+                                        <strong>
+                                            <label htmlFor="destination_select" className="">Destination: </label>
+                                        </strong>
+                                        <select
+                                            name="destination"
+                                            id="destination_select"
+                                            className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-0 mr-10 w-50"
+                                            value={formData.destination}
+                                            onChange={HandleChange}
+                                        >
+                                            <option value="">&lt;Please select a destination&gt;</option>
+                                            {arrDestinations.map((item, index) => (
+                                                <option
+                                                    key={item}
+                                                    value={item}
+                                                >{item}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </td>
 
                                 {/* Amount input */}
                                 <td>
-                                    <strong>
-                                        <label htmlFor="amount_input">Amount: $</label>
-                                    </strong>
-                                    <input
-                                        type="text"
-                                        name="amount"
-                                        id="amount_input"
-                                        placeholder="0.00"
-                                        readOnly={true}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                                        value={formData.amount}
-                                    />
+                                    <div className="label-above-select">
+                                        <strong>
+                                            <label htmlFor="amount_input">Amount:</label>
+                                        </strong>
+                                        <input
+                                            type="text"
+                                            name="amount"
+                                            id="amount_input"
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-0 mr-10 w-20"
+                                            value={formData.amount}
+                                        />
+                                    </div>
                                 </td>
                             </tr>
 
@@ -409,7 +463,7 @@ const FundsTransferPage = () =>{
                                         id="penny_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.penny}
                                         onChange={HandleChange}
                                     />
@@ -422,7 +476,7 @@ const FundsTransferPage = () =>{
                                         id="one_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.one}
                                         onChange={HandleChange}
                                     />
@@ -437,7 +491,7 @@ const FundsTransferPage = () =>{
                                         id="nickel_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.nickel}
                                         onChange={HandleChange}
                                     />
@@ -450,7 +504,7 @@ const FundsTransferPage = () =>{
                                         id="five_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.five}
                                         onChange={HandleChange}
                                     />
@@ -465,7 +519,7 @@ const FundsTransferPage = () =>{
                                         id="dime_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.dime}
                                         onChange={HandleChange}
                                     />
@@ -478,7 +532,7 @@ const FundsTransferPage = () =>{
                                         id="ten_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.ten}
                                         onChange={HandleChange}
                                     />
@@ -493,7 +547,7 @@ const FundsTransferPage = () =>{
                                         id="quarter_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.quarter}
                                         onChange={HandleChange}
                                     />
@@ -506,7 +560,7 @@ const FundsTransferPage = () =>{
                                         id="twenty_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.twenty}
                                         onChange={HandleChange}
                                     />
@@ -521,7 +575,7 @@ const FundsTransferPage = () =>{
                                         id="pennyRoll_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.pennyRoll}
                                         onChange={HandleChange}
                                     />
@@ -534,7 +588,7 @@ const FundsTransferPage = () =>{
                                         id="fifty_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.fifty}
                                         onChange={HandleChange}
                                     />
@@ -549,7 +603,7 @@ const FundsTransferPage = () =>{
                                         id="nickelRoll_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.nickelRoll}
                                         onChange={HandleChange}
                                     />
@@ -562,7 +616,7 @@ const FundsTransferPage = () =>{
                                         id="hundred_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.hundred}
                                         onChange={HandleChange}
                                     />
@@ -577,7 +631,7 @@ const FundsTransferPage = () =>{
                                         id="dimeRoll_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                                         value={formData.dimeRoll}
                                         onChange={HandleChange}
                                     />
@@ -590,7 +644,7 @@ const FundsTransferPage = () =>{
                                         id="quarterRoll_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                                         value={formData.quarterRoll}
                                         onChange={HandleChange}
                                     />
@@ -605,7 +659,7 @@ const FundsTransferPage = () =>{
                                         id="oneCoin_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.dollarCoin}
                                         onChange={HandleChange}
                                     />
@@ -618,7 +672,7 @@ const FundsTransferPage = () =>{
                                         id="two_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.two}
                                         onChange={HandleChange}
                                     />
@@ -633,7 +687,7 @@ const FundsTransferPage = () =>{
                                         id="halfDollar_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.halfDollar}
                                         onChange={HandleChange}
                                     />
@@ -646,8 +700,10 @@ const FundsTransferPage = () =>{
                             </tr>
                             <tr>
                                 <td>
-                                    <button type="reset" className="bg-main-color hover:bg-hover-color text-white font-bold py-2 px-10 rounded mt-4 ml-6 ">Cancel</button>
-                                    <button type="submit" className="bg-main-color hover:bg-hover-color text-white font-bold py-2 px-10 rounded mt-4 ml-6 ">Submit</button>
+                                    <button type="reset" className="flex w-5/6  justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Cancel</button>
+                                </td>
+                                <td>
+                                    <button type="submit" className="flex w-5/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
                                 </td>
                             </tr>
                         </tbody>

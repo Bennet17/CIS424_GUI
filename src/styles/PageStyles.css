@@ -52,6 +52,11 @@
     background-color: rgb(228, 231, 233);
 }
 
+.label-above-select {
+    display: flex;
+    flex-direction: column;
+}
+
 pre {
     font-family: 'Roboto Mono', monospace;
 }
