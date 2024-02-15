@@ -7,6 +7,7 @@ import HorizontalNav from "./HorizontalNav";
 const OpenDayPage = () =>{
     //sample data to demonstrate how this all works. In reality, we would get all the POS data with a post get request to the db and store it in an array
     const poss = [
+        {id: 0, open: "Closed"},
         {id: 1, open: "Closed"},
         {id: 2, open: "Closed"},
         {id: 3, open: "Closed"},
@@ -19,8 +20,8 @@ const OpenDayPage = () =>{
 
     //changes the currently-selected pos to either open or close
     function changeCurrentPos(id){
-        console.log(id - 1);
-        setCurrentPos(poss[id - 1]);
+        console.log(id);
+        setCurrentPos(poss[id]);
     }
 
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
@@ -61,18 +62,28 @@ const OpenDayPage = () =>{
                 <p className="text-2xl mb-2">Select a POS to open</p>
                 {poss.map(item => (
                     <>
-                    {item.id == 1 ?
-                        <input key={"pos" + item.id} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"POS "+ item.id} />
+                    {item.id == 0 ?
+                        <>
+                            <input key={"safe"} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"safe"} />
+                            <label key={"lbl" + item.id} className="ml-1">Safe - {item.open}</label>
+                        </>
+                        
                     :
-                        <input key={"pos" + item.id} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"POS "+ item.id} />
+                        <>
+                            <input key={"pos" + item.id} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"POS "+ item.id} />
+                            <label key={"lbl" + item.id} className="ml-1" >POS {item.id} - {item.open}</label>
+                        </>
                     }
-                        <label key={"lbl" + item.id} >POS {item.id} - {item.open}</label>
                         <br/>
                     </>
                 ))}
             </div>
             <div className="text-main-color float-left ml-16 mt-12">
-                <p className="text-3xl" >Enter denominations for POS # {currentPos.id}</p>
+                {currentPos.id == 0 ?
+                    <p className="text-3xl" >Enter denominations for Safe</p>
+                :
+                    <p className="text-3xl" >Enter denominations for POS # {currentPos.id}</p>
+                }
                 <br/><hr/><br/>
                 <form onSubmit={Submit}>
                     <table>
