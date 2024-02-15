@@ -2,8 +2,10 @@ import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useState} from 'react';
 import { formatValue } from "react-currency-input-field";
+import CurrencyInput from "react-currency-input-field";
 import Navbar from './Navbar';
 import HorizontalNav from "./HorizontalNav";
+import { parse } from "postcss";
 
 // TODO - Put labels ontop of select and input fields
 
@@ -125,9 +127,9 @@ const FundsTransferPage = () =>{
         });
 
         // If the amount field is changed from the denominations, remove the error class from the amount field
-        if (name !== "source" || name !== "destination") {
+        if (name !== "source" || name !== "destination") 
             document.getElementById("amount_input").classList.remove("error");
-        }
+        
     };
 
     // Function to filter out non-zero currency fields from the form data and return them
@@ -156,8 +158,6 @@ const FundsTransferPage = () =>{
             document.getElementById("source_select").classList.add("error");
             document.getElementById("destination_select").classList.add("error");
         }
-
-        console.log(formData.amount)
 
         // Check if any field is empty
         if (formData.source === "" || formData.destination === "" || formData.amount === "0.00") {
@@ -279,16 +279,15 @@ const FundsTransferPage = () =>{
             ...newCurrencyFields
         }
     
-        // FundTransferURL
         // Submit the form data
-        axios.post('', request).then(response => {
+        axios.post(FundTransferURL, request).then(response => {
             console.log(response);
 
             // Check if the transfer was successful
             if (response.data.IsValid == true) 
-                console.log("Success");
+                console.log("Successfully submitted transfer");
             else 
-                console.log("Error");
+                console.log("Failed to submit transfer");
         })
         .catch(error => {
             console.error(error);
@@ -338,7 +337,7 @@ const FundsTransferPage = () =>{
         // Loop through the currency fields and add the non-zero denominations to the report
         for (const [key, value] of Object.entries(newCurrencyFields)) {
             if (denominations[key]) {
-                denominationsDetails += `${value} x $${denominations[key]}, `;
+                denominationsDetails += `${value} x $${denominations[key]}\n`;
             }
         }
 
@@ -440,20 +439,34 @@ const FundsTransferPage = () =>{
                                         <strong>
                                             <label htmlFor="amount_input">Amount:</label>
                                         </strong>
-                                        <input
-                                            type="text"
+                                        <CurrencyInput
                                             name="amount"
                                             id="amount_input"
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-0 mr-10 w-20"
+                                            className="box-border border-border-color border-2 bg-nav-bg mb-4 ml-0 mr-10 w-24"
                                             value={formData.amount}
-                                        />
+                                            onValueChange={(value, name) => {
+                                                setFormData((prevFormData) => ({
+                                                    ...prevFormData,
+                                                    amount: value
+                                                }));
+                                            }}
+                                        />  
                                     </div>
                                 </td>
                             </tr>
-
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
                             {/* Denominations */}
+                            <strong>
+                                <label>Denominations:</label>
+                            </strong>
                             <tr>
                                 <td>
                                     <label htmlFor="penny_input">Pennies</label>
@@ -469,6 +482,17 @@ const FundsTransferPage = () =>{
                                     />
                                 </td>
                                 <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.penny * 0.01).toFixed(2)}
+                                    />
+                                </td>
+                                <td>
                                     <label htmlFor="one_input">$1's</label>
                                     <input 
                                         type="number"
@@ -479,6 +503,17 @@ const FundsTransferPage = () =>{
                                         className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.one}
                                         onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.one * 1).toFixed(2)}
                                     />
                                 </td>
                             </tr>
@@ -497,6 +532,17 @@ const FundsTransferPage = () =>{
                                     />
                                 </td>
                                 <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.nickel * 0.05).toFixed(2)}
+                                    />
+                                </td>
+                                <td>
                                     <label htmlFor="five_input">$5's</label>
                                     <input 
                                         type="number"
@@ -507,6 +553,17 @@ const FundsTransferPage = () =>{
                                         className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.five}
                                         onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.five * 5).toFixed(2)}
                                     />
                                 </td>
                             </tr>
@@ -525,6 +582,17 @@ const FundsTransferPage = () =>{
                                     />
                                 </td>
                                 <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.dime * 0.1).toFixed(2)}
+                                    />
+                                </td>
+                                <td>
                                     <label htmlFor="ten_input">$10's</label>
                                     <input 
                                         type="number"
@@ -535,6 +603,17 @@ const FundsTransferPage = () =>{
                                         className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.ten}
                                         onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.ten * 10).toFixed(2)}
                                     />
                                 </td>
                             </tr>
@@ -553,6 +632,17 @@ const FundsTransferPage = () =>{
                                     />
                                 </td>
                                 <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.quarter * 0.25).toFixed(2)}
+                                    />
+                                </td>
+                                <td>
                                     <label htmlFor="twenty_input">$20's</label>
                                     <input 
                                         type="number"
@@ -563,6 +653,17 @@ const FundsTransferPage = () =>{
                                         className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.twenty}
                                         onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.twenty * 20).toFixed(2)}
                                     />
                                 </td>
                             </tr>
@@ -581,6 +682,17 @@ const FundsTransferPage = () =>{
                                     />
                                 </td>
                                 <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.pennyRoll * 0.5).toFixed(2)}
+                                    />
+                                </td>
+                                <td>
                                     <label htmlFor="fifty_input">$50's</label>
                                     <input 
                                         type="number"
@@ -591,6 +703,17 @@ const FundsTransferPage = () =>{
                                         className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.fifty}
                                         onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.fifty * 50).toFixed(2)}
                                     />
                                 </td>
                             </tr>
@@ -609,6 +732,17 @@ const FundsTransferPage = () =>{
                                     />
                                 </td>
                                 <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.nickelRoll * 2).toFixed(2)}
+                                    />
+                                </td>
+                                <td>
                                     <label htmlFor="hundred_input">$100's</label>
                                     <input 
                                         type="number"
@@ -619,6 +753,17 @@ const FundsTransferPage = () =>{
                                         className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.hundred}
                                         onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.hundred * 100).toFixed(2)}
                                     />
                                 </td>
                             </tr>
@@ -637,6 +782,17 @@ const FundsTransferPage = () =>{
                                     />
                                 </td>
                                 <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.dimeRoll * 5).toFixed(2)}
+                                    />
+                                </td>
+                                <td>
                                     <label htmlFor="quarterRoll_input">Quarters (rolled)</label>
                                     <input
                                         type="number"
@@ -647,6 +803,17 @@ const FundsTransferPage = () =>{
                                         className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                                         value={formData.quarterRoll}
                                         onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.quarterRoll * 10).toFixed(2)}
                                     />
                                 </td>
                             </tr>
@@ -665,6 +832,17 @@ const FundsTransferPage = () =>{
                                     />
                                 </td>
                                 <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.dollarCoin * 1).toFixed(2)}
+                                    />
+                                </td>
+                                <td>
                                     <label htmlFor="">$2's</label>
                                     <input 
                                         type="number"
@@ -675,6 +853,17 @@ const FundsTransferPage = () =>{
                                         className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                         value={formData.two}
                                         onChange={HandleChange}
+                                    />
+                                </td>
+                                <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.two * 2).toFixed(2)}
                                     />
                                 </td>
                             </tr>}
@@ -693,18 +882,29 @@ const FundsTransferPage = () =>{
                                     />
                                 </td>
                                 <td>
+                                    <CurrencyInput
+                                        prefix="$"
+                                        decimalSeparator="."
+                                        groupSeparator=","
+                                        placeholder="0.00"
+                                        readOnly={true}
+                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        value={(formData.halfDollar * 0.5).toFixed(2)}
+                                    />
                                 </td>
                             </tr>}
                             <tr>
-                                <td colSpan="2"><p className="cursor-pointer w-full mb-4 text-center hover:bg-nav-bg bg-white text-xl" onClick={ToggleExtraChange}>{showExtraChangeTxt}</p></td>
+                                <td colSpan="3"><p className="cursor-pointer w-full mb-4 text-center hover:bg-nav-bg bg-white text-xl" onClick={ToggleExtraChange}>{showExtraChangeTxt}</p></td>
                             </tr>
                             <tr>
                                 <td>
                                     <button type="reset" className="flex w-5/6  justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Cancel</button>
                                 </td>
+                                <td></td>
                                 <td>
                                     <button type="submit" className="flex w-5/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
                                 </td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
