@@ -1,7 +1,7 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useState} from 'react';
-import NavBar from './Navbar';
+import NavBar from './Navbar.jsx';
 import HorizotalNav from "./HorizontalNav";
 import OpenDayPage from "./OpenDay";
 import { Fragment } from 'react'
