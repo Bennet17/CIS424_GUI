@@ -7,6 +7,7 @@ const routes = {
     closeday: "/CloseDay",
     security: "/Security",
     usermanagement:"/Security/UserManagement",
+    posmanagement:"/Security/POSManagement",
     fundstransfer: "/TransferFunds",
     safeaudit: "/SafeAudit",
     signout: "/"
