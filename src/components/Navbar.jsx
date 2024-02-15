@@ -7,7 +7,7 @@ import logo from '../Logo.png';
 let testPermissions = 1;
 
 const Navbar = () =>{
-    //used to navigate to a new route page when calling a function
+    //used to navigate to a new route page when calling a functionjvgj
     const navigate = useNavigate();
 
     //functions to navigate user through pages. See html code below for calling these
