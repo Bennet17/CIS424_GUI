@@ -6,6 +6,7 @@ import CurrencyInput from "react-currency-input-field";
 import Navbar from './Navbar';
 import HorizontalNav from "./HorizontalNav";
 import { parse } from "postcss";
+import { format } from "highcharts";
 
 // TODO - Put labels ontop of select and input fields
 
@@ -18,7 +19,7 @@ const FundsTransferPage = () =>{
     
     // Const to hold the form data
     const [formData, setFormData] = useState({
-        user: 0,
+        user: 37,
         source: '',
         destination: '',
         amount: '',
@@ -224,8 +225,11 @@ const FundsTransferPage = () =>{
         setStatus("Successfully submitted transfer!");
 
         // Generate the report
-        const reportText = GenerateReport(user, source, destination, fltAmount, newCurrencyFields);
-        setReport(reportText);
+        const report = GenerateReport(user, source, destination, fltAmount, newCurrencyFields);
+        setReport(report);
+        // report.forEach((item, index) => {
+        //     setReport((prevReport) => prevReport + `${Object.values(item)}\n`);
+        // });
     };
 
     const HandleReset = (event) => {
@@ -331,46 +335,98 @@ const FundsTransferPage = () =>{
             "pennyRoll": 0.5
         };
 
-        // Generate the denominations details
-        let denominationsDetails = "";
+        // Array to hold the denominations details
+        const denominationsDetails = [];
 
         // Loop through the currency fields and add the non-zero denominations to the report
         for (const [key, value] of Object.entries(newCurrencyFields)) {
             if (denominations[key]) {
-                denominationsDetails += `${value} x $${denominations[key]}\n`;
+                denominationsDetails.push(
+                    <tr key={key}>
+                        <td class="tg-i817">{value} x ${denominations[key]}</td>
+                    </tr>
+                );
             }
         }
 
-        // TODO - Format into a table
         // Report details
-        const transferDetails = `
-            Transfer of Funds Report
-            Store: <Store Name>
-
-            User Details:
-            User: ${user}
-            Date: ${currentDate}
-
-            Transfer Details:
-            Source: ${strSource}
-            Destination: ${strDestination}
-            Amount: $${formatValue({ 
-                value: fltAmount, 
-                groupSeparator: ",", 
-                decimalSeparator: "."})}
-            Denominations: ${denominationsDetails}
-
-            Source Details:
-            Expected Amount in ${strSource} before transfer: <Amount here>
-            Expected Amount in ${strSource} after transfer: <Amount here>
-            Actual Amount in ${strSource} after transfer: <Amount here>
-
-            Destination Details:
-            Expected Amount in ${strDestination} before transfer: <Amount here>
-            Expected Amount in ${strDestination} after transfer: <Amount here>
-            Actual Amount in ${strDestination} after transfer: <Amount here>
-        `;
-        return transferDetails;
+        return (
+            <div>
+                <table class="tg">
+                    <thead>
+                        <tr>
+                            <th class="tg-mqa1" colspan="2">Transfer of Funds Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="tg-mcqj" colspan="2">User Details:</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Store:</td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">User:</td>
+                            <td class="tg-i817">{user}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">Date:</td>
+                            <td class="tg-73oq">{currentDate}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-c10m" colspan="2">Transfer Details:</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">Source:</td>
+                            <td class="tg-73oq">{strSource}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Destination:</td>
+                            <td class="tg-i817">{strDestination}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">Amount:</td>
+                            <td class="tg-73oq">${fltAmount}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Denominations:</td>
+                            <td class="tg-i817">{denominationsDetails}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-mcqj" colspan="2">Source Details:</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Expected amount in {strSource} before transfer:</td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">Expected amount in {strSource} after transfer:</td>
+                            <td class="tg-73oq">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Actual amount in {strSource} after transfer:</td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-mcqj" colspan="2">Destination Details:</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Expected amount in {strDestination} before transfer:</td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">Expected amount in {strDestination} after transfer:</td>
+                            <td class="tg-73oq">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Actual amount in {strDestination} after transfer:</td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        );
     };
 
     // Determine the class based on the status
@@ -445,7 +501,7 @@ const FundsTransferPage = () =>{
                                             prefix="$"
                                             decimalSeparator="."
                                             groupSeparator=","
-                                            placeholder="0.00"
+                                            placeholder="$0.00"
                                             readOnly={true}
                                             className="box-border border-border-color border-2 bg-nav-bg mb-4 ml-0 mr-10 w-24"
                                             value={formData.amount}
@@ -461,12 +517,13 @@ const FundsTransferPage = () =>{
                             </tr>
                         </tbody>
                     </table>
+
+                    {/* Denominations */}
+                    <strong>
+                        <label>Denominations:</label>
+                    </strong>
                     <table>
                         <tbody>
-                            {/* Denominations */}
-                            <strong>
-                                <label>Denominations:</label>
-                            </strong>
                             <tr>
                                 <td>
                                     <label htmlFor="penny_input">Pennies</label>
@@ -917,8 +974,8 @@ const FundsTransferPage = () =>{
 
                 {/* Shows report with successful submissions */}
                 {report && (
-                    <div className="report">
-                        <pre>{report}</pre>
+                    <div>
+                        {report}
                     </div>
                 )}
             </div>
