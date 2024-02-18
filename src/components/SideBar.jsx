@@ -21,9 +21,17 @@ import {
 //test variables
 let testPermissions = 1;
 
-const Navbar = (props) => {
+const SideBar = (props) => {
   //used to navigate to a new route page when calling a function
   const navigate = useNavigate();
+
+  //Constants
+  const HOME_PAGE_NAME = 0;
+  const OPEN_DAY_PAGE_NAME = 1;
+  const CLOSE_DAY_PAGE_NAME = 2;
+  const TRANSFER_FUNDS_PAGE_NAME = 3;
+  const SAFE_AUDIT_PAGE_NAME = 4;
+  const USER_MANAGEMENT_PAGE_NAME = 5;
 
   //functions to navigate user through pages. See html code below for calling these
   function toHome() {
@@ -48,14 +56,6 @@ const Navbar = (props) => {
     navigate(routes.signout);
   }
 
-  //Constants
-  const homePageName = "HomePage";
-  const openDayPageName = "OpenDayPage";
-  const closeDayPageName = "CloseDayPage";
-  const transferFundsPageName = "TransferFundsPage";
-  const safeAuditPageName = "SafeAuditPage";
-  const userManagementPageName = "UserManagementPage";
-
   const [cashManagerOn, setCashManager] = useState(false);
   const [securityOn, setSecurity] = useState(false);
 
@@ -72,7 +72,7 @@ const Navbar = (props) => {
             onClick={toHome}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
                  transition-colors ${
-                   props.currentPage == homePageName
+                   props.currentPage == HOME_PAGE_NAME
                      ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                      : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
                  }`}
@@ -84,7 +84,7 @@ const Navbar = (props) => {
             onClick={toOpenDay}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
                  transition-colors ${
-                   props.currentPage == openDayPageName
+                   props.currentPage == OPEN_DAY_PAGE_NAME
                      ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                      : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
                  }`}
@@ -96,7 +96,7 @@ const Navbar = (props) => {
             onClick={toCloseDay}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
                  transition-colors ${
-                   props.currentPage == closeDayPageName
+                   props.currentPage == CLOSE_DAY_PAGE_NAME
                      ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                      : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
                  }`}
@@ -108,7 +108,7 @@ const Navbar = (props) => {
             onClick={toTransferFunds}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
                  transition-colors ${
-                   props.currentPage == transferFundsPageName
+                   props.currentPage == TRANSFER_FUNDS_PAGE_NAME
                      ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                      : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
                  }`}
@@ -136,7 +136,7 @@ const Navbar = (props) => {
             <li
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
-              props.currentPage == safeAuditPageName
+              props.currentPage == SAFE_AUDIT_PAGE_NAME
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
@@ -165,12 +165,12 @@ const Navbar = (props) => {
             <li
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
-              props.currentPage == userManagementPageName
+              props.currentPage == USER_MANAGEMENT_PAGE_NAME
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
             >
-              <CreditCard />
+              <UserRound />
               <span className="ml-3">User Management</span>
             </li>
           )}
@@ -180,7 +180,7 @@ const Navbar = (props) => {
             transition-colors hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 
             text-gray-600`}
             >
-              <UserRound />
+              <CreditCard />
               <span className="ml-3">POS Management</span>
             </li>
           )}
@@ -200,4 +200,4 @@ const Navbar = (props) => {
   );
 };
 
-export default Navbar;
+export default SideBar;

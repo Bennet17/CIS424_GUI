@@ -1,7 +1,7 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, { useState } from "react";
-import Navbar from "./Navbar";
+import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 
 const OpenDayPage = () => {
@@ -17,8 +17,6 @@ const OpenDayPage = () => {
   const [showExtraChange, setShowExtraChange] = useState(false);
   const [showExtraChangeTxt, setShowExtraChangeTxt] =
     useState("show extras \\/");
-
-  const pageName = "OpenDayPage";
 
   //changes the currently-selected pos to either open or close
   function changeCurrentPos(id) {
@@ -58,7 +56,7 @@ const OpenDayPage = () => {
 
   return (
     <div className="flex h-screen bg-custom-accent">
-      <Navbar currentPage={pageName} />
+      <SideBar currentPage={1} />
 
       <div className="flex flex-col w-full">
         <HorizontalNav />
