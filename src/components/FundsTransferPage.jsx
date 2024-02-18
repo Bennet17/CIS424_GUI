@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { formatValue } from "react-currency-input-field";
 import CurrencyInput from "react-currency-input-field";
-import Navbar from "./Navbar";
+import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { parse } from "postcss";
 import { format } from "highcharts";
@@ -502,7 +502,7 @@ const FundsTransferPage = () => {
 
   return (
     <div>
-      <Navbar />
+      <SideBar />
       <HorizontalNav />
       <div className="text-main-color float-left ml-8 mt-12">
         <form onSubmit={HandleSubmit} onReset={HandleReset}>

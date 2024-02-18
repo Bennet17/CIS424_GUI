@@ -32,6 +32,7 @@ const SideBar = (props) => {
   const TRANSFER_FUNDS_PAGE_NAME = 3;
   const SAFE_AUDIT_PAGE_NAME = 4;
   const USER_MANAGEMENT_PAGE_NAME = 5;
+  const POS_MANAGEMENT_PAGE_NAME = 6;
 
   //functions to navigate user through pages. See html code below for calling these
   function toHome() {
@@ -51,6 +52,9 @@ const SideBar = (props) => {
   }
   function toUserManagement() {
     navigate(routes.usermanagement);
+  }
+  function toPosManagement() {
+    navigate(routes.posmanagement);
   }
   function signOut() {
     navigate(routes.signout);
@@ -134,6 +138,7 @@ const SideBar = (props) => {
           {cashManagerOn && <hr className="border-gray-300" />}
           {cashManagerOn && (
             <li
+              onClick={toSafeAudit}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
               props.currentPage == SAFE_AUDIT_PAGE_NAME
@@ -163,6 +168,7 @@ const SideBar = (props) => {
           {securityOn && <hr className="border-gray-300" />}
           {securityOn && (
             <li
+              onClick={toUserManagement}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
               props.currentPage == USER_MANAGEMENT_PAGE_NAME
@@ -176,9 +182,13 @@ const SideBar = (props) => {
           )}
           {securityOn && (
             <li
+              onClick={toPosManagement}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
-            transition-colors hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 
-            text-gray-600`}
+            transition-colors ${
+              props.currentPage == POS_MANAGEMENT_PAGE_NAME
+                ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
+                : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
+            }`}
             >
               <CreditCard />
               <span className="ml-3">POS Management</span>
