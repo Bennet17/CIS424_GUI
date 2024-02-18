@@ -3,17 +3,17 @@ import Navbar from "./Navbar.jsx";
 import OSBarChart from "./OSBarChart.jsx";
 import HorizontalNav from "./HorizontalNav.js";
 
-const HomePage = () => {
+const pageName = "HomePage";
 
+const HomePage = () => {
   return (
     <div className="flex h-screen bg-custom-accent">
-      <Navbar/>
+      <Navbar currentPage={pageName} />
 
       <div className="flex flex-col w-full">
         <div>
           <HorizontalNav></HorizontalNav>
         </div>
-
 
         {/* Content area */}
         <div className="flex flex-grow justify-center items-center">
