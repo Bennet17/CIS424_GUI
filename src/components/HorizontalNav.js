@@ -25,7 +25,7 @@ export default function HorizotalNav() {
       
       function signOut() {
           
-          navigate(routes.signOut);
+          navigate(routes.signout);
       }
   return (
     
