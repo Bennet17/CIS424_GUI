@@ -8,8 +8,6 @@ import HorizontalNav from "./HorizontalNav";
 import { parse } from "postcss";
 import { format } from "highcharts";
 
-// TODO - Put labels ontop of select and input fields
-
 const FundsTransferPage = () =>{
     // Arrays to hold the source and destination options
     let arrSources = ["POS1", "POS2", "POS3", "Safe", "Bank"];
