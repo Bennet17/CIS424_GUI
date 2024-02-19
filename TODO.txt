@@ -35,10 +35,14 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
     ### Look into Apexcharts License - MISSION
         May be licensing requirements for the software (MIT License)
 
-### `Navbar.jsx` Component ### - 
+### `SideBar.jsx` Component ### - 
 
     #### Add Lucide License Requirements - MISSION
         Lucide requires certain acknowledgements (ISC License)
+
+    #### Connect 'Close Day' Items - MISSION
+        Close Day item is currently connected to Open Day page. I think
+        it's cuz we don't have a Close Day page lol.
 
 ### Handle invalid user login
 

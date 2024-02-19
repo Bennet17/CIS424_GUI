@@ -71,7 +71,7 @@ const SideBar = (props) => {
 
   return (
     <aside className="h-screen">
-      <nav className="h-full flex flex-col bg-custom-ghost border-r shadow-sm">
+      <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <img src={logo} className="w-64" alt="Plato's Closet Logo" />
         </div>
