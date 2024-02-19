@@ -34,6 +34,15 @@ const SideBar = (props) => {
   const USER_MANAGEMENT_PAGE_NAME = 5;
   const POS_MANAGEMENT_PAGE_NAME = 6;
 
+  const [cashManagerOn, setCashManager] = useState(
+    props.currentPage === SAFE_AUDIT_PAGE_NAME
+  );
+
+  const [securityOn, setSecurity] = useState(
+    props.currentPage === USER_MANAGEMENT_PAGE_NAME ||
+      props.currentPage === POS_MANAGEMENT_PAGE_NAME
+  );
+
   //functions to navigate user through pages. See html code below for calling these
   function toHome() {
     navigate(routes.home);
@@ -59,9 +68,6 @@ const SideBar = (props) => {
   function signOut() {
     navigate(routes.signout);
   }
-
-  const [cashManagerOn, setCashManager] = useState(false);
-  const [securityOn, setSecurity] = useState(false);
 
   return (
     <aside className="h-screen">
@@ -121,10 +127,17 @@ const SideBar = (props) => {
             <span className="ml-3">Transfer Funds</span>
           </li>
           <li
-            onClick={() => setCashManager(!cashManagerOn)}
+            onClick={() => {
+              if (props.currentPage !== SAFE_AUDIT_PAGE_NAME) {
+                setCashManager(!cashManagerOn);
+              }
+            }}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
-            transition-colors hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 
-            text-gray-600`}
+            transition-colors text-gray-600 ${
+              props.currentPage !== SAFE_AUDIT_PAGE_NAME
+                ? "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800"
+                : ""
+            }`}
           >
             <PiggyBank />
             <span className="ml-3">Cash Manager</span>
@@ -151,10 +164,21 @@ const SideBar = (props) => {
             </li>
           )}
           <li
-            onClick={() => setSecurity(!securityOn)}
+            onClick={() => {
+              if (
+                props.currentPage !== USER_MANAGEMENT_PAGE_NAME &&
+                props.currentPage !== POS_MANAGEMENT_PAGE_NAME
+              ) {
+                setSecurity(!securityOn);
+              }
+            }}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
-            transition-colors hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 
-            text-gray-600`}
+            transition-colors text-gray-600 ${
+              props.currentPage !== USER_MANAGEMENT_PAGE_NAME &&
+              props.currentPage !== POS_MANAGEMENT_PAGE_NAME
+                ? "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800"
+                : ""
+            }`}
           >
             <Lock />
             <span className="ml-3">Security</span>
