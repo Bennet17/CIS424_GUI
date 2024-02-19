@@ -44,6 +44,9 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
         Close Day item is currently connected to Open Day page. I think
         it's cuz we don't have a Close Day page lol.
 
+    #### Parent Items Bold Text When Open - QUEST
+        If parent item is open, make text the darker gray to signify it is parent.
+
 ### Handle invalid user login
 
 ### Refactor assets into their own directory
