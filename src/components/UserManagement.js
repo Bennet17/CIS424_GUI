@@ -15,17 +15,19 @@ import EditUser from "./EditUser.js";
 
 const UserManagementPage = () => {
   return (
-    <div>
+    <div className="flex h-screen bg-custom-accent">
       <SideBar currentPage={5} />
-      <HorizotalNav />
-      <div class="flex flex-col mt-32 px-6">
-        <div>
-          {" "}
-          <EmployeeTable></EmployeeTable>
-        </div>
-        <div class="flex flex-row mt-20">
-          <AddUser></AddUser>
-          <EditUser></EditUser>
+      <div className="flex flex-col w-full">
+        <HorizotalNav />
+        <div class="flex flex-col mt-32 px-6">
+          <div>
+            {" "}
+            <EmployeeTable></EmployeeTable>
+          </div>
+          <div class="flex flex-row mt-20">
+            <AddUser></AddUser>
+            <EditUser></EditUser>
+          </div>
         </div>
       </div>
     </div>

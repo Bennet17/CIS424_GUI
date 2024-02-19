@@ -45,79 +45,81 @@ const TransferFunds = () => {
   }
 
   return (
-    <div>
+    <div className={"flex h-screen bg-custom-accent"}>
       <SideBar currentPage={3} />
-      <div className="text-main-color float-left ml-8 mt-32">
-        <p className="text-2xl mb-2">Source:</p>
-        {poss.map((item) => (
-          <>
-            {item.id == 1 ? (
-              <input
-                key={"pos" + item.id}
-                onChange={(e) => changeCurrentPosSource(item.id)}
-                type="radio"
-                name="pos"
-                value={"POS " + item.id}
-              />
-            ) : (
-              <input
-                key={"pos" + item.id}
-                onChange={(e) => changeCurrentPosSource(item.id)}
-                type="radio"
-                name="pos"
-                value={"POS " + item.id}
-              />
-            )}
-            <label key={"lbl" + item.id}>
-              POS {item.id} - {item.open}
-            </label>
-            <br />
-          </>
-        ))}
-      </div>
-      <div className="text-main-color float-left ml-16 mt-32">
-        <p className="text-2xl mb-2">Destination:</p>
-        {poss.map((item) => (
-          <>
-            {item.id == 1 ? (
-              <input
-                key={"pos" + item.id}
-                onChange={(e) => changeCurrentPosDestination(item.id)}
-                type="radio"
-                name="pos"
-                value={"POS " + item.id}
-              />
-            ) : (
-              <input
-                key={"pos" + item.id}
-                onChange={(e) => changeCurrentPosDestination(item.id)}
-                type="radio"
-                name="pos"
-                value={"POS " + item.id}
-              />
-            )}
-            <label key={"lbl" + item.id}>
-              POS {item.id} - {item.open}
-            </label>
-            <br />
-          </>
-        ))}
-      </div>
-      <div className="text-main-color float-left ml-16 mt-32">
-        <label className="text-2xl mb-2">Amount:</label>
-        <input
-          defaultValue="0"
-          className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-          type="number"
-        />
-        <button
-          onClick={Submit}
-          type="submit"
-          value="submit"
-          className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Submit
-        </button>
+      <div className="flex flex-col w-full">
+        <div className="text-main-color float-left ml-8 mt-32">
+          <p className="text-2xl mb-2">Source:</p>
+          {poss.map((item) => (
+            <>
+              {item.id == 1 ? (
+                <input
+                  key={"pos" + item.id}
+                  onChange={(e) => changeCurrentPosSource(item.id)}
+                  type="radio"
+                  name="pos"
+                  value={"POS " + item.id}
+                />
+              ) : (
+                <input
+                  key={"pos" + item.id}
+                  onChange={(e) => changeCurrentPosSource(item.id)}
+                  type="radio"
+                  name="pos"
+                  value={"POS " + item.id}
+                />
+              )}
+              <label key={"lbl" + item.id}>
+                POS {item.id} - {item.open}
+              </label>
+              <br />
+            </>
+          ))}
+        </div>
+        <div className="text-main-color float-left ml-16 mt-32">
+          <p className="text-2xl mb-2">Destination:</p>
+          {poss.map((item) => (
+            <>
+              {item.id == 1 ? (
+                <input
+                  key={"pos" + item.id}
+                  onChange={(e) => changeCurrentPosDestination(item.id)}
+                  type="radio"
+                  name="pos"
+                  value={"POS " + item.id}
+                />
+              ) : (
+                <input
+                  key={"pos" + item.id}
+                  onChange={(e) => changeCurrentPosDestination(item.id)}
+                  type="radio"
+                  name="pos"
+                  value={"POS " + item.id}
+                />
+              )}
+              <label key={"lbl" + item.id}>
+                POS {item.id} - {item.open}
+              </label>
+              <br />
+            </>
+          ))}
+        </div>
+        <div className="text-main-color float-left ml-16 mt-32">
+          <label className="text-2xl mb-2">Amount:</label>
+          <input
+            defaultValue="0"
+            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+            type="number"
+          />
+          <button
+            onClick={Submit}
+            type="submit"
+            value="submit"
+            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );

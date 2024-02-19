@@ -18,17 +18,19 @@ import POSTable from "./POSTable.jsx";
 
 const POSManagementPage = () => {
   return (
-    <div>
+    <div className="flex h-screen bg-custom-accent">
       <SideBar currentPage={6} />
-      <HorizotalNav />
-      <div class="flex flex-col mt-32 px-6">
-        <div>
-          {" "}
-          <POSTable></POSTable>
-        </div>
-        <div class="flex flex-row mt-20">
-          <AddPOS></AddPOS>
-          <EditPOS></EditPOS>
+      <div className="flex flex-col w-full">
+        <HorizotalNav />
+        <div class="flex flex-col mt-32 px-6">
+          <div>
+            {" "}
+            <POSTable></POSTable>
+          </div>
+          <div class="flex flex-row mt-20">
+            <AddPOS></AddPOS>
+            <EditPOS></EditPOS>
+          </div>
         </div>
       </div>
     </div>
