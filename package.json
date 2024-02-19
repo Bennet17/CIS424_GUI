@@ -14,6 +14,7 @@
     "chart.js": "^4.4.1",
     "highcharts": "^11.3.0",
     "highcharts-react-official": "^3.2.1",
+    "lucide-react": "^0.331.0",
     "postcss": "^8.4.33",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",

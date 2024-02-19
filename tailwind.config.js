@@ -18,10 +18,12 @@ module.exports = {
         "main-color": "#607d97",
         "custom-primary": "#DD3846",
         "custom-primary-light": "#E8C7C6",
+        "custom-cant-remember": "#F0F7F9",
+        "custom-ghost": "#EDF2EF",
         "custom-secondary": "#3D3D3D",
         "custom-secondary-light": "#949494",
         "custom-accent": "#ACD4E0",
-        "custom-accent-light": "#DEFFFD",
+        "custom-accent-light": "#CCE4EB",
       },
       backgroundColor: {
         "blue-350": "#79C0F1",
