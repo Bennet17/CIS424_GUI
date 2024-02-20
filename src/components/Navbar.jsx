@@ -2,6 +2,7 @@ import "../styles/PageStyles.css";
 import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import logo from '../Logo.png';
+import { useAuth } from "../AuthProvider.js";
 
 //test variables
 let testPermissions = 1;
@@ -9,6 +10,7 @@ let testPermissions = 1;
 const Navbar = () =>{
     //used to navigate to a new route page when calling a functionjvgj
     const navigate = useNavigate();
+    const auth = useAuth();
 
     //functions to navigate user through pages. See html code below for calling these
     function toHome(){
@@ -39,6 +41,7 @@ const Navbar = () =>{
         navigate (routes.posmanagement);
     }
     function signOut(){
+        auth.logOut();
         navigate(routes.signout);
     }
 
