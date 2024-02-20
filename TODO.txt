@@ -50,6 +50,9 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
     #### Parent Items Bold Text When Open - QUEST
         If parent item is open, make text the darker gray to signify it is parent.
 
+    #### Not Mobile-Responsive - BATTLE
+        Hopefully an easy fix with Tailwind
+
 ### Handle invalid user login
 
 ### Refactor assets into their own directory
