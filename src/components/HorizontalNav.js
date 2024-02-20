@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import {useNavigate} from 'react-router-dom';
+import { useAuth } from "../AuthProvider.js";
 import routes from '../routes.js';
 
 /*
@@ -14,18 +15,19 @@ const navigation = [
 */
 
 export default function HorizotalNav() {
-    function classNames(...classes) {
-        return classes.filter(Boolean).join(' ')
-      }
-      const navigate = useNavigate();
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
+  const navigate = useNavigate();
+  const auth = useAuth();
       
-      function signOut() {
-          
-          navigate(routes.signout);
-      }
+  function signOut() {
+    auth.logOut();
+    navigate(routes.signout);
+  }
 
-    const [username, setUsername] = useState("ZippyDee");
-    const [position, setPosition] = useState("<position>");
+  const [username, setUsername] = useState("ZippyDee");
+  const [position, setPosition] = useState("<position>");
 
   return (
     

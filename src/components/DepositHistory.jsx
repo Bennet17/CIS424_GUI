@@ -14,11 +14,11 @@ const DepositHistory = () => {
         'text-center',
         'w-12',
         'h-8',
-        {
+        /*{
             'bg-border-color': status.OPEN,
             'bg-nav-bg': status.PENDING,
             'bg-main-color': status.CLOSED,
-        }
+        }*/
     );
     
     const status = {

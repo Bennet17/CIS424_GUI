@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import routes from "./routes.js";
-import {CookiesProvider, useCookies} from "react-cookie";
 import AuthProvider from "./AuthProvider.js";
 
 // page components
@@ -19,16 +18,9 @@ import PrivateRoute from "./PrivateRoute.js";
 import DepositHistory from "./components/DepositHistory.jsx";
 
 function App() {
-  
-  /*const [cookies, setCookie] = useCookies(["user"]);
-
-  function handleLogin(user){
-    setCookie("user", user, {path: "/"});
-  }*/
-
   return (
     <BrowserRouter className="App">
-      {/*<AuthProvider>*/}
+      <AuthProvider>
         <Routes>
           {/* this is how we structure our routes. Each new route is a new page that renders a new element.
           Currently, all routes will have the url of "localhost:3000/<path>". Routes can also be nested,
@@ -37,7 +29,7 @@ function App() {
           Lastly, note the index property for the login page instead of a path. This means that the path
           for this page will be on the root "localhost:3000" url */}
           <Route index element={<LoginPage />} />
-          {/*<Route element={<PrivateRoute />}>*/}
+          <Route element={<PrivateRoute />}>
             <Route path={routes.home} element={<HomePage />} />
             <Route path={routes.openday} element={<OpenDayPage />} />
             <Route path={routes.closeday} element={<OpenDayPage />} />
@@ -52,11 +44,11 @@ function App() {
               <Route path={routes.deposithistory} element={<DepositHistory />} />
             </Route>
             <Route path="*" element={<NotFound />}/>
-          {/*</Route>*/}
+          </Route>
           {/* Notice how the path is *. This means it will show this element if any other url is entered
           that is not explicitly defined */}
         </Routes>
-      {/*</AuthProvider>*/}
+      </AuthProvider>
     </BrowserRouter>
   );
 }
