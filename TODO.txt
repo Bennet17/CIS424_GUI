@@ -35,6 +35,9 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
     ### Look into Apexcharts License - MISSION
         May be licensing requirements for the software (MIT License)
 
+    ### Black Titles to Gray-800 - MISSION
+        Make it look consistent with SideBar
+
 ### `SideBar.jsx` Component ### - 
 
     #### Add Lucide License Requirements - MISSION
