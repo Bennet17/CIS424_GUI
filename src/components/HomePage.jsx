@@ -11,7 +11,7 @@ const HomePage = () => {
 
       <div className="flex flex-col w-full">
         <div>
-          <HorizontalNav></HorizontalNav>
+          <HorizontalNav />
         </div>
 
 

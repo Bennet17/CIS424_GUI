@@ -55,29 +55,20 @@ const SafeAuditPage = () =>{
                     <table className="box-border border-border-color border-2">
                         <tbody>
                             <tr>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Name</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Prev. Day Strap Amount</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Prev. Day Loose Amount</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Prev. Day Total Value</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Current Day Strap Amount</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Strap Amount</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Current Day Loose Amount</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Loose Amount</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Current Day Total Value</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Date</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Cash Tendered</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Cash Buys</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Petty Cash</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">MasterCard Sale</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Visa Sale</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">American Express Sale</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Discover Sale</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Debit Sales</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Other Card Sales</td>
                             </tr>
                             <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">1s</td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                            </tr>
-                            <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">5s</td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
@@ -88,18 +79,8 @@ const SafeAuditPage = () =>{
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                             </tr>
                             <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">10s</td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                            </tr>
-                            <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">20s</td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
@@ -110,18 +91,8 @@ const SafeAuditPage = () =>{
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                             </tr>
                             <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">50s</td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                            </tr>
-                            <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">100s</td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
@@ -132,18 +103,8 @@ const SafeAuditPage = () =>{
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                             </tr>
                             <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">Pennies</td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                            </tr>
-                            <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">Nickles</td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
@@ -154,7 +115,8 @@ const SafeAuditPage = () =>{
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                             </tr>
                             <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">Dimes</td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
@@ -165,7 +127,56 @@ const SafeAuditPage = () =>{
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                             </tr>
                             <tr>
-                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8">Quarters</td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                            </tr>
+                            <tr>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                            </tr>
+                            <tr>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                            </tr>
+                            <tr>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Date</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Cash Tendered</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Cash Buys</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Petty Cash</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total MasterCard Sale</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Visa Sale</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total American Express Sale</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Discover Sale</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Debit Sales</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Other Card Sales</td>
+                            </tr>
+                            <tr>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
+                                <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
                                 <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
@@ -183,14 +194,12 @@ const SafeAuditPage = () =>{
                         <tbody>
                             <tr>
                                 <td>
-                                    <label className="text-main-color">Petty cash:
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
+                                    <label className="text-main-color">Cash Tendered:</label>
+                                    <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                 </td>
                                 <td>
-                                    <label className="text-main-color">Over/Short:
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
+                                    <label className="text-main-color">Cash Buys:</label>
+                                    <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                 </td>
                                 <td>
                                     <div className="text-main-color ml-6 mr-12">
@@ -204,14 +213,12 @@ const SafeAuditPage = () =>{
                             </tr>
                             <tr>
                                 <td>
-                                    <label className="text-main-color">Safe Expected:
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
+                                    <label className="text-main-color">Petty Cash:</label>
+                                    <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                 </td>
                                 <td>
-                                    <label className="text-main-color">Safe Total:
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
+                                    <label className="text-main-color">Credit Sales:</label>
+                                    <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                 </td>
                             </tr>
                         </tbody>

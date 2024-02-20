@@ -2,6 +2,7 @@ import axios from "axios";
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import routes from "../routes.js";
+import { useAuth } from "../AuthProvider.js";
 import Logo from '../Logo.png'; // Adjust the path accordingly
 
 //creates a function that returns the login page area
@@ -15,12 +16,24 @@ function LoginPage() {
   const [username, setUsername] = useState([]);
   const [password, setPassword] = useState([]);
 
+  const auth = useAuth();
+
   //performs an axios post request to verify that a user exists in the database, and performs logic
   //based on if the user exists or not, or errors
   function Submit(event){
     event.preventDefault();
 
-    axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser', {
+    /*console.log({
+      "username": username,
+      "password": password,
+    });*/
+
+    auth.loginAction({
+      "username": username,
+      "password": password,
+    });
+
+    /*axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser', {
       "username": username,
       "password": password,
     })
@@ -37,7 +50,7 @@ function LoginPage() {
     })
     .catch(error => {
       console.error(error);
-    });
+    });*/
   }  
 
   return (

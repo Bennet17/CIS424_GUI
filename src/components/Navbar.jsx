@@ -26,8 +26,17 @@ const Navbar = () =>{
     function toSafeAudit() {
         navigate(routes.safeaudit);
     }
+    function toVarianceAudit(){
+        navigate(routes.varianceaudit);
+    }
+    function toDepositHistory(){
+        navigate(routes.deposithistory);
+    }
     function toUserManagement(){
-        navigate (routes.usermanage);
+        navigate (routes.usermanagement);
+    }
+    function toPOSManagement(){
+        navigate (routes.posmanagement);
     }
     function signOut(){
         navigate(routes.signout);
@@ -50,20 +59,23 @@ const Navbar = () =>{
                     <p className="text-xl text-left translate-x-4">Transfer Funds</p>
                 </div>
                 <div className="group box-border border-border-color border-2 hover:bg-nav-bg bg-white" >
-                    <p className="text-xl text-left translate-x-4 inline-block">Cash Manager</p><p className="text-xl text-text-faded text-right translate-x-24 inline-block">\/</p>
+                    <p className="text-xl text-left translate-x-4 inline-block">Cash Manager</p><p className="text-xl text-text-faded text-right translate-x-24 inline-block">▼</p>
                     {testPermissions == 1 && <div onClick={toSafeAudit} className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
                         <p className="text-xl text-left translate-x-8">Safe Audit</p>
                     </div>}
-                    {testPermissions == 1 && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
-                        <p className="text-xl text-left translate-x-8">peepeepoopoodoodoofart</p>
+                    {testPermissions == 1 && <div onClick={toVarianceAudit} className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+                        <p className="text-xl text-left translate-x-8">Variance Audit</p>
+                    </div>}
+                    {testPermissions == 1 && <div onClick={toDepositHistory} className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+                        <p className="text-xl text-left translate-x-8">Deposit History</p>
                     </div>}
                 </div>
                 <div className="group box-border border-border-color border-2 hover:bg-nav-bg bg-white" >
-                    <p className="text-xl text-left translate-x-4 inline-block">Security</p><p className="text-xl text-text-faded text-right translate-x-36 inline-block">\/</p>
+                    <p className="text-xl text-left translate-x-4 inline-block">Security</p><p className="text-xl text-text-faded text-right translate-x-36 inline-block">▼</p>
                     {testPermissions == 1 && <div onClick={toUserManagement} className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
                         <p className="text-xl text-left translate-x-8">User management</p>
                     </div>}
-                    {testPermissions == 1 && <div className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
+                    {testPermissions == 1 && <div onClick={toPOSManagement} className="hidden group-hover:block cursor-pointer box-border border-border-color border-2 hover:bg-nav-bg bg-white">
                         <p className="text-xl text-left translate-x-8">POS Management</p>
                     </div>}
                 </div>
