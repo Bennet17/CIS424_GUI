@@ -382,103 +382,103 @@ const FundsTransferPage = () =>{
 
         // Report details
         return (
-        <div>
-            <table class="tg">
-                <thead>
-                    <tr>
-                    <th class="tg-mqa1" colspan="2">
-                        Transfer of Funds Report
-                    </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="tg-mcqj" colspan="2">
-                            User Details:
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tg-i817">Store:</td>
-                        <td class="tg-i817">blank</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-i817">User:</td>
-                        <td class="tg-i817">{user}</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-73oq">Date:</td>
-                        <td class="tg-73oq">{currentDate}</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-c10m" colspan="2">
-                            Transfer Details:
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tg-73oq">Source:</td>
-                        <td class="tg-73oq">{strSource}</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-i817">Destination:</td>
-                        <td class="tg-i817">{strDestination}</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-73oq">Amount:</td>
-                        <td class="tg-73oq">${fltAmount}</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-i817">Denominations:</td>
-                        <td class="tg-i817">{denominationsDetails}</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-mcqj" colspan="2">
-                            Source Details:
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tg-i817">
-                            Expected amount in {strSource} before transfer:
-                        </td>
-                        <td class="tg-i817">blank</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-73oq">
-                            Expected amount in {strSource} after transfer:
-                        </td>
-                        <td class="tg-73oq">blank</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-i817">
-                            Actual amount in {strSource} after transfer:
-                        </td>
-                        <td class="tg-i817">blank</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-mcqj" colspan="2">
-                            Destination Details:
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tg-i817">
-                            Expected amount in {strDestination} before transfer:
-                        </td>
-                        <td class="tg-i817">blank</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-73oq">
-                            Expected amount in {strDestination} after transfer:
-                        </td>
-                        <td class="tg-73oq">blank</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-i817">
-                            Actual amount in {strDestination} after transfer:
-                        </td>
-                        <td class="tg-i817">blank</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <div>
+                <table class="tg">
+                    <thead>
+                        <tr>
+                        <th class="tg-mqa1" colspan="2">
+                            Transfer of Funds Report
+                        </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="tg-mcqj" colspan="2">
+                                User Details:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Store:</td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">User:</td>
+                            <td class="tg-i817">{user}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">Date:</td>
+                            <td class="tg-73oq">{currentDate}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-c10m" colspan="2">
+                                Transfer Details:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">Source:</td>
+                            <td class="tg-73oq">{strSource}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Destination:</td>
+                            <td class="tg-i817">{strDestination}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">Amount:</td>
+                            <td class="tg-73oq">${fltAmount}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">Denominations:</td>
+                            <td class="tg-i817">{denominationsDetails}</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-mcqj" colspan="2">
+                                Source Details:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">
+                                Expected amount in {strSource} before transfer:
+                            </td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">
+                                Expected amount in {strSource} after transfer:
+                            </td>
+                            <td class="tg-73oq">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">
+                                Actual amount in {strSource} after transfer:
+                            </td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-mcqj" colspan="2">
+                                Destination Details:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">
+                                Expected amount in {strDestination} before transfer:
+                            </td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-73oq">
+                                Expected amount in {strDestination} after transfer:
+                            </td>
+                            <td class="tg-73oq">blank</td>
+                        </tr>
+                        <tr>
+                            <td class="tg-i817">
+                                Actual amount in {strDestination} after transfer:
+                            </td>
+                            <td class="tg-i817">blank</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         );
     };
 
