@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import routes from "../routes.js";
+import { useAuth } from "../AuthProvider.js";
 import Logo from "../newLogo.png"; // Adjust the path accordingly
 
 //creates a function that returns the login page area
@@ -14,38 +15,42 @@ function LoginPage() {
   const [username, setUsername] = useState([]);
   const [password, setPassword] = useState([]);
 
+  const auth = useAuth();
+
   //performs an axios post request to verify that a user exists in the database, and performs logic
   //based on if the user exists or not, or errors
   function Submit(event) {
     event.preventDefault();
 
-    axios
-      .post(
-        "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser",
-        {
-          username: username,
-          password: password,
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        //see discord behind-the-scenes channel for test username/passwords to use
-        //if we return true as our response, route the user to the main screen
-        if (response.data.IsValid == true) {
-          navigate(routes.home);
-        } else {
-          //do logic for invalid user, i dunno can't test this yet cuz back-end people are
-          //sending truthy responses for both valid/invalid user possibilities
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+    /*console.log({
+      "username": username,
+      "password": password,
+    });*/
 
+    auth.loginAction({
+      "username": username,
+      "password": password,
+    });
 
-
-
+    /*axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser', {
+      "username": username,
+      "password": password,
+    })
+    .then(response => {
+      console.log(response);
+      //see discord behind-the-scenes channel for test username/passwords to use
+      //if we return true as our response, route the user to the main screen
+      if (response.data.IsValid == true){
+        navigate(routes.home);
+      }else{
+        //do logic for invalid user, i dunno can't test this yet cuz back-end people are
+        //sending truthy responses for both valid/invalid user possibilities
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });*/
+  }  
 
   return (
     <div className="flex bg-custom-accent min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">

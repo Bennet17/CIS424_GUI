@@ -19,7 +19,7 @@ import POSTable from "./POSTable.jsx";
 const POSManagementPage = () => {
   return (
     <div className="flex h-screen bg-custom-accent">
-      <SideBar currentPage={6} />
+      <SideBar currentPage={8} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
         <div class="flex flex-col mt-32 px-6">

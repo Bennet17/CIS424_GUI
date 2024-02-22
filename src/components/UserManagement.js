@@ -19,7 +19,7 @@ import AddUserForm from "./AddUserForm.jsx"
 const UserManagementPage = () => {
   return (
     <div className="flex h-screen bg-custom-accent">
-      <SideBar currentPage={5} />
+      <SideBar currentPage={7} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
           <div class="flex flex-col mt-4 px-6">
