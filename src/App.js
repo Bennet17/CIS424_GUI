@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import routes from "./routes.js";
 // page components
 
-
+// Page imports
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 import OpenDayPage from './components/OpenDay';
@@ -15,7 +15,7 @@ import POSManagementPage from "./components/POSManagement.jsx";
 
 function App() {
   return (
-    <BrowserRouter className="App">
+    <HashRouter className="App">
       <Routes>
         {/* this is how we structure our routes. Each new route is a new page that renders a new element.
         Currently, all routes will have the url of "localhost:3000/<path>". Routes can also be nested,
@@ -39,7 +39,7 @@ function App() {
         that is not explicitly defined */}
         {/*<Route path="*" element={<NoPage />} />*/}
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
