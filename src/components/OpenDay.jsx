@@ -1,7 +1,7 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, {useState} from 'react';
-import Navbar from './Navbar';
+import React, { useState } from "react";
+import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 
 const OpenDayPage = () =>{
@@ -97,7 +97,7 @@ const OpenDayPage = () =>{
 
     return (
         <div>
-            <Navbar />
+            <SideBar />
             <HorizontalNav />
             <div className="text-main-color float-left ml-8 mt-12">
                 <p className="text-2xl mb-2">Select a POS to open</p>

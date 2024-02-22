@@ -1,13 +1,12 @@
 import axios from "axios";
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import routes from "../routes.js";
 import { useAuth } from "../AuthProvider.js";
-import Logo from '../Logo.png'; // Adjust the path accordingly
+import Logo from "../newLogo.png"; // Adjust the path accordingly
 
 //creates a function that returns the login page area
 function LoginPage() {
-
   //used to navigate to a new route page
   const navigate = useNavigate();
 
@@ -20,7 +19,7 @@ function LoginPage() {
 
   //performs an axios post request to verify that a user exists in the database, and performs logic
   //based on if the user exists or not, or errors
-  function Submit(event){
+  function Submit(event) {
     event.preventDefault();
 
     /*console.log({
@@ -54,11 +53,10 @@ function LoginPage() {
   }  
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8"> 
-    
+    <div className="flex bg-custom-accent min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
-          className="mx-auto h-48 w-auto"
+          className="mx-auto mb-12 h-30 w-auto"
           src={Logo}
           alt="Plato's Closet Logo"
         />
@@ -70,7 +68,10 @@ function LoginPage() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6" onSubmit={Submit}>
           <div>
-            <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900 text-left">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium leading-6 text-gray-900 text-left"
+            >
               Employee ID
             </label>
             <div className="mt-2">
@@ -87,11 +88,17 @@ function LoginPage() {
 
           <div>
             <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Password
               </label>
               <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500 ">
+                <a
+                  href="#"
+                  className="font-semibold text-indigo-600 hover:text-indigo-500 "
+                >
                   Forgot password?
                 </a>
               </div>
@@ -122,8 +129,6 @@ function LoginPage() {
         </form>
       </div>
     </div>
-    
-
   );
 }
 

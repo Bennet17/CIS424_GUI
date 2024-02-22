@@ -7,7 +7,7 @@ import { useAuth } from "../AuthProvider.js";
 //test variables
 let testPermissions = 1;
 
-const Navbar = () =>{
+const SideBar = () =>{
     //used to navigate to a new route page when calling a functionjvgj
     const navigate = useNavigate();
     const auth = useAuth();
@@ -90,4 +90,4 @@ const Navbar = () =>{
     );
 }
 
-export default Navbar;
+export default SideBar;

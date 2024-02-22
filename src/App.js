@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import routes from "./routes.js";
 import AuthProvider from "./AuthProvider.js";
-
 // page components
+
+// Page imports
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 import OpenDayPage from './components/OpenDay';
