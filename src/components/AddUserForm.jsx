@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
 
-function AddUser() {
+const AddUserForm = () => {
+
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -9,7 +10,22 @@ function AddUser() {
   const [position, setPosition] = useState("");
   const [storeID, setStoreID] = useState("");
   const [result, setResult] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
+  const handleChange = (e) => {
+    setPassword(e.target.value);
+    validatePassword(e.target.value);
+  };
+
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+    const isValid = regex.test(password);
+    if (!isValid) {
+      setErrorMessage('Include 8 characters, 1 number, and 1 symbol.');
+    } else {
+      setErrorMessage('');
+    }
+  };
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -56,6 +72,7 @@ function AddUser() {
     <div className="mb-4">
       <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">First Name:</label>
       <input
+      required
         id="firstName"
         type="text"
         value={firstname}
@@ -66,6 +83,7 @@ function AddUser() {
     <div className="mb-4">
       <label htmlFor="lastName" className="block text-gray-700 font-bold mb-2">Last Name:</label>
       <input
+      required
         id="lastName"
         type="text"
         value={lastname}
@@ -76,6 +94,7 @@ function AddUser() {
     <div className="mb-4">
       <label htmlFor="username" className="block text-gray-700 font-bold mb-2">Username:</label>
       <input
+      required
         id="username"
         type="text"
         onChange={(e) => setUsername(e.target.value)}
@@ -83,20 +102,27 @@ function AddUser() {
       />
     </div>
   </div>
+
   <div className="grid grid-cols-3 gap-4">
     <div className="mb-4">
       <label htmlFor="password" className="block text-gray-700 font-bold mb-2">Password:</label>
+      <div>
       <input
-        id="password"
+      required
         type="password"
-        onChange={(e) => setPassword(e.target.value)}
+        value={password}
+      
+        onChange={handleChange}
         className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
       />
+      {errorMessage && <div className="text-red-500 text-sm mt-1">{errorMessage}</div>}
+    </div>
     </div>
     <div className="mb-4">
       <label htmlFor="role" className="block text-gray-700 font-bold mb-2">Role:</label>
       <select
         id="role"
+        required
         onChange={(e) => setPosition(e.target.value)}
         className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
       >
@@ -109,6 +135,7 @@ function AddUser() {
       <select
         id="storeID"
         multiple
+        required
         onChange={(e) => setStoreID(e.target.value)}
         className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
       >
@@ -138,4 +165,4 @@ function AddUser() {
   );
 }
 
-export default AddUser;
+export default AddUserForm;
