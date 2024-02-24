@@ -22,14 +22,13 @@ const POSManagementPage = () => {
       <SideBar currentPage={8} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
-        <div class="flex flex-col mt-32 px-6">
+        <div class="flex flex-col mt-8 px-6">
           <div>
             {" "}
             <POSTable></POSTable>
           </div>
           <div class="flex flex-row mt-20">
             <AddPOS></AddPOS>
-            <EditPOS></EditPOS>
           </div>
         </div>
       </div>
