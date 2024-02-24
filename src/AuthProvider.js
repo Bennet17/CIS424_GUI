@@ -9,7 +9,6 @@ const AuthProvider = ({ children }) => {
 
     const [cookie, setCookie, removeCookie] = useCookies(["user"]);
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(localStorage.getItem("site") || "");
     const navigate = useNavigate();
 
     //username and password details are to be passed into here which will be stored in "data"
@@ -17,12 +16,14 @@ const AuthProvider = ({ children }) => {
     const loginAction = (data) => {
         axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser', data)
         .then(response => {
+            console.log(response.data);
             if (response.data.IsValid == true){
                 setUser(response.data.user);
                 //setToken(response.token);
-                setCookie("user", data.username, {path: "/"});
+                setCookie("user", response.data.user.username, {path: "/"});
                 localStorage.setItem("site", cookie);
-                console.log(response.data);
+                //console.log(response.data.user);
+                console.log(user);
                 navigate(routes.home);
             }else{
                 //invalid credentials
@@ -41,6 +42,8 @@ const AuthProvider = ({ children }) => {
         navigate(routes.signout);
     }
     
+    //exports our various variables and objects to be accessable on other pages that imports this
+    //file
     return <AuthContext.Provider value={{cookie, user, loginAction, logOut}}>
         {children}
     </AuthContext.Provider>;

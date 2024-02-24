@@ -2,6 +2,7 @@ import "../styles/PageStyles.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import routes from "../routes.js";
+import { useAuth } from "../AuthProvider.js";
 import logo from "../newLogo.png";
 import {
   Home,
@@ -26,6 +27,7 @@ let testPermissions = 1;
 const SideBar = (props) => {
   //used to navigate to a new route page when calling a function
   const navigate = useNavigate();
+  const auth = useAuth();
 
   //Constants
   const HOME_PAGE_NAME = 0;
@@ -175,7 +177,7 @@ const SideBar = (props) => {
               <span className="ml-3">Safe Audit</span>
             </li>
           )}
-          {cashManagerOn && (
+          {auth.user.position == 'Manager' & cashManagerOn && (
             <li
               onClick={toVarianceAudit}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
@@ -189,7 +191,7 @@ const SideBar = (props) => {
               <span className="ml-3">Variance Audit</span>
             </li>
           )}
-          {cashManagerOn && (
+          {auth.user.position == "Manager" & cashManagerOn && (
             <li
               onClick={toDepositHistory}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 

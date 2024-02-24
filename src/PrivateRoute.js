@@ -7,7 +7,7 @@ import routes from "./routes.js";
 //reroute to login page, otherwise, passthrough route
 const PrivateRoute = () => {
   const user = useAuth();
-  console.log(user.cookie);
+  //console.log(user.cookie);
   if (!user.cookie || Object.keys(user.cookie).length === 0) return <Navigate to={routes.signout} />;
   return <Outlet />;
 };

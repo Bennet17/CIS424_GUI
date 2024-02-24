@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
+import classNames from 'classnames';
 
 const OpenDayPage = () =>{
     //sample data to demonstrate how this all works. In reality, we would get all the POS data with a post get request to the db and store it in an array
@@ -36,6 +37,52 @@ const OpenDayPage = () =>{
     const [elm1DollarCoin, setElm1DollarCoin] = useState(0);
     const [elm2Dollar, setElm2Dollar] = useState(0);
     const [elmHalfDollarCoin, setElmHalfDollarCoin] = useState(0);
+
+    //calculates the total of all denominations
+    const totalAmount = 
+        Math.round(
+            (
+                (elmPennies * 0.01) + 
+                (elmNickles * 0.05) +
+                (elmDimes * 0.1) +
+                (elmQuarters * 0.25) +
+                (elmPenniesRolled * 0.5) +
+                (elmNicklesRolled * 2) +
+                (elmDimesRolled * 5) +
+                (elmQuartersRolled * 10) +
+                (elm1Dollar * 1) +
+                (elm5Dollar * 5) +
+                (elm10Dollar * 10) +
+                (elm20Dollar * 20) +
+                (elm50Dollar * 50) +
+                (elm100Dollar * 100) +
+                (elm1DollarCoin * 1) +
+                (elm2Dollar * 2) +
+                (elmHalfDollarCoin * 0.5)
+            ) * 100
+        ) / 100;
+
+    const [expectedAmount, setExpectedAmount] = useState(0);
+
+    //Stores the general styling for the current total denominations text field.
+    //here, we simply change the text color based on a few conditions, which are shown below
+    const totalAmountStyle = classNames(
+        'box-border',
+        'text-center',
+        'mb-4',
+        'ml-6',
+        'mr-12',
+        'w-24',
+        'float-right',
+        'border-border-color',
+        'border-2',
+        'bg-white',
+        {
+            'text-yellow-500': totalAmount > expectedAmount,
+            'text-rose-600': totalAmount < expectedAmount,
+            'text-black': totalAmount == expectedAmount,
+        }
+    );
 
     //changes the currently-selected pos to either open or close
     function changeCurrentPos(id){
@@ -95,162 +142,179 @@ const OpenDayPage = () =>{
         });
     }
 
+
+
     return (
-        <div>
-            <SideBar />
-            <HorizontalNav />
-            <div className="text-main-color float-left ml-8 mt-12">
-                <p className="text-2xl mb-2">Select a POS to open</p>
-                {poss.map(item => (
-                    <>
-                    {item.id == 1 ?
+        <div className="flex h-screen bg-custom-accent">
+            <SideBar currentPage={1} />
+            <div className="w-full">
+                <HorizontalNav />
+                <div className="text-main-color float-left ml-8 mt-12">
+                    <p className="text-2xl mb-2">Select a POS to open</p>
+                    {poss.map(item => (
                         <>
-                            <label>
-                                <input key={"pos" + item.id} defaultChecked={true} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"POS "+ item.id} />
-                                POS {item.id} - {item.open}
-                            </label>
+                            {item.id == 0 ?
+                                <>
+                                    <label>
+                                        <input key={"safe"} defaultChecked={true} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"Safe"} />
+                                        Safe - {item.open}
+                                    </label>
+                                </>
+                            :    
+                                <>
+                                    <label>
+                                        <input key={"pos" + item.id} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"POS "+ item.id} />
+                                        POS {item.id} - {item.open}
+                                    </label>
+                                </>
+                            }
+                            <br/>
                         </>
+                    ))}
+                </div>
+                <div className="text-main-color float-left ml-16 mt-12">
+                    {currentPos.id == 0 ?
+                        <p className="text-3xl" >Enter denominations for Safe</p>
                     :
-                        <>
-                            <label>
-                                <input key={"pos" + item.id} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"POS "+ item.id} />
-                                POS {item.id} - {item.open}
-                            </label>
-                        </>
+                        <p className="text-3xl" >Enter denominations for POS # {currentPos.id}</p>
                     }
-                        <br/>
-                    </>
-                ))}
-            </div>
-            <div className="text-main-color float-left ml-16 mt-12">
-                {currentPos.id == 0 ?
-                    <p className="text-3xl" >Enter denominations for Safe</p>
-                :
-                    <p className="text-3xl" >Enter denominations for POS # {currentPos.id}</p>
-                }
-                <br/><hr/><br/>
-                <form onSubmit={Submit}>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <label>Pennies
-                                        <input value={elmPennies} onChange={e => setElmPennies(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>$1's
-                                        <input value={elm1Dollar} onChange={e => setElm1Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>Nickles
-                                        <input value={elmNickles} onChange={e => setElmNickles(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>$5's
-                                        <input value={elm5Dollar} onChange={e => setElm5Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>Dimes
-                                        <input value={elmDimes} onChange={e => setElmDimes(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>$10s
-                                        <input value={elm10Dollar} onChange={e => setElm10Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>Quarters
-                                        <input value={elmQuarters} onChange={e => setElmQuarters(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>$20s
-                                        <input value={elm20Dollar} onChange={e => setElm20Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>Pennies (rolled)
-                                        <input value={elmPenniesRolled} onChange={e => setElmPenniesRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>$50s
-                                        <input value={elm50Dollar} onChange={e => setElm50Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>Nickles (rolled)
-                                        <input value={elmNicklesRolled} onChange={e => setElmNicklesRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>$100s
-                                        <input value={elm100Dollar} onChange={e => setElm100Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>Dimes (rolled)
-                                        <input value={elmDimesRolled} onChange={e => setElmDimesRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>Quarters (rolled)
-                                        <input value={elmQuartersRolled} onChange={e => setElmQuartersRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                            </tr>
-                            {showExtraChange == true &&<tr>
-                                <td>
-                                    <label>$1 coin
-                                        <input value={elm1DollarCoin} onChange={e => setElm1DollarCoin(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>$2's
-                                        <input value={elm2Dollar} onChange={e => setElm2Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                            </tr>}
-                            {showExtraChange == true &&<tr>
-                                <td>
-                                    <label>$1/2 coin
-                                        <input value={elmHalfDollarCoin} onChange={e => setElmHalfDollarCoin(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
-                                    </label>
-                                </td>
-                                <td>
-                                </td>
-                            </tr>}
-                            <tr>
-                                <td colSpan="2"><p className="cursor-pointer w-full mb-4 text-center hover:bg-nav-bg bg-white text-xl" onClick={ToggleExtraChange}>{showExtraChangeTxt}</p></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button type="submit" value="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Open Register</button>
-                                </td>
-                                <td>
-                                    <button onClick={ClearAllFields} type="button" value="button" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Clear all fields</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
+                    <br/><hr/><br/>
+                    <form onSubmit={Submit}>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>Pennies
+                                            <input value={elmPennies} onChange={e => setElmPennies(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>$1's
+                                            <input value={elm1Dollar} onChange={e => setElm1Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Nickles
+                                            <input value={elmNickles} onChange={e => setElmNickles(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>$5's
+                                            <input value={elm5Dollar} onChange={e => setElm5Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Dimes
+                                            <input value={elmDimes} onChange={e => setElmDimes(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>$10s
+                                            <input value={elm10Dollar} onChange={e => setElm10Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Quarters
+                                            <input value={elmQuarters} onChange={e => setElmQuarters(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>$20s
+                                            <input value={elm20Dollar} onChange={e => setElm20Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Pennies (rolled)
+                                            <input value={elmPenniesRolled} onChange={e => setElmPenniesRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>$50s
+                                            <input value={elm50Dollar} onChange={e => setElm50Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Nickles (rolled)
+                                            <input value={elmNicklesRolled} onChange={e => setElmNicklesRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>$100s
+                                            <input value={elm100Dollar} onChange={e => setElm100Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Dimes (rolled)
+                                            <input value={elmDimesRolled} onChange={e => setElmDimesRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>Quarters (rolled)
+                                            <input value={elmQuartersRolled} onChange={e => setElmQuartersRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                {showExtraChange == true &&<tr>
+                                    <td>
+                                        <label>$1 coin
+                                            <input value={elm1DollarCoin} onChange={e => setElm1DollarCoin(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>$2's
+                                            <input value={elm2Dollar} onChange={e => setElm2Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                </tr>}
+                                {showExtraChange == true &&<tr>
+                                    <td>
+                                        <label>$1/2 coin
+                                            <input value={elmHalfDollarCoin} onChange={e => setElmHalfDollarCoin(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>}
+                                <tr>
+                                    <td colSpan="2"><p className="cursor-pointer w-full mb-4 text-center hover:bg-nav-bg bg-white text-xl" onClick={ToggleExtraChange}>{showExtraChangeTxt}</p></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Open POS</button>
+                                    </td>
+                                    <td>
+                                        <button onClick={ClearAllFields} type="button" value="button" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Clear all fields</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div className="text-main-color text-2xl float-left ml-16 mt-12">
+                    <div>
+                        <label> Current Total:
+                            <input value={"$" + totalAmount} className={totalAmountStyle} type="text" disabled="true" />
+                        </label>
+                    </div>
+                    <br/>
+                    <div>
+                        <label> Expected Total:
+                            <input value={"$" + expectedAmount} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" type="text" disabled="true" />
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
     )

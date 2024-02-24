@@ -26,15 +26,12 @@ export default function HorizotalNav() {
     navigate(routes.signout);
   }
 
-  const [username, setUsername] = useState("ZippyDee");
-  const [position, setPosition] = useState("<position>");
-
   return (
     
     <Disclosure as="nav" className="bg-gray-300 shadow">
       {({ open }) => (
         <>
-          <p className="float-left translate-x-6 translate-y-4 text-2xl text-main-color">PLATO'S CLOSET - {username} ({position})</p>
+          <p className="float-left translate-x-6 translate-y-4 text-2xl text-main-color">PLATO'S CLOSET - {auth.user.name} ({auth.user.position})</p>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
