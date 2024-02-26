@@ -3,12 +3,15 @@ import axios from "axios";
 import React, { useState } from "react";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
+import { useAuth } from "../AuthProvider.js";
 import classNames from 'classnames';
 
 const OpenDayPage = () =>{
+    const auth = useAuth();
+
     //sample data to demonstrate how this all works. In reality, we would get all the POS data with a post get request to the db and store it in an array
+    const safe = {id: 0, open: "Closed"}
     const poss = [
-        {id: 0, open: "Closed"},
         {id: 1, open: "Closed"},
         {id: 2, open: "Closed"},
         {id: 3, open: "Closed"},
@@ -38,7 +41,7 @@ const OpenDayPage = () =>{
     const [elm2Dollar, setElm2Dollar] = useState(0);
     const [elmHalfDollarCoin, setElmHalfDollarCoin] = useState(0);
 
-    //calculates the total of all denominations
+    //calculates the total of all denominations with rounding
     const totalAmount = 
         Math.round(
             (
@@ -65,7 +68,7 @@ const OpenDayPage = () =>{
     const [expectedAmount, setExpectedAmount] = useState(0);
 
     //Stores the general styling for the current total denominations text field.
-    //here, we simply change the text color based on a few conditions, which are shown below
+    //here, we simply change the text color based on if we're over, under, or at expected value
     const totalAmountStyle = classNames(
         'box-border',
         'text-center',
@@ -84,10 +87,30 @@ const OpenDayPage = () =>{
         }
     );
 
+    //Stores the general styling for the pos system label/radio buttons.
+    //here, we simply change the text color based on whether the pos is open
+    const posLabelStyle = classNames(
+        '',
+        {
+            'text-green-500': currentPos.open == "Open",
+            'text-rose-600': currentPos.open == "Closed",
+        }
+    );
+
+    function clamp(value, min = 0){
+        if (value < min){
+            return min;
+        }
+        return value;
+    }
+
     //changes the currently-selected pos to either open or close
     function changeCurrentPos(id){
-        console.log(id);
-        setCurrentPos(poss[id]);
+        if (id == 0){
+            setCurrentPos(safe);
+        }
+        setCurrentPos(poss[id - 1]);
+        console.log(currentPos);
     }
 
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
@@ -126,15 +149,35 @@ const OpenDayPage = () =>{
         //prevents default behavior of sending data to current URL And refreshing page
         event.preventDefault();
 
-        axios.post('', {
-            "username": "username",
+        axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
+            "usrID": auth.user.ID,
+            "itemCounted": "what",
+            "total": totalAmount,
+            "amountExpected": "what",
+            "hundred": elm100Dollar,
+            "fifty": elm50Dollar,
+            "twenty": elm20Dollar,
+            "ten": elm10Dollar,
+            "five": elm5Dollar,
+            "two": elm2Dollar,
+            "one": elm1Dollar,
+            "dollarCoin": elm1DollarCoin,
+            "halfDollar": elmHalfDollarCoin,
+            "quarter": elmQuarters,
+            "dime": elmDimes,
+            "nickel": elmNickles,
+            "penny": elmPennies,
+            "quarterRoll": elmQuartersRolled,
+            "dimeRoll": elmDimesRolled,
+            "nickelRoll": elmNicklesRolled,
+            "pennyRoll": elmPenniesRolled
         })
         .then(response => {
             console.log(response);
-            if (response.data.IsValid == true){
-                
+            if (true){
+                //open POS
             }else{
-
+                //close POS
             }
         })
         .catch(error => {
@@ -151,32 +194,26 @@ const OpenDayPage = () =>{
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-12">
                     <p className="text-2xl mb-2">Select a POS to open</p>
+                    <label>
+                        <input key={"safe"} defaultChecked={true} onChange={(e) => changeCurrentPos(safe.id)} type="radio" name="pos" value={"Safe"} />
+                        Safe - {safe.open}
+                    </label>
+                    <br/>
                     {poss.map(item => (
                         <>
-                            {item.id == 0 ?
-                                <>
-                                    <label>
-                                        <input key={"safe"} defaultChecked={true} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"Safe"} />
-                                        Safe - {item.open}
-                                    </label>
-                                </>
-                            :    
-                                <>
-                                    <label>
-                                        <input key={"pos" + item.id} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"POS "+ item.id} />
-                                        POS {item.id} - {item.open}
-                                    </label>
-                                </>
-                            }
+                            <label>
+                                <input key={"pos" + item.id} onChange={(e) => changeCurrentPos(item.id)} type="radio" name="pos" value={"POS "+ item.id} />
+                                POS {item.id} - {item.open}
+                            </label>
                             <br/>
                         </>
                     ))}
                 </div>
                 <div className="text-main-color float-left ml-16 mt-12">
                     {currentPos.id == 0 ?
-                        <p className="text-3xl" >Enter denominations for Safe</p>
+                        <p className="text-2xl" >Enter denominations for Safe</p>
                     :
-                        <p className="text-3xl" >Enter denominations for POS # {currentPos.id}</p>
+                        <p className="text-2xl" >Enter denominations for POS # {currentPos.id}</p>
                     }
                     <br/><hr/><br/>
                     <form onSubmit={Submit}>
@@ -185,103 +222,103 @@ const OpenDayPage = () =>{
                                 <tr>
                                     <td>
                                         <label>Pennies
-                                            <input value={elmPennies} onChange={e => setElmPennies(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elmPennies} onChange={e => setElmPennies(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                     <td>
                                         <label>$1's
-                                            <input value={elm1Dollar} onChange={e => setElm1Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elm1Dollar} onChange={e => setElm1Dollar(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label>Nickles
-                                            <input value={elmNickles} onChange={e => setElmNickles(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elmNickles} onChange={e => setElmNickles(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                     <td>
                                         <label>$5's
-                                            <input value={elm5Dollar} onChange={e => setElm5Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elm5Dollar} onChange={e => setElm5Dollar(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label>Dimes
-                                            <input value={elmDimes} onChange={e => setElmDimes(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elmDimes} onChange={e => setElmDimes(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                     <td>
                                         <label>$10s
-                                            <input value={elm10Dollar} onChange={e => setElm10Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elm10Dollar} onChange={e => setElm10Dollar(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label>Quarters
-                                            <input value={elmQuarters} onChange={e => setElmQuarters(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elmQuarters} onChange={e => setElmQuarters(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                     <td>
                                         <label>$20s
-                                            <input value={elm20Dollar} onChange={e => setElm20Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elm20Dollar} onChange={e => setElm20Dollar(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label>Pennies (rolled)
-                                            <input value={elmPenniesRolled} onChange={e => setElmPenniesRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elmPenniesRolled} onChange={e => setElmPenniesRolled(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                     <td>
                                         <label>$50s
-                                            <input value={elm50Dollar} onChange={e => setElm50Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elm50Dollar} onChange={e => setElm50Dollar(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label>Nickles (rolled)
-                                            <input value={elmNicklesRolled} onChange={e => setElmNicklesRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elmNicklesRolled} onChange={e => setElmNicklesRolled(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                     <td>
                                         <label>$100s
-                                            <input value={elm100Dollar} onChange={e => setElm100Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elm100Dollar} onChange={e => setElm100Dollar(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label>Dimes (rolled)
-                                            <input value={elmDimesRolled} onChange={e => setElmDimesRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elmDimesRolled} onChange={e => setElmDimesRolled(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                     <td>
                                         <label>Quarters (rolled)
-                                            <input value={elmQuartersRolled} onChange={e => setElmQuartersRolled(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elmQuartersRolled} onChange={e => setElmQuartersRolled(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                 </tr>
                                 {showExtraChange == true &&<tr>
                                     <td>
                                         <label>$1 coin
-                                            <input value={elm1DollarCoin} onChange={e => setElm1DollarCoin(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elm1DollarCoin} onChange={e => setElm1DollarCoin(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                     <td>
                                         <label>$2's
-                                            <input value={elm2Dollar} onChange={e => setElm2Dollar(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elm2Dollar} onChange={e => setElm2Dollar(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                 </tr>}
                                 {showExtraChange == true &&<tr>
                                     <td>
                                         <label>$1/2 coin
-                                            <input value={elmHalfDollarCoin} onChange={e => setElmHalfDollarCoin(e.target.value)} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input value={elmHalfDollarCoin} onChange={e => setElmHalfDollarCoin(clamp(e.target.value))} min="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
                                         </label>
                                     </td>
                                     <td>
@@ -305,13 +342,13 @@ const OpenDayPage = () =>{
                 <div className="text-main-color text-2xl float-left ml-16 mt-12">
                     <div>
                         <label> Current Total:
-                            <input value={"$" + totalAmount} className={totalAmountStyle} type="text" disabled="true" />
+                            <input value={"$" + totalAmount} className={totalAmountStyle} type="text" disabled={true}/>
                         </label>
                     </div>
                     <br/>
                     <div>
                         <label> Expected Total:
-                            <input value={"$" + expectedAmount} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" type="text" disabled="true" />
+                            <input value={"$" + expectedAmount} className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" type="text" disabled={true} />
                         </label>
                     </div>
                 </div>

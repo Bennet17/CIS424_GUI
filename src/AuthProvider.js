@@ -8,7 +8,7 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
 
     const [cookie, setCookie, removeCookie] = useCookies(["user"]);
-    const [user, setUser] = useState(null);
+    //const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
     //username and password details are to be passed into here which will be stored in "data"
@@ -18,12 +18,12 @@ const AuthProvider = ({ children }) => {
         .then(response => {
             console.log(response.data);
             if (response.data.IsValid == true){
-                setUser(response.data.user);
+                //setUser(response.data.user);
                 //setToken(response.token);
-                setCookie("user", response.data.user.username, {path: "/"});
+                setCookie("user", response.data.user, {path: "/"});
                 localStorage.setItem("site", cookie);
                 //console.log(response.data.user);
-                console.log(user);
+                console.log(cookie);
                 navigate(routes.home);
             }else{
                 //invalid credentials
@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
 
     //kill everything
     const logOut = () => {
-        setUser(null);
+        //setUser(null);
         removeCookie("user", {path: "/"});
         localStorage.removeItem("site");
         navigate(routes.signout);
@@ -44,7 +44,7 @@ const AuthProvider = ({ children }) => {
     
     //exports our various variables and objects to be accessable on other pages that imports this
     //file
-    return <AuthContext.Provider value={{cookie, user, loginAction, logOut}}>
+    return <AuthContext.Provider value={{cookie, loginAction, logOut}}>
         {children}
     </AuthContext.Provider>;
 };
