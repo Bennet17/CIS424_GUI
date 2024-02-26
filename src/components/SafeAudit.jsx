@@ -8,24 +8,28 @@ const SafeAuditPage = () =>{
     const [startDay, setStartDay] = useState();
     const [endDay, setEndDay] = useState();
     const [currentDay, setCurrentDay] = useState(Date.toString(Date.now));
+    const [pettyCash, setPettyCash] = useState(0);
+    const [expected, setExpected] = useState(0);
+    const [overShort, setOverShort] = useState(0);
+    const [safeTotal, setSafeTotal] = useState(0);
 
   //changes the start day, end day, and current day
-  function changeDayStart() {}
+  /*function changeDayStart() {}
   function changeDayEnd() {}
-  function changeDayCurrent() {}
+  function changeDayCurrent() {}*/
 
   function Submit(event) {
     event.preventDefault();
 
-    axios
-      .post("", {
-        username: "username",
+    axios.post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewSafeTotalsForStore", {
+        "storeID": ""
       })
       .then((response) => {
         console.log(response);
         if (response.data.IsValid == true) {
           //navigate(routes.home);
         } else {
+
         }
       })
       .catch((error) => {
@@ -41,7 +45,7 @@ const SafeAuditPage = () =>{
         <div className="float-left ml-10 mt-12">
           <label className="text-main-color text-2xl ">Start Date:</label>
           <input
-            onChange={changeDayStart}
+            onChange={setStartDay}
             className="box-border text-center ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
             type="date"
             name="start"
@@ -50,7 +54,7 @@ const SafeAuditPage = () =>{
         <div className="float-left ml-10 mt-4">
           <label className="text-main-color text-2xl ">End Date:</label>
           <input
-            onChange={changeDayEnd}
+            onChange={setEndDay}
             className="box-border text-center ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
             type="date"
             name="start"
@@ -231,25 +235,27 @@ const SafeAuditPage = () =>{
                   <td>
                     <label className="text-main-color">Petty cash:</label>
                     <input
-                      defaultValue="0"
-                      className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                        value={"$"+ pettyCash}
+                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white"
+                        disabled={true}
+                        type="text"
                     />
                   </td>
                   <td>
                     <label className="text-main-color">Over/Short:</label>
                     <input
-                      defaultValue="0"
-                      className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                        value={"$" + overShort}
+                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white"
+                        disabled={true}
+                        type="text"
                     />
                   </td>
                   <td></td>
                   <td>
                     <button
-                      type="submit"
-                      value="submit"
-                      className="flex w-36 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        type="submit"
+                        value="submit"
+                        className="flex w-36 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                       Submit
                     </button>
@@ -259,17 +265,19 @@ const SafeAuditPage = () =>{
                   <td>
                     <label className="text-main-color">Safe Expected:</label>
                     <input
-                      defaultValue="0"
-                      className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                        value={"$" + expected}
+                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white"
+                        disabled={true}
+                        type="text"
                     />
                   </td>
                   <td>
                     <label className="text-main-color">Safe Total:</label>
                     <input
-                      defaultValue="0"
-                      className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                        value={"$" + safeTotal}
+                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white"
+                        disabled={true}
+                        type="text"
                     />
                   </td>
                 </tr>
