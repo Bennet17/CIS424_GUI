@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { useDownloadExcel } from 'react-export-table-to-excel';
-
+import {Trash2, Pencil, Pen} from "lucide-react";
 function EmployeeTable() {
   const [employees, setEmployees] = useState([]);
   const tableRef = useRef(null);
@@ -49,10 +49,8 @@ function EmployeeTable() {
       <table ref={tableRef} className="min-w-full">
         <thead>
           <tr>
-            <th className="px-4 py-2"> User ID</th>
             <th className="px-4 py-2">Username</th>
             <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Password</th>
             <th className="px-4 py-2">Position</th>
             <th className="px-4 py-2">Store ID</th>
           </tr>
@@ -60,10 +58,8 @@ function EmployeeTable() {
         <tbody>
           {employees.map((employee) => (
             <tr key={employee.ID} onClick={() => handleRowClick(employee.ID)} className="cursor-pointer hover:bg-gray-100">
-              <td className="border px-4 py-2">{employee.ID}</td>
               <td className="border px-4 py-2">{employee.username}</td>
               <td className="border px-4 py-2">{employee.name}</td>
-              <td className="border px-4 py-2">{employee.password}</td>
               <td className="border px-4 py-2">{employee.position}</td>
               <td className="border px-4 py-2">{employee.storeID}</td>
             </tr>

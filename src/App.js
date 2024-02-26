@@ -20,7 +20,7 @@ import DepositHistory from "./components/DepositHistory.jsx";
 
 function App() {
   return (
-    <BrowserRouter className="App">
+    <HashRouter className="App">
       <AuthProvider>
         <Routes>
           {/* this is how we structure our routes. Each new route is a new page that renders a new element.
@@ -50,7 +50,7 @@ function App() {
           that is not explicitly defined */}
         </Routes>
       </AuthProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
