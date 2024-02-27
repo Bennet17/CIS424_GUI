@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 const AddUserForm = () => {
 
@@ -8,10 +8,10 @@ const AddUserForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [position, setPosition] = useState("");
-  const [storeID, setStoreID] = useState("");
+  const [storeID, setStoreID] = useState([]);
   const [result, setResult] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
-
+  const[storeArray,setStoreArray] = useState([]);
   const handleChange = (e) => {
     setPassword(e.target.value);
     validatePassword(e.target.value);
@@ -21,11 +21,47 @@ const AddUserForm = () => {
     const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
     const isValid = regex.test(password);
     if (!isValid) {
-      setErrorMessage('Include 8 characters, 1 number, and 1 symbol.');
-    } else {
+      setErrorMessage(
+        <>
+          Include 8 characters,<br />
+          1 number, and 1 symbol.
+        </>
+      );    } else {
       setErrorMessage('');
     }
   };
+
+
+
+
+  useEffect(() => {
+    function fetchAllStores() {
+      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStores`;
+
+      axios.get(url)
+        .then((response) => {
+          console.log('Data:', response.data);
+          console.log(response);
+          const updatedStoreArray = response.data.map(item => ({
+            ID: item.ID,
+            location: item.location
+        }));
+        setStoreArray(updatedStoreArray);
+        console.log(storeArray);
+        
+          
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
+
+    // Call the function to initiate the GET request with specific details
+    fetchAllStores();
+  }, []); // Empty dependency array ensures that this effect runs only once, similar to componentDidMount
+
+
+
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -115,7 +151,7 @@ const AddUserForm = () => {
         onChange={handleChange}
         className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
       />
-      {errorMessage && <div className="text-red-500 text-sm mt-1">{errorMessage}</div>}
+      {errorMessage && <div className="text-red-500 text-sm mt-1 ">{errorMessage}</div>}
     </div>
     </div>
     <div className="mb-4">
@@ -131,7 +167,7 @@ const AddUserForm = () => {
       </select>
     </div>
     <div className="mb-4">
-      <label htmlFor="storeID" className="block text-gray-700 font-bold mb-2">Store ID:</label>
+      <label htmlFor="storeID" className="block text-gray-700 font-bold mb-2">Store:</label>
       <select
         id="storeID"
         multiple
@@ -139,8 +175,9 @@ const AddUserForm = () => {
         onChange={(e) => setStoreID(e.target.value)}
         className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
       >
-        <option value="0">Store 1</option>
-        <option value="1">Store 2</option>
+        {storeArray.map(item => (
+            <option key={item.ID} value={item.ID}>{item.location}</option>
+          ))}
       </select>
     </div>
   </div>
