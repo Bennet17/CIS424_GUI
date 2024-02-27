@@ -13,7 +13,7 @@ const OpenDayPage = () =>{
     const [poss, setPoss] = useState([]);
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("show extras ▼");
-    let currentPos = null;
+    let currentPosIndex = -1;
 
     //dom fields
     const [elmPennies, setElmPennies] = useState(0);
@@ -99,8 +99,8 @@ const OpenDayPage = () =>{
 
     //changes the currently-selected pos
     function changeCurrentPos(id){
-        currentPos = poss[id - 1];
-        console.log(currentPos);
+        currentPosIndex = id
+        console.log(currentPosIndex);
     }
 
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
@@ -165,7 +165,7 @@ const OpenDayPage = () =>{
 
         axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
             "usrID": auth.cookie.user.ID,
-            "itemCounted": currentPos.ID,
+            "itemCounted": poss[currentPosIndex],
             "total": totalAmount,
             "amountExpected": expectedAmount,
             "hundred": elm100Dollar,
@@ -226,7 +226,7 @@ const OpenDayPage = () =>{
                     ))}
                 </div>
                 <div className="text-main-color float-left ml-16 mt-12">
-                    {currentPos && <p className="text-2xl" >Enter denominations for {currentPos.name}</p>}
+                    {currentPosIndex > 0 && <p className="text-2xl" >Enter denominations for {poss[currentPosIndex].name}</p>}
                     <br/><hr/><br/>
                     <form onSubmit={Submit}>
                         <table>
