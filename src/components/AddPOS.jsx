@@ -24,7 +24,7 @@ function AddPOS() {
       .then((response) => {
 
         console.log(response.data.response);
-
+        window.location.reload(); // This will refresh the page
   
       })
       .catch((error) => {

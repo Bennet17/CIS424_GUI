@@ -11,13 +11,15 @@ const POSManagementPage = () => {
       <SideBar currentPage={8} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
-        <div class="flex flex-col mt-8 px-6">
-          <div>
-            {" "}
-            <POSTable></POSTable>
+        <h2 className="text-lg font-bold mt-4 px-10 ">POS Registers at: -insert current store</h2>
+
+        <div className="flex mt-8 px-6">
+          
+          <div className="w-1/2 mr-4"> {/* Use w-1/2 to take half of the width */}
+            <POSTable />
           </div>
-          <div class="flex flex-row mt-20">
-            <AddPOS></AddPOS>
+          <div className="w-1/2 ml-4"> {/* Use w-1/2 to take half of the width */}
+            <AddPOS />
           </div>
         </div>
       </div>
