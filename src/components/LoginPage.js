@@ -14,6 +14,8 @@ function LoginPage() {
   //"item" to get the value. Default values can be set in the "useState()" parentheses
   const [username, setUsername] = useState([]);
   const [password, setPassword] = useState([]);
+  const [invalidCredential, setInvalidCredential] = useState('');
+
 
   const auth = useAuth();
 
@@ -30,6 +32,13 @@ function LoginPage() {
     auth.loginAction({
       "username": username,
       "password": password,
+    })
+    .then(response => {
+      //console.log("success yeehaw!!!", response);
+    })
+    .catch(error => {
+      //console.error("wrong!!! >:(", error.message);
+      setInvalidCredential("Invalid Credentials. Try Again.") ;
     });
 
     /*axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser', {
@@ -127,6 +136,7 @@ function LoginPage() {
             </button>
           </div>
         </form>
+        {invalidCredential && <p className="block text-sm font-medium leading-6 text-red-600">{invalidCredential}</p>}
       </div>
     </div>
   );

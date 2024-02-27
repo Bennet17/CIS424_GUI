@@ -4,19 +4,6 @@ import { useAuth } from "../AuthProvider.js";
 
 
 
-//page function definition
-const Sampletext = () => {
-    
-    const auth = useAuth();
-    console.log(auth.user.name);
-    
-    //return page data
-    return (
-      <p>{auth.user.name}</p>
-      
-    )
-  }
-
 function AddPOS() {
 
   const [name, posName] = useState("");

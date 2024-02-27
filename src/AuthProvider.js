@@ -14,24 +14,30 @@ const AuthProvider = ({ children }) => {
     //username and password details are to be passed into here which will be stored in "data"
     //and used for validation. Then handle tokens n stuff
     const loginAction = (data) => {
-        axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser', data)
-        .then(response => {
-            console.log(response.data);
-            if (response.data.IsValid == true){
-                //setUser(response.data.user);
-                //setToken(response.token);
-                setCookie("user", response.data.user, {path: "/"});
-                localStorage.setItem("site", cookie);
-                //console.log(response.data.user);
-                console.log(cookie);
-                navigate(routes.home);
-            }else{
-                //invalid credentials
-            }
+        return new Promise((resolve, reject) => {
+            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser', data)
+            .then(response => {
+            
+                console.log(response.data);
+                if (response.data.IsValid == true){
+                    //setUser(response.data.user);
+                    //setToken(response.token);
+                    setCookie("user", response.data.user, {path: "/"});
+                    localStorage.setItem("site", cookie);
+                    //console.log(response.data.user);
+                    console.log(cookie);
+                    navigate(routes.home);
+                    resolve(response.data);
+                }else{
+                    //invalid credentials
+                    reject(new Error("Invalid credentials"));
+                }
         })
         .catch(error => {
             console.error(error);
+            reject(error);
         });
+    })
     }
 
     //kill everything
