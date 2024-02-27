@@ -1,6 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
@@ -10,17 +10,10 @@ const OpenDayPage = () =>{
     const auth = useAuth();
 
     //sample data to demonstrate how this all works. In reality, we would get all the POS data with a post get request to the db and store it in an array
-    const safe = {id: 0, open: "Closed"}
-    const poss = [
-        {id: 1, open: "Closed"},
-        {id: 2, open: "Closed"},
-        {id: 3, open: "Closed"},
-        {id: 4, open: "Closed"},
-        {id: 5, open: "Closed"},
-    ];
-    const [currentPos, setCurrentPos] = useState(poss[0]);
+    const [poss, setPoss] = useState([]);
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("show extras ▼");
+    let currentPos = null;
 
     //dom fields
     const [elmPennies, setElmPennies] = useState(0);
@@ -89,13 +82,13 @@ const OpenDayPage = () =>{
 
     //Stores the general styling for the pos system label/radio buttons.
     //here, we simply change the text color based on whether the pos is open
-    const posLabelStyle = classNames(
+    /*const posLabelStyle = classNames(
         '',
         {
-            'text-green-500': currentPos.open == "Open",
-            'text-rose-600': currentPos.open == "Closed",
+            'text-green-500': currentPos.open == true,
+            'text-rose-600': currentPos.open == false,
         }
-    );
+    );*/
 
     function clamp(value, min = 0){
         if (value < min){
@@ -104,12 +97,9 @@ const OpenDayPage = () =>{
         return value;
     }
 
-    //changes the currently-selected pos to either open or close
+    //changes the currently-selected pos
     function changeCurrentPos(id){
-        if (id == 0){
-            setCurrentPos(safe);
-        }
-        setCurrentPos(poss[id - 1]);
+        currentPos = poss[id - 1];
         console.log(currentPos);
     }
 
@@ -145,13 +135,37 @@ const OpenDayPage = () =>{
         setElmHalfDollarCoin(0);
     }
 
+    //make this call immediately on component load
+    useEffect(() => {
+        function Initialize(){
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID}`)
+            .then(response => {
+                console.log(response);
+                if (true){
+                    //set the pos information data
+                    setPoss(response.data);
+
+                    //update current pos
+                    changeCurrentPos(response.data[0].ID);
+                }else{
+                    //something broke, oh no
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+
+        Initialize();
+    }, []);
+
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
         event.preventDefault();
 
         axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
-            "usrID": auth.user.ID,
-            "itemCounted": "<pos id>",
+            "usrID": auth.cookie.user.ID,
+            "itemCounted": currentPos.ID,
             "total": totalAmount,
             "amountExpected": expectedAmount,
             "hundred": elm100Dollar,
@@ -194,40 +208,25 @@ const OpenDayPage = () =>{
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-12">
                     <p className="text-2xl mb-2">Select a POS to open</p>
-                    <label>
-                        <input 
-                            key={"safe"} 
-                            defaultChecked={true} 
-                            onChange={(e) => changeCurrentPos(safe.id)} 
-                            type="radio" 
-                            name="pos" 
-                            value={"Safe"} 
-                        />
-                        Safe - {safe.open}
-                    </label>
-                    <br/>
                     {poss.map(item => (
                         <>
                             <label>
                                 <input 
-                                    key={"pos" + item.id} 
-                                    onChange={(e) => changeCurrentPos(item.id)} 
+                                    key={item.name} 
+                                    defaultChecked={item.ID == 1 ? true : false}
+                                    onChange={(e) => changeCurrentPos(item.ID)} 
                                     type="radio" 
                                     name="pos" 
-                                    value={"POS "+ item.id} 
+                                    value={item.name} 
                                 />
-                                POS {item.id} - {item.open}
+                                {item.name} - {item.opened ? "Open" : "Closed"}
                             </label>
                             <br/>
                         </>
                     ))}
                 </div>
                 <div className="text-main-color float-left ml-16 mt-12">
-                    {currentPos.id == 0 ?
-                        <p className="text-2xl" >Enter denominations for Safe</p>
-                    :
-                        <p className="text-2xl" >Enter denominations for POS # {currentPos.id}</p>
-                    }
+                    {currentPos && <p className="text-2xl" >Enter denominations for {currentPos.name}</p>}
                     <br/><hr/><br/>
                     <form onSubmit={Submit}>
                         <table>
