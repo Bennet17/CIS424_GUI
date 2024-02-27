@@ -1,68 +1,83 @@
-
-import EditUser from "./EditUser"
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from "axios";
+import { useDownloadExcel } from 'react-export-table-to-excel';
+import {Trash2, Pencil, Pen} from "lucide-react";
 function EmployeeTable() {
-{/*}
-    const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+  const [employees, setEmployees] = useState([]);
+  const tableRef = useRef(null);
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: 'Employees table',
+    sheet: 'Employees'
+  });
 
+  const handleRowClick = (employeeID) => {
+    console.log("Clicked employee ID:", employeeID);
+    // You can implement your logic for handling row clicks here
+  };
 
-    
-      // Function to close the edit form
-      const handleCloseEditForm = () => {
-        setIsEditFormOpen(false);
-        setSelectedUser(null);
-      };
+  useEffect(() => {
+    function fetchEmployeeTable() {
+      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewUsersByStoreID?storeID=0`;
 
-    */}
+      axios.get(url)
+        .then((response) => {
+          console.log('Data:', response.data);
 
-    const handleRowClick = (user) => {
-        //setSelectedUser(user);
-        //setIsEditFormOpen(true);
-      };
+          // Update the state variable 'employees' with the fetched data
+          setEmployees(response.data.map(employee => ({
+            ID: employee.ID,
+            username: employee.username,
+            name: employee.name,
+            password: employee.password,
+            position: employee.position,
+            storeID: employee.storeID
+          })));
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
 
-  const employees = [
-    { id: 1, firstName: 'John', lastName: 'Doe', phoneNumber: '123-456-7890', employeeId: 1, storeId: 101, role:'Standard' },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', phoneNumber: '987-654-3210', employeeId: 2, storeId: 102, role:'Manager'},
-    // Add more employee objects here if needed
-  ];
-
-
-
-
+    // Call the function to initiate the GET request with specific details
+    fetchEmployeeTable();
+  }, []); // Empty dependency array ensures that this effect runs only once, similar to componentDidMount
 
   return (
     <div>
-      <table className="min-w-full">
+    <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
+      <table ref={tableRef} className="min-w-full">
         <thead>
           <tr>
-            <th className="px-4 py-2">First Name</th>
-            <th className="px-4 py-2">Last Name</th>
-            <th className="px-4 py-2">Phone Number</th>
-            <th className="px-4 py-2">Employee ID</th>
+            <th className="px-4 py-2">Username</th>
+            <th className="px-4 py-2">Name</th>
+            <th className="px-4 py-2">Position</th>
             <th className="px-4 py-2">Store ID</th>
-            <th className="px-4 py-2">Role</th>
           </tr>
         </thead>
         <tbody>
           {employees.map((employee) => (
-            <tr key={employee.id} onClick={() => handleRowClick(employee.employeeId)} className="cursor-pointer hover:bg-gray-100">
-              <td className="border px-4 py-2">{employee.firstName}</td>
-              <td className="border px-4 py-2">{employee.lastName}</td>
-              <td className="border px-4 py-2">{employee.phoneNumber}</td>
-              <td className="border px-4 py-2">{employee.employeeId}</td>
-              <td className="border px-4 py-2">{employee.storeId}</td>
-              <td className="border px-4 py-2">{employee.role}</td>
+            <tr key={employee.ID} onClick={() => handleRowClick(employee.ID)} className="cursor-pointer hover:bg-gray-100">
+              <td className="border px-4 py-2">{employee.username}</td>
+              <td className="border px-4 py-2">{employee.name}</td>
+              <td className="border px-4 py-2">{employee.position}</td>
+              <td className="border px-4 py-2">{employee.storeID}</td>
             </tr>
           ))}
         </tbody>
       </table>
-        
-      <div class="flex flex-row-reverse">
-   
-      </div>
     </div>
+    <div className="flex flex-row-reverse">
+      <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              <button onClick={onDownload}>Export to Excel</button></div>
+    
+    </div>
+    </div>
+    
   );
 }
 
 export default EmployeeTable;
+
+
+

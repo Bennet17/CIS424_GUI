@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 
-const SafeAuditPage = () => {
-  const [startDay, setStartDay] = useState();
-  const [endDay, setEndDay] = useState();
-  const [currentDay, setCurrentDay] = useState();
+const SafeAuditPage = () =>{
+    const [startDay, setStartDay] = useState();
+    const [endDay, setEndDay] = useState();
+    const [currentDay, setCurrentDay] = useState(Date.toString(Date.now));
 
   //changes the start day, end day, and current day
   function changeDayStart() {}
@@ -38,20 +38,20 @@ const SafeAuditPage = () => {
       <SideBar currentPage={4} />
       <div className="flex flex-col w-full">
         <HorizontalNav />
-        <div className="float-left ml-32 mt-12">
-          <label className="text-main-color text-2xl mb-2">Start Date:</label>
+        <div className="float-left ml-10 mt-12">
+          <label className="text-main-color text-2xl ">Start Date:</label>
           <input
             onChange={changeDayStart}
-            className="box-border text-center mb-4 ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
+            className="box-border text-center ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
             type="date"
             name="start"
           ></input>
         </div>
-        <div className="float-left ml-10 mt-12">
-          <label className="text-main-color text-2xl mb-2">End Date:</label>
+        <div className="float-left ml-10 mt-4">
+          <label className="text-main-color text-2xl ">End Date:</label>
           <input
             onChange={changeDayEnd}
-            className="box-border text-center mb-4 ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
+            className="box-border text-center ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
             type="date"
             name="start"
           ></input>

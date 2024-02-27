@@ -1,31 +1,45 @@
 
-import EditUser from "./EditUser"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 function POSTable() {
-{/*}
-    const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
 
-
-    
-      // Function to close the edit form
-      const handleCloseEditForm = () => {
-        setIsEditFormOpen(false);
-        setSelectedUser(null);
-      };
-
-    */}
+    //do a get request to get all the POS's for the current store
+    const [pos, setPosRegisters] = useState([]);
 
     const handleRowClick = (user) => {
         //setSelectedUser(user);
         //setIsEditFormOpen(true);
       };
 
-  const POS = [
-    {  City: 'Flint', State: 'MI', Postal_Code: '48507', district: 1,address:'3192 S. Linden Road' , storeId: '00001', posID:'681' },
-    {  City: 'Flint', State: 'MI', Postal_Code: '48507', district: 1,address:'3192 S. Linden Road' , storeId: '00001', posID:'682' },
-    // Add more POS objects here if needed
-  ];
+
+      
+  useEffect(() => {
+    function  fetchPosTable()    {
+      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=0`;
+
+      axios.get(url)
+        .then((response) => {
+          console.log('Data:', response.data);
+
+          // Update the state variable 'pos' with the fetched data
+          setPosRegisters(response.data.map(pos => ({
+            ID: pos.ID,
+            name: pos.name,
+            storeID: pos.storeID,
+            enabled:pos.enabled,
+            opened:pos.opened
+            
+          })));
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
+
+    // Call the function to initiate the GET request with specific details
+    fetchPosTable();
+  }, []); // Empty dependency array ensures that this effect runs only once, similar to componentDidMount
+
 
 
 
@@ -33,38 +47,28 @@ function POSTable() {
 
   return (
     <div>
-      <table className="min-w-full">
+      <table className="w-auto">
         <thead>
           <tr>
-            <th className="px-4 py-2">City</th>
-            <th className="px-4 py-2">State</th>
-            <th className="px-4 py-2">Postal Code</th>
-            <th className="px-4 py-2">District</th>
-            <th className="px-4 py-2">Address</th>
-            <th className="px-4 py-2">Store ID</th>
-            <th className="px-4 py-2">POS ID</th>
+            <th className="px-4 py-2">POS Name</th>
+            <th className="px-4 py-2">POS Current Status</th>
+            <th className="px-4 py-2"></th>
+
 
           </tr>
         </thead>
         <tbody>
-          {POS.map((pos) => (
-            <tr key={pos.posID} onClick={() => handleRowClick(POS.posID)} className="cursor-pointer hover:bg-gray-100">
-              <td className="border px-4 py-2">{pos.City}</td>
-              <td className="border px-4 py-2">{pos.State}</td>
-              <td className="border px-4 py-2">{pos.Postal_Code}</td>
-              <td className="border px-4 py-2">{pos.district}</td>
-              <td className="border px-4 py-2">{pos.address}</td>
-              <td className="border px-4 py-2">{pos.storeId}</td>
-              <td className="border px-4 py-2">{pos.posID}</td>
+        {pos.map((pos) => (
+  <tr key={pos.name} onClick={() => handleRowClick(pos.name)} className="cursor-pointer hover:bg-gray-100">
+    <td className="border px-4 py-2">{pos.name}</td>
+    <td className="border px-4 py-2">{pos.opened ? 'Open' : 'Closed'}</td>
+    <td className="border px-4 py-2">{pos.enabled ? 'Enabled' : 'Disabled'}</td>
+  </tr>
+))}
 
-            </tr>
-          ))}
         </tbody>
       </table>
         
-      <div class="flex flex-row-reverse">
-   
-      </div>
     </div>
   );
 }

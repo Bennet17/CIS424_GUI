@@ -1,56 +1,89 @@
+import axios from "axios";
+import { useState } from "react";
+import { useAuth } from "../AuthProvider.js";
+
+
 
 function AddPOS() {
-    return (
 
-        <table >
-<tbody>
-<h2 className="text-lg font-bold mb-2">Add POS</h2>
-    <tr>
-        <td>
-            <label>City</label>
-            <input className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" />
-        </td>
-        <td>
-            <label>State</label>
-            <input className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" />
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label>Postal Code</label>
-            <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" ></input>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label>Store ID</label>
-            <select className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" >
-                <option value="store 1">Store 1</option>
-                <option value="store 2">Store 2</option>
-               </select>
-        </td>
-        <td>
-            <label>POS ID</label>
-            <select className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" >
-                <option value="POS 1">POS 1</option>
-                <option value="POS 2">POS 2</option>
-               </select>
-        </td>
-    </tr>
+  const [name, posName] = useState("");
+  const [store, setStore] = useState("");
+  const [result, setResult] = useState("");
 
 
-    <tr>
-        <td>
-            <button type="cancel"value="cancel" className="flex w-5/6  justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Cancel</button>
-        </td>
-        <td>
-            <button type="submit" value="submit" className="flex w-5/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add POS</button>
-        </td>
-    </tr>
-</tbody>
-</table>
+  function handleSubmit(event) {
+    event.preventDefault();
 
-    )
-}
+    
+    axios
+      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateRegister", 
+        {
+          "name": name,
+          "storeID": 0 //get Store ID
+        })
+      .then((response) => {
+
+        console.log(response.data.response);
+        window.location.reload(); // This will refresh the page
   
+      })
+      .catch((error) => {
+        console.error("API request failed:", error);
+       setResult("Request Failed. Try again.")
+      });
+  }
+
+  return (
+<form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+  <h2 className="text-lg font-bold mb-4">Create a New POS</h2>
+  <h2 className="text-lg font-bold mb-4">{result}</h2>
+  <div className="grid grid-cols-2 gap-4">
+    <div className="mb-4">
+      <label htmlFor="posName" className="block text-gray-700 font-bold mb-2"> POS Register Name:</label>
+      <input
+        id="posName"
+        type="text"
+        value={name}
+        onChange={(e) => posName(e.target.value)}
+        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+      />
+    </div>
+    {/*
+    <div className="mb-4">
+      <label htmlFor="store" className="block text-gray-700 font-bold mb-2">Store:</label>
+      <input
+        id="store"
+        readOnly='true'
+        type="text"
+        value={store}
+        onChange={(e) => setStore(e.target.value)}
+        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+      />
+    </div>
+  */}
+  </div>
+  <div className="grid grid-cols-2 gap-4">
+
+  </div>
+  <div className="flex justify-between">
+    <button
+      type="button"
+      className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    >
+      Add POS Register
+    </button>
+  </div>
+</form>
+
+
+
+  );
+}
+
 export default AddPOS;
