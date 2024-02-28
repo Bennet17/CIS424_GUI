@@ -1,9 +1,10 @@
-import { Fragment, useState } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import {useNavigate} from 'react-router-dom';
+import { Fragment, useState } from "react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider.js";
-import routes from '../routes.js';
+import routes from "../routes.js";
+import { Store } from "lucide-react";
 
 /*
 const navigation = [
@@ -16,22 +17,26 @@ const navigation = [
 
 export default function HorizotalNav() {
   function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
+    return classes.filter(Boolean).join(" ");
   }
   const navigate = useNavigate();
   const auth = useAuth();
-      
+
+  const [storeMenuOn, setStoreMenu] = useState(false);
+
   function signOut() {
     auth.logOut();
     navigate(routes.signout);
   }
 
   return (
-    
-    <Disclosure as="nav" className="bg-gray-300 shadow">
+    <Disclosure as="nav" className="bg-gray-500 shadow">
       {({ open }) => (
         <>
-          <p className="float-left translate-x-6 translate-y-4 text-2xl text-main-color">PLATO'S CLOSET - {auth.cookie.user.name} ({auth.cookie.user.position})</p>
+          <p className="float-left translate-x-6 translate-y-4 text-2xl text-custom-accent">
+            PLATO'S CLOSET - {auth.cookie.user.name} (
+            {auth.cookie.user.position})
+          </p>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -47,9 +52,7 @@ export default function HorizotalNav() {
                 </Disclosure.Button>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex flex-shrink-0 items-center">
-
-                </div>
+                <div className="flex flex-shrink-0 items-center"></div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {/*
@@ -70,20 +73,26 @@ export default function HorizotalNav() {
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-
-
+              <div
+                onClick={() => {
+                  setStoreMenu(!storeMenuOn);
+                }}
+                className="bg-gray-500 inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+              >
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="relative flex rounded-full bg-white text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-white">
+                    <Menu.Button
+                      className={`relative p-2 rounded-md flex ${
+                        storeMenuOn
+                          ? "bg-gradient-to-tr from-gray-800 to-gray-600"
+                          : "hover:bg-gradient-to-tr from-gray-800 to-gray-600"
+                      }`}
+                    >
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+
+                      <Store className="text-custom-accent mx-3 w-7 h-7" />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -100,30 +109,35 @@ export default function HorizotalNav() {
                         {({ active }) => (
                           <a
                             href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
                           >
                             View Store location 2
                           </a>
                         )}
                       </Menu.Item>
-                      <Menu.Item>
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <a
                             onClick={signOut}
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
                           >
                             Sign out
-                            
                           </a>
                         )}
-                      </Menu.Item >
+                      </Menu.Item> */}
                     </Menu.Items>
                   </Transition>
                 </Menu>
               </div>
             </div>
           </div>
-                { /*
+          {/*
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
                 
@@ -146,5 +160,5 @@ export default function HorizotalNav() {
         </>
       )}
     </Disclosure>
-  )
+  );
 }

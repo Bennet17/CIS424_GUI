@@ -32,10 +32,10 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
     #### Negative Values in () - MISSION
         Format negative datalabels in () rather than with -
 
-    ### Look into Apexcharts License - MISSION
+    #### Look into Apexcharts License - MISSION
         May be licensing requirements for the software (MIT License)
 
-    ### Black Titles to Gray-800 - MISSION
+    #### Black Titles to Gray-800 - MISSION
         Make it look consistent with SideBar
 
 ### `SideBar.jsx` Component ### - 
@@ -52,6 +52,20 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
 
     #### Not Mobile-Responsive - BATTLE
         Hopefully an easy fix with Tailwind
+
+### `HorizontalNav.js` Component ### - 
+    
+    #### Menu Focus Loss Bug - BATTLE
+        The focus styling for the stores icon button is only handling clicks ON it,
+        buuuuuuut the menu that comes up can lose focus when user clicks anywhere -
+        not just on the stores icon button - at which point the styling needs to be
+        turned off but it is not
+
+    #### Menu Items Rounded Corners - QUEST
+        When menu items are hovered, their corner styling disappears
+
+    #### Populate with User Stores - BATTLE
+        Just a hardcoded store right now
 
 ### Handle invalid user login
 
