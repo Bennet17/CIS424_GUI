@@ -1,11 +1,17 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import classNames from 'classnames';
+import {useNavigate} from 'react-router-dom';
+import routes from '../routes.js';
+import {useAuth} from '../AuthProvider.js';
 
 const DepositHistory = () => {
+
+    const auth = useAuth();
+    const navigate = useNavigate();
 
     const statusStyle = classNames(
         'box-border',
@@ -20,6 +26,14 @@ const DepositHistory = () => {
             'bg-main-color': status.CLOSED,
         }*/
     );
+
+    //check the permissions of the logged in user on page load, passing in
+    //the required permissions
+    useEffect(() => {
+        if (!auth.CheckAuthorization(["Manager", "District Manager", "CEO"])){
+            navigate(routes.signout);
+        }
+    })
     
     const status = {
         OPEN: 0,

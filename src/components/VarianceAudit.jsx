@@ -1,10 +1,16 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
+import {useNavigate} from 'react-router-dom';
+import routes from '../routes.js';
+import {useAuth} from '../AuthProvider.js';
 
 const SafeAuditPage = () =>{
+    const auth = useAuth();
+    const navigate = useNavigate();
+
     const [startDay, setStartDay] = useState();
     const [endDay, setEndDay] = useState();
     const [currentDay, setCurrentDay] = useState(Date.toString(Date.now));
@@ -16,6 +22,14 @@ const SafeAuditPage = () =>{
     }
     function changeDayCurrent(){
     }
+
+    //check the permissions of the logged in user on page load, passing in
+    //the required permissions
+    useEffect(() => {
+        if (!auth.CheckAuthorization(["Manager", "District Manager", "CEO"])){
+            navigate(routes.signout);
+        }
+    })
 
     function Submit(event){
         event.preventDefault();
