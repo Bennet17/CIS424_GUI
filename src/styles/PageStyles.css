@@ -61,6 +61,35 @@
     text-align: right;
 }
 
+/* Format for select inputs in fund transfer */
+.select-input {
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    margin-left: 0;
+    margin-right: 2.5rem;
+    width: 15rem;
+    border: 2px solid rgb(57, 70, 83); 
+    border-radius: 5px;
+    background-color: #FFFFFF; 
+}
+
+.select-input:hover {
+    background-color: #F3F4F6;
+}
+
+.amount-input {
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: 1rem;
+    margin-left: 0;
+    margin-right: 2.5rem;
+    width: 10rem;
+    border: 2px solid rgb(57, 70, 83); 
+    border-radius: 5px;
+    background-color: #FFFFFF; 
+    user-select: text;
+}
+
 /* Format for denomination inputs in fund transfer */
 .denomination-input {
     box-sizing: border-box;
@@ -71,10 +100,27 @@
     width: 6rem;
     float: right; 
     border: 2px solid rgb(57, 70, 83); 
+    border-radius: 5px;
     background-color: #FFFFFF; 
 }
 
 .denomination-input:hover {
+    background-color: #F3F4F6;
+}
+
+.showextra {
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: .1em;
+    text-align: center; 
+    font-size: 1.25rem; 
+    border-radius: 5px;
+    background-color: white;
+}
+
+.showextra:hover {
+    border-radius: 5px;
     background-color: #F3F4F6;
 }
 
