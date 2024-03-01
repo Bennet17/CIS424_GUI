@@ -1,23 +1,23 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, { useState } from "react";
-import { formatValue } from "react-currency-input-field";
+import React, { useState, useEffect } from "react";
 import CurrencyInput from "react-currency-input-field";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
-import { parse } from "postcss";
-import { format } from "highcharts";
+import { useAuth } from "../AuthProvider.js";
 
 const FundsTransferPage = () =>{
-    // Arrays to hold the source and destination options
-    let arrSources = ["POS1", "POS2", "POS3", "Safe", "Bank"];
-    let arrDestinations = ["POS1", "POS2", "POS3", "Safe", "Bank"];
+    // Authentication context
+    const auth = useAuth();
 
-    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer";
+    // Const to hold the fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
+    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer";
 
     // Const to hold the form data
     const [formData, setFormData] = useState({
-        user: 37,
+        user: auth.cookie.user.ID,
+        name: auth.cookie.user.name,
+        store: auth.cookie.user.storeID,
         source: "",
         destination: "",
         amount: "",
@@ -40,14 +40,42 @@ const FundsTransferPage = () =>{
         pennyRoll: 0,
     });
 
+    const [arrSources, setArrSources] = useState([]); // Array to hold the source register names
+    const [arrDestinations, setArrDestinations] = useState([]); // Array to hold the destination register names
+
     const [status, setStatus] = useState(""); // Status message to display after form submission
     const [report, setReport] = useState(""); // Report message to display after form submission
     const successClass = "text-green-500"; // CSS class for success
     const errorClass = "text-red-500"; // CSS class for error
 
     const [showExtraChange, setShowExtraChange] = useState(false);
-    const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("+ Show extras");
+    const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
 
+    // Loads the source options from the store
+    useEffect(() => {
+        function Initialize() {
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${formData.store}`)
+            .then(response => {
+                // Extract register names from the response and filter based on opened status
+                const newSources = response.data.filter(register => register.opened).map(register => register.name);
+
+                // Update arrSources using functional form of setState to avoid duplicates
+                setArrSources(newSources);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+
+        Initialize();
+    }, []);
+
+    // Set the destination options from arrSources
+    useEffect(() => {
+        setArrDestinations(arrSources);
+    }, [arrSources]);
+
+    // Calculate the total amount based on the denomination fields
     const CalculateAmount = (formData) => {
         // Object to hold the denominations and their values.
         const denominations = {
@@ -179,8 +207,10 @@ const FundsTransferPage = () =>{
         }
 
         // If any field is invalid, return true to stop form submission
-        if (blnError) return true;
-        else return false;
+        if (blnError) 
+            return true;
+        else 
+            return false;
     }
 
     // Const to handle form submission
@@ -194,6 +224,8 @@ const FundsTransferPage = () =>{
         // Stores the form data in the variables
         let {
             user,
+            name,
+            store,
             source,
             destination,
             amount: fltAmount,
@@ -220,24 +252,11 @@ const FundsTransferPage = () =>{
             newCurrencyFields
         );
 
-        // Reset the form fields
-        setFormData({
-            user: 0,
-            source: "",
-            destination: "",
-            amount: "",
-            ...Object.keys(currencyFields).reduce((acc, key) => {
-            acc[key] = 0;
-            return acc;
-            }, {}),
-        });
-
         // Set the status message
         setStatus("Successfully submitted transfer!");
 
         // Generate the report
         const report = GenerateReport(
-            user,
             source,
             destination,
             fltAmount,
@@ -246,12 +265,28 @@ const FundsTransferPage = () =>{
 
         // Set the report message
         setReport(report);
-    };
-
-    const HandleReset = (event) => {
+        
         // Reset the form fields
         setFormData({
-            user: 0,
+            user: user,
+            name: name,
+            store: store,
+            source: "",
+            destination: "",
+            amount: "",
+            ...Object.keys(currencyFields).reduce((acc, key) => {
+                acc[key] = 0;
+                return acc;
+            }, {}),
+        });
+    };
+
+    const HandleCancel = (event) => {
+        // Reset the form fields
+        setFormData({
+            user: auth.cookie.user.ID,
+            name: auth.cookie.user.name,
+            store: auth.cookie.user.storeID,
             source: "",
             destination: "",
             amount: "",
@@ -327,14 +362,13 @@ const FundsTransferPage = () =>{
         setShowExtraChange(!showExtraChange);
 
         if (!showExtraChange)
-            setShowExtraChangeTxt("- Hide extras");
+            setShowExtraChangeTxt("▲ Hide extras");
         else
-            setShowExtraChangeTxt("+ Show extras");
+            setShowExtraChangeTxt("▼ Show extras");
     }
 
     // Generate the report message
     const GenerateReport = (
-        user,
         strSource,
         strDestination,
         fltAmount,
@@ -372,9 +406,7 @@ const FundsTransferPage = () =>{
             if (denominations[key]) {
                 denominationsDetails.push(
                     <tr key={key}>
-                        <td class="tg-i817">
-                            {value} x ${denominations[key]}
-                        </td>
+                        <td className="tg-i817">{value} x ${denominations[key]}</td>
                     </tr>
                 );
             }
@@ -383,98 +415,102 @@ const FundsTransferPage = () =>{
         // Report details
         return (
             <div>
-                <table class="tg">
+                <table className="tg">
                     <thead>
                         <tr>
-                        <th class="tg-mqa1" colspan="2">
-                            Transfer of Funds Report
-                        </th>
+                            <th className="tg-mqa1" colSpan="2">
+                                Transfer of Funds Report
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="tg-mcqj" colspan="2">
+                            <td className="tg-mcqj" colSpan="2">
                                 User Details:
                             </td>
                         </tr>
                         <tr>
-                            <td class="tg-i817">Store:</td>
-                            <td class="tg-i817">blank</td>
+                            <td className="tg-i817">Store:</td>
+                            <td className="tg-i817">{formData.store}</td>
                         </tr>
                         <tr>
-                            <td class="tg-i817">User:</td>
-                            <td class="tg-i817">{user}</td>
+                            <td className="tg-i817">User:</td>
+                            <td className="tg-i817">{formData.name}</td>
                         </tr>
                         <tr>
-                            <td class="tg-73oq">Date:</td>
-                            <td class="tg-73oq">{currentDate}</td>
+                            <td className="tg-73oq">Date:</td>
+                            <td className="tg-73oq">{currentDate}</td>
                         </tr>
                         <tr>
-                            <td class="tg-c10m" colspan="2">
+                            <td className="tg-c10m" colSpan="2">
                                 Transfer Details:
                             </td>
                         </tr>
                         <tr>
-                            <td class="tg-73oq">Source:</td>
-                            <td class="tg-73oq">{strSource}</td>
+                            <td className="tg-73oq">Source:</td>
+                            <td className="tg-73oq">{strSource}</td>
                         </tr>
                         <tr>
-                            <td class="tg-i817">Destination:</td>
-                            <td class="tg-i817">{strDestination}</td>
+                            <td className="tg-i817">Destination:</td>
+                            <td className="tg-i817">{strDestination}</td>
                         </tr>
                         <tr>
-                            <td class="tg-73oq">Amount:</td>
-                            <td class="tg-73oq">${fltAmount}</td>
+                            <td className="tg-73oq">Amount:</td>
+                            <td className="tg-73oq">${fltAmount}</td>
                         </tr>
                         <tr>
-                            <td class="tg-i817">Denominations:</td>
-                            <td class="tg-i817">{denominationsDetails}</td>
+                            <td className="tg-i817">Denominations:</td>
+                            <td className="tg-i817">
+                                <table>
+                                    <tbody>{denominationsDetails}</tbody>
+                                </table>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="tg-mcqj" colspan="2">
+                            <td className="tg-mcqj" colSpan="2">
                                 Source Details:
                             </td>
                         </tr>
                         <tr>
-                            <td class="tg-i817">
+                            <td className="tg-i817">
                                 Expected amount in {strSource} before transfer:
                             </td>
-                            <td class="tg-i817">blank</td>
+                            <td className="tg-i817">blank</td>
                         </tr>
                         <tr>
-                            <td class="tg-73oq">
+                            <td className="tg-73oq">
                                 Expected amount in {strSource} after transfer:
                             </td>
-                            <td class="tg-73oq">blank</td>
+                            <td className="tg-73oq">blank</td>
                         </tr>
                         <tr>
-                            <td class="tg-i817">
+                            <td className="tg-i817">
                                 Actual amount in {strSource} after transfer:
                             </td>
-                            <td class="tg-i817">blank</td>
+                            <td className="tg-i817">blank</td>
                         </tr>
                         <tr>
-                            <td class="tg-mcqj" colspan="2">
+                            <td className="tg-mcqj" colSpan="2">
                                 Destination Details:
                             </td>
                         </tr>
                         <tr>
-                            <td class="tg-i817">
+                            <td className="tg-i817">
                                 Expected amount in {strDestination} before transfer:
                             </td>
-                            <td class="tg-i817">blank</td>
+                            <td className="tg-i817">blank</td>
                         </tr>
                         <tr>
-                            <td class="tg-73oq">
+                            <td className="tg-73oq">
                                 Expected amount in {strDestination} after transfer:
                             </td>
-                            <td class="tg-73oq">blank</td>
+                            <td className="tg-73oq">blank</td>
                         </tr>
                         <tr>
-                            <td class="tg-i817">
+                            <td className="tg-i817">
                                 Actual amount in {strDestination} after transfer:
                             </td>
-                            <td class="tg-i817">blank</td>
+                            <td className="tg-i817">blank</td>
                         </tr>
                     </tbody>
                 </table>
@@ -491,7 +527,7 @@ const FundsTransferPage = () =>{
             <div className="flex flex-col w-full">
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-12">
-                    <form onSubmit={HandleSubmit} onReset={HandleReset}>
+                    <form onSubmit={HandleSubmit} onReset={HandleCancel}>
                         <table>
                             <tbody>
                                 <tr>
@@ -508,12 +544,12 @@ const FundsTransferPage = () =>{
                                                 value={formData.source}
                                                 onChange={HandleChange}
                                             >
-                                            <option value="">&lt;Please select a source&gt;</option>
-                                            {arrSources.map((item, index) => (
-                                                <option key={item} value={item}>
+                                                <option value="">&lt;Please select a source&gt;</option>
+                                                {arrSources.map((item, index) => (
+                                                    <option key={item} value={item}>
                                                     {item}
-                                                </option>
-                                            ))}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                     </td>
