@@ -11,7 +11,7 @@ const FundsTransferPage = () =>{
     const auth = useAuth();
 
     // Const to hold the fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
-    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer";
+    const FundTransferURL = "";
 
     // Const to hold the form data
     const [formData, setFormData] = useState({
@@ -625,7 +625,7 @@ const FundsTransferPage = () =>{
                                             id="penny_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.penny}
                                             onChange={HandleChange}
                                         />
@@ -637,7 +637,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.penny * 0.01).toFixed(2)}
                                         />
                                     </td>
@@ -649,7 +649,7 @@ const FundsTransferPage = () =>{
                                             id="one_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.one}
                                             onChange={HandleChange}
                                         />
@@ -661,7 +661,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.one * 1).toFixed(2)}
                                         />
                                     </td>
@@ -675,7 +675,7 @@ const FundsTransferPage = () =>{
                                             id="nickel_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.nickel}
                                             onChange={HandleChange}
                                         />
@@ -687,7 +687,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.nickel * 0.05).toFixed(2)}
                                         />
                                     </td>
@@ -699,7 +699,7 @@ const FundsTransferPage = () =>{
                                             id="five_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.five}
                                             onChange={HandleChange}
                                         />
@@ -711,7 +711,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.five * 5).toFixed(2)}
                                         />
                                     </td>
@@ -725,7 +725,7 @@ const FundsTransferPage = () =>{
                                             id="dime_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.dime}
                                             onChange={HandleChange}
                                         />
@@ -737,7 +737,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.dime * 0.1).toFixed(2)}
                                         />
                                     </td>
@@ -749,7 +749,7 @@ const FundsTransferPage = () =>{
                                             id="ten_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.ten}
                                             onChange={HandleChange}
                                         />
@@ -761,7 +761,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.ten * 10).toFixed(2)}
                                         />
                                     </td>
@@ -775,7 +775,7 @@ const FundsTransferPage = () =>{
                                             id="quarter_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.quarter}
                                             onChange={HandleChange}
                                         />
@@ -787,7 +787,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.quarter * 0.25).toFixed(2)}
                                         />
                                     </td>
@@ -799,7 +799,7 @@ const FundsTransferPage = () =>{
                                             id="twenty_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.twenty}
                                             onChange={HandleChange}
                                         />
@@ -811,7 +811,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.twenty * 20).toFixed(2)}
                                         />
                                     </td>
@@ -825,7 +825,7 @@ const FundsTransferPage = () =>{
                                             id="pennyRoll_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.pennyRoll}
                                             onChange={HandleChange}
                                         />
@@ -837,7 +837,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.pennyRoll * 0.5).toFixed(2)}
                                         />
                                     </td>
@@ -849,7 +849,7 @@ const FundsTransferPage = () =>{
                                             id="fifty_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.fifty}
                                             onChange={HandleChange}
                                         />
@@ -861,7 +861,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.fifty * 50).toFixed(2)}
                                         />
                                     </td>
@@ -875,7 +875,7 @@ const FundsTransferPage = () =>{
                                             id="nickelRoll_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.nickelRoll}
                                             onChange={HandleChange}
                                         />
@@ -887,7 +887,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.nickelRoll * 2).toFixed(2)}
                                         />
                                     </td>
@@ -899,7 +899,7 @@ const FundsTransferPage = () =>{
                                             id="hundred_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.hundred}
                                             onChange={HandleChange}
                                         />
@@ -911,7 +911,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.hundred * 100).toFixed(2)}
                                         />
                                     </td>
@@ -925,7 +925,7 @@ const FundsTransferPage = () =>{
                                             id="dimeRoll_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.dimeRoll}
                                             onChange={HandleChange}
                                         />
@@ -937,7 +937,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.dimeRoll * 5).toFixed(2)}
                                         />
                                     </td>
@@ -949,7 +949,7 @@ const FundsTransferPage = () =>{
                                             id="quarterRoll_input"
                                             step={1}
                                             min={0}
-                                            className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                            className="denomination-input"
                                             value={formData.quarterRoll}
                                             onChange={HandleChange}
                                         />
@@ -961,7 +961,7 @@ const FundsTransferPage = () =>{
                                             groupSeparator=","
                                             placeholder="0.00"
                                             readOnly={true}
-                                            className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                            className="denomination"
                                             value={(formData.quarterRoll * 10).toFixed(2)}
                                         />
                                     </td>
@@ -977,7 +977,7 @@ const FundsTransferPage = () =>{
                                         id="oneCoin_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                        className="denomination-input"
                                         value={formData.dollarCoin}
                                         onChange={HandleChange}
                                     />
@@ -989,7 +989,7 @@ const FundsTransferPage = () =>{
                                         groupSeparator=","
                                         placeholder="0.00"
                                         readOnly={true}
-                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        className="denomination"
                                         value={(formData.dollarCoin * 1).toFixed(2)}
                                     />
                                     </td>
@@ -1001,7 +1001,7 @@ const FundsTransferPage = () =>{
                                         id="two_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                        className="denomination-input"
                                         value={formData.two}
                                         onChange={HandleChange}
                                     />
@@ -1013,7 +1013,7 @@ const FundsTransferPage = () =>{
                                         groupSeparator=","
                                         placeholder="0.00"
                                         readOnly={true}
-                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        className="denomination"
                                         value={(formData.two * 2).toFixed(2)}
                                     />
                                     </td>
@@ -1029,7 +1029,7 @@ const FundsTransferPage = () =>{
                                         id="halfDollar_input"
                                         step={1}
                                         min={0}
-                                        className="box-border text-center mb-4 ml-6 mr-10 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                                        className="denomination-input"
                                         value={formData.halfDollar}
                                         onChange={HandleChange}
                                     />
@@ -1041,7 +1041,7 @@ const FundsTransferPage = () =>{
                                         groupSeparator=","
                                         placeholder="0.00"
                                         readOnly={true}
-                                        className="text-gray-500 mb-4 ml-0 mr-0 w-24"
+                                        className="denomination"
                                         value={(formData.halfDollar * 0.5).toFixed(2)}
                                     />
                                     </td>
