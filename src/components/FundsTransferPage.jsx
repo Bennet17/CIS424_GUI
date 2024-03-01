@@ -555,7 +555,7 @@ const FundsTransferPage = () =>{
                                             <select
                                                 name="source"
                                                 id="source_select"
-                                                className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-0 mr-10 w-50"
+                                                className="select-input"
                                                 value={formData.source}
                                                 onChange={HandleChange}
                                             >
@@ -580,7 +580,7 @@ const FundsTransferPage = () =>{
                                             <select
                                                 name="destination"
                                                 id="destination_select"
-                                                className="box-border border-border-color border-2 hover:bg-nav-bg bg-white mb-4 ml-0 mr-10 w-50"
+                                                className="select-input"
                                                 value={formData.destination}
                                                 onChange={HandleChange}
                                             >
@@ -610,7 +610,7 @@ const FundsTransferPage = () =>{
                                                 groupSeparator=","
                                                 placeholder="$0.00"
                                                 readOnly={true}
-                                                className="box-border border-border-color border-2 bg-nav-bg mb-4 ml-0 mr-10 w-24"
+                                                className="amount-input"
                                                 value={formData.amount}
                                                 onValueChange={(value, name) => {
                                                     setFormData((prevFormData) => ({
