@@ -78,6 +78,22 @@
     background-color: #F3F4F6;
 }
 
+.showextra {
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: .1em;
+    text-align: center; 
+    font-size: 1.25rem; 
+    border-radius: 5px;
+    background-color: white;
+}
+
+.showextra:hover {
+    border-radius: 5px;
+    background-color: #F3F4F6;
+}
+
 /* Format for individual denominations in fund transfer */
 .denomination {
     margin-bottom: 1rem;

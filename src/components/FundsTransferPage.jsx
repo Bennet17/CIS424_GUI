@@ -11,7 +11,7 @@ const FundsTransferPage = () =>{
     const auth = useAuth();
 
     // Const to hold the fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
-    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer";
+    const FundTransferURL = "";
 
     // Const to hold the form data
     const [formData, setFormData] = useState({
@@ -124,12 +124,23 @@ const FundsTransferPage = () =>{
         // Get the field name and value
         const { name, value } = event.target;
 
+        // Stores value to be parsed back to number after form change
+        let parsedValue = value;
+
+        // If the field is not a select field, parse the value to a number
+        if (event.target.tagName.toLowerCase() !== 'select') {
+            const numericValue = parseFloat(value);
+
+            if (!isNaN(numericValue))
+                parsedValue = numericValue;
+        }
+
         // Update the form data
         setFormData((prevFormData) => ({
             ...prevFormData,
-            [name]: value,
+            [name]: parsedValue,
         }));
-
+        
         // Remove error class when the field is filled for empty fields
         if (value !== "") 
             event.target.classList.remove("error");
@@ -149,7 +160,7 @@ const FundsTransferPage = () =>{
         // Calculate the amount based on the denomination fields
         CalculateAmount({
             ...formData,
-            [name]: value,
+            [name]: parsedValue,
         });
 
         // If the amount field is changed from the denominations, remove the error class from the amount field
@@ -159,7 +170,9 @@ const FundsTransferPage = () =>{
 
     // Function to filter out non-zero currency fields from the form data and return them
     function FilterDenominations(currencyFields) {
-        // Filter out non-zero currency fields
+        // Filter out non-zero currency fields by reducing the currencyFields object to a new object
+        // only including the non-zero fields. The reduce function iterates through each key-value pair
+        // in the currencyFields object and adds the key-value pair to the new object if the value is non-zero.
         let nonZeroCurrencyFields = Object.keys(currencyFields).reduce(
             (acc, key) => {
                 if (currencyFields[key] !== 0) acc[key] = currencyFields[key];
@@ -231,6 +244,8 @@ const FundsTransferPage = () =>{
             amount: fltAmount,
             ...currencyFields
         } = formData;
+
+        console.log(currencyFields)
 
         // Filter out non-zero currency fields
         fltAmount = parseFloat(formData.amount).toFixed(2);
@@ -352,7 +367,7 @@ const FundsTransferPage = () =>{
                 console.log("Failed to submit transfer");
         })
         .catch((error) => {
-            console.error(error);
+            // console.error(error);
         });
     }
 
@@ -1050,7 +1065,7 @@ const FundsTransferPage = () =>{
                                 <tr>
                                     <td colSpan="3">
                                         <p
-                                            className="cursor-pointer w-full mb-4 text-center hover:bg-nav-bg bg-white text-xl"
+                                            className="showextra"
                                             onClick={ToggleExtraChange}
                                         >
                                             {showExtraChangeTxt}
