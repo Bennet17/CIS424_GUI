@@ -18,6 +18,13 @@ const SafeAuditPage = () =>{
   function changeDayEnd() {}
   function changeDayCurrent() {}*/
 
+  function clamp(value, min = 0){
+    if (value < min){
+        return min;
+    }
+        return value;
+    }
+
   function Submit(event) {
     event.preventDefault();
 
@@ -42,23 +49,23 @@ const SafeAuditPage = () =>{
       <SideBar currentPage={4} />
       <div className="flex flex-col w-full">
         <HorizontalNav />
-        <div className="float-left ml-10 mt-12">
-          <label className="text-main-color text-2xl ">Start Date:</label>
-          <input
-            onChange={setStartDay}
-            className="box-border text-center ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
-            type="date"
-            name="start"
-          ></input>
-        </div>
-        <div className="float-left ml-10 mt-4">
-          <label className="text-main-color text-2xl ">End Date:</label>
-          <input
-            onChange={setEndDay}
-            className="box-border text-center ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
-            type="date"
-            name="start"
-          ></input>
+        <div className="float-left ml-32 mt-12">
+          <label className="text-main-color text-2xl ">Start Date:
+            <input
+                onChange={setStartDay}
+                className="box-border text-center text-base ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
+                type="date"
+                name="start"
+            ></input>
+          </label>
+          <label className="text-main-color text-2xl ">End Date:
+            <input
+                onChange={setEndDay}
+                className="box-border text-center text-base ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white"
+                type="date"
+                name="start"
+            ></input>
+          </label>
         </div>
         <div className="float-left ml-32 mt-8">
           <div>
@@ -233,22 +240,26 @@ const SafeAuditPage = () =>{
               <tbody>
                 <tr>
                   <td>
-                    <label className="text-main-color">Petty cash:</label>
-                    <input
-                        value={"$"+ pettyCash}
-                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white"
-                        disabled={true}
-                        type="text"
-                    />
+                    <label className="text-main-color">Petty cash:
+                        <input
+                            value={pettyCash}
+                            onChange={e => setPettyCash(clamp(e.target.value))} 
+                            min="0"
+                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                            type="number"
+                        />
+                    </label>
                   </td>
                   <td>
-                    <label className="text-main-color">Over/Short:</label>
-                    <input
-                        value={"$" + overShort}
-                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white"
-                        disabled={true}
-                        type="text"
-                    />
+                    <label className="text-main-color">Over/Short:
+                        <input
+                            value={overShort}
+                            onChange={e => setOverShort(clamp(e.target.value))} 
+                            min="0"
+                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                            type="number"
+                        />
+                    </label>
                   </td>
                   <td></td>
                   <td>
@@ -263,22 +274,26 @@ const SafeAuditPage = () =>{
                 </tr>
                 <tr>
                   <td>
-                    <label className="text-main-color">Safe Expected:</label>
-                    <input
-                        value={"$" + expected}
-                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white"
-                        disabled={true}
-                        type="text"
-                    />
+                    <label className="text-main-color">Safe Expected:
+                        <input
+                            value={expected}
+                            onChange={e => setExpected(clamp(e.target.value))} 
+                            min="0"
+                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                            type="number"
+                        />
+                    </label>
                   </td>
                   <td>
-                    <label className="text-main-color">Safe Total:</label>
-                    <input
-                        value={"$" + safeTotal}
-                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white"
-                        disabled={true}
-                        type="text"
-                    />
+                    <label className="text-main-color">Safe Total:
+                        <input
+                            value={safeTotal}
+                            onChange={e => setSafeTotal(clamp(e.target.value))} 
+                            min="0" 
+                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                            type="number"
+                        />
+                    </label>
                   </td>
                 </tr>
               </tbody>

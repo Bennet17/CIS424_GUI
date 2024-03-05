@@ -55,22 +55,22 @@ const SafeAuditPage = () =>{
             <SideBar currentPage={5} />
             <div className="flex flex-col w-full">
                 <HorizontalNav />
-                <div className="float-left ml-10 mt-12">
-                    <label className="text-main-color text-2xl">Start Date:</label>
-                    <input onChange={changeDayStart} 
-                        className="box-border text-center  ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
-                        type="date" 
-                        name="start">
-                    </input>
-                </div>
-                <div className="float-left ml-10 mt-4">
-                    <label className="text-main-color text-2xl ">End Date:</label>
-                    <input 
-                        onChange={changeDayEnd} 
-                        className="box-border text-center ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
-                        type="date" 
-                        name="start">
-                    </input>
+                <div className="float-left ml-32 mt-12">
+                    <label className="text-main-color text-2xl">Start Date:
+                        <input onChange={changeDayStart} 
+                            className="box-border text-center text-base ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
+                            type="date" 
+                            name="start">
+                        </input>
+                    </label>
+                    <label className="text-main-color text-2xl ">End Date:
+                        <input 
+                            onChange={changeDayEnd} 
+                            className="box-border text-center text-base ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
+                            type="date" 
+                            name="start">
+                        </input>
+                    </label>
                 </div>
                 <div className="float-left ml-32 mt-8">
                     <div>
@@ -238,12 +238,14 @@ const SafeAuditPage = () =>{
                             <tbody>
                                 <tr>
                                     <td>
-                                        <label className="text-main-color">Cash Tendered:</label>
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        <label className="text-main-color">Cash Tendered:
+                                            <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
                                     </td>
                                     <td>
-                                        <label className="text-main-color">Cash Buys:</label>
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        <label className="text-main-color">Cash Buys:
+                                            <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
                                     </td>
                                     <td>
                                         <div className="text-main-color ml-6 mr-12">
@@ -257,12 +259,14 @@ const SafeAuditPage = () =>{
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label className="text-main-color">Petty Cash:</label>
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        <label className="text-main-color">Petty Cash:
+                                            <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
                                     </td>
                                     <td>
-                                        <label className="text-main-color">Credit Sales:</label>
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        <label className="text-main-color">Credit Sales:
+                                            <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        </label>
                                     </td>
                                 </tr>
                             </tbody>
