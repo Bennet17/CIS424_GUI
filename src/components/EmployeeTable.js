@@ -9,6 +9,9 @@ import EditUser from './EditUser';
 
 function EmployeeTable() {
 
+  const curStore = localStorage.getItem('curStore'); //extract current store ID from local storage
+
+
   //useState variables for employees array
   const [employees, setEmployees] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null); // State variable to store selected user data
@@ -33,7 +36,6 @@ function EmployeeTable() {
   useEffect(() => {
     //this function will make a GET request to the API to return all employees in the store based on the currently viewed store
     function fetchEmployeeTable() {
-      const curStore = localStorage.getItem('curStore'); //extract current store ID from local storage
 
       const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewUsersByStoreID?storeID=${curStore}`;
       axios.get(url)

@@ -6,8 +6,6 @@ function POSTable() {
 
   const curStoreID = localStorage.getItem('curStore');
 
-  
-
 
     const toggleActivity = (pos)=> {
       //this pos is currently enabled. lets disable it
