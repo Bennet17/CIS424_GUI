@@ -79,8 +79,7 @@ const UserManagementPage = () => {
           <h2 className="text-lg font-bold mt-4 px-10 ">Users at Plato's Closet: {curStoreName}</h2>
 
               <div> <EmployeeTable storeArray={storeArray}></EmployeeTable></div>
-              <div className="flex flex-row mt-2"><AddUserForm storeArray={storeArray} > </AddUserForm></div>
-            
+
            </div>
       </div>
     </div>

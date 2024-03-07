@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDownloadExcel } from 'react-export-table-to-excel';
 import {Trash2, Pencil, Pen} from "lucide-react";
 import EditUser from './EditUser'; 
+import AddUserForm from './AddUserForm';
 
 
 function EmployeeTable() {
@@ -16,6 +17,8 @@ function EmployeeTable() {
   const [employees, setEmployees] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null); // State variable to store selected user data
   const [showEditForm, setShowEditForm] = useState(false); // State variable to manage form visibility
+  const [showAddForm, setShowAddForm] = useState(false); // State variable to manage form visibility
+
   const tableRef = useRef(null);
 
   //this method handles downloads to a excel file
@@ -61,7 +64,7 @@ function EmployeeTable() {
 
   return (
     <div>
-      <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
+      <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table ref={tableRef} className="min-w-full">
           <thead>
             <tr>
@@ -84,14 +87,17 @@ function EmployeeTable() {
           </tbody>
         </table>
       </div>
-      <div className="flex flex-row-reverse">
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      <div className="flex flex-row-reverse mt-3">
+        
+      <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
           <button onClick={onDownload}>Export to Excel</button>
         </div>
-      </div>
+        
+        <div><AddUserForm > </AddUserForm></div>
+        <div>        {showEditForm && <EditUser user={selectedUser}  />}  </div>
 
-      {/* Render the edit user form conditionally */}
-      {showEditForm && <EditUser user={selectedUser} />}
+           </div>   
+
     </div>
   );
 }

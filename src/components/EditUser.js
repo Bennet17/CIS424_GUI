@@ -22,6 +22,11 @@ const EditUser = (user) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+
+
+
+
+
   const openModal = () => {
     setIsOpen(true);
   };
@@ -42,12 +47,13 @@ const EditUser = (user) => {
   }
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <button
         onClick={openModal}
-        className="bg-indigo-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+       className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline"
+
       >
-        Edit User
+        Edit User: {user.user.name}
       </button>
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
@@ -107,40 +113,61 @@ const EditUser = (user) => {
     </div>
     </div>
     <div className="mb-4">
-      <label htmlFor="role" className="block text-gray-700 font-bold mb-2">Role:</label>
-      <select
-        id="role"
-        required
-     //   onChange={(e) => setPosition(e.target.value)}
-        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-      >
-        <option value="Employee">Employee</option>
-        <option value="Manager">Manager</option>
-      </select>
-    </div>
-    <div className="mb-4">
-      <label htmlFor="storeID" className="block text-gray-700 font-bold mb-2">Store:</label>
-      <select
-        id="storeID"
-        multiple
-        required
-      //  onChange={(e) => setStoreID(e.target.value)}
-        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-      >
-        {storeArray.map(item => (
-            <option key={item.ID} value={item.ID} selected={item.ID === curStore}>{item.location}</option>
+                    <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
+                    <div className="flex items-center">
+                      <input
+                        type="radio"
+                        id="employee"
+                        name="role"
+                        value="Employee"
+                        defaultChecked
+                      //  checked={position === "Employee"} // Assuming position is the state variable for the selected role
+                       // onChange={(e) => setPosition(e.target.value)}
+                        className="mr-2"
+                      />
+                      <label htmlFor="employee" className="mr-4">Employee</label>
+                      <input
+                        type="radio"
+                        id="manager"
+                        name="role"
+                        value="Manager"
+                       // checked={position === "Manager"} // Assuming position is the state variable for the selected role
+                      //  onChange={(e) => setPosition(e.target.value)}
+                        className="mr-2"
+                      />
+                      <label htmlFor="manager">Manager</label>
+                    </div>
+                  </div>
 
-          ))}
-      </select>
+                  <div className="mb-4">
+                    <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
+                    {storeArray.map(item => (
+                      <div key={item.ID} className="mb-2">
+                        <input
+                          type="checkbox"
+                          id={`store${item.ID}`}
+                          name="store"
+                          value={item.ID}
+                          //checked={item.ID ===curStore}
+                         // onChange={(e) => handleCheckboxChange(e, item.ID)}
+                          className="mr-2"
+                        />
+                        <label htmlFor={`store${item.ID}`}>{item.location}</label>
+                      </div>
+                    ))}
     </div>
   </div>
   <div className="flex justify-between">
     <button
       type="button"
+      onClick={closeModal}
       className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
     >
       Cancel
+      
     </button>
+
+
     <button
       type="submit"
       className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -148,13 +175,15 @@ const EditUser = (user) => {
       Save
     
     </button>
+
     <button
       type="submit"
-      className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
     >
       Disable User
     
     </button>
+
   </div>
   
 </form>
