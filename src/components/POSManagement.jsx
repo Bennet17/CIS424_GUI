@@ -50,14 +50,15 @@ const POSManagementPage = () => {
         <div className="flex flex-col mt-8 px-6">
           <div>
             <h2 className="text-lg font-bold mt-4 px-10 ">POS Registers at Plato's Closet: {curStoreName}</h2>
-            <div className="flex mt-8 px-6 flex-col"> {/* Changed to flex-col */}
-              <div className="mb-4">
-                <POSTable curStoreID={curStoreID} />
+            <div className="flex mt-8 px-6"> 
+              <div className="w-1/2 mr-4"> 
+                <POSTable />
               </div>
-              <div className='justify-center w-1/2'>
+              <div className="w-1/2 mt-4"> 
                 <AddPOS />
               </div>
             </div>
+
           </div>
         </div>
       </div>
