@@ -1,25 +1,55 @@
+//this component serves as a form to add a user from
+//written by brianna kline
 import axios from "axios";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
+
+
 
 const AddUserForm = () => {
 
+  //retrieve the Current Store ID from local storage
+  const curStore = localStorage.getItem('curStoreID');
+
+  // Retrieve the serialized string from local storage
+  const storedArrayString = localStorage.getItem('stores');
+
+  // Parse the string back into an array
+  const storeArray = JSON.parse(storedArrayString);
+
+  //TEST FOR STORE ARRAY
+  // storeArray.forEach(item => {
+  //   console.log(`ID: ${item.ID}, Name: ${item.location}`);
+  // });
+
+
+  //use state variables for the input of user data
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [position, setPosition] = useState("");
-  const [storeID, setStoreID] = useState([]);
+  const [storeIDs, setStoreID] = useState([]);
   const [result, setResult] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
-  const[storeArray,setStoreArray] = useState([]);
+  const [selectedStores, setSelectedStores] = useState([])
+  const[validPassword, setValidPassword] = useState(false);
+
+  //this method is called as a helper for when a user enters a password.
+  //it calls setPassword, which changes the password variable
+  //it calls validate password which runs the below method for password strength check
   const handleChange = (e) => {
     setPassword(e.target.value);
     validatePassword(e.target.value);
   };
 
+  //this method will validate a password and prevent a user from entering a weak password
+  //check functionaloity
+  //REGEX tests for 8 characters, 1 captial, and 1 symbol
   const validatePassword = (password) => {
     const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
     const isValid = regex.test(password);
+
+    //if its not valid, set the error message to appear conditionally
     if (!isValid) {
       setErrorMessage(
         <>
@@ -27,80 +57,75 @@ const AddUserForm = () => {
           1 number, and 1 symbol.
         </>
       );    } else {
-      setErrorMessage('');
+      setErrorMessage(''); //make error disappear when valid
+      setValidPassword(true);
     }
+
+ 
   };
 
 
 
+  const handleCheckboxChange = (e, storeID) => {
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setStoreID([storeIDs, storeID]); // Add the store ID to the selectedStores array
+    } else {
+      setStoreID(storeIDs.filter(id => id !== storeID)); // Remove the store ID from the selectedStores array
+    }
+  };
+ 
 
-  useEffect(() => {
-    function fetchAllStores() {
-      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStores`;
 
-      axios.get(url)
+  //this method handles the submit button click on the add user form
+  function handleSubmit(event) {
+    if(validPassword === true){
+      event.preventDefault(); //prevent refresh TEST THIS
+
+      //concantenate last name and first name entry
+      const name = lastname + ", "+firstname;
+      
+      //create an axios POST request to create a new user with inputs from the form
+      axios
+        .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateUser", 
+          {
+            "username": username,
+            "name": name,
+            "password": password,
+            "position": position,
+            "storeID": storeIDs
+          })
         .then((response) => {
-          console.log('Data:', response.data);
-          console.log(response);
-          const updatedStoreArray = response.data.map(item => ({
-            ID: item.ID,
-            location: item.location
-        }));
-        setStoreArray(updatedStoreArray);
-        console.log(storeArray);
-        
-          
+          //console.log(response.data.response);
+
+          //if the response data was not an API error
+          //the following line indicates a successful entry
+          if (response.data.response == "User created successfully.") {
+            //console.log("User was created!");
+            setResult("User Successfully Created.")
+                  window.location.reload(); // This will refresh the page
+
+          } else {
+            //a valid API request but user was not created because there was already a user with that username
+            console.error("Failed to create user");
+            setResult("Username already taken. Try again")
+
+          }
+
+
         })
+        //error if the API request failed
         .catch((error) => {
-          console.error('Error fetching data:', error);
+          console.error("API request failed:", error);
+        // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
+        setResult("Request Failed. Try again.")
         });
     }
 
-    // Call the function to initiate the GET request with specific details
-    fetchAllStores();
-  }, []); // Empty dependency array ensures that this effect runs only once, similar to componentDidMount
-
-
-
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const name = lastname + ", "+firstname;
-    
-    axios
-      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateUser", 
-        {
-          "username": username,
-          "name": name,
-          "password": password,
-          "position": position,
-          "storeID": 0
-        })
-      .then((response) => {
-
-        console.log(response.data.response);
-
-        if (response.data.response == "User created successfully.") {
-          console.log("User was created!");
-          setResult("User Successfully Created.")
-
-        } else {
-          console.error("Failed to create user");
-          setResult("Username already taken. Try again")
-
-        }
-
-
-      })
-      .catch((error) => {
-        console.error("API request failed:", error);
-       // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
-       setResult("Request Failed. Try again.")
-      });
   }
 
   return (
+    <div>
 <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
   <h2 className="text-lg font-bold mb-4">Add User</h2>
   <h2 className="text-lg font-bold mb-4">{result}</h2>
@@ -155,31 +180,50 @@ const AddUserForm = () => {
     </div>
     </div>
     <div className="mb-4">
-      <label htmlFor="role" className="block text-gray-700 font-bold mb-2">Role:</label>
-      <select
-        id="role"
-        required
-        onChange={(e) => setPosition(e.target.value)}
-        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-      >
-        <option value="Employee">Employee</option>
-        <option value="Manager">Manager</option>
-      </select>
+  <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
+  <div className="flex items-center">
+    <input
+      type="radio"
+      id="employee"
+      name="role"
+      value="Employee"
+      defaultChecked
+      checked={position === "Employee"} // Assuming position is the state variable for the selected role
+      onChange={(e) => setPosition(e.target.value)}
+      className="mr-2"
+    />
+    <label htmlFor="employee" className="mr-4">Employee</label>
+    <input
+      type="radio"
+      id="manager"
+      name="role"
+      value="Manager"
+      checked={position === "Manager"} // Assuming position is the state variable for the selected role
+      onChange={(e) => setPosition(e.target.value)}
+      className="mr-2"
+    />
+    <label htmlFor="manager">Manager</label>
+  </div>
+</div>
+
+<div className="mb-4">
+  <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
+  {storeArray.map(item => (
+    <div key={item.ID} className="mb-2">
+      <input
+        type="checkbox"
+        id={`store${item.ID}`}
+        name="store"
+        value={item.ID}
+        //checked={item.ID ===curStore}
+        onChange={(e) => handleCheckboxChange(e, item.ID)}
+        className="mr-2"
+      />
+      <label htmlFor={`store${item.ID}`}>{item.location}</label>
     </div>
-    <div className="mb-4">
-      <label htmlFor="storeID" className="block text-gray-700 font-bold mb-2">Store:</label>
-      <select
-        id="storeID"
-        multiple
-        required
-        onChange={(e) => setStoreID(e.target.value)}
-        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-      >
-        {storeArray.map(item => (
-            <option key={item.ID} value={item.ID}>{item.location}</option>
-          ))}
-      </select>
-    </div>
+  ))}
+</div>
+
   </div>
   <div className="flex justify-between">
     <button
@@ -195,9 +239,10 @@ const AddUserForm = () => {
       Add Employee
     </button>
   </div>
+  
 </form>
 
-
+</div>
 
   );
 }

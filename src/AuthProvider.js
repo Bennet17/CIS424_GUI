@@ -45,6 +45,8 @@ const AuthProvider = ({ children }) => {
         //setUser(null);
         removeCookie("user", {path: "/"});
         localStorage.removeItem("site");
+        localStorage.removeItem("curStoreID");
+        localStorage.removeItem("stores");
         navigate(routes.signout);
     }
     
