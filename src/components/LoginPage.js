@@ -1,7 +1,7 @@
-import axios from "axios";
+//This component contains the LOGIN page form
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import routes from "../routes.js";
 import { useAuth } from "../AuthProvider.js";
 import Logo from "../newLogo.png"; // Adjust the path accordingly
 
@@ -14,51 +14,31 @@ function LoginPage() {
   //"item" to get the value. Default values can be set in the "useState()" parentheses
   const [username, setUsername] = useState([]);
   const [password, setPassword] = useState([]);
+
+   //this useState variable allows for conditional message to be displayed if invalid credentials are entered
   const [invalidCredential, setInvalidCredential] = useState('');
 
-
+  //import the authentication function from AuthProvider.js
   const auth = useAuth();
 
-  //performs an axios post request to verify that a user exists in the database, and performs logic
-  //based on if the user exists or not, or errors
+  //function to handle Submit button pressed logic
   function Submit(event) {
     event.preventDefault();
 
-    /*console.log({
-      "username": username,
-      "password": password,
-    });*/
-
+      //pass in the object with username and password values to authentication method
+      //LoginAction method will return an error promise if the user credentials are invalid
     auth.loginAction({
       "username": username,
       "password": password,
     })
     .then(response => {
-      //console.log("success yeehaw!!!", response);
+
     })
     .catch(error => {
-      //console.error("wrong!!! >:(", error.message);
+      //use state variable to set conditional message to invalid alert
       setInvalidCredential("Invalid Credentials. Try Again.") ;
     });
 
-    /*axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser', {
-      "username": username,
-      "password": password,
-    })
-    .then(response => {
-      console.log(response);
-      //see discord behind-the-scenes channel for test username/passwords to use
-      //if we return true as our response, route the user to the main screen
-      if (response.data.IsValid == true){
-        navigate(routes.home);
-      }else{
-        //do logic for invalid user, i dunno can't test this yet cuz back-end people are
-        //sending truthy responses for both valid/invalid user possibilities
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });*/
   }  
 
   return (
@@ -81,7 +61,7 @@ function LoginPage() {
               htmlFor="username"
               className="block text-sm font-medium leading-6 text-gray-900 text-left"
             >
-              Employee ID
+              Username
             </label>
             <div className="mt-2">
               <input
@@ -109,7 +89,7 @@ function LoginPage() {
                   href="#"
                   className="font-semibold text-indigo-600 hover:text-indigo-500 "
                 >
-                  Forgot password?
+                  Forgot Password?
                 </a>
               </div>
             </div>
@@ -133,7 +113,7 @@ function LoginPage() {
               value="login"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Sign in
+              Sign In
             </button>
           </div>
         </form>
