@@ -50,7 +50,7 @@ function EmployeeTable() {
             name: employee.name,
            // password: employee.password,
             position: employee.position,
-            storeName: localStorage.getItem(employee.storeID) //get storename from local storage
+            storeID: employee.storeID //get storename from local storage
           })));
         })
         .catch((error) => {
@@ -71,7 +71,6 @@ function EmployeeTable() {
               <th className="px-4 py-2">Username</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Position</th>
-              <th className="px-4 py-2">Store Locations</th>
             </tr>
           </thead>
           <tbody>
@@ -80,7 +79,6 @@ function EmployeeTable() {
                 <td className="border px-4 py-2">{employee.username}</td>
                 <td className="border px-4 py-2">{employee.name}</td>
                 <td className="border px-4 py-2">{employee.position}</td>
-                <td className="border px-4 py-2">{employee.storeName}</td>
 
               </tr>
             ))}

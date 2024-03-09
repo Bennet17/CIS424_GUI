@@ -22,6 +22,7 @@ const UserManagementPage = () => {
   
   const curStoreID = auth.cookie.user.storeID; //stores the current Store we are viewing
   localStorage.setItem('curStore', curStoreID); //sets current store into local storage 
+
   
   //useState variables for the current store name and for an array of stores to be saved
   const [curStoreName, setCurStoreName] = useState(null); // Initialize curStoreName as null
@@ -45,9 +46,12 @@ const UserManagementPage = () => {
          setStoreArray(updatedStoreArray); //use usestate function to set storeArray to equal array from API request
 
           //this loop stores the currentStore Name based on the current store ID
-          storeArray.forEach(function(item) {
+          response.data.forEach(function(item) {
             if(item.ID === curStoreID){
               setCurStoreName(item.location); 
+              console.log(curStoreName);
+              localStorage.setItem('curStoreName', curStoreName); 
+
             }
             localStorage.setItem(item.ID, item.location);
           });
