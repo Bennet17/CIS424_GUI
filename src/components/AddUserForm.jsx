@@ -24,9 +24,6 @@ const AddUserForm = () => {
 
 
 
-
-
-
   //retrieve the Current Store ID from local storage
   const curStore = localStorage.getItem('curStoreID');
 
@@ -62,6 +59,8 @@ const AddUserForm = () => {
     validatePassword(e.target.value);
   };
 
+
+
   //this method will validate a password and prevent a user from entering a weak password
   //check functionaloity
   //REGEX tests for 8 characters, 1 captial, and 1 symbol
@@ -71,12 +70,16 @@ const AddUserForm = () => {
 
     //if its not valid, set the error message to appear conditionally
     if (!isValid) {
+
       setErrorMessage(
         <>
           Include 8 characters,<br />
           1 number, and 1 symbol.
         </>
-      );    } else {
+      );    }
+       else {
+
+
       setErrorMessage(''); //make error disappear when valid
       setValidPassword(true);
     }
@@ -100,7 +103,7 @@ const AddUserForm = () => {
 
   //this method handles the submit button click on the add user form
   function handleSubmit(event) {
-    if(validPassword === true){
+    if(validPassword == true){
       event.preventDefault(); //prevent refresh TEST THIS
 
       //concantenate last name and first name entry
@@ -127,7 +130,7 @@ const AddUserForm = () => {
             //console.log("User was created!");
             closeModal();
             setResult("User Successfully Created.")
-                  window.location.reload(); // This will refresh the page
+             window.location.reload(); // This will refresh the page
 
           } else {
             //a valid API request but user was not created because there was already a user with that username
@@ -153,6 +156,7 @@ const AddUserForm = () => {
 <div className="relative ml-5 ">
       <button
         onClick={openModal}
+        
        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       > Add User</button>
 
@@ -221,8 +225,7 @@ const AddUserForm = () => {
                         id="employee"
                         name="role"
                         value="Employee"
-                        defaultChecked
-                        checked={position === "Employee"} // Assuming position is the state variable for the selected role
+                        defaultChecked={position === "Employee"} // Assuming position is the state variable for the selected role
                         onChange={(e) => setPosition(e.target.value)}
                         className="mr-2"
                       />
@@ -232,8 +235,8 @@ const AddUserForm = () => {
                         id="manager"
                         name="role"
                         value="Manager"
-                        checked={position === "Manager"} // Assuming position is the state variable for the selected role
-                        //onChange={(e) => setPosition(e.target.value)}
+                       // checked={position === "Manager"} // Assuming position is the state variable for the selected role
+                        onChange={(e) => setPosition(e.target.value)}
                         className="mr-2"
                       />
                       <label htmlFor="manager">Manager</label>
@@ -267,11 +270,11 @@ const AddUserForm = () => {
                       >
                         Cancel
                       </button>
-                      <button
+                      <button 
                         type="submit"
                         className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                       >
-                        Add Employee
+                        Add User
                       </button>
                     </div>
                     
