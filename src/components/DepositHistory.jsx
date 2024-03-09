@@ -81,8 +81,8 @@ const DepositHistory = () => {
         );
     }
 
-    function toggleField(){
-        SelectedRows.find();
+    function toggleField(fieldIndex){
+        SelectedRows.find(fieldIndex);
     }
     
     function Submit(event){
