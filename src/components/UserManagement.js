@@ -36,26 +36,32 @@ const UserManagementPage = () => {
 
       axios.get(url)
         .then((response) => {
-         
-          //create an Array of stores from the JSON response, containing store ID and store Location
-          const updatedStoreArray = response.data.map(store => ({
-            ID: store.ID,
-            location: store.location
-        }));
 
-         setStoreArray(updatedStoreArray); //use usestate function to set storeArray to equal array from API request
+// Create an array to store the updated store array
+let updatedStoreArray = [];
 
-          //this loop stores the currentStore Name based on the current store ID
-          response.data.forEach(function(item) {
-            if(item.ID === curStoreID){
-              setCurStoreName(item.location); 
-              console.log(curStoreName);
-              localStorage.setItem('curStoreName', curStoreName); 
+// Iterate over the response data to extract store information
+response.data.forEach(function(item) {
+  // Check if the current item matches the current store ID
+  if (item.ID === curStoreID) {
+    // Set the current store name
+    setCurStoreName(item.location);
+    // Store the current store name in local storage
+    localStorage.setItem('curStoreName', curStoreName);
+    console.log(curStoreName);
+  }
+  
+  // Store each store ID and location in local storage
+  localStorage.setItem(item.ID, item.location);
+  
+  // Push each store object to the updated store array
+  updatedStoreArray.push({
+    ID: item.ID,
+    location: item.location
+  });
+});
 
-            }
-            localStorage.setItem(item.ID, item.location);
-          });
-
+setStoreArray(updatedStoreArray);
 
         })
         .catch((error) => {

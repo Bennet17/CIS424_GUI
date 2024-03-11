@@ -62,8 +62,92 @@ const EditUser = (user) => {
     setPosition('')
     setManagerStores('')
     setStoreID('')
+    setErrorMessage('')
     
   };
+
+  const toggleAbility = () =>{
+          //this pos is currently enabled. lets disable it
+          if(user.user.enabled == true){
+            //create a disable POS request
+            axios
+            .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableUser", 
+              {
+                "ID": user.user.ID,
+              })
+            .then((response) => {
+      
+              console.log(response.data.response);
+      
+              if (response.data.response == "Disabled") {
+                  console.log("User successfully disabled");
+                  window.location.reload(); // This will refresh the page
+    
+              } else {
+                console.error("Failed to disable user");
+      
+              }
+      
+      
+            })
+            .catch((error) => {
+              console.error("API request failed:", error);
+             // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
+             //setResult("Request Failed. Try again.")
+            });
+        }
+        if(user.user.enabled == false){
+                  //create a disable POS request
+                  axios
+                  .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EnableUser", 
+                    {
+                      "ID": user.user.ID,
+                    })
+                  .then((response) => {
+            
+                    console.log(response.data.response);
+            
+                    if (response.data.response == "Enabled") {
+                      console.log("User enabled");
+                      window.location.reload(); // This will refresh the page
+    
+          
+                    } else {
+                      console.error("Failed to enable user");
+            
+                    }
+            
+            
+                  })
+                  .catch((error) => {
+                    console.error("API request failed:", error);
+                   // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
+                  // setResult("Request Failed. Try again.")
+                  });
+        }
+    
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -90,7 +174,7 @@ const EditUser = (user) => {
         if (response.data.response == "User Updated successfully.") {
           //console.log("User was created!");
            closeModal();
-             setResult("User Successfully Created.")
+             setResult("User Successfully edited.")
             window.location.reload(); // This will refresh the page
    
         } else {
@@ -228,10 +312,10 @@ const EditUser = (user) => {
     </button>
 
     <button
-      type="submit"
+    onClick={toggleAbility}
       className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
     >
-      Disable User
+  {user.user.enabled ? 'Disable User' : 'Enable User'}
     </button>
   </div>
 </form>

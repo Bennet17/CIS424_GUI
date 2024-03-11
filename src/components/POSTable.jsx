@@ -15,17 +15,14 @@ function POSTable() {
         .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableRegister", 
           {
             "ID": pos.ID,
-            "name": pos.name,
-            "storeID": pos.storeID,
-            "enabled": pos.enabled,
-            "opened": pos.opened
-
           })
         .then((response) => {
   
           console.log(response.data.response);
   
-          if (response.data.isValid) {
+          if (response.data.response == "Disabled") {
+              console.log("Register successfully disabled");
+              window.location.reload(); // This will refresh the page
 
           } else {
             console.error("Failed to disable register");
@@ -46,17 +43,15 @@ function POSTable() {
               .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EnableRegister", 
                 {
                   "ID": pos.ID,
-                  "name": pos.name,
-                  "storeID": pos.storeID,
-                  "enabled": pos.enabled,
-                  "opened": pos.opened
-      
                 })
               .then((response) => {
         
                 console.log(response.data.response);
         
-                if (response.data.isValid) {
+                if (response.data.response == "Enabled") {
+                  console.log("Register enabled");
+                  window.location.reload(); // This will refresh the page
+
       
                 } else {
                   console.error("Failed to enable register");
@@ -125,20 +120,29 @@ function POSTable() {
           <tr>
             <th className="px-4 py-2">POS Name</th>
             <th className="px-4 py-2">POS Current Status</th>
-            <th className="px-4 py-2"></th>
+            {/* <th className="px-4 py-2"></th> */}
 
 
           </tr>
         </thead>
         <tbody>
         {pos.map((pos) => (
-  <tr key={pos.name} onClick={() => handleRowClick(pos.name)} className="cursor-pointer hover:bg-gray-100">
-    <td className="border px-4 py-2">{pos.name}</td>
-    <td className="border px-4 py-2">{pos.opened ? 'Open' : 'Closed'}</td>
-    <td className="border px-4 py-2">{pos.enabled ? 'Enabled' : 'Disabled'}</td>
-    <td className="border px-4 py-2"><button onClick={() => toggleActivity(pos)} className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>{pos.enabled ? 'Disable' : 'Enable'}</button></td>
-  </tr>
-))}
+            <tr 
+              key={pos.name} 
+              onClick={() => handleRowClick(pos.name)} 
+              className={`cursor-pointer hover:bg-gray-100 ${pos.enabled ? '' : 'bg-gray-300'}`}
+            >
+              <td className="border px-4 py-2">{pos.name}</td>
+              <td className="border px-4 py-2">{pos.opened ? 'Open' : 'Closed'}</td>
+              {/* <td className="border px-4 py-2">{pos.enabled ? 'Enabled' : 'Disabled'}</td> */}
+              <td className="border px-4 py-2">
+                <button onClick={() => toggleActivity(pos)} className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
+                  {pos.enabled ? 'Disable' : 'Enable'}
+                </button>
+              </td>
+            </tr>
+          ))}
+
 
         </tbody>
       </table>
