@@ -18,6 +18,13 @@ const AddUserForm = () => {
 
   const closeModal = () => {
     setIsOpen(false);
+    setLastName('')
+    setFirstName('')
+    setUsername('')
+    setPosition('')
+    setPassword('')
+    setStoreID('')
+    setErrorMessage('')
   };
 
 
@@ -25,7 +32,8 @@ const AddUserForm = () => {
 
 
   //retrieve the Current Store ID from local storage
-  const curStore = localStorage.getItem('curStoreID');
+  const curStore = localStorage.getItem('curStore');
+  console.log("current store in add user form"+curStore);
 
   // Retrieve the serialized string from local storage
   const storedArrayString = localStorage.getItem('stores');
@@ -45,7 +53,7 @@ const AddUserForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [position, setPosition] = useState("");
-  const [storeIDs, setStoreID] = useState('');
+  const [storeIDs, setStoreID] = useState(curStore);
   const [result, setResult] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
   //const [selectedStores, setSelectedStores] = useState([])
@@ -88,16 +96,21 @@ const AddUserForm = () => {
   };
 
 
-
   const handleCheckboxChange = (e, storeID) => {
-    const isChecked = e.target.checked;
+    const isChecked = e.target.checked; // Get the new checked state from the event
+    // Do something with the checked state and item ID
     if (isChecked) {
-      setStoreID(storeID);
-      //setStoreID([storeIDs, storeID]); // Add the store ID to the selectedStores array
+      console.log(`Checkbox with ID ${storeID} is checked`);
+      // Additional logic when the checkbox is checked
     } else {
-      setStoreID(storeIDs.filter(id => id !== storeID)); // Remove the store ID from the selectedStores array
+      //console.log(`Checkbox with ID ${storeID} is unchecked`);
+      // Additional logic when the checkbox is unchecked
+      if(storeID == curStore){
+        e.target.checked = true;
+      }
     }
   };
+  
  
 
 
@@ -119,10 +132,11 @@ const AddUserForm = () => {
             "name": name,
             "password": password,
             "position": position,
-            "storeID": storeIDs
+            "storeID": storeIDs,
+
           })
         .then((response) => {
-          //console.log(response.data.response);
+          console.log(response.data.response);
           
           //if the response data was not an API error
           //the following line indicates a successful entry
@@ -246,13 +260,14 @@ const AddUserForm = () => {
                   <div className="mb-4">
                     <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
                     {storeArray.map(item => (
+                     
                       <div key={item.ID} className="mb-2">
                         <input
                           type="checkbox"
                           id={`store${item.ID}`}
                           name="store"
                           value={item.ID}
-                          //checked={item.ID ===curStore}
+                          defaultChecked={item.ID == curStore}
                           onChange={(e) => handleCheckboxChange(e, item.ID)}
                           className="mr-2"
                         />
