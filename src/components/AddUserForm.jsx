@@ -25,6 +25,7 @@ const AddUserForm = () => {
     setPassword('')
     setStoreID('')
     setErrorMessage('')
+    setValidPassword(false);
   };
 
 
@@ -33,7 +34,6 @@ const AddUserForm = () => {
 
   //retrieve the Current Store ID from local storage
   const curStore = localStorage.getItem('curStore');
-  console.log("current store in add user form"+curStore);
 
   // Retrieve the serialized string from local storage
   const storedArrayString = localStorage.getItem('stores');
@@ -62,10 +62,14 @@ const AddUserForm = () => {
   //this method is called as a helper for when a user enters a password.
   //it calls setPassword, which changes the password variable
   //it calls validate password which runs the below method for password strength check
-  const handleChange = (e) => {
-    setPassword(e.target.value);
-    validatePassword(e.target.value);
-  };
+// Define the handleChange function
+const handleChange = (e) => {
+  // Update the password state with the new value
+  setPassword(e.target.value);
+
+  // Call validatePassword with the new password value
+  validatePassword(e.target.value);
+};
 
 
 
@@ -75,16 +79,19 @@ const AddUserForm = () => {
   const validatePassword = (password) => {
     const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
     const isValid = regex.test(password);
+      console.log(isValid);
 
     //if its not valid, set the error message to appear conditionally
     if (!isValid) {
-
+      setValidPassword(false);
       setErrorMessage(
         <>
           Include 8 characters,<br />
           1 number, and 1 symbol.
         </>
-      );    }
+      );    
+    }
+
        else {
 
 
@@ -223,9 +230,8 @@ const AddUserForm = () => {
                         <input
                         required
                           type="password"
-                          value={password}
-                        
-                          onChange={handleChange}
+                                                  
+                          onChange={(e) => handleChange(e)} // Pass the entire event object 'e'
                           className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                         />
                         {errorMessage && <div className="text-red-500 text-sm mt-1 ">{errorMessage}</div>}
@@ -279,7 +285,7 @@ const AddUserForm = () => {
                     </div>
                     <div className="flex justify-between">
                       <button
-                  onClick={closeModal}
+                      onClick={closeModal}
                         type="button"
                         className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                       >
@@ -287,6 +293,7 @@ const AddUserForm = () => {
                       </button>
                       <button 
                         type="submit"
+                        disabled={!validPassword}
                         className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                       >
                         Add User
