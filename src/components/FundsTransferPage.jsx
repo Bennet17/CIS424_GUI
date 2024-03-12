@@ -56,8 +56,10 @@ const FundsTransferPage = () =>{
         function Initialize() {
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${formData.store}`)
             .then(response => {
-                // Extract register names from the response and filter based on opened status
-                const newSources = response.data.filter(register => register.opened).map(register => register.name);
+                // Extract register names and ID from the response and filter based on opened status
+                const newSources = response.data
+                .filter(register => register.opened)
+                .map(register => ({ id: register.ID, name: register.name }));
 
                 // Update arrSources using functional form of setState to avoid duplicates
                 setArrSources(newSources);
@@ -245,8 +247,6 @@ const FundsTransferPage = () =>{
             ...currencyFields
         } = formData;
 
-        console.log(currencyFields)
-
         // Filter out non-zero currency fields
         fltAmount = parseFloat(formData.amount).toFixed(2);
         let newCurrencyFields = FilterDenominations(currencyFields);
@@ -367,7 +367,7 @@ const FundsTransferPage = () =>{
                 console.log("Failed to submit transfer");
         })
         .catch((error) => {
-            // console.error(error);
+            console.error(error);
         });
     }
 
@@ -561,8 +561,8 @@ const FundsTransferPage = () =>{
                                             >
                                                 <option value="">&lt;Please select a source&gt;</option>
                                                 {arrSources.map((item, index) => (
-                                                    <option key={item} value={item}>
-                                                    {item}
+                                                    <option key={item.id} value={item.name}>
+                                                        {item.name}
                                                     </option>
                                                 ))}
                                             </select>
@@ -588,8 +588,8 @@ const FundsTransferPage = () =>{
                                                 &lt;Please select a destination&gt;
                                                 </option>
                                                 {arrDestinations.map((item, index) => (
-                                                    <option key={item} value={item}>
-                                                        {item}
+                                                    <option key={item.id} value={item.name}>
+                                                        {item.name}
                                                     </option>
                                                 ))}
                                             </select>
