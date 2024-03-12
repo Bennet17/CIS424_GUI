@@ -1,6 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, {useState, useEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import {useNavigate} from 'react-router-dom';
@@ -53,10 +53,10 @@ const SafeAuditPage = () =>{
 
     //check the permissions of the logged in user on page load, passing in
     //the required permissions
-    useEffect(() => {
+    useLayoutEffect(() => {
         UpdateVariance();
         if (!auth.CheckAuthorization(["Manager", "District Manager", "CEO"])){
-            navigate(routes.signout);
+            navigate(routes.home);
         }
     })
 

@@ -1,6 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
@@ -57,7 +57,8 @@ const OpenDayPage = () =>{
                 (elm2Dollar * 2) +
                 (elmHalfDollarCoin * 0.5)
             ) * 100
-        ) / 100;
+        ) / 100
+    ;
 
     const [expectedAmount, setExpectedAmount] = useState(0);
 
@@ -100,10 +101,11 @@ const OpenDayPage = () =>{
 
     //changes the currently-selected pos
     function changeCurrentPos(id){
-        currentPosIndex = id;
-        console.log(currentPosIndex);
+        currentPosIndex = id - 1;
+        console.log("setting pos array index to " + currentPosIndex + " data, see below");
+        console.log(poss[currentPosIndex]);
 
-        //updated expected amount
+        //update the expected total amount
         GetExpectedCount();
     }
 
@@ -139,35 +141,15 @@ const OpenDayPage = () =>{
         setElmHalfDollarCoin(0);
     }
 
-    function GetExpectedCount(){
-        //wait till we have our pos data before we attempt to make this call
-        axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.storeID}&registerID=${poss[currentPosIndex].ID}`)
-        .then(response => {
-            console.log(response);
-            if (true){
-                //set the expected amount data
-                setExpectedAmount(response.data);
-            }else{
-                //something broke, oh no
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
-    }
-
     //make this call immediately on component load
     useEffect(() => {
         function Initialize(){
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID_CSV[0]}`)
             .then(response => {
                 console.log(response);
                 if (true){
                     //set the pos information data
                     setPoss(response.data);
-
-                    //change poss to a normal js variable so it avoids late updating of react updating
-                    //(or the expected total?)
 
                     //update current pos
                     changeCurrentPos(response.data[0].ID);
@@ -184,15 +166,31 @@ const OpenDayPage = () =>{
         Initialize();
     }, []);
 
+    function GetExpectedCount(){
+        //wait until we have our pos data before attempting to execute
+        if (poss.length > 0 && poss[currentPosIndex]){
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.storeID_CSV[0]}&registerID=${poss[currentPosIndex].ID}`)
+            .then(response => {
+                console.log("getting cash count for " + poss[currentPosIndex].name + " , see below");
+                console.log(response);
+                setExpectedAmount(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+    }
+    
+
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
         event.preventDefault();
 
         axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
             "usrID": auth.cookie.user.ID,
-            "itemCounted": poss[currentPosIndex],
+            "itemCounted": poss[currentPosIndex].name,
             "total": totalAmount,
-            "amountExpected": null,
+            "amountExpected": expectedAmount,
             "hundred": elm100Dollar,
             "fifty": elm50Dollar,
             "twenty": elm20Dollar,
@@ -215,8 +213,7 @@ const OpenDayPage = () =>{
             console.log(response);
             if (true){
                 //open POS
-            }else{
-                //close POS
+                
             }
         })
         .catch(error => {
@@ -242,6 +239,7 @@ const OpenDayPage = () =>{
                                             key={item.name} 
                                             defaultChecked={item.ID == 1 ? true : false}
                                             onChange={(e) => changeCurrentPos(item.ID)} 
+                                            onLoad={item.ID == 1 && changeCurrentPos(item.ID)}
                                             type="radio" 
                                             name="pos" 
                                             value={item.name} 
@@ -499,7 +497,7 @@ const OpenDayPage = () =>{
                             <input 
                                 value={expectedAmount} 
                                 disabled={true}
-                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
                                 type="number" 
                             />
                         </label>
