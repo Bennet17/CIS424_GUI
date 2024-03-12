@@ -14,6 +14,10 @@ const SafeAuditPage = () =>{
     const [startDay, setStartDay] = useState();
     const [endDay, setEndDay] = useState();
     const [currentDay, setCurrentDay] = useState(Date.toString(Date.now));
+    const [cashTendered, setCashTendered] = useState(0);
+    const [cashBuys, setCashBuys] = useState(0);
+    const [pettyCash, setPettyCash] = useState(0);
+    const [creditSales, setCreditSales] = useState(0);
 
     //changes the start day, end day, and current day
     function changeDayStart(){
@@ -30,6 +34,13 @@ const SafeAuditPage = () =>{
             navigate(routes.signout);
         }
     })
+
+    function clamp(value, min = 0){
+        if (value < min){
+            return min;
+        }
+        return value;
+    }
 
     function Submit(event){
         event.preventDefault();
@@ -239,12 +250,24 @@ const SafeAuditPage = () =>{
                                 <tr>
                                     <td>
                                         <label className="text-main-color">Cash Tendered:
-                                            <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input 
+                                                value={cashTendered}
+                                                onChange={e => setCashTendered(clamp(e.target.value))} 
+                                                min="0" 
+                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                                type="number"
+                                            />
                                         </label>
                                     </td>
                                     <td>
                                         <label className="text-main-color">Cash Buys:
-                                            <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input 
+                                                value={cashBuys}
+                                                onChange={e => setCashBuys(clamp(e.target.value))} 
+                                                min="0" 
+                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                                type="number"
+                                            />
                                         </label>
                                     </td>
                                     <td>
@@ -254,18 +277,35 @@ const SafeAuditPage = () =>{
                                         </div>
                                     </td>
                                     <td>
-                                        <button type="submit" value="submit" className="flex w-36 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
+                                        <button 
+                                            type="submit" 
+                                            value="submit" 
+                                            className="flex w-36 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                            Submit
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <label className="text-main-color">Petty Cash:
-                                            <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input 
+                                                value={pettyCash}
+                                                onChange={e => setPettyCash(clamp(e.target.value))} 
+                                                min="0" 
+                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                                type="number"
+                                            />
                                         </label>
                                     </td>
                                     <td>
                                         <label className="text-main-color">Credit Sales:
-                                            <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                            <input 
+                                                value={creditSales}
+                                                onChange={e => setCreditSales(clamp(e.target.value))} 
+                                                min="0" 
+                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                                type="number"
+                                            />
                                         </label>
                                     </td>
                                 </tr>

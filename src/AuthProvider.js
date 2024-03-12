@@ -41,10 +41,9 @@ const AuthProvider = ({ children }) => {
     }
 
     //use for when loading into a route. This just verifies the user's position
-    //
+    //and returns if they should be allowed to have access to the page
     const CheckAuthorization = (position) => {
         let roles = ["Employee", "Manager", "District Manager", "CEO"];
-        let isAuthorized = false;
         
         //scan the array of allowed positions
         for (let i = 0; i < position.length; i ++){

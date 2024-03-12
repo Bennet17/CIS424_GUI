@@ -1,5 +1,6 @@
-import React from "react";
 import Chart from "react-apexcharts";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 
 // Component for displaying a bar chart representing Over/Short by Day
 const OSBarChart = () => {
@@ -108,6 +109,29 @@ const OSBarChart = () => {
       data: [6.66, 4.2, -6.9, -8.008135, 3.14159, -1.812, 8.08], // Data representing variance
     },
   ];
+
+  useEffect(() => {
+    function Initialize(){
+        axios.post(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance`, {
+          "storeID": "1",
+          "startDate": "2024-02-01",
+          "endDate": "2024-02-16"
+        })
+        .then(response => {
+          console.log(response);
+          if (true){
+            //poop
+          }else{
+              //something broke, oh no
+          }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
+    Initialize();
+  }, []);
 
   // Return the JSX for rendering the chart
   return (

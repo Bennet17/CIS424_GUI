@@ -169,7 +169,7 @@ const OpenDayPage = () =>{
             "usrID": auth.cookie.user.ID,
             "itemCounted": poss[currentPosIndex],
             "total": totalAmount,
-            "amountExpected": expectedAmount,
+            "amountExpected": null,
             "hundred": elm100Dollar,
             "fifty": elm50Dollar,
             "twenty": elm20Dollar,
