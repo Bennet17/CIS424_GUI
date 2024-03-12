@@ -100,8 +100,11 @@ const OpenDayPage = () =>{
 
     //changes the currently-selected pos
     function changeCurrentPos(id){
-        currentPosIndex = id
+        currentPosIndex = id;
         console.log(currentPosIndex);
+
+        //updated expected amount
+        GetExpectedCount();
     }
 
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
@@ -136,6 +139,23 @@ const OpenDayPage = () =>{
         setElmHalfDollarCoin(0);
     }
 
+    function GetExpectedCount(){
+        //wait till we have our pos data before we attempt to make this call
+        axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.storeID}&registerID=${poss[currentPosIndex].ID}`)
+        .then(response => {
+            console.log(response);
+            if (true){
+                //set the expected amount data
+                setExpectedAmount(response.data);
+            }else{
+                //something broke, oh no
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
     //make this call immediately on component load
     useEffect(() => {
         function Initialize(){
@@ -145,6 +165,9 @@ const OpenDayPage = () =>{
                 if (true){
                     //set the pos information data
                     setPoss(response.data);
+
+                    //change poss to a normal js variable so it avoids late updating of react updating
+                    //(or the expected total?)
 
                     //update current pos
                     changeCurrentPos(response.data[0].ID);
@@ -463,7 +486,7 @@ const OpenDayPage = () =>{
                     <div>
                         <label> Current Total:
                             <input 
-                                value={"$" + totalAmount} 
+                                value={totalAmount} 
                                 className={totalAmountStyle} 
                                 type="text" 
                                 disabled={true}
@@ -475,8 +498,7 @@ const OpenDayPage = () =>{
                         <label> Expected Total:
                             <input 
                                 value={expectedAmount} 
-                                onChange={e => setExpectedAmount(clamp(e.target.value))} 
-                                min="0" 
+                                disabled={true}
                                 className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                 type="number" 
                             />

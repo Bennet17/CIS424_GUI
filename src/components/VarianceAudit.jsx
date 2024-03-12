@@ -27,13 +27,22 @@ const SafeAuditPage = () =>{
     function changeDayCurrent(){
     }
 
-    //check the permissions of the logged in user on page load, passing in
-    //the required permissions
-    useEffect(() => {
-        if (!auth.CheckAuthorization(["Manager", "District Manager", "CEO"])){
-            navigate(routes.signout);
-        }
-    })
+    function UpdateVariance(){
+        //wait till we have our pos data before we attempt to make this call
+        axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance`)
+        .then(response => {
+            console.log(response);
+            if (true){
+                //populate table fields
+                
+            }else{
+                //something broke, oh no
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
 
     function clamp(value, min = 0){
         if (value < min){
@@ -42,23 +51,19 @@ const SafeAuditPage = () =>{
         return value;
     }
 
+    //check the permissions of the logged in user on page load, passing in
+    //the required permissions
+    useEffect(() => {
+        UpdateVariance();
+        if (!auth.CheckAuthorization(["Manager", "District Manager", "CEO"])){
+            navigate(routes.signout);
+        }
+    })
+
     function Submit(event){
         event.preventDefault();
 
-        axios.post('', {
-            "username": "username",
-        })
-        .then(response => {
-            console.log(response);
-            if (response.data.IsValid == true){
-            //navigate(routes.home);
-            }else{
-
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
+        UpdateVariance();
     }
 
     return (
