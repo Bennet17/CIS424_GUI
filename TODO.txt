@@ -15,7 +15,7 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
 
 ### `OSBarChart.jsx` Component ### - TM: I should be on top of these
 
-    #### Date to Weekday Function #### - MISSION
+    #### DONE - Date to Weekday Function #### - MISSION
         to find weekday value of given date in `OSBarChart.jsx` --- Sample
         data has weekday values but input will inevitably be in date format
 
@@ -23,19 +23,19 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
         Conditionally format above or below x-axis inversely to data value as to not cover up the info 
         - May not be necessary - 
 
-    #### Round Tooltips Values #### - MISSION - (DONE)
+    #### DONE - Round Tooltips Values #### - MISSION - (DONE)
         Tooltips are rounding to whole numbers... need to be 2 decimal (currency)
 
     #### Populate Chart w/ Real Data #### - BATTLE
         needs to be plugged into middleware routes... just sample data now
 
-    #### Negative Values in () - MISSION
+    #### DONE - Negative Values in () - MISSION
         Format negative datalabels in () rather than with -
 
-    #### Look into Apexcharts License - MISSION
+    #### DONE - Look into Apexcharts License - MISSION
         May be licensing requirements for the software (MIT License)
 
-    #### Black Titles to Gray-800 - MISSION
+    #### DONE - Black Titles to Gray-800 - MISSION
         Make it look consistent with SideBar
 
 ### `SideBar.jsx` Component ### - 

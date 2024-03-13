@@ -40,19 +40,39 @@ const AuthProvider = ({ children }) => {
     })
     }
 
+    //use for when loading into a route. This just verifies the user's position
+    //and returns if they should be allowed to have access to the page
+    const CheckAuthorization = (position) => {
+        let roles = ["Employee", "Manager", "District Manager", "CEO"];
+        
+        //scan the array of allowed positions
+        for (let i = 0; i < position.length; i ++){
+            //check if any of them match our current position list
+            for (let j = 0; j < roles.length; j ++){
+                if (position[i] == roles[j]){
+                    return true;
+                }
+            }
+        }
+
+        //otherwise, we are not authorized
+        return false;
+    }
+
     //kill everything
     const logOut = () => {
         //setUser(null);
         removeCookie("user", {path: "/"});
         localStorage.removeItem("site");
         localStorage.removeItem("curStoreID");
+        localStorage.removeItem("curStoreName");
         localStorage.removeItem("stores");
         navigate(routes.signout);
     }
     
     //exports our various variables and objects to be accessable on other pages that imports this
     //file
-    return <AuthContext.Provider value={{cookie, loginAction, logOut}}>
+    return <AuthContext.Provider value={{cookie, CheckAuthorization, loginAction, logOut}}>
         {children}
     </AuthContext.Provider>;
 };

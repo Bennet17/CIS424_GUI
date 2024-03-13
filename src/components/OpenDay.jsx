@@ -10,6 +10,7 @@ const OpenDayPage = () =>{
     const auth = useAuth();
 
     //sample data to demonstrate how this all works. In reality, we would get all the POS data with a post get request to the db and store it in an array
+    const [posHasLoaded, SetPosHasLoaded] = useState(false);
     const [poss, setPoss] = useState([]);
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("show extras ▼");
@@ -147,6 +148,7 @@ const OpenDayPage = () =>{
 
                     //update current pos
                     changeCurrentPos(response.data[0].ID);
+                    SetPosHasLoaded(true);
                 }else{
                     //something broke, oh no
                 }
@@ -167,7 +169,7 @@ const OpenDayPage = () =>{
             "usrID": auth.cookie.user.ID,
             "itemCounted": poss[currentPosIndex],
             "total": totalAmount,
-            "amountExpected": expectedAmount,
+            "amountExpected": null,
             "hundred": elm100Dollar,
             "fifty": elm50Dollar,
             "twenty": elm20Dollar,
@@ -208,22 +210,26 @@ const OpenDayPage = () =>{
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-12">
                     <p className="text-2xl mb-2">Select a POS to open</p>
-                    {poss.map(item => (
+                    {posHasLoaded ? 
                         <>
-                            <label>
-                                <input 
-                                    key={item.name} 
-                                    defaultChecked={item.ID == 1 ? true : false}
-                                    onChange={(e) => changeCurrentPos(item.ID)} 
-                                    type="radio" 
-                                    name="pos" 
-                                    value={item.name} 
-                                />
-                                {item.name} - {item.opened ? "Open" : "Closed"}
-                            </label>
-                            <br/>
+                            {poss.map(item => (
+                                <>
+                                    <label>
+                                        <input 
+                                            key={item.name} 
+                                            defaultChecked={item.ID == 1 ? true : false}
+                                            onChange={(e) => changeCurrentPos(item.ID)} 
+                                            type="radio" 
+                                            name="pos" 
+                                            value={item.name} 
+                                        />
+                                        {item.name} - {item.opened ? "Open" : "Closed"}
+                                    </label>
+                                    <br/>
+                                </>
+                            ))}
                         </>
-                    ))}
+                    : <p>Loading...</p>}
                 </div>
                 <div className="text-main-color float-left ml-16 mt-12">
                     {currentPosIndex > 0 && <p className="text-2xl" >Enter denominations for {poss[currentPosIndex].name}</p>}

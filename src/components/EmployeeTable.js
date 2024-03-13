@@ -11,7 +11,7 @@ import AddUserForm from './AddUserForm';
 function EmployeeTable() {
 
   const curStore = localStorage.getItem('curStore'); //extract current store ID from local storage
-
+  console.log(curStore + "in employee table");
 
   //useState variables for employees array
   const [employees, setEmployees] = useState([]);
@@ -28,12 +28,12 @@ function EmployeeTable() {
     sheet: 'Employees'
   });
 
-  //this table handles grabbing the corresponding employee object from a row click
-  const handleRowClick = (employee) => {
-    setSelectedUser(employee); // Set the selected user data
-    //console.log(employee);
-    setShowEditForm(true); // Show the edit form button
-  };
+    //this table handles grabbing the corresponding employee object from a row click
+    const handleRowClick = (employee) => {
+      setSelectedUser(employee); // Set the selected user data
+      //console.log(employee);
+      setShowEditForm(true); // Show the edit form button
+    };
 
   //useEffect will launch as soon as the component is loaded
   useEffect(() => {
@@ -43,6 +43,7 @@ function EmployeeTable() {
       const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewUsersByStoreID?storeID=${curStore}`;
       axios.get(url)
         .then((response) => {
+          console.log(response);
           //map the response of employee data onto an array of employees
           setEmployees(response.data.map(employee => ({
             ID: employee.ID,
@@ -50,7 +51,8 @@ function EmployeeTable() {
             name: employee.name,
            // password: employee.password,
             position: employee.position,
-            storeName: localStorage.getItem(employee.storeID) //get storename from local storage
+            storeID: employee.storeID, //get storename from local storage
+            enabled: employee.enabled
           })));
         })
         .catch((error) => {
@@ -71,19 +73,24 @@ function EmployeeTable() {
               <th className="px-4 py-2">Username</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Position</th>
-              <th className="px-4 py-2">Store Locations</th>
+              {/* <th className="px-4 py-2">Enabled</th> */}
+
             </tr>
           </thead>
           <tbody>
-            {employees.map((employee) => (
-              <tr key={employee.ID} onClick={() => handleRowClick(employee)} className="cursor-pointer hover:bg-gray-100">
-                <td className="border px-4 py-2">{employee.username}</td>
-                <td className="border px-4 py-2">{employee.name}</td>
-                <td className="border px-4 py-2">{employee.position}</td>
-                <td className="border px-4 py-2">{employee.storeName}</td>
+          {employees.map((employee) => (
+            <tr 
+              key={employee.ID} 
+              onClick={() => handleRowClick(employee)} 
+              className={`cursor-pointer hover:bg-gray-100 ${employee.enabled ? '' : 'bg-gray-300'}`}
+            >
+              <td className="border px-4 py-2">{employee.username}</td>
+              <td className="border px-4 py-2">{employee.name}</td>
+              <td className="border px-4 py-2">{employee.position}</td>
+              {/* <td className="border px-4 py-2">{employee.enabled.toString()}</td> */}
+            </tr>
+          ))}
 
-              </tr>
-            ))}
           </tbody>
         </table>
       </div>
