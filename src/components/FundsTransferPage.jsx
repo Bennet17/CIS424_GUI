@@ -11,13 +11,13 @@ const FundsTransferPage = () =>{
     const auth = useAuth();
 
     // Const to hold the fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
-    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer";
+    const FundTransferURL = "";
 
     // Const to hold the form data
     const [formData, setFormData] = useState({
         user: auth.cookie.user.ID,
         name: auth.cookie.user.name,
-        store: auth.cookie.user.storeID,
+        store: auth.cookie.user.storeID_CSV[0], // Replace with currently selected store ID when store selection is implemented
         source: "",
         destination: "",
         amount: "",
@@ -229,7 +229,7 @@ const FundsTransferPage = () =>{
     }
 
     // Const to handle form submission
-    const HandleSubmit = (event) => {
+    const HandleSubmit = async (event) => {
         event.preventDefault();
 
         // Check if any field is invalid
@@ -246,6 +246,10 @@ const FundsTransferPage = () =>{
             amount: fltAmount,
             ...currencyFields
         } = formData;
+        
+        // Get the source and destination register IDs
+        let sourceID = arrSources.find(register => register.name === source).id;
+        let destinationID = arrDestinations.find(register => register.name === destination).id;
 
         // Filter out non-zero currency fields
         fltAmount = parseFloat(formData.amount).toFixed(2);
@@ -271,9 +275,11 @@ const FundsTransferPage = () =>{
         setStatus("Successfully submitted transfer!");
 
         // Generate the report
-        const report = GenerateReport(
+        const report = await GenerateReport(
             source,
             destination,
+            sourceID,
+            destinationID,
             fltAmount,
             newCurrencyFields
         );
@@ -371,6 +377,14 @@ const FundsTransferPage = () =>{
         });
     }
 
+    // Function to format negative values in parentheses
+    function NegativeValueParantheses(transferValue) {
+        if (transferValue < 0) 
+            return `(${Math.abs(transferValue).toFixed(2)})`;
+        else 
+            return `$${transferValue.toFixed(2)}`;
+    }
+
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
     //(also change arrow text thing)
     function ToggleExtraChange() {
@@ -382,10 +396,27 @@ const FundsTransferPage = () =>{
             setShowExtraChangeTxt("▼ Show extras");
     }
 
+    // Function to get the expected amount in the source register before transfer with register ID from arrSources
+    const GetExpectedAmount = async (registerID) => {
+        try {
+            // Get the expected amount in the source register before transfer
+            const response = await axios.get(
+                `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${formData.store}&registerID=${registerID}`
+            );
+    
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            return 0;
+        }
+    };
+
     // Generate the report message
-    const GenerateReport = (
+    const GenerateReport = async (
         strSource,
         strDestination,
+        sourceID,
+        destinationID,
         fltAmount,
         newCurrencyFields
     ) => {
@@ -426,6 +457,15 @@ const FundsTransferPage = () =>{
                 );
             }
         }
+
+        // Calls GetExpectedAmount to get the expected amount in the source and destination registers before transfer
+        let expectedSource, expectedDestination;
+        expectedSource = parseFloat(await GetExpectedAmount(sourceID)).toFixed(2);
+        expectedDestination = parseFloat(await GetExpectedAmount(destinationID)).toFixed(2);
+
+        // Format the expected amount in the source and destination registers before transfer
+        const afterTransferSource = NegativeValueParantheses(parseFloat(expectedSource) - parseFloat(fltAmount));
+        const afterTransferDestination = NegativeValueParantheses(parseFloat(expectedDestination) + parseFloat(fltAmount));
 
         // Report details
         return (
@@ -490,13 +530,13 @@ const FundsTransferPage = () =>{
                             <td className="tg-i817">
                                 Expected amount in {strSource} before transfer:
                             </td>
-                            <td className="tg-i817">blank</td>
+                            <td className="tg-i817">${expectedSource}</td>
                         </tr>
                         <tr>
                             <td className="tg-73oq">
                                 Expected amount in {strSource} after transfer:
                             </td>
-                            <td className="tg-73oq">blank</td>
+                            <td className="tg-73oq">{afterTransferSource}</td>
                         </tr>
                         <tr>
                             <td className="tg-i817">
@@ -513,13 +553,13 @@ const FundsTransferPage = () =>{
                             <td className="tg-i817">
                                 Expected amount in {strDestination} before transfer:
                             </td>
-                            <td className="tg-i817">blank</td>
+                            <td className="tg-i817">${expectedDestination}</td>
                         </tr>
                         <tr>
                             <td className="tg-73oq">
                                 Expected amount in {strDestination} after transfer:
                             </td>
-                            <td className="tg-73oq">blank</td>
+                            <td className="tg-73oq">{afterTransferDestination}</td>
                         </tr>
                         <tr>
                             <td className="tg-i817">
