@@ -6,12 +6,12 @@ import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
 
-const FundsTransferPage = () =>{
+const FundsTransferPage = () => {
     // Authentication context
     const auth = useAuth();
 
-    // Const to hold the fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
-    const FundTransferURL = "";
+    // Const to hold the POST request fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
+    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer";
 
     // Const to hold the form data
     const [formData, setFormData] = useState({
@@ -506,7 +506,7 @@ const FundsTransferPage = () =>{
                         </tr>
                         <tr>
                             <td className="tg-i817">User:</td>
-                            <td className="tg-i817">{formData.name}</td>
+                            <td className="tg-i817">{formData.user} ({formData.name})</td>
                         </tr>
                         <tr>
                             <td className="tg-73oq">Date:</td>
