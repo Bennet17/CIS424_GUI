@@ -77,6 +77,18 @@
     background-color: #F3F4F6;
 }
 
+.select-input-error {
+    
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    margin-left: 0;
+    margin-right: 2.5rem;
+    width: 15rem;
+    border: 2px solid red; 
+    border-radius: 5px;
+    background-color: #FFFFFF; 
+}
+
 .amount-input {
     box-sizing: border-box;
     text-align: center;
@@ -85,6 +97,19 @@
     margin-right: 2.5rem;
     width: 10rem;
     border: 2px solid rgb(57, 70, 83); 
+    border-radius: 5px;
+    background-color: #FFFFFF; 
+    user-select: text;
+}
+
+.amount-input-error {
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: 1rem;
+    margin-left: 0;
+    margin-right: 2.5rem;
+    width: 10rem;
+    border: 2px solid red; 
     border-radius: 5px;
     background-color: #FFFFFF; 
     user-select: text;

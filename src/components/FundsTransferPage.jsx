@@ -198,8 +198,8 @@ const FundsTransferPage = () =>{
             setStatus("Source and destination cannot be the same.");
 
             // Highlight the source and destination fields with red border
-            document.getElementById("source_select").classList.add("error");
-            document.getElementById("destination_select").classList.add("error");
+            document.getElementById("source_select").classList.add("select-input-error");
+            document.getElementById("destination_select").classList.add("select-input-error");
         }
 
         // Check if any field is empty
@@ -212,20 +212,31 @@ const FundsTransferPage = () =>{
 
             // Highlight empty fields with red border
             if (formData.source === "") 
-                document.getElementById("source_select").classList.add("error");
+                document.getElementById("source_select").classList.add("select-input-error");
             
             if (formData.destination === "") 
-                document.getElementById("destination_select").classList.add("error");
+                document.getElementById("destination_select").classList.add("select-input-error");
             
             if (formData.amount === "0.00") 
-                document.getElementById("amount_input").classList.add("error");
+                document.getElementById("amount_input").classList.add("amount-input-error");
         }
 
         // If any field is invalid, return true to stop form submission
         if (blnError) 
             return true;
-        else 
+        else {
+            // Remove error class from all fields
+            document.getElementById("source_select").classList.remove("select-input-error");
+            document.getElementById("destination_select").classList.remove("select-input-error");
+            document.getElementById("amount_input").classList.remove("amount-input-error");
+
+            // Return to default class
+            document.getElementById("source_select").classList.add("select-input");
+            document.getElementById("destination_select").classList.add("select-input");
+            document.getElementById("amount_input").classList.add("amount-input");
+
             return false;
+        }
     }
 
     // Const to handle form submission
@@ -337,9 +348,14 @@ const FundsTransferPage = () =>{
         setReport("");
 
         // Remove error class from all fields
-        document.getElementById("source_select").classList.remove("error");
-        document.getElementById("destination_select").classList.remove("error");
-        document.getElementById("amount_input").classList.remove("error");
+        document.getElementById("source_select").classList.remove("select-input-error");
+        document.getElementById("destination_select").classList.remove("select-input-error");
+        document.getElementById("amount_input").classList.remove("amount-input-error");
+
+        // Return to default class
+        document.getElementById("source_select").classList.add("select-input");
+        document.getElementById("destination_select").classList.add("select-input");
+        document.getElementById("amount_input").classList.add("amount-input");
     };
 
     // Axios post request to submit the transfer
