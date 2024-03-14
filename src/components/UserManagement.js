@@ -20,7 +20,7 @@ const UserManagementPage = () => {
   //console.log(auth.cookie.user.storeID);
 
   
-  const curStoreID = auth.cookie.user.storeID; //stores the current Store we are viewing
+  const curStoreID = auth.cookie.user.storeID_CSV[0]; //stores the current Store we are viewing
   localStorage.setItem('curStore', curStoreID); //sets current store into local storage 
 
   
@@ -43,7 +43,7 @@ let updatedStoreArray = [];
 // Iterate over the response data to extract store information
 response.data.forEach(function(item) {
   // Check if the current item matches the current store ID
-  if (item.ID === curStoreID) {
+  if (item.ID == curStoreID) {
     // Set the current store name
     setCurStoreName(item.location);
     // Store the current store name in local storage

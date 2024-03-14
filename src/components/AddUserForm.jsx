@@ -241,6 +241,7 @@ const handleChange = (e) => {
                     <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
                     <div className="flex items-center">
                       <input
+                        required
                         type="radio"
                         id="employee"
                         name="role"
@@ -251,6 +252,7 @@ const handleChange = (e) => {
                       />
                       <label htmlFor="employee" className="mr-4">Employee</label>
                       <input
+                        
                         type="radio"
                         id="manager"
                         name="role"
@@ -293,7 +295,7 @@ const handleChange = (e) => {
                       </button>
                       <button 
                         type="submit"
-                        disabled={!validPassword}
+                        disabled={validPassword}
                         className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                       >
                         Add User
