@@ -10,7 +10,7 @@ import axios from "axios";
 const POSManagementPage = () => {
   const auth = useAuth();
   console.log(auth.cookie.user.storeID);
-  const curStoreID = auth.cookie.user.storeID;
+  const curStoreID = auth.cookie.user.storeID_CSV[0]; //stores the current Store we are viewing
   const [curStoreName, setCurStoreName] = useState(null); // Initialize curStoreName as null
 
 
@@ -26,7 +26,7 @@ const POSManagementPage = () => {
           var jsonData = response.data;
           // Using forEach method
           jsonData.forEach(function(item) {
-            if(item.ID === curStoreID){
+            if(item.ID == curStoreID){
               setCurStoreName(item.location); // Update curStoreName in the state
               console.log(item.location);
             }
