@@ -18,7 +18,7 @@ const DepositHistory = () => {
         {date: Date.now(), amount: 30, location: 1, user: 4, status: "open"},
         {date: Date.now(), amount: 3000, location: 1, user: 2, status: "closed"},
     ];
-    const SelectedRows = [];
+    const [selectedRow, SetSelectedRow] = useState(null);
 
     const auth = useAuth();
     const navigate = useNavigate();
@@ -40,9 +40,9 @@ const DepositHistory = () => {
         'focus-visible:outline-offset-2',
         'focus-visible:outline-indigo-600',
         {
-            'bg-indigo-600': SelectedRows.length > 0,
-            'hover:bg-indigo-500': SelectedRows.length > 0,
-            'text-white': SelectedRows.length > 0,
+            'bg-indigo-600': selectedRow != null,
+            'hover:bg-indigo-500': selectedRow != null,
+            'text-white': selectedRow != null,
         }
     );
 
@@ -81,8 +81,15 @@ const DepositHistory = () => {
         );
     }
 
-    function toggleField(fieldIndex){
-        SelectedRows.find(fieldIndex);
+    //selects the row's index
+    function SelectRow(fieldIndex){
+        if (selectedRow != fieldIndex){
+            SetSelectedRow(fieldIndex);
+            console.log("Selected row index " + fieldIndex); 
+        }else{
+            SetSelectedRow(null);
+            console.log("Deselected row index " + fieldIndex); 
+        }     
     }
     
     function Submit(event){
@@ -93,11 +100,22 @@ const DepositHistory = () => {
         })
         .then(response => {
             console.log(response);
-            if (true){
-                //do
-            }else{
-                //o no
-            }
+            
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
+    function Abort(event){
+        //prevents default behavior of sending data to current URL And refreshing page
+        event.preventDefault();
+
+        axios.post('', {
+        })
+        .then(response => {
+            console.log(response);
+            
         })
         .catch(error => {
             console.error(error);
@@ -131,13 +149,13 @@ const DepositHistory = () => {
                                 <td className="box-border border-border-color border-2 text-center w-28 h-12">Location</td>
                                 <td className="box-border border-border-color border-2 text-center w-28 h-12">Opened By</td>
                             </tr>
-                            {dummyData.map(item => (
-                                <tr onClick={toggleField}>
+                            {dummyData.map((item, index) => (
+                                <tr onClick={() => SelectRow(index)} className={`${selectedRow == index && "bg-amber-200"}`} >
                                     <FieldStatus data={item.status} />
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-left w-28 h-8 pl-2">{item.date}</td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-left w-28 h-8 pl-2">{item.amount}</td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-left w-28 h-8 pl-2">{item.location}</td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-left w-28 h-8 pl-2">{item.user}</td>
+                                    <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.date}</td>
+                                    <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.amount}</td>
+                                    <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.location}</td>
+                                    <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.user}</td>
                                 </tr>
                             ))}
                             <tr>
@@ -193,8 +211,11 @@ const DepositHistory = () => {
                                 </td>
                                 <td>
                                 </td>
-                                <td colSpan="4">
+                                <td colSpan="2">
                                     <button type="submit" value="submit" className={buttonStyle} onClick={Submit}>Submit</button>
+                                </td>
+                                <td colSpan="2">
+                                    <button type="submit" value="submit" className={buttonStyle} onClick={Abort}>Abort Deposit</button>
                                 </td>
                             </tr>
                         </tbody>
