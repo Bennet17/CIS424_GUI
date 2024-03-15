@@ -1,10 +1,11 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider.js";
 import routes from "../routes.js";
-import { Store } from "lucide-react";
+import { Store, Eye } from "lucide-react";
+import axios from "axios";
 
 /*
 const navigation = [
@@ -23,6 +24,38 @@ export default function HorizotalNav() {
   const auth = useAuth();
 
   const [storeMenuOn, setStoreMenu] = useState(false);
+  const [allStores, setAllStores] = useState([]);
+  const [userAssociatedStores, setUserAssociatedStores] = useState([]);
+
+  useEffect(() => {
+    // Fetch all store objects
+    const url =
+      "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStores";
+    axios
+      .get(url) // fetching store data
+      .then((response) => {
+        setAllStores(response.data); // Set the fetched stores in the state
+
+        // Extract user's store IDs from the CSV stored in the cookie
+        const userStoreIDs = auth.cookie.user.storeID_CSV;
+
+        // Filter out the user's stores from the fetched store list
+        const userStores = response.data.filter((store) =>
+          userStoreIDs.includes(store.ID.toString())
+        );
+
+        if (auth.cookie.user.position === "Employee") {
+          userStores = response.data.filter(
+            (store) => store.ID === auth.cookie.user.viewingStoreID
+          );
+        }
+
+        setUserAssociatedStores(userStores); // Set the user's stores in the state
+      })
+      .catch((error) => {
+        console.error("Error fetching stores:", error);
+      });
+  }, []); // Run this effect only on component mount
 
   function signOut() {
     auth.logOut();
@@ -53,25 +86,6 @@ export default function HorizotalNav() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center"></div>
-                <div className="hidden sm:ml-6 sm:block">
-                  <div className="flex space-x-4">
-                    {/*
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current ? 'bg-gray-200 text-gray-900' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {item.name}
-                      </a>
-                    ))}
-                        */}
-                  </div>
-                </div>
               </div>
               <div
                 onClick={() => {
@@ -79,7 +93,7 @@ export default function HorizotalNav() {
                 }}
                 className="bg-gray-500 inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
               >
-                {/* Profile dropdown */}
+                {/* Stores dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button
@@ -90,7 +104,7 @@ export default function HorizotalNav() {
                       }`}
                     >
                       <span className="absolute -inset-1.5" />
-                      <span className="sr-only">Open user menu</span>
+                      <span className="sr-only">Open store menu</span>
 
                       <Store className="text-custom-accent mx-3 w-7 h-7" />
                     </Menu.Button>
@@ -105,58 +119,45 @@ export default function HorizotalNav() {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            View Store location 2
-                          </a>
-                        )}
-                      </Menu.Item>
-                      {/* <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            onClick={signOut}
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Sign out
-                          </a>
-                        )}
-                      </Menu.Item> */}
+                      {
+                        <Menu.Item key={"title"}>
+                          {({ active }) => (
+                            <a
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block font-medium px-4 py-2 text-sm text-gray-700"
+                              )}
+                            >
+                              {"Storeview"}
+                            </a>
+                          )}
+                        </Menu.Item>
+                      }
+                      <hr className="mx-3 border-gray-300 " />
+
+                      {userAssociatedStores.map((store) => (
+                        <Menu.Item key={store.ID}>
+                          {({ active }) => (
+                            <a
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700 flex justify-between"
+                              )}
+                            >
+                              {store.location}
+                              {store.ID === auth.cookie.user.viewingStoreID && (
+                                <Eye />
+                              )}
+                            </a>
+                          )}
+                        </Menu.Item>
+                      ))}
                     </Menu.Items>
                   </Transition>
                 </Menu>
               </div>
             </div>
           </div>
-          {/*
-          <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-                
-              {navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={classNames(
-                    item.current ? 'bg-gray-200 text-gray-900' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
-                  aria-current={item.current ? 'page' : undefined}
-                >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-            </div>
-                  </Disclosure.Panel> */}
         </>
       )}
     </Disclosure>

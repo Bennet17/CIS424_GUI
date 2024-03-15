@@ -35,12 +35,14 @@ const OSBarChart = () => {
     const url =
       "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance";
 
+    // const obj =
+
     try {
       const response = await axios.post(url, {
         // TODO - Not dynamic
-        storeID: 2,
-        startDate: "02-01-2024",
-        endDate: "02-16-2024",
+        storeID: "1",
+        startDate: "2024-02-01",
+        endDate: "2024-02-16",
       });
       const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
       console.log(data);
@@ -126,6 +128,7 @@ const OSBarChart = () => {
         text: "Date",
         style: {
           fontSize: "12px",
+          fontWeight: "bold",
         },
       },
     },
@@ -134,6 +137,7 @@ const OSBarChart = () => {
         text: "Variance (USD)",
         style: {
           fontSize: "12px",
+          fontWeight: "bold",
         },
       },
       labels: {
