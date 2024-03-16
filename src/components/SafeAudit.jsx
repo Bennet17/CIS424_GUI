@@ -41,6 +41,10 @@ const SafeAuditPage = () => {
         pennyRoll: 0,
     });
 
+    const [status, setStatus] = useState(""); // Status message to display after form submission
+    const successClass = "text-green-500"; // CSS class for success
+    const errorClass = "text-red-500"; // CSS class for error
+
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
 
@@ -65,6 +69,32 @@ const SafeAuditPage = () => {
 		//     });
 		formData.expectedAmount = 0.00;
 	}, []);
+
+	// Function to check if amount fields are empty
+	function CheckFields() {
+		if (formData.currentAmount === "" || formData.currentAmount === 0) {
+			// Update the status message
+			setStatus("Please fill out the current amount field.");
+
+			// Adds error class to fields
+			document.getElementById("currentAmount_input").classList.add("safe-amount-input-error");
+
+
+			// Return true to prevent form submission
+			return true;
+		}
+		else {
+			// Removes error class from fields
+			document.getElementById("currentAmount_input").classList.remove("safe-amount-input-error");
+			setStatus("");
+
+			// Return to default class
+			document.getElementById("currentAmount_input").classList.add("safe-amount-input");
+
+			// Return false to allow form submission
+			return false;
+		}
+	}
 
 	// Calculate the total amount based on the denomination fields
     const CalculateAmount = (formData) => {
@@ -118,6 +148,12 @@ const SafeAuditPage = () => {
         // Stores value to be parsed back to number after form change
         let parsedValue = parseFloat(value);
 
+		// If current amount was changed, remove error class
+		if (value !== "") {
+			document.getElementById("currentAmount_input").classList.remove("safe-amount-input-error");
+			setStatus("");
+		}
+
         // Update the form data
         setFormData((prevFormData) => ({
             ...prevFormData,
@@ -151,6 +187,8 @@ const SafeAuditPage = () => {
 			...currencyFields,
 		};
 
+		console.log(request)
+
 		// POST the cash count to the server
 		axios.post(CreateCashCountURL, request).then((response) => {
 			console.log(response);
@@ -166,10 +204,14 @@ const SafeAuditPage = () => {
 		});
 	}
 
+	// Function to handle the form submission
 	const HandleSubmit = async (event) => {
 		event.preventDefault();
 
-		// make if statement here to check values
+        // Check if any field is invalid
+        if (CheckFields())
+            return;
+		
 
 		// Stores form data to be passed to SubmitCashCount
 		let {
@@ -184,6 +226,9 @@ const SafeAuditPage = () => {
 		// Parse the form data to floats
 		fltCurrentAmount = parseFloat(formData.currentAmount).toFixed(2);
 		fltExpectedAmount = parseFloat(formData.expectedAmount).toFixed(2);
+
+        // Set the status message
+        setStatus("Successfully submitted mid day cash count!");
 
 		// Submit the cash count
 		SubmitCashCount(
@@ -236,6 +281,9 @@ const SafeAuditPage = () => {
         else
             setShowExtraChangeTxt("▼ Show extras");
     }
+
+    // Determine the class based on the status
+    const statusClass = status.startsWith("Successfully") ? successClass : errorClass;
 
 	return (
 		<div className="flex h-screen bg-custom-accent">
@@ -769,6 +817,8 @@ const SafeAuditPage = () => {
 							</div>
 						</div>
 					</form>
+                    {/* Shows submission status */}
+                    <p className={`mt-4 ml-6 ${statusClass}`}>{status}</p>
 				</div>
 			</div>
 		</div>

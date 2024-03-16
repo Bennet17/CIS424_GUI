@@ -195,6 +195,19 @@
     user-select: text;
 }
 
+.safe-amount-input-error {
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: 1rem;
+    margin-left: 0;
+    margin-right: 2.5rem;
+    width: 12rem;
+    border: 2px solid red; 
+    border-radius: 5px;
+    background-color: #FFFFFF; 
+    user-select: text;
+}
+
 pre {
     font-family: 'Roboto Mono', monospace;
 }
