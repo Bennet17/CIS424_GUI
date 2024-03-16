@@ -32,8 +32,8 @@ const AuthProvider = ({ children }) => {
             if (cookie.user.storeID_CSV.length === 1) {
               // Update cookie.user with viewing and working store ID
               let objectTemp = cookie.user;
-              objectTemp.viewingStoreID = cookie.user.storeID_CSV[0];
-              objectTemp.workingStoreID = cookie.user.storeID_CSV[0];
+              objectTemp.viewingStoreID = parseInt(cookie.user.storeID_CSV[0]);
+              objectTemp.workingStoreID = parseInt(cookie.user.storeID_CSV[0]);
               setCookie("user", objectTemp, { path: "/" });
               navigate(routes.home);
             } else {

@@ -40,7 +40,7 @@ export default function HorizotalNav() {
         const userStoreIDs = auth.cookie.user.storeID_CSV;
 
         // Filter out the user's stores from the fetched store list
-        const userStores = response.data.filter((store) =>
+        let userStores = response.data.filter((store) =>
           userStoreIDs.includes(store.ID.toString())
         );
 
@@ -146,7 +146,7 @@ export default function HorizotalNav() {
                             >
                               {store.location}
                               {store.ID === auth.cookie.user.viewingStoreID && (
-                                <Eye />
+                                <Eye className="text-gray-500" />
                               )}
                             </a>
                           )}
