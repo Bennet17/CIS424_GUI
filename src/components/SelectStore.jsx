@@ -10,6 +10,7 @@ function SelectStore() {
   const auth = useAuth();
 
   const [selectedStoreID, setSelectedStoreID] = useState(null);
+  const [selectedStoreName, setSelectedStoreName] = useState("");
   const [stores, setStores] = useState([]);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ function SelectStore() {
       });
   }, []); // Run only once on component mount
 
-  function handleStoreSelection(storeID) {
+  function handleStoreSelection(storeID, storeName) {
     setSelectedStoreID(storeID);
   }
 
@@ -41,7 +42,7 @@ function SelectStore() {
     event.preventDefault();
     if (selectedStoreID) {
       // Set viewing and working store with store selection
-      auth.setUserStores(selectedStoreID, selectedStoreID);
+      auth.setUserStores(selectedStoreID, selectedStoreID, selectedStoreName);
       navigate(routes.home); // Navigate to home page after store selection
     } else {
       // Show an error message if no store is selected
@@ -73,7 +74,9 @@ function SelectStore() {
                   name="store"
                   value={store.ID}
                   checked={selectedStoreID === store.ID}
-                  onChange={() => handleStoreSelection(store.ID)}
+                  onChange={() =>
+                    handleStoreSelection(store.ID, store.location)
+                  }
                   className="mr-2"
                 />
                 <label htmlFor={store.ID} className="text-sm text-gray-900">
