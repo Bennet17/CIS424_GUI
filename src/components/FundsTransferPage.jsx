@@ -171,6 +171,8 @@ const FundsTransferPage = () => {
             [name]: parsedValue,
         });
 
+        console.log(formData)
+
         // If the amount field is changed from the denominations, remove the error class from the amount field
         if (name !== "source" || name !== "destination")
             document.getElementById("amount_input").classList.remove("error");
