@@ -20,6 +20,7 @@ const SafeAuditPage = () => {
         user: auth.cookie.user.ID,
         name: auth.cookie.user.name,
         store: auth.cookie.user.viewingStoreID,
+        storeName: auth.cookie.user.viewingStoreLocation,
         currentAmount: "",
 		expectedAmount: 0,
         hundred: 0,

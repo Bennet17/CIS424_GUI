@@ -18,6 +18,7 @@ const FundsTransferPage = () => {
         user: auth.cookie.user.ID,
         name: auth.cookie.user.name,
         store: auth.cookie.user.viewingStoreID,
+        storeName: auth.cookie.user.viewingStoreLocation,
         source: "",
         destination: "",
         amount: "",
