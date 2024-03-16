@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider.js";
 import Logo from "../newLogo.png"; // Adjust the path accordingly
+import routes from "../routes.js";
 
 //creates a function that returns the login page area
 function LoginPage() {
@@ -20,6 +21,10 @@ function LoginPage() {
 
   //import the authentication function from AuthProvider.js
   const auth = useAuth();
+
+  function toForgotPassword() {
+    navigate(routes.forgotpassword);
+  }
 
   //function to handle Submit button pressed logic
   function Submit(event) {
@@ -86,7 +91,7 @@ function LoginPage() {
               </label>
               <div className="text-sm">
                 <a
-                  href="#"
+                  onClick={toForgotPassword}
                   className="font-semibold text-indigo-600 hover:text-indigo-500 "
                 >
                   Forgot Password?

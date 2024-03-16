@@ -19,6 +19,7 @@ import VarianceAudit from "./components/VarianceAudit.jsx";
 import NotFound from "./components/NotFound";
 import PrivateRoute from "./PrivateRoute.js";
 import DepositHistory from "./components/DepositHistory.jsx";
+import ForgotPassword from "./components/ForgotPassword.jsx";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           Lastly, note the index property for the login page instead of a path. This means that the path
           for this page will be on the root "localhost:3000" url */}
           <Route index element={<LoginPage />} />
+              <Route path={routes.forgotpassword} element={<ForgotPassword />} />
           <Route element={<PrivateRoute />}>
             <Route path={routes.home} element={<HomePage />} />
             <Route path={routes.selectstore} element={<SelectStorePage />} />

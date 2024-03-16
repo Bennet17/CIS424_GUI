@@ -5,6 +5,7 @@ import axios from "axios";
 import routes from "./routes.js";
 const AuthContext = createContext();
 
+
 const AuthProvider = ({ children }) => {
   const [cookie, setCookie, removeCookie] = useCookies(["user"]);
   //const [user, setUser] = useState(null);
