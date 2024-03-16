@@ -77,7 +77,7 @@ const CloseDayPage = () =>{
         {
             'text-yellow-500': totalAmount > expectedAmount,
             'text-rose-600': totalAmount < expectedAmount,
-            'text-black': totalAmount == expectedAmount,
+            'text-black': totalAmount === expectedAmount,
         }
     );
 
@@ -139,7 +139,7 @@ const CloseDayPage = () =>{
     //make this call immediately on component load
     useEffect(() => {
         function Initialize(){
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID_CSV[0]}`)
             .then(response => {
                 console.log(response);
                 if (true){
@@ -159,7 +159,7 @@ const CloseDayPage = () =>{
         }
 
         Initialize();
-    }, []);
+    },);
 
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
@@ -169,7 +169,7 @@ const CloseDayPage = () =>{
             "usrID": auth.cookie.user.ID,
             "itemCounted": poss[currentPosIndex],
             "total": totalAmount,
-            "amountExpected": expectedAmount,
+            "amountExpected": null,
             "hundred": elm100Dollar,
             "fifty": elm50Dollar,
             "twenty": elm20Dollar,
@@ -205,11 +205,11 @@ const CloseDayPage = () =>{
 
     return (
         <div className="flex h-screen bg-custom-accent">
-            <SideBar currentPage={1} />
+            <SideBar currentPage={2} />
             <div className="w-full">
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-12">
-                    <p className="text-2xl mb-2">Select a POS to open</p>
+                    <p className="text-2xl mb-2">Select a POS to close</p>
                     {posHasLoaded ? 
                         <>
                             {poss.map(item => (
@@ -217,7 +217,7 @@ const CloseDayPage = () =>{
                                     <label>
                                         <input 
                                             key={item.name} 
-                                            defaultChecked={item.ID == 1 ? true : false}
+                                            defaultChecked={item.ID === 1 ? true : false}
                                             onChange={(e) => changeCurrentPos(item.ID)} 
                                             type="radio" 
                                             name="pos" 
@@ -229,7 +229,7 @@ const CloseDayPage = () =>{
                                 </>
                             ))}
                         </>
-                    : <p>Loading...</p>}
+                    : <p>Wait...</p>}
                 </div>
                 <div className="text-main-color float-left ml-16 mt-12">
                     {currentPosIndex > 0 && <p className="text-2xl" >Enter denominations for {poss[currentPosIndex].name}</p>}
@@ -405,7 +405,7 @@ const CloseDayPage = () =>{
                                         </label>
                                     </td>
                                 </tr>
-                                {showExtraChange == true &&<tr>
+                                {showExtraChange === true &&<tr>
                                     <td>
                                         <label>$1 coin
                                             <input 
@@ -429,7 +429,7 @@ const CloseDayPage = () =>{
                                         </label>
                                     </td>
                                 </tr>}
-                                {showExtraChange == true &&<tr>
+                                {showExtraChange === true &&<tr>
                                     <td>
                                         <label>$1/2 coin
                                             <input 

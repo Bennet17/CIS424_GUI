@@ -9,6 +9,7 @@ import AuthProvider from "./AuthProvider.js";
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 import OpenDayPage from './components/OpenDay';
+import CloseDayPage from './components/CloseDay';
 import FundsTransferPage from './components/FundsTransferPage';
 import UserManagementPage from "./components/UserManagement.js";
 import SafeAudit from './components/SafeAudit';
@@ -33,7 +34,7 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path={routes.home} element={<HomePage />} />
             <Route path={routes.openday} element={<OpenDayPage />} />
-            <Route path={routes.closeday} element={<OpenDayPage />} />
+            <Route path={routes.closeday} element={<CloseDayPage />} />
             <Route path={routes.security} >
               <Route path={routes.usermanagement} element={<UserManagementPage/>} />
               <Route path={routes.posmanagement} element={<POSManagementPage/>} />

@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
             .then(response => {
             
                 console.log(response.data);
-                if (response.data.IsValid == true){
+                if (response.data.IsValid === true){
                     //setUser(response.data.user);
                     //setToken(response.token);
                     setCookie("user", response.data.user, {path: "/"});
@@ -49,7 +49,7 @@ const AuthProvider = ({ children }) => {
         for (let i = 0; i < position.length; i ++){
             //check if any of them match our current position list
             for (let j = 0; j < roles.length; j ++){
-                if (position[i] == roles[j]){
+                if (position[i] === roles[j]){
                     return true;
                 }
             }
