@@ -378,6 +378,7 @@ const FundsTransferPage = () => {
         // Request object
         const request = {
             usrID: user,
+            storeID: formData.store,
             origin: strSource,
             destination: strDestination,
             total: fltAmount,
