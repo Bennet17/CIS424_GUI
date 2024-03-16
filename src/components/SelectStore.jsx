@@ -45,7 +45,7 @@ function SelectStore() {
     event.preventDefault();
     if (selectedStoreID) {
       // Set viewing and working store with store selection
-      auth.setUserStores(selectedStoreID);
+      auth.setUserStores(selectedStoreID); //switch to one store for now, and included method in auth provider
       navigate(routes.home); // Navigate to home page after store selection
     } else {
       // Show an error message if no store is selected
