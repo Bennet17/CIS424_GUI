@@ -159,7 +159,7 @@ const CloseDayPage = () =>{
         }
 
         Initialize();
-    },);
+    },[]);
 
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
