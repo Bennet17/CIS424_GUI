@@ -52,13 +52,12 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  const setUserStores = (viewingStoreID, workingStoreID) => {
+  const setUserStores = (storeID) => {
     setCookie(
       "user",
       {
         ...cookie.user,
-        viewingStoreID: viewingStoreID,
-        workingStoreID: workingStoreID,
+        StoreID: storeID
       },
       { path: "/" }
     );
@@ -98,7 +97,7 @@ const AuthProvider = ({ children }) => {
   //file
   return (
     <AuthContext.Provider
-      value={{ cookie, CheckAuthorization, loginAction, logOut }}
+      value={{ cookie, CheckAuthorization, loginAction, logOut, setUserStores }}
     >
       {children}
     </AuthContext.Provider>
