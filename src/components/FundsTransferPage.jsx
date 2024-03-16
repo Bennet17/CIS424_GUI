@@ -510,7 +510,7 @@ const FundsTransferPage = () => {
                         </tr>
                         <tr>
                             <td className="tg-i817">Store:</td>
-                            <td className="tg-i817">{formData.store}</td>
+                            <td className="tg-i817">{formData.storeName}</td>
                         </tr>
                         <tr>
                             <td className="tg-i817">User:</td>

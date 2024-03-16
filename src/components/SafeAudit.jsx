@@ -292,7 +292,7 @@ const SafeAuditPage = () => {
 			<div className="flex flex-col w-full">
 				<HorizontalNav />
 				<div className="text-main-color float-left ml-8 mt-12">
-					<h1 className="text-3xl font-bold">Safe Audit for store {formData.store}</h1>
+					<h1 className="text-3xl font-bold">Safe Audit for {formData.storeName}</h1>
 					<br />
 					<form onSubmit={HandleSubmit} onReset={HandleCancel} className="tables-container">
                         {/* Denominations */}

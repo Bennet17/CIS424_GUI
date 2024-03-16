@@ -40,6 +40,8 @@ const VarianceAuditPage = () =>{
             <div className="flex flex-col w-full">
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-12">
+					<h1 className="text-3xl font-bold">Variance Audit for {formData.storeName}</h1>
+					<br />
                     <table className="table-variance">
                         <thead className="">
                             <tr>
