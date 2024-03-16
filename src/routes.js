@@ -2,20 +2,21 @@
 //it can easily be done so here, and all affecting pages will be updated
 
 const routes = {
-    home: "/Home",
-    openday: "/OpenDay",
-    closeday: "/CloseDay",
-    security: "/Security",
-    usermanagement:"/Security/UserManagement",
-    posmanagement:"/Security/POSManagement",
-    fundstransfer: "/TransferFunds",
-    cashmanager: "/CashManager",
-    safeaudit: "/CashManager/SafeAudit",
-    varianceaudit: "/CashManager/VarianceAudit",
-    deposithistory: "/CashManager/DepositHistory",
-    signout: "/"
+  home: "/Home",
+  selectstore: "/SelectStore",
+  openday: "/OpenDay",
+  closeday: "/CloseDay",
+  security: "/Security",
+  usermanagement: "/Security/UserManagement",
+  posmanagement: "/Security/POSManagement",
+  fundstransfer: "/TransferFunds",
+  cashmanager: "/CashManager",
+  safeaudit: "/CashManager/SafeAudit",
+  varianceaudit: "/CashManager/VarianceAudit",
+  deposithistory: "/CashManager/DepositHistory",
+  signout: "/",
 
-    //add more here
-}
+  //add more here
+};
 
 export default routes;
