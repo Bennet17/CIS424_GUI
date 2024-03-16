@@ -21,13 +21,9 @@ function SelectStore() {
         // Filter stores based on user's storeID_CSV
         console.log(auth.cookie.user.storeID_CSV);
         console.log(allStores);
-        const filteredStores = allStores.filter((store) => {
-          // Check if any of the store IDs in storeID_CSV matches the current store's ID
-          return auth.cookie.user.storeID_CSV.some((storeID) => {
-              const [storeIdValue] = storeID.split("-"); // Extract the store ID part
-              return storeIdValue === store.ID.toString(); // Check if the store ID matches
-          });
-      });
+        const filteredStores = allStores.filter((store) =>
+          auth.cookie.user.storeID_CSV.includes(store.ID.toString())
+        );
         // Set filtered stores
         //console.log(filteredStores);
         setStores(filteredStores);
@@ -45,7 +41,7 @@ function SelectStore() {
     event.preventDefault();
     if (selectedStoreID) {
       // Set viewing and working store with store selection
-      auth.setUserStores(selectedStoreID); //switch to one store for now, and included method in auth provider
+      auth.setUserStores(selectedStoreID, selectedStoreID);
       navigate(routes.home); // Navigate to home page after store selection
     } else {
       // Show an error message if no store is selected

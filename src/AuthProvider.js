@@ -52,12 +52,13 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  const setUserStores = (storeID) => {
+  const setUserStores = (workingStoreID, viewingStoreID) => {
     setCookie(
       "user",
       {
         ...cookie.user,
-        StoreID: storeID
+        workingStoreID: workingStoreID,
+        viewingStoreID: viewingStoreID,
       },
       { path: "/" }
     );
