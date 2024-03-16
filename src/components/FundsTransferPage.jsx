@@ -6,18 +6,18 @@ import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
 
-const FundsTransferPage = () =>{
+const FundsTransferPage = () => {
     // Authentication context
     const auth = useAuth();
 
-    // Const to hold the fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
+    // Const to hold the POST request fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
     const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer";
 
     // Const to hold the form data
     const [formData, setFormData] = useState({
         user: auth.cookie.user.ID,
         name: auth.cookie.user.name,
-        store: auth.cookie.user.storeID,
+        store: auth.cookie.user.storeID_CSV[0], // Replace with currently selected store ID when store selection is implemented
         source: "",
         destination: "",
         amount: "",
@@ -56,8 +56,10 @@ const FundsTransferPage = () =>{
         function Initialize() {
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${formData.store}`)
             .then(response => {
-                // Extract register names from the response and filter based on opened status
-                const newSources = response.data.filter(register => register.opened).map(register => register.name);
+                // Extract register names and ID from the response and filter based on opened status
+                const newSources = response.data
+                .filter(register => register.opened)
+                .map(register => ({ id: register.ID, name: register.name }));
 
                 // Update arrSources using functional form of setState to avoid duplicates
                 setArrSources(newSources);
@@ -196,8 +198,8 @@ const FundsTransferPage = () =>{
             setStatus("Source and destination cannot be the same.");
 
             // Highlight the source and destination fields with red border
-            document.getElementById("source_select").classList.add("error");
-            document.getElementById("destination_select").classList.add("error");
+            document.getElementById("source_select").classList.add("select-input-error");
+            document.getElementById("destination_select").classList.add("select-input-error");
         }
 
         // Check if any field is empty
@@ -210,24 +212,35 @@ const FundsTransferPage = () =>{
 
             // Highlight empty fields with red border
             if (formData.source === "") 
-                document.getElementById("source_select").classList.add("error");
+                document.getElementById("source_select").classList.add("select-input-error");
             
             if (formData.destination === "") 
-                document.getElementById("destination_select").classList.add("error");
+                document.getElementById("destination_select").classList.add("select-input-error");
             
             if (formData.amount === "0.00") 
-                document.getElementById("amount_input").classList.add("error");
+                document.getElementById("amount_input").classList.add("amount-input-error");
         }
 
         // If any field is invalid, return true to stop form submission
         if (blnError) 
             return true;
-        else 
+        else {
+            // Remove error class from all fields
+            document.getElementById("source_select").classList.remove("select-input-error");
+            document.getElementById("destination_select").classList.remove("select-input-error");
+            document.getElementById("amount_input").classList.remove("amount-input-error");
+
+            // Return to default class
+            document.getElementById("source_select").classList.add("select-input");
+            document.getElementById("destination_select").classList.add("select-input");
+            document.getElementById("amount_input").classList.add("amount-input");
+
             return false;
+        }
     }
 
     // Const to handle form submission
-    const HandleSubmit = (event) => {
+    const HandleSubmit = async (event) => {
         event.preventDefault();
 
         // Check if any field is invalid
@@ -244,8 +257,10 @@ const FundsTransferPage = () =>{
             amount: fltAmount,
             ...currencyFields
         } = formData;
-
-        console.log(currencyFields)
+        
+        // Get the source and destination register IDs
+        let sourceID = arrSources.find(register => register.name === source).id;
+        let destinationID = arrDestinations.find(register => register.name === destination).id;
 
         // Filter out non-zero currency fields
         fltAmount = parseFloat(formData.amount).toFixed(2);
@@ -271,9 +286,11 @@ const FundsTransferPage = () =>{
         setStatus("Successfully submitted transfer!");
 
         // Generate the report
-        const report = GenerateReport(
+        const report = await GenerateReport(
             source,
             destination,
+            sourceID,
+            destinationID,
             fltAmount,
             newCurrencyFields
         );
@@ -331,9 +348,14 @@ const FundsTransferPage = () =>{
         setReport("");
 
         // Remove error class from all fields
-        document.getElementById("source_select").classList.remove("error");
-        document.getElementById("destination_select").classList.remove("error");
-        document.getElementById("amount_input").classList.remove("error");
+        document.getElementById("source_select").classList.remove("select-input-error");
+        document.getElementById("destination_select").classList.remove("select-input-error");
+        document.getElementById("amount_input").classList.remove("amount-input-error");
+
+        // Return to default class
+        document.getElementById("source_select").classList.add("select-input");
+        document.getElementById("destination_select").classList.add("select-input");
+        document.getElementById("amount_input").classList.add("amount-input");
     };
 
     // Axios post request to submit the transfer
@@ -367,8 +389,16 @@ const FundsTransferPage = () =>{
                 console.log("Failed to submit transfer");
         })
         .catch((error) => {
-            // console.error(error);
+            console.error(error);
         });
+    }
+
+    // Function to format negative values in parentheses
+    function NegativeValueParantheses(transferValue) {
+        if (transferValue < 0) 
+            return `(${Math.abs(transferValue).toFixed(2)})`;
+        else 
+            return `$${transferValue.toFixed(2)}`;
     }
 
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
@@ -382,10 +412,27 @@ const FundsTransferPage = () =>{
             setShowExtraChangeTxt("▼ Show extras");
     }
 
+    // Function to get the expected amount in the source register before transfer with register ID from arrSources
+    const GetExpectedAmount = async (registerID) => {
+        try {
+            // Get the expected amount in the source register before transfer
+            const response = await axios.get(
+                `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${formData.store}&registerID=${registerID}`
+            );
+    
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            return 0;
+        }
+    };
+
     // Generate the report message
-    const GenerateReport = (
+    const GenerateReport = async (
         strSource,
         strDestination,
+        sourceID,
+        destinationID,
         fltAmount,
         newCurrencyFields
     ) => {
@@ -427,6 +474,15 @@ const FundsTransferPage = () =>{
             }
         }
 
+        // Calls GetExpectedAmount to get the expected amount in the source and destination registers before transfer
+        let expectedSource, expectedDestination;
+        expectedSource = parseFloat(await GetExpectedAmount(sourceID)).toFixed(2);
+        expectedDestination = parseFloat(await GetExpectedAmount(destinationID)).toFixed(2);
+
+        // Format the expected amount in the source and destination registers before transfer
+        const afterTransferSource = NegativeValueParantheses(parseFloat(expectedSource) - parseFloat(fltAmount));
+        const afterTransferDestination = NegativeValueParantheses(parseFloat(expectedDestination) + parseFloat(fltAmount));
+
         // Report details
         return (
             <div>
@@ -450,7 +506,7 @@ const FundsTransferPage = () =>{
                         </tr>
                         <tr>
                             <td className="tg-i817">User:</td>
-                            <td className="tg-i817">{formData.name}</td>
+                            <td className="tg-i817">{formData.user} ({formData.name})</td>
                         </tr>
                         <tr>
                             <td className="tg-73oq">Date:</td>
@@ -490,13 +546,13 @@ const FundsTransferPage = () =>{
                             <td className="tg-i817">
                                 Expected amount in {strSource} before transfer:
                             </td>
-                            <td className="tg-i817">blank</td>
+                            <td className="tg-i817">${expectedSource}</td>
                         </tr>
                         <tr>
                             <td className="tg-73oq">
                                 Expected amount in {strSource} after transfer:
                             </td>
-                            <td className="tg-73oq">blank</td>
+                            <td className="tg-73oq">{afterTransferSource}</td>
                         </tr>
                         <tr>
                             <td className="tg-i817">
@@ -513,13 +569,13 @@ const FundsTransferPage = () =>{
                             <td className="tg-i817">
                                 Expected amount in {strDestination} before transfer:
                             </td>
-                            <td className="tg-i817">blank</td>
+                            <td className="tg-i817">${expectedDestination}</td>
                         </tr>
                         <tr>
                             <td className="tg-73oq">
                                 Expected amount in {strDestination} after transfer:
                             </td>
-                            <td className="tg-73oq">blank</td>
+                            <td className="tg-73oq">{afterTransferDestination}</td>
                         </tr>
                         <tr>
                             <td className="tg-i817">
@@ -561,8 +617,8 @@ const FundsTransferPage = () =>{
                                             >
                                                 <option value="">&lt;Please select a source&gt;</option>
                                                 {arrSources.map((item, index) => (
-                                                    <option key={item} value={item}>
-                                                    {item}
+                                                    <option key={item.id} value={item.name}>
+                                                        {item.name}
                                                     </option>
                                                 ))}
                                             </select>
@@ -588,8 +644,8 @@ const FundsTransferPage = () =>{
                                                 &lt;Please select a destination&gt;
                                                 </option>
                                                 {arrDestinations.map((item, index) => (
-                                                    <option key={item} value={item}>
-                                                        {item}
+                                                    <option key={item.id} value={item.name}>
+                                                        {item.name}
                                                     </option>
                                                 ))}
                                             </select>

@@ -1,10 +1,31 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const EditUser = (user) => {
 
+
+
     console.log(user.user.name);
+    const name = user.user.name;
+    const nameArray = name.split(", ");
+    const lastName = nameArray[0];
+  const firstName = nameArray[1];
+
+
+  const [lastname, setLastName] = useState('');
+  const [firstname, setFirstName] = useState('');
+  const [username, setUsername] = useState(user.user.username);
+  const [password, setPassword] = useState('');
+  const [position, setPosition] = useState(user.user.position);
+  const [storeIDs, setStoreID] = useState(user.user.storeID);
+  const[managerStoreIDs, setManagerStores] = useState('')
+  const [errorMessage, setErrorMessage] = useState('');
+  const [result, setResult] = useState("");
+
 
     const curStore = localStorage.getItem('curStore');
+    const curStoreName = localStorage.getItem('curStoreName');
+
     //console.log(curStore +'in form');
     // Retrieve the serialized string from local storage
     const storedArrayString = localStorage.getItem('stores');
@@ -12,19 +33,21 @@ const EditUser = (user) => {
     // Parse the string back into an array
     const storeArray = JSON.parse(storedArrayString);
 
-    // const userId = user.user.ID;
-    // const userName = user.user.name;
-    // const userPassword = user.user.password;
-    // const userPosition = user.user.position;
-    // const userStoreName = user.user.storeName;
-    // const userUsername = user.user.username;
-    
 
   const [isOpen, setIsOpen] = useState(false);
 
 
 
-
+  const handleCheckboxChange = (e, storeID) => {
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setStoreID(storeID);
+      //setStoreID([storeIDs, storeID]); // Add the store ID to the selectedStores array
+    } else {
+      setStoreID(storeIDs.filter(id => id !== storeID)); // Remove the store ID from the selectedStores array
+    }
+  };
+  
 
 
   const openModal = () => {
@@ -33,18 +56,147 @@ const EditUser = (user) => {
 
   const closeModal = () => {
     setIsOpen(false);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Perform form submission logic here
-    console.log('Form submitted');
-    closeModal();
+    setLastName('')
+    setFirstName('')
+    setUsername('')
+    setPosition('')
+    setManagerStores('')
+    setStoreID('')
+    setErrorMessage('')
+    
   };
 
   const toggleAbility = () =>{
+          //this pos is currently enabled. lets disable it
+          if(user.user.enabled == true){
+            //create a disable POS request
+            axios
+            .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableUser", 
+              {
+                "ID": user.user.ID,
+              })
+            .then((response) => {
+      
+              console.log(response.data.response);
+      
+              if (response.data.response == "Disabled") {
+                  console.log("User successfully disabled");
+                  window.location.reload(); // This will refresh the page
+    
+              } else {
+                console.error("Failed to disable user");
+      
+              }
+      
+      
+            })
+            .catch((error) => {
+              console.error("API request failed:", error);
+             // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
+             //setResult("Request Failed. Try again.")
+            });
+        }
+        if(user.user.enabled == false){
+                  //create a disable POS request
+                  axios
+                  .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EnableUser", 
+                    {
+                      "ID": user.user.ID,
+                    })
+                  .then((response) => {
+            
+                    console.log(response.data.response);
+            
+                    if (response.data.response == "Enabled") {
+                      console.log("User enabled");
+                      window.location.reload(); // This will refresh the page
+    
+          
+                    } else {
+                      console.error("Failed to enable user");
+            
+                    }
+            
+            
+                  })
+                  .catch((error) => {
+                    console.error("API request failed:", error);
+                   // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
+                  // setResult("Request Failed. Try again.")
+                  });
+        }
+    
+
 
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+      //create an axios POST request to create a new user with inputs from the form
+      axios
+      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EditUser", 
+        {
+         "ID": user.user.ID,
+         "storeID": storeIDs,
+         "username": username,
+         "name": lastName+", "+firstName,
+         "position": position,
+         "managerCSV": managerStoreIDs
+        })
+   
+   
+   
+      .then((response) => {
+        //console.log(response.data.response);
+        
+        //if the response data was not an API error
+        //the following line indicates a successful entry
+        if (response.data.response == "User Updated successfully.") {
+          //console.log("User was created!");
+           closeModal();
+             setResult("User Successfully edited.")
+            window.location.reload(); // This will refresh the page
+   
+        } else {
+          //a valid API request but user was not created because there was already a user with that username
+          console.error("Failed to create user");
+          setResult("Username already taken. Try again")
+   
+        }
+   
+   
+      })
+      //error if the API request failed
+      .catch((error) => {
+        console.error("API request failed:", error);
+      // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
+      setResult("Request Failed. Try again.")
+      });
+   
+   
+  };
+
+
 
   return (
     <div className="relative ">
@@ -60,101 +212,87 @@ const EditUser = (user) => {
           <div className="bg-white p-8 rounded shadow-md w-auto">
             <span onClick={closeModal} className="absolute top-0 right-0 cursor-pointer text-gray-700 hover:text-gray-900">&times;</span>
             <h2 className="text-2xl font-bold mb-4">Edit User Information</h2>
-            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h2 className="text-lg font-bold mb-4">{result}</h2>
+           <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
   <div className="grid grid-cols-3 gap-4">
     <div className="mb-4">
       <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">First Name:</label>
       <input
-      required
+        required
         id="firstName"
         type="text"
-        value={user.user.name}
-      //  onChange={(e) => setFirstName(e.target.value)}
+        defaultValue={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
         className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
       />
     </div>
     <div className="mb-4">
       <label htmlFor="lastName" className="block text-gray-700 font-bold mb-2">Last Name:</label>
       <input
-      required
+        required
         id="lastName"
         type="text"
-        value={user.user.name}
-      //  onChange={(e) => setLastName(e.target.value)}
+        defaultValue={lastName}
+        onChange={(e) => setLastName(e.target.value)}
         className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
       />
     </div>
     <div className="mb-4">
       <label htmlFor="username" className="block text-gray-700 font-bold mb-2">Username:</label>
       <input
-      required
+        required
         id="username"
         type="text"
-        value={user.user.username}
-
-      //  onChange={(e) => setUsername(e.target.value)}
+        defaultValue={user.user.username}
+        onChange={(e) => setUsername(e.target.value)}
         className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
       />
     </div>
   </div>
 
-  <div className="grid grid-cols-3 gap-4">
-    <div className="mb-4">
-      <label htmlFor="password" className="block text-gray-700 font-bold mb-2">Password:</label>
-      <div>
-      <input
-      required
-        type="password"
-        value={user.user.password}
-      
-        //onChange={handleChange}
-        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-      />
+  <div className="grid grid-cols-3 gap-4 mb-4">
+    <div>
+      <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
+      <div className="flex items-center">
+        <input
+          type="radio"
+          id="employee"
+          name="role"
+          value="Employee"
+          defaultChecked={user.user.position === "Employee"}
+          onChange={(e) => setPosition(e.target.value)}
+          className="mr-2"
+        />
+        <label htmlFor="employee" className="mr-4">Employee</label>
+        <input
+          type="radio"
+          id="manager"
+          name="role"
+          value="Manager"
+          defaultChecked={user.user.position === "Manager"}
+          onChange={(e) => setPosition(e.target.value)}
+          className="mr-2"
+        />
+        <label htmlFor="manager">Manager</label>
+      </div>
     </div>
-    </div>
-    <div className="mb-4">
-                    <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
-                    <div className="flex items-center">
-                      <input
-                        type="radio"
-                        id="employee"
-                        name="role"
-                        value="Employee"
-                        defaultChecked
-                      //  checked={position === "Employee"} // Assuming position is the state variable for the selected role
-                       // onChange={(e) => setPosition(e.target.value)}
-                        className="mr-2"
-                      />
-                      <label htmlFor="employee" className="mr-4">Employee</label>
-                      <input
-                        type="radio"
-                        id="manager"
-                        name="role"
-                        value="Manager"
-                       // checked={position === "Manager"} // Assuming position is the state variable for the selected role
-                      //  onChange={(e) => setPosition(e.target.value)}
-                        className="mr-2"
-                      />
-                      <label htmlFor="manager">Manager</label>
-                    </div>
-                  </div>
 
-                  <div className="mb-4">
-                    <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
-                    {storeArray.map(item => (
-                      <div key={item.ID} className="mb-2">
-                        <input
-                          type="checkbox"
-                          id={`store${item.ID}`}
-                          name="store"
-                          value={item.ID}
-                          //checked={item.ID ===curStore}
-                         // onChange={(e) => handleCheckboxChange(e, item.ID)}
-                          className="mr-2"
-                        />
-                        <label htmlFor={`store${item.ID}`}>{item.location}</label>
-                      </div>
-                    ))}
+    <div>
+      <legend className="block text-gray-700 font-bold mb-2 ">Store:</legend>
+      {storeArray.map(item => (
+        <div key={item.ID} className="mb-2 flex items-center">
+          <input
+            type="checkbox"
+            id={`store${item.ID}`}
+            name="store"
+            value={item.ID}
+            defaultChecked={item.location === curStoreName}
+            onChange={(e) => setStoreID(e.target.value)}
+            className="mr-2"
+          />
+          <label htmlFor={`store${item.ID}`}>{item.location}</label>
+        </div>
+      ))}
     </div>
   </div>
   <div className="flex justify-between">
@@ -164,29 +302,24 @@ const EditUser = (user) => {
       className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
     >
       Cancel
-      
     </button>
-
 
     <button
       type="submit"
       className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
     >
       Save
-    
     </button>
 
     <button
-      type="submit"
+    onClick={toggleAbility}
       className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
     >
-      Disable User
-    
+  {user.user.enabled ? 'Disable User' : 'Enable User'}
     </button>
-
   </div>
-  
 </form>
+
           </div>
         </div>
       )}
