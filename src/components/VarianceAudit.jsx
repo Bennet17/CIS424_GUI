@@ -1,13 +1,23 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, {useState} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
+import {useNavigate} from 'react-router-dom';
+import routes from '../routes.js';
+import {useAuth} from '../AuthProvider.js';
 
 const SafeAuditPage = () =>{
+    const auth = useAuth();
+    const navigate = useNavigate();
+
     const [startDay, setStartDay] = useState();
     const [endDay, setEndDay] = useState();
     const [currentDay, setCurrentDay] = useState(Date.toString(Date.now));
+    const [cashTendered, setCashTendered] = useState(0);
+    const [cashBuys, setCashBuys] = useState(0);
+    const [pettyCash, setPettyCash] = useState(0);
+    const [creditSales, setCreditSales] = useState(0);
 
     //changes the start day, end day, and current day
     function changeDayStart(){
@@ -17,18 +27,16 @@ const SafeAuditPage = () =>{
     function changeDayCurrent(){
     }
 
-    function Submit(event){
-        event.preventDefault();
-
-        axios.post('', {
-            "username": "username",
-        })
+    function UpdateVariance(){
+        //wait till we have our pos data before we attempt to make this call
+        axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance`)
         .then(response => {
             console.log(response);
-            if (response.data.IsValid == true){
-            //navigate(routes.home);
+            if (true){
+                //populate table fields
+                
             }else{
-
+                //something broke, oh no
             }
         })
         .catch(error => {
@@ -36,27 +44,49 @@ const SafeAuditPage = () =>{
         });
     }
 
+    function clamp(value, min = 0){
+        if (value < min){
+            return min;
+        }
+        return value;
+    }
+
+    //check the permissions of the logged in user on page load, passing in
+    //the required permissions
+    useLayoutEffect(() => {
+        UpdateVariance();
+        if (!auth.CheckAuthorization(["Manager", "District Manager", "CEO"])){
+            navigate(routes.home);
+        }
+    })
+
+    function Submit(event){
+        event.preventDefault();
+
+        UpdateVariance();
+    }
+
     return (
         <div className="flex h-screen bg-custom-accent">
             <SideBar currentPage={5} />
             <div className="flex flex-col w-full">
                 <HorizontalNav />
-                <div className="float-left ml-10 mt-12">
-                    <label className="text-main-color text-2xl">Start Date:</label>
-                    <input onChange={changeDayStart} 
-                        className="box-border text-center  ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
-                        type="date" 
-                        name="start">
-                    </input>
-                </div>
-                <div className="float-left ml-10 mt-4">
-                    <label className="text-main-color text-2xl ">End Date:</label>
-                    <input 
-                        onChange={changeDayEnd} 
-                        className="box-border text-center ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
-                        type="date" 
-                        name="start">
-                    </input>
+                <div className="float-left ml-32 mt-12">
+                    <label className="text-main-color text-2xl">Start Date:
+                        <input onChange={changeDayStart} 
+                            className="box-border text-center text-base ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
+                            type="date" 
+                            name="start">
+                        </input>
+                    </label>
+                    <label className="text-main-color text-2xl ">End Date:
+                        <input 
+                            onChange={changeDayEnd} 
+                            className="box-border text-center text-base ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
+                            type="date" 
+                            name="start">
+                        </input>
+                    </label>
                 </div>
                 <div className="float-left ml-32 mt-8">
                     <div>
@@ -224,12 +254,26 @@ const SafeAuditPage = () =>{
                             <tbody>
                                 <tr>
                                     <td>
-                                        <label className="text-main-color">Cash Tendered:</label>
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        <label className="text-main-color">Cash Tendered:
+                                            <input 
+                                                value={cashTendered}
+                                                onChange={e => setCashTendered(clamp(e.target.value))} 
+                                                min="0" 
+                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                                type="number"
+                                            />
+                                        </label>
                                     </td>
                                     <td>
-                                        <label className="text-main-color">Cash Buys:</label>
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        <label className="text-main-color">Cash Buys:
+                                            <input 
+                                                value={cashBuys}
+                                                onChange={e => setCashBuys(clamp(e.target.value))} 
+                                                min="0" 
+                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                                type="number"
+                                            />
+                                        </label>
                                     </td>
                                     <td>
                                         <div className="text-main-color ml-6 mr-12">
@@ -238,17 +282,36 @@ const SafeAuditPage = () =>{
                                         </div>
                                     </td>
                                     <td>
-                                        <button type="submit" value="submit" className="flex w-36 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
+                                        <button 
+                                            type="submit" 
+                                            value="submit" 
+                                            className="flex w-36 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                            Submit
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label className="text-main-color">Petty Cash:</label>
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        <label className="text-main-color">Petty Cash:
+                                            <input 
+                                                value={pettyCash}
+                                                onChange={e => setPettyCash(clamp(e.target.value))} 
+                                                min="0" 
+                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                                type="number"
+                                            />
+                                        </label>
                                     </td>
                                     <td>
-                                        <label className="text-main-color">Credit Sales:</label>
-                                        <input defaultValue="0" className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" type="number"/>
+                                        <label className="text-main-color">Credit Sales:
+                                            <input 
+                                                value={creditSales}
+                                                onChange={e => setCreditSales(clamp(e.target.value))} 
+                                                min="0" 
+                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                                type="number"
+                                            />
+                                        </label>
                                     </td>
                                 </tr>
                             </tbody>
