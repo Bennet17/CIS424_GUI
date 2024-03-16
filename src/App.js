@@ -36,7 +36,7 @@ function App() {
             <Route path={routes.home} element={<HomePage />} />
             <Route path={routes.selectstore} element={<SelectStorePage />} />
             <Route path={routes.openday} element={<OpenDayPage />} />
-            <Route path={routes.closeday} element={<OpenDayPage />} />
+            <Route path={routes.closeday} element={<CloseDayPage />} />
             <Route path={routes.security}>
               <Route
                 path={routes.usermanagement}
@@ -46,7 +46,7 @@ function App() {
                 path={routes.posmanagement}
                 element={<POSManagementPage />}
               />
-            <Route path={routes.closeday} element={<CloseDayPage />} />
+            </Route>
             <Route path={routes.security} >
               <Route path={routes.usermanagement} element={<UserManagementPage/>} />
               <Route path={routes.posmanagement} element={<POSManagementPage/>} />
@@ -72,5 +72,4 @@ function App() {
     </HashRouter>
   );
 }
-
 export default App;
