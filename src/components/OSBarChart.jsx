@@ -2,6 +2,8 @@ import Chart from "react-apexcharts";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import { useAuth } from "../AuthProvider.js";
+
 // Component for displaying a bar chart representing Over/Short by Day
 const OSBarChart = () => {
   const defaultAnnotationOffset = -3;
@@ -9,6 +11,9 @@ const OSBarChart = () => {
   const [annotationOffset, setAnnotationOffset] = useState(
     defaultAnnotationOffset
   );
+
+  //import the authentication function from AuthProvider.js
+  const auth = useAuth();
 
   useEffect(() => {
     fetchData();
@@ -24,17 +29,22 @@ const OSBarChart = () => {
   }, [chartData]);
 
   const fetchData = async () => {
-    // TODO - This is wrong - waiting for correct route
-    const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance`;
+    // TODO - Correct route but it's not working
+    const storeID = auth.cookie.user.storeID;
+    const url =
+      "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance";
+
+    // const obj =
 
     try {
       const response = await axios.post(url, {
         // TODO - Not dynamic
-        registerID: 2,
-        startDate: "2-01-2024",
-        endDate: "2-16-2024",
+        storeID: "1",
+        startDate: "2024-02-01",
+        endDate: "2024-02-16",
       });
       const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
+      console.log(data);
 
       setChartData({
         // Map returned variance values to chart y-axis coordinates
@@ -117,6 +127,7 @@ const OSBarChart = () => {
         text: "Date",
         style: {
           fontSize: "12px",
+          fontWeight: "bold",
         },
       },
     },
@@ -125,6 +136,7 @@ const OSBarChart = () => {
         text: "Variance (USD)",
         style: {
           fontSize: "12px",
+          fontWeight: "bold",
         },
       },
       labels: {

@@ -9,12 +9,13 @@ import classNames from 'classnames';
 const OpenDayPage = () =>{
     const auth = useAuth();
 
-    //sample data to demonstrate how this all works. In reality, we would get all the POS data with a post get request to the db and store it in an array
+    //pos-related data
     const [posHasLoaded, SetPosHasLoaded] = useState(false);
     const [poss, setPoss] = useState([]);
+    const [currentPosIndex, SetCurrentPosIndex] = useState(-1);
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("show extras ▼");
-    let currentPosIndex = -1;
+    //let currentPosIndex = -1;
 
     //dom fields
     const [elmPennies, setElmPennies] = useState(0);
@@ -57,9 +58,12 @@ const OpenDayPage = () =>{
                 (elm2Dollar * 2) +
                 (elmHalfDollarCoin * 0.5)
             ) * 100
-        ) / 100;
+        ) / 100
+    ;
 
     const [expectedAmount, setExpectedAmount] = useState(0);
+    const [postSuccess, SetPostSuccess] = useState(null);
+    const [possSuccessTxt, SetPosSuccessTxt] = useState("");
 
     //Stores the general styling for the current total denominations text field.
     //here, we simply change the text color based on if we're over, under, or at expected value
@@ -81,16 +85,6 @@ const OpenDayPage = () =>{
         }
     );
 
-    //Stores the general styling for the pos system label/radio buttons.
-    //here, we simply change the text color based on whether the pos is open
-    /*const posLabelStyle = classNames(
-        '',
-        {
-            'text-green-500': currentPos.open == true,
-            'text-rose-600': currentPos.open == false,
-        }
-    );*/
-
     function clamp(value, min = 0){
         if (value < min){
             return min;
@@ -98,11 +92,14 @@ const OpenDayPage = () =>{
         return value;
     }
 
-    //changes the currently-selected pos
-    function changeCurrentPos(id){
-        currentPosIndex = id
-        console.log(currentPosIndex);
-    }
+    //call on component load AND when the currently-selected pos has refreshed
+    useEffect(() => {
+        console.log("setting pos array index to " + currentPosIndex + ", see below");
+        console.log(poss[currentPosIndex]);
+
+        //update the expected total amount
+        GetExpectedCount();
+    }, [currentPosIndex]);
 
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
     //(also change arrow text thing)
@@ -113,6 +110,11 @@ const OpenDayPage = () =>{
         }else{
             setShowExtraChangeTxt("show extras ▼");
         }
+    }
+
+    //changes the text to display on the pos submission status
+    function SetPosStatusText(txt){
+        SetPosStatusText(txt);
     }
 
     //clears all the inpout fields to default values
@@ -136,22 +138,21 @@ const OpenDayPage = () =>{
         setElmHalfDollarCoin(0);
     }
 
-    //make this call immediately on component load
+    //call on component load AND when poss state has refreshed
+    useEffect(() => {
+        //update current pos
+        SetCurrentPosIndex(0);
+        SetPosHasLoaded(true);
+    }, [poss]);
+
+    //call on component load AND when postSuccess is updated
     useEffect(() => {
         function Initialize(){
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID_CSV[0]}`)
             .then(response => {
                 console.log(response);
-                if (true){
-                    //set the pos information data
-                    setPoss(response.data);
-
-                    //update current pos
-                    changeCurrentPos(response.data[0].ID);
-                    SetPosHasLoaded(true);
-                }else{
-                    //something broke, oh no
-                }
+                //set the pos information data
+                setPoss(response.data);
             })
             .catch(error => {
                 console.error(error);
@@ -159,49 +160,73 @@ const OpenDayPage = () =>{
         }
 
         Initialize();
-    }, []);
+    }, [postSuccess]);
+
+    //gets the expected count for this pos
+    function GetExpectedCount(){
+        //wait until we have our pos data before attempting to execute
+        if (poss.length > 0 && poss[currentPosIndex]){
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.storeID_CSV[0]}&registerID=${poss[currentPosIndex].ID}`)
+            .then(response => {
+                console.log("getting cash count for " + poss[currentPosIndex].name + ", see below");
+                console.log(response);
+                setExpectedAmount(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+    }
+    
 
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
         event.preventDefault();
 
-        axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
-            "usrID": auth.cookie.user.ID,
-            "itemCounted": poss[currentPosIndex],
-            "total": totalAmount,
-            "amountExpected": null,
-            "hundred": elm100Dollar,
-            "fifty": elm50Dollar,
-            "twenty": elm20Dollar,
-            "ten": elm10Dollar,
-            "five": elm5Dollar,
-            "two": elm2Dollar,
-            "one": elm1Dollar,
-            "dollarCoin": elm1DollarCoin,
-            "halfDollar": elmHalfDollarCoin,
-            "quarter": elmQuarters,
-            "dime": elmDimes,
-            "nickel": elmNickles,
-            "penny": elmPennies,
-            "quarterRoll": elmQuartersRolled,
-            "dimeRoll": elmDimesRolled,
-            "nickelRoll": elmNicklesRolled,
-            "pennyRoll": elmPenniesRolled
-        })
-        .then(response => {
-            console.log(response);
-            if (true){
-                //open POS
-            }else{
-                //close POS
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
+        //check if our currently-selected pos is open
+        if (!poss[currentPosIndex].opened){
+            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
+                "usrID": auth.cookie.user.ID,
+                "itemCounted": poss[currentPosIndex].name,
+                "total": totalAmount,
+                "amountExpected": expectedAmount,
+                "hundred": elm100Dollar,
+                "fifty": elm50Dollar,
+                "twenty": elm20Dollar,
+                "ten": elm10Dollar,
+                "five": elm5Dollar,
+                "two": elm2Dollar,
+                "one": elm1Dollar,
+                "dollarCoin": elm1DollarCoin,
+                "halfDollar": elmHalfDollarCoin,
+                "quarter": elmQuarters,
+                "dime": elmDimes,
+                "nickel": elmNickles,
+                "penny": elmPennies,
+                "quarterRoll": elmQuartersRolled,
+                "dimeRoll": elmDimesRolled,
+                "nickelRoll": elmNicklesRolled,
+                "pennyRoll": elmPenniesRolled
+            })
+            .then(response => {
+                console.log(response);
+                if (response.status == 200){
+                    //open POS
+                    SetPostSuccess(true);
+                    SetPosSuccessTxt(poss[currentPosIndex].name + " opened successfully!");
+                }else{
+                    SetPostSuccess(false);
+                    SetPosSuccessTxt("Error trying to open" + poss[currentPosIndex].name);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }else{
+            SetPostSuccess(false);
+            SetPosSuccessTxt(poss[currentPosIndex].name + " is already open!");
+        }
     }
-
-
 
     return (
         <div className="flex h-screen bg-custom-accent">
@@ -212,15 +237,16 @@ const OpenDayPage = () =>{
                     <p className="text-2xl mb-2">Select a POS to open</p>
                     {posHasLoaded ? 
                         <>
-                            {poss.map(item => (
+                            {poss.map((item, index) => (
                                 <>
                                     <label>
                                         <input 
                                             key={item.name} 
-                                            defaultChecked={item.ID == 1 ? true : false}
-                                            onChange={(e) => changeCurrentPos(item.ID)} 
+                                            defaultChecked={index === 0 ? true : false}
+                                            onChange={(e) => SetCurrentPosIndex(index)} 
+                                            disabled={item.opened ? true : false}
                                             type="radio" 
-                                            name="pos" 
+                                            name="POS" 
                                             value={item.name} 
                                         />
                                         {item.name} - {item.opened ? "Open" : "Closed"}
@@ -232,7 +258,12 @@ const OpenDayPage = () =>{
                     : <p>Loading...</p>}
                 </div>
                 <div className="text-main-color float-left ml-16 mt-12">
-                    {currentPosIndex > 0 && <p className="text-2xl" >Enter denominations for {poss[currentPosIndex].name}</p>}
+                    {
+                        poss.length > 0 ? 
+                        <p className="text-2xl" >Enter denominations for {poss[currentPosIndex].name}</p>
+                        :
+                        <p className="text-2xl" >Waiting for POS data...</p>
+                    }
                     <br/><hr/><br/>
                     <form onSubmit={Submit}>
                         <table>
@@ -463,7 +494,7 @@ const OpenDayPage = () =>{
                     <div>
                         <label> Current Total:
                             <input 
-                                value={"$" + totalAmount} 
+                                value={totalAmount} 
                                 className={totalAmountStyle} 
                                 type="text" 
                                 disabled={true}
@@ -475,12 +506,15 @@ const OpenDayPage = () =>{
                         <label> Expected Total:
                             <input 
                                 value={expectedAmount} 
-                                onChange={e => setExpectedAmount(clamp(e.target.value))} 
-                                min="0" 
-                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                disabled={true}
+                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
                                 type="number" 
                             />
                         </label>
+                    </div>
+                    <div>
+                        {postSuccess == true && <p className="text-base font-bold text-green-500">{possSuccessTxt}</p>}
+                        {postSuccess == false && <p className="text-base font-bold text-red-500">{possSuccessTxt}</p>}
                     </div>
                 </div>
             </div>

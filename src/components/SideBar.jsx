@@ -42,13 +42,13 @@ const SideBar = (props) => {
 
   const [cashManagerOn, setCashManager] = useState(
     props.currentPage === SAFE_AUDIT_PAGE_NAME ||
-    props.currentPage === VARIANCE_AUDIT_PAGE_NAME ||
-    props.currentPage === DEPOSIT_HISTORY_PAGE_NAME
+      props.currentPage === VARIANCE_AUDIT_PAGE_NAME ||
+      props.currentPage === DEPOSIT_HISTORY_PAGE_NAME
   );
 
   const [securityOn, setSecurity] = useState(
     props.currentPage === USER_MANAGEMENT_PAGE_NAME ||
-    props.currentPage === POS_MANAGEMENT_PAGE_NAME
+      props.currentPage === POS_MANAGEMENT_PAGE_NAME
   );
 
   //functions to navigate user through pages. See html code below for calling these
@@ -67,10 +67,10 @@ const SideBar = (props) => {
   function toSafeAudit() {
     navigate(routes.safeaudit);
   }
-  function toVarianceAudit(){
+  function toVarianceAudit() {
     navigate(routes.varianceaudit);
   }
-  function toDepositHistory(){
+  function toDepositHistory() {
     navigate(routes.deposithistory);
   }
   function toUserManagement() {
