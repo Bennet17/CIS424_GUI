@@ -7,7 +7,6 @@ import { useAuth } from "../AuthProvider.js";
 const HomePage = () => {
   const auth = useAuth();
 
-
   return (
     <div className="flex h-screen bg-custom-accent">
       <SideBar currentPage={0} />
@@ -19,7 +18,7 @@ const HomePage = () => {
 
         {/* Content area */}
         <div className="flex flex-grow justify-center items-center">
-        {auth.cookie.user.position == "Manager"}
+          {auth.cookie.user.position == "Manager"}
           <OSBarChart />
         </div>
       </div>

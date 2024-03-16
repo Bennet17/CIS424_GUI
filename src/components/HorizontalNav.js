@@ -44,10 +44,17 @@ export default function HorizotalNav() {
           userStoreIDs.includes(store.ID.toString())
         );
 
+        // Ensure employee type can only see their working location
         if (auth.cookie.user.position === "Employee") {
           userStores = response.data.filter(
             (store) => store.ID === auth.cookie.user.viewingStoreID
           );
+        }
+
+        // If there is not a store location in cookies yet, put it there
+        if (!auth.cookie.user.viewingStoreLocation) {
+          const tempStore = userStores[0];
+          auth.setUserStores(tempStore.ID, tempStore.ID, tempStore.location);
         }
 
         setUserAssociatedStores(userStores); // Set the user's stores in the state
