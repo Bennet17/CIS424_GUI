@@ -17,7 +17,7 @@ const FundsTransferPage = () => {
     const [formData, setFormData] = useState({
         user: auth.cookie.user.ID,
         name: auth.cookie.user.name,
-        store: auth.cookie.user.storeID_CSV[0], // Replace with currently selected store ID when store selection is implemented
+        store: auth.cookie.user.viewingStoreID,
         source: "",
         destination: "",
         amount: "",
@@ -56,13 +56,19 @@ const FundsTransferPage = () => {
         function Initialize() {
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${formData.store}`)
             .then(response => {
+                console.log(response.data)
+
                 // Extract register names and ID from the response and filter based on opened status
                 const newSources = response.data
                 .filter(register => register.opened)
                 .map(register => ({ id: register.ID, name: register.name }));
 
-                // Update arrSources using functional form of setState to avoid duplicates
-                setArrSources(newSources);
+                if (newSources.length === 0)
+                    // Set status message if no registers are open
+                    setStatus("No registers are currently open.");
+                else
+                    // Update arrSources using functional form of setState to avoid duplicates
+                    setArrSources(newSources);
             })
             .catch(error => {
                 console.error(error);
