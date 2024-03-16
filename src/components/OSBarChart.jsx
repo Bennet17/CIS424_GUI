@@ -30,7 +30,7 @@ const OSBarChart = () => {
 
   const fetchData = async () => {
     // TODO - Correct route but it's not working
-    const storeID = auth.cookie.user.storeID;
+    const storeID = auth.cookie.user.viewingStoreID;
     const url =
       "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance";
 
