@@ -131,29 +131,13 @@ const SafeAuditPage = () => {
         });
     };
 
-	// Function to filter out empty currency fields from the form data and return them
-    function FilterDenominations(currencyFields) {
-        // Filter out non-zero currency fields by reducing the currencyFields object to a new object
-        // only including the non-zero fields. The reduce function iterates through each key-value pair
-        // in the currencyFields object and adds the key-value pair to the new object if the value is non-zero.
-        let nonZeroCurrencyFields = Object.keys(currencyFields).reduce(
-            (acc, key) => {
-                if (currencyFields[key] !== 0) acc[key] = currencyFields[key];
-                    return acc;
-            },
-            {}
-        );
-
-        return nonZeroCurrencyFields;
-    }
-
 	// Function to submit the cash count to the server
 	function SubmitCashCount(
 		event,
 		user,
 		currentAmount,
 		expectedAmount,
-		newCurrencyFields
+		currencyFields
 	) {
 		event.preventDefault();
 
@@ -164,20 +148,18 @@ const SafeAuditPage = () => {
 			itemCounted: "SAFE",
 			amountExpected: parseFloat(expectedAmount),
 			total: parseFloat(currentAmount),
-			...newCurrencyFields,
+			...currencyFields,
 		};
-
-		console.log(request);
 
 		// POST the cash count to the server
 		axios.post(CreateCashCountURL, request).then((response) => {
 			console.log(response);
 
 			 // Check if the count was successful
-			 if (response.data.IsValid == true)
-			 console.log("Successfully submitted safe count");
-		 else 
-			 console.log("Failed to submit safe count");
+			if (response.data.IsValid == true)
+				console.log("Successfully submitted safe count");
+			else 
+				console.log("Failed to submit safe count");
 		})
 		.catch((error) => {
 			console.error(error);
@@ -203,16 +185,13 @@ const SafeAuditPage = () => {
 		fltCurrentAmount = parseFloat(formData.currentAmount).toFixed(2);
 		fltExpectedAmount = parseFloat(formData.expectedAmount).toFixed(2);
 
-		// Filter out any empty fields
-		let newCurrencyFields = FilterDenominations(currencyFields);
-
 		// Submit the cash count
 		SubmitCashCount(
 			event,
 			user,
 			fltCurrentAmount,
 			fltExpectedAmount,
-			newCurrencyFields
+			currencyFields
 		);
 	}
 

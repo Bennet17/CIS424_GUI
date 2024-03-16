@@ -287,7 +287,7 @@ const FundsTransferPage = () => {
             source,
             destination,
             fltAmount,
-            newCurrencyFields
+            currencyFields // Includes zeroes
         );
 
         // Set the status message
@@ -373,7 +373,7 @@ const FundsTransferPage = () => {
         strSource,
         strDestination,
         fltAmount,
-        newCurrencyFields
+        currencyFields
     ) {
         event.preventDefault();
 
@@ -384,7 +384,7 @@ const FundsTransferPage = () => {
             origin: strSource,
             destination: strDestination,
             total: fltAmount,
-            ...newCurrencyFields,
+            ...currencyFields,
         };
 
         // Submit the form data
