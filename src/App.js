@@ -10,6 +10,7 @@ import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
 import SelectStorePage from "./components/SelectStore";
 import OpenDayPage from "./components/OpenDay";
+import CloseDayPage from './components/CloseDay';
 import FundsTransferPage from "./components/FundsTransferPage";
 import UserManagementPage from "./components/UserManagement.js";
 import SafeAudit from "./components/SafeAudit";
@@ -35,7 +36,7 @@ function App() {
             <Route path={routes.home} element={<HomePage />} />
             <Route path={routes.selectstore} element={<SelectStorePage />} />
             <Route path={routes.openday} element={<OpenDayPage />} />
-            <Route path={routes.closeday} element={<OpenDayPage />} />
+            <Route path={routes.closeday} element={<CloseDayPage />} />
             <Route path={routes.security}>
               <Route
                 path={routes.usermanagement}
@@ -45,6 +46,10 @@ function App() {
                 path={routes.posmanagement}
                 element={<POSManagementPage />}
               />
+            </Route>
+            <Route path={routes.security} >
+              <Route path={routes.usermanagement} element={<UserManagementPage/>} />
+              <Route path={routes.posmanagement} element={<POSManagementPage/>} />
             </Route>
             <Route
               path={routes.fundstransfer}
@@ -67,5 +72,4 @@ function App() {
     </HashRouter>
   );
 }
-
 export default App;
