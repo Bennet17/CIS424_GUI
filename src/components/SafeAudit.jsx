@@ -131,6 +131,23 @@ const SafeAuditPage = () => {
         });
     };
 
+	// Function to filter out empty currency fields from the form data and return them
+    function FilterDenominations(currencyFields) {
+        // Filter out non-zero currency fields by reducing the currencyFields object to a new object
+        // only including the non-zero fields. The reduce function iterates through each key-value pair
+        // in the currencyFields object and adds the key-value pair to the new object if the value is non-zero.
+        let nonZeroCurrencyFields = Object.keys(currencyFields).reduce(
+            (acc, key) => {
+                if (currencyFields[key] !== 0) acc[key] = currencyFields[key];
+                    return acc;
+            },
+            {}
+        );
+
+        return nonZeroCurrencyFields;
+    }
+
+	// Function to submit the cash count to the server
 	function SubmitCashCount(
 		event,
 		user,
@@ -142,11 +159,15 @@ const SafeAuditPage = () => {
 
 		// Create the cash count object
 		const request = {
-			user: user,
-			currentAmount: currentAmount,
-			expectedAmount: expectedAmount,
+			usrID: user,
+			storeID: formData.store,
+			itemCounted: "SAFE",
+			amountExpected: parseFloat(expectedAmount),
+			total: parseFloat(currentAmount),
 			...newCurrencyFields,
 		};
+
+		console.log(request);
 
 		// POST the cash count to the server
 		axios.post(CreateCashCountURL, request).then((response) => {
@@ -171,10 +192,28 @@ const SafeAuditPage = () => {
 		// Stores form data to be passed to SubmitCashCount
 		let {
 			user,
-			currentAmount,
-			expectedAmount,
-
+			name,
+			store,
+			currentAmount: fltCurrentAmount,
+			expectedAmount: fltExpectedAmount,
+			...currencyFields
 		} = formData;
+
+		// Parse the form data to floats
+		fltCurrentAmount = parseFloat(formData.currentAmount).toFixed(2);
+		fltExpectedAmount = parseFloat(formData.expectedAmount).toFixed(2);
+
+		// Filter out any empty fields
+		let newCurrencyFields = FilterDenominations(currencyFields);
+
+		// Submit the cash count
+		SubmitCashCount(
+			event,
+			user,
+			fltCurrentAmount,
+			fltExpectedAmount,
+			newCurrencyFields
+		);
 	}
 
 	// Function to handle the cancel button and resets the form data
