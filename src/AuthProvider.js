@@ -1,4 +1,4 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CookiesProvider, useCookies } from "react-cookie";
 import axios from "axios";
@@ -20,25 +20,34 @@ const AuthProvider = ({ children }) => {
           data
         )
         .then((response) => {
-          console.log(response.data);
           if (response.data.IsValid == true) {
             //setUser(response.data.user);
             //setToken(response.token);
-            setCookie("user", response.data.user, { path: "/" });
-            localStorage.setItem("site", cookie);
+            //setCookie("user", response.data.user, { path: "/" });
+            //localStorage.setItem("site", cookie);
             //console.log(response.data.user);
-            console.log(cookie);
+            console.log("cookie user");
+            console.log(cookie.user);
 
-            if (cookie.user.storeID_CSV.length === 1) {
+            if (response.data.user.storeID_CSV.length === 1) {
+              setCookie(
+                "user",
+                {
+                  ...response.data.user,
+                  workingStoreID: parseInt(response.data.user.storeID_CSV[0]),
+                  viewingStoreID: parseInt(response.data.user.storeID_CSV[0]),
+                },
+                { path: "/" }
+              );
               // Update cookie.user with viewing and working store ID
-              let objectTemp = cookie.user;
-              objectTemp.viewingStoreID = parseInt(cookie.user.storeID_CSV[0]);
-              objectTemp.workingStoreID = parseInt(cookie.user.storeID_CSV[0]);
-              setCookie("user", objectTemp, { path: "/" });
+              localStorage.setItem("site", cookie);
               navigate(routes.home);
             } else {
+              setCookie("user", response.data.user, { path: "/" });
+              localStorage.setItem("site", cookie);
               navigate(routes.selectstore);
             }
+
             resolve(response.data);
           } else {
             //invalid credentials
@@ -52,13 +61,20 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  const setUserStores = (workingStoreID, viewingStoreID) => {
+  const setUserStores = (
+    workingStoreID,
+    viewingStoreID,
+    viewingStoreLocation
+  ) => {
+    console.log("Viewing store location was set.");
+    console.log(viewingStoreLocation);
     setCookie(
       "user",
       {
         ...cookie.user,
         workingStoreID: workingStoreID,
         viewingStoreID: viewingStoreID,
+        viewingStoreLocation: viewingStoreLocation,
       },
       { path: "/" }
     );
