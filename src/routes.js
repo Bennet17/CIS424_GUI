@@ -13,7 +13,8 @@ const routes = {
     safeaudit: "/CashManager/SafeAudit",
     varianceaudit: "/CashManager/VarianceAudit",
     deposithistory: "/CashManager/DepositHistory",
-    signout: "/"
+    signout: "/",
+    forgotpassword: "/forgotPassword"
 
     //add more here
 }
