@@ -80,6 +80,7 @@ const SideBar = (props) => {
     navigate(routes.posmanagement);
   }
   function signOut() {
+    auth.logOut();
     navigate(routes.signout);
   }
 
