@@ -36,19 +36,24 @@ function SelectStore() {
 
   function handleStoreSelection(storeID, storeName) {
     setSelectedStoreID(storeID);
+    setSelectedStoreName(storeName);
   }
 
   function handleSubmit(event) {
     event.preventDefault();
     if (selectedStoreID) {
       // Set viewing and working store with store selection
+      console.log("user stores being set, viewingStoreID after code line:");
       auth.setUserStores(selectedStoreID, selectedStoreID, selectedStoreName);
+      //console.log(auth.cookie.user.viewingStoreID);
       navigate(routes.home); // Navigate to home page after store selection
     } else {
       // Show an error message if no store is selected
       alert("Please select a store.");
     }
   }
+
+  useEffect(() => {}, auth.setUserStores);
 
   return (
     <div className="flex bg-custom-accent min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
