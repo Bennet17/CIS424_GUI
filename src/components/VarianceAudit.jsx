@@ -1,326 +1,236 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, {useState, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import CurrencyInput from "react-currency-input-field";
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import {useAuth} from '../AuthProvider.js';
 
-const SafeAuditPage = () =>{
+const VarianceAuditPage = () =>{
     const auth = useAuth();
     const navigate = useNavigate();
 
-    const [startDay, setStartDay] = useState();
-    const [endDay, setEndDay] = useState();
-    const [currentDay, setCurrentDay] = useState(Date.toString(Date.now));
-    const [cashTendered, setCashTendered] = useState(0);
-    const [cashBuys, setCashBuys] = useState(0);
-    const [pettyCash, setPettyCash] = useState(0);
-    const [creditSales, setCreditSales] = useState(0);
+    // POST request URL for the General Variance API (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/SVSU_CIS424/GeneralVariance)
+    const GeneralVarianceURL = ""
 
-    //changes the start day, end day, and current day
-    function changeDayStart(){
-    }
-    function changeDayEnd(){
-    }
-    function changeDayCurrent(){
-    }
+    // Set the start date to 7 days ago and the end date to today
+    const today = new Date();
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    function UpdateVariance(){
-        //wait till we have our pos data before we attempt to make this call
-        axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance`)
-        .then(response => {
-            console.log(response);
-            if (true){
-                //populate table fields
-                
-            }else{
-                //something broke, oh no
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
-    }
+    const [formData, setFormData] = useState({
+        user: auth.cookie.user.ID,
+        name: auth.cookie.user.name,
+        store: auth.cookie.user.viewingStoreID,
+        storeName: auth.cookie.user.viewingStoreLocation,
+        startDate: sevenDaysAgo,
+        endDate: today,
+        expectedAmount: "",
+        total: "",
+        variance: "",
+    });
 
-    function clamp(value, min = 0){
-        if (value < min){
-            return min;
-        }
-        return value;
-    }
 
     //check the permissions of the logged in user on page load, passing in
     //the required permissions
     useLayoutEffect(() => {
-        UpdateVariance();
         if (!auth.CheckAuthorization(["Manager", "District Manager", "CEO"])){
             navigate(routes.home);
         }
-    })
+    });
 
-    function Submit(event){
+    // POST request to the General Variance API when the form data changes
+    useEffect(() => {
+        // Set the start and end date to the correct format
+        document.getElementById("startDate").value = new Date(formData.startDate).toISOString().split('T')[0];
+        document.getElementById("endDate").value = new Date(formData.endDate).toISOString().split('T')[0];
+
+        // Create the request object
+        const request = {
+            storeID: formData.store + "",
+            startDate: formData.startDate.toISOString().split('T')[0],
+            endDate: formData.endDate.toISOString().split('T')[0]
+        }
+
+        console.log(request)
+
+        // Send the POST request to the General Variance API
+        axios.post(GeneralVarianceURL, {request}).then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            //console.log(error);
+        });
+    }, [formData]);
+
+    // Event handler for decrementing the date by one day when the left arrow button is clicked
+    const handlePreviousDay = (event) => {
         event.preventDefault();
 
-        UpdateVariance();
+        // Decrement the start and end date by one day
+        const newStartDate = decrementDate(formData.startDate);
+        const newEndDate = decrementDate(formData.endDate);
+
+        // If the new end date is greater than today, do not update the date
+        if (newEndDate < today) {
+            setFormData((prev) => ({
+                ...prev,
+                startDate: newStartDate,
+                endDate: newEndDate,
+            }));
+        }
+    };
+
+    // Event handler for incrementing the date by one day when the right arrow button is clicked
+    const handleNextDay = (event) => {
+        event.preventDefault();
+
+        // Increment the start and end date by one day
+        const newStartDate = incrementDate(formData.startDate);
+        const newEndDate = incrementDate(formData.endDate);
+    
+        // If the new end date is greater than today, do not update the date
+        if (newEndDate < today) {
+            setFormData((prev) => ({
+                ...prev,
+                startDate: newStartDate,
+                endDate: newEndDate,
+            }));
+        }
+    };
+
+    // Function to increment the date by one day
+    const incrementDate = (dateString) => {
+        // Convert the date string to a Date object
+        const date = new Date(dateString);
+
+        // Increment the date by one day
+        date.setDate(date.getDate() + 1);
+
+        return date;
+    };
+
+    // Function to decrement the date by one day
+    const decrementDate = (dateString) => {
+        // Convert the date string to a Date object
+        const date = new Date(dateString);
+
+        // Decrement the date by one day
+        date.setDate(date.getDate() - 1);
+
+        return date;
+    };
+
+    // Handles the change of the input fields
+    const HandleChange = (event) => {
+        const {name, value} = event.target;
+
+        setFormData((prev) => {
+            return {
+                ...prev,
+                [name]: value
+            }
+        });
+
+        console.log(formData);
     }
+
+    // Dummy data for the table
+    const data = [
+        {
+            date: "01/01/2024",
+            expectedAmount: "$1000.00",
+            total: "$900.00",
+            variance: "$100.00"
+        },
+        {
+            date: "01/02/2024",
+            expectedAmount: "$1000.00",
+            total: "$900.00",
+            variance: "$100.00"
+        },
+        {
+            date: "01/03/2024",
+            expectedAmount: "$1000.00",
+            total: "$900.00",
+            variance: "$100.00"
+        },
+        {
+            date: "01/04/2024",
+            expectedAmount: "$1000.00",
+            total: "$900.00",
+            variance: "$100.00"
+        },
+        {
+            date: "01/05/2024",
+            expectedAmount: "$1000.00",
+            total: "$900.00",
+            variance: "$100.00"
+        }
+    ];
 
     return (
         <div className="flex h-screen bg-custom-accent">
             <SideBar currentPage={5} />
             <div className="flex flex-col w-full">
                 <HorizontalNav />
-                <div className="float-left ml-32 mt-12">
-                    <label className="text-main-color text-2xl">Start Date:
-                        <input onChange={changeDayStart} 
-                            className="box-border text-center text-base ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
-                            type="date" 
-                            name="start">
-                        </input>
-                    </label>
-                    <label className="text-main-color text-2xl ">End Date:
+                <div className="text-main-color float-left ml-8 mt-12">
+					<h1 className="text-3xl font-bold">Variance Audit for {formData.storeName}</h1>
+					<br />
+                    <div>
+                        {/* Left arrow button */}
+                        <button onClick={handlePreviousDay}>←</button>
+                        {/* Start date */}
+                        <label htmlFor="startDate">Start Date:</label>
                         <input 
-                            onChange={changeDayEnd} 
-                            className="box-border text-center text-base ml-4 mr-12 w-32 border-border-color border-2 hover:bg-nav-bg bg-white" 
                             type="date" 
-                            name="start">
-                        </input>
-                    </label>
-                </div>
-                <div className="float-left ml-32 mt-8">
-                    <div>
-                        <div onClick="" className=""></div>
-                        <p className="text-center w-252">{currentDay}</p>
-                        <table className="box-border border-border-color border-2">
-                            <tbody>
-                                <tr>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        Date
-                                    </td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        Cash Tendered
-                                    </td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        Cash Buys
-                                    </td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        Petty Cash
-                                    </td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        MasterCard Sale
-                                    </td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        Visa Sale
-                                    </td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        American Express Sale
-                                    </td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        Discover Sale
-                                    </td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        Debit Sales
-                                    </td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">
-                                        Other Card Sales
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                </tr>
-                                <tr>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Date</td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Cash Tendered</td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Cash Buys</td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Petty Cash</td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total MasterCard Sale</td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Visa Sale</td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total American Express Sale</td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Discover Sale</td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Debit Sales</td>
-                                    <td className="box-border border-border-color border-2 text-center w-28 h-12">Total Other Card Sales</td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                    <td className="bg-nav-bg box-border border-border-color border-2 text-center w-28 h-8"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            id="startDate" 
+                            name="startDate" 
+                            className="" 
+                            date={formData.startDate}
+                            onChange={HandleChange}
+                        />
+                        {/* End date */}
+                        <label htmlFor="endDate">End Date:</label>
+                        <input 
+                            type="date" 
+                            id="endDate" 
+                            name="endDate" 
+                            className="" 
+                            date={formData.endDate}
+                            onChange={HandleChange}
+                        />
+                        {/* Right arrow button */}
+                        <button onClick={handleNextDay}>→</button>
                     </div>
-                    <div>
-                        <table className="mt-4">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <label className="text-main-color">Cash Tendered:
-                                            <input 
-                                                value={cashTendered}
-                                                onChange={e => setCashTendered(clamp(e.target.value))} 
-                                                min="0" 
-                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                                type="number"
-                                            />
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label className="text-main-color">Cash Buys:
-                                            <input 
-                                                value={cashBuys}
-                                                onChange={e => setCashBuys(clamp(e.target.value))} 
-                                                min="0" 
-                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                                type="number"
-                                            />
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div className="text-main-color ml-6 mr-12">
-                                            <p>Save Safe Audit</p>
-                                            <img onClick={""} src="" alt="download" className=""/>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button 
-                                            type="submit" 
-                                            value="submit" 
-                                            className="flex w-36 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                            Submit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label className="text-main-color">Petty Cash:
-                                            <input 
-                                                value={pettyCash}
-                                                onChange={e => setPettyCash(clamp(e.target.value))} 
-                                                min="0" 
-                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                                type="number"
-                                            />
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label className="text-main-color">Credit Sales:
-                                            <input 
-                                                value={creditSales}
-                                                onChange={e => setCreditSales(clamp(e.target.value))} 
-                                                min="0" 
-                                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                                type="number"
-                                            />
-                                        </label>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <table className="table-variance">
+                        <thead className="">
+                            <tr>
+                                <th>Date</th>
+                                <th>Expected Amount</th>
+                                <th>Total</th>
+                                <th>Variance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map((item, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{item.date}</td>
+                                        <td>{item.expectedAmount}</td>
+                                        <td>{item.total}</td>
+                                        <td>{item.variance}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     )
 }
 
-export default SafeAuditPage;
+export default VarianceAuditPage;

@@ -18,6 +18,7 @@ const FundsTransferPage = () => {
         user: auth.cookie.user.ID,
         name: auth.cookie.user.name,
         store: auth.cookie.user.viewingStoreID,
+        storeName: auth.cookie.user.viewingStoreLocation,
         source: "",
         destination: "",
         amount: "",
@@ -509,7 +510,7 @@ const FundsTransferPage = () => {
                         </tr>
                         <tr>
                             <td className="tg-i817">Store:</td>
-                            <td className="tg-i817">{formData.store}</td>
+                            <td className="tg-i817">{formData.storeName}</td>
                         </tr>
                         <tr>
                             <td className="tg-i817">User:</td>
