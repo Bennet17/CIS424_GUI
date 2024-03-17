@@ -84,14 +84,12 @@ const VarianceAuditPage = () =>{
         const newStartDate = decrementDate(formData.startDate);
         const newEndDate = decrementDate(formData.endDate);
 
-        // If the new end date is greater than today, do not update the date
-        if (newEndDate < today) {
-            setFormData((prev) => ({
-                ...prev,
-                startDate: newStartDate,
-                endDate: newEndDate,
-            }));
-        }
+        // Update the date
+        setFormData((prev) => ({
+            ...prev,
+            startDate: newStartDate,
+            endDate: newEndDate,
+        }));
     };
 
     // Event handler for incrementing the date by one day when the right arrow button is clicked
@@ -102,14 +100,12 @@ const VarianceAuditPage = () =>{
         const newStartDate = incrementDate(formData.startDate);
         const newEndDate = incrementDate(formData.endDate);
     
-        // If the new end date is greater than today, do not update the date
-        if (newEndDate < today) {
-            setFormData((prev) => ({
-                ...prev,
-                startDate: newStartDate,
-                endDate: newEndDate,
-            }));
-        }
+        // Update the date
+        setFormData((prev) => ({
+            ...prev,
+            startDate: newStartDate,
+            endDate: newEndDate,
+        }));
     };
 
     // Function to increment the date by one day
