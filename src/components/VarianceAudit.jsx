@@ -1,7 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import CurrencyInput from "react-currency-input-field";
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import {useNavigate} from 'react-router-dom';
@@ -12,13 +11,13 @@ const VarianceAuditPage = () =>{
     const auth = useAuth();
     const navigate = useNavigate();
 
-    // POST request URL for the General Variance API (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/SVSU_CIS424/GeneralVariance)
-    const GeneralVarianceURL = ""
-
     // Set the start date to 7 days ago and the end date to today
     const today = new Date();
     const sevenDaysAgo = new Date(today);
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    // Array of variances and its information
+    const [arrVariances, setArrVariances] = useState([]);
 
     const [formData, setFormData] = useState({
         user: auth.cookie.user.ID,
@@ -32,7 +31,6 @@ const VarianceAuditPage = () =>{
         variance: "",
     });
 
-
     //check the permissions of the logged in user on page load, passing in
     //the required permissions
     useLayoutEffect(() => {
@@ -41,28 +39,35 @@ const VarianceAuditPage = () =>{
         }
     });
 
-    // POST request to the General Variance API when the form data changes
+    // GET request to the General Variance API
     useEffect(() => {
         // Set the start and end date to the correct format
         document.getElementById("startDate").value = new Date(formData.startDate).toISOString().split('T')[0];
         document.getElementById("endDate").value = new Date(formData.endDate).toISOString().split('T')[0];
 
-        // Create the request object
-        const request = {
-            storeID: formData.store + "",
-            startDate: formData.startDate.toISOString().split('T')[0],
-            endDate: formData.endDate.toISOString().split('T')[0]
+        // GET request to the General Variance API
+        function GetGeneralVariance() {
+            // Get the store ID, start date, and end date from the form data
+            const storeID = formData.store;
+            const startDate = formData.startDate.toISOString().split('T')[0];
+            const endDate = formData.endDate.toISOString().split('T')[0];
+
+            // GET request to the General Variance API
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`)
+                .then((response) => {
+                    // If the response contains data, set the array of variances to the response data
+                    if (response.data && response.data.length > 0)
+                        setArrVariances(response.data);
+                    else {
+                        setArrVariances([]);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
 
-        console.log(request)
-
-        // Send the POST request to the General Variance API
-        axios.post(GeneralVarianceURL, {request}).then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
-            //console.log(error);
-        });
+        GetGeneralVariance();
     }, [formData]);
 
     // Event handler for decrementing the date by one day when the left arrow button is clicked
@@ -123,6 +128,14 @@ const VarianceAuditPage = () =>{
         return date;
     };
 
+    // Function to format negative values in parentheses
+    function NegativeValueParantheses(transferValue) {
+        if (transferValue < 0) 
+            return `($${Math.abs(transferValue).toFixed(2)})`;
+        else 
+            return `$${transferValue.toFixed(2)}`;
+    }
+
     // Handles the change of the input fields
     const HandleChange = (event) => {
         const {name, value} = event.target;
@@ -136,40 +149,6 @@ const VarianceAuditPage = () =>{
 
         console.log(formData);
     }
-
-    // Dummy data for the table
-    const data = [
-        {
-            date: "01/01/2024",
-            expectedAmount: "$1000.00",
-            total: "$900.00",
-            variance: "$100.00"
-        },
-        {
-            date: "01/02/2024",
-            expectedAmount: "$1000.00",
-            total: "$900.00",
-            variance: "$100.00"
-        },
-        {
-            date: "01/03/2024",
-            expectedAmount: "$1000.00",
-            total: "$900.00",
-            variance: "$100.00"
-        },
-        {
-            date: "01/04/2024",
-            expectedAmount: "$1000.00",
-            total: "$900.00",
-            variance: "$100.00"
-        },
-        {
-            date: "01/05/2024",
-            expectedAmount: "$1000.00",
-            total: "$900.00",
-            variance: "$100.00"
-        }
-    ];
 
     return (
         <div className="flex h-screen bg-custom-accent">
@@ -215,13 +194,13 @@ const VarianceAuditPage = () =>{
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((item, index) => {
+                            {arrVariances.map((item, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{item.date}</td>
-                                        <td>{item.expectedAmount}</td>
-                                        <td>{item.total}</td>
-                                        <td>{item.variance}</td>
+                                        <td>{new Date(item.Date).toISOString().split('T')[0]}</td>
+                                        <td>${parseFloat(item.amountExpected).toFixed(2)}</td>
+                                        <td>${parseFloat(item.total).toFixed(2)}</td>
+                                        <td>{NegativeValueParantheses(parseFloat(item.Variance))}</td>
                                     </tr>
                                 );
                             })}

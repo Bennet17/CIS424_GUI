@@ -404,7 +404,7 @@ const FundsTransferPage = () => {
     // Function to format negative values in parentheses
     function NegativeValueParantheses(transferValue) {
         if (transferValue < 0) 
-            return `(${Math.abs(transferValue).toFixed(2)})`;
+            return `($${Math.abs(transferValue).toFixed(2)})`;
         else 
             return `$${transferValue.toFixed(2)}`;
     }
@@ -606,6 +606,8 @@ const FundsTransferPage = () => {
             <div className="flex flex-col w-full">
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-12">
+					<h1 className="text-3xl font-bold">Transfer funds for {formData.storeName}</h1>
+					<br />
                     <form onSubmit={HandleSubmit} onReset={HandleCancel}>
                         <table>
                             <tbody>
