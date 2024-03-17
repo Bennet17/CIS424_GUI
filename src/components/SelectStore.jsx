@@ -46,6 +46,7 @@ function SelectStore() {
       console.log("user stores being set, viewingStoreID after code line:");
       auth.setUserStores(selectedStoreID, selectedStoreID, selectedStoreName);
       //console.log(auth.cookie.user.viewingStoreID);
+      //auth.setUserStores(selectedStoreID, selectedStoreID, selectedStoreName);
       navigate(routes.home); // Navigate to home page after store selection
     } else {
       // Show an error message if no store is selected
