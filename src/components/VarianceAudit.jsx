@@ -25,8 +25,8 @@ const VarianceAuditPage = () =>{
         name: auth.cookie.user.name,
         store: auth.cookie.user.viewingStoreID,
         storeName: auth.cookie.user.viewingStoreLocation,
-        startDate: "",
-        endDate: "",
+        startDate: sevenDaysAgo,
+        endDate: today,
         expectedAmount: "",
         total: "",
         variance: "",
@@ -41,35 +41,87 @@ const VarianceAuditPage = () =>{
         }
     });
 
-    // Sets the start and end date to the current date and 7 days ago
+    // POST request to the General Variance API when the form data changes
     useEffect(() => {
-        // Grabs the start and end date input fields and sets their values to the current date and 7 days ago
-        document.getElementById("startDate").value = sevenDaysAgo.toISOString().split('T')[0];
-        document.getElementById("endDate").value = today.toISOString().split('T')[0];
+        // Set the start and end date to the correct format
+        document.getElementById("startDate").value = new Date(formData.startDate).toISOString().split('T')[0];
+        document.getElementById("endDate").value = new Date(formData.endDate).toISOString().split('T')[0];
 
-        // Sets the start and end date in the form data to the current date and 7 days ago
-        setFormData((prev) => {
-            return {
-                ...prev,
-                startDate: sevenDaysAgo.toISOString().split('T')[0],
-                endDate: today.toISOString().split('T')[0]
-            }
+        // Create the request object
+        const request = {
+            storeID: formData.store + "",
+            startDate: formData.startDate.toISOString().split('T')[0],
+            endDate: formData.endDate.toISOString().split('T')[0]
+        }
+
+        console.log(request)
+
+        // Send the POST request to the General Variance API
+        axios.post(GeneralVarianceURL, {request}).then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            //console.log(error);
         });
-    }, []);
+    }, [formData]);
 
-    // POST request to the General Variance API on page load. 
-    // Passes store ID and start and end date which returns a list containing the dates, expected amounts, totals, and variances.
-    // useEffect(() => {
-    //     axios.post(GeneralVarianceURL, {
-    //         storeID: formData.store,
-    //         startDate: formData.startDate,
-    //         endDate: formData.endDate
-    //     }).then((response) => {
-    //         console.log(response);
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     });
-    // }, []);
+    // Event handler for decrementing the date by one day when the left arrow button is clicked
+    const handlePreviousDay = (event) => {
+        event.preventDefault();
+
+        // Decrement the start and end date by one day
+        const newStartDate = decrementDate(formData.startDate);
+        const newEndDate = decrementDate(formData.endDate);
+
+        // If the new end date is greater than today, do not update the date
+        if (newEndDate < today) {
+            setFormData((prev) => ({
+                ...prev,
+                startDate: newStartDate,
+                endDate: newEndDate,
+            }));
+        }
+    };
+
+    // Event handler for incrementing the date by one day when the right arrow button is clicked
+    const handleNextDay = (event) => {
+        event.preventDefault();
+
+        // Increment the start and end date by one day
+        const newStartDate = incrementDate(formData.startDate);
+        const newEndDate = incrementDate(formData.endDate);
+    
+        // If the new end date is greater than today, do not update the date
+        if (newEndDate < today) {
+            setFormData((prev) => ({
+                ...prev,
+                startDate: newStartDate,
+                endDate: newEndDate,
+            }));
+        }
+    };
+
+    // Function to increment the date by one day
+    const incrementDate = (dateString) => {
+        // Convert the date string to a Date object
+        const date = new Date(dateString);
+
+        // Increment the date by one day
+        date.setDate(date.getDate() + 1);
+
+        return date;
+    };
+
+    // Function to decrement the date by one day
+    const decrementDate = (dateString) => {
+        // Convert the date string to a Date object
+        const date = new Date(dateString);
+
+        // Decrement the date by one day
+        date.setDate(date.getDate() - 1);
+
+        return date;
+    };
 
     // Handles the change of the input fields
     const HandleChange = (event) => {
@@ -128,6 +180,8 @@ const VarianceAuditPage = () =>{
 					<h1 className="text-3xl font-bold">Variance Audit for {formData.storeName}</h1>
 					<br />
                     <div>
+                        {/* Left arrow button */}
+                        <button onClick={handlePreviousDay}>←</button>
                         {/* Start date */}
                         <label htmlFor="startDate">Start Date:</label>
                         <input 
@@ -148,6 +202,8 @@ const VarianceAuditPage = () =>{
                             date={formData.endDate}
                             onChange={HandleChange}
                         />
+                        {/* Right arrow button */}
+                        <button onClick={handleNextDay}>→</button>
                     </div>
                     <table className="table-variance">
                         <thead className="">
