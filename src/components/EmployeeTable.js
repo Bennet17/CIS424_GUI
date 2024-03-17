@@ -6,12 +6,14 @@ import { useDownloadExcel } from 'react-export-table-to-excel';
 import {Trash2, Pencil, Pen} from "lucide-react";
 import EditUser from './EditUser'; 
 import AddUserForm from './AddUserForm';
+import {useAuth} from '../AuthProvider.js';
 
 
 function EmployeeTable() {
 
-  const curStore = localStorage.getItem('curStore'); //extract current store ID from local storage
-  console.log(curStore + "in employee table");
+  const auth = useAuth();
+  const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
+
 
   //useState variables for employees array
   const [employees, setEmployees] = useState([]);
@@ -40,7 +42,7 @@ function EmployeeTable() {
     //this function will make a GET request to the API to return all employees in the store based on the currently viewed store
     function fetchEmployeeTable() {
 
-      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewUsersByStoreID?storeID=${curStore}`;
+      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewUsersByStoreID?storeID=${curStoreID}`;
       axios.get(url)
         .then((response) => {
           console.log(response);

@@ -2,9 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getValue } from '@testing-library/user-event/dist/utils';
+import {useAuth} from '../AuthProvider.js';
+
 function POSTable() {
 
-  const curStoreID = localStorage.getItem('curStore');
+  const auth = useAuth();
+  const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
 
 
     const toggleActivity = (pos)=> {

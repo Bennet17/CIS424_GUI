@@ -2,11 +2,14 @@
 //written by brianna kline
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useAuth } from "../AuthProvider";
 
 
 
 const AddUserForm = () => {
 
+  const auth = useAuth();
+  const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
 
 
 
@@ -32,8 +35,6 @@ const AddUserForm = () => {
 
 
 
-  //retrieve the Current Store ID from local storage
-  const curStore = localStorage.getItem('curStore');
 
   // Retrieve the serialized string from local storage
   const storedArrayString = localStorage.getItem('stores');
@@ -53,7 +54,7 @@ const AddUserForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [position, setPosition] = useState("");
-  const [storeIDs, setStoreID] = useState(curStore);
+  const [storeIDs, setStoreID] = useState(curStoreID);
   const [result, setResult] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
   //const [selectedStores, setSelectedStores] = useState([])
@@ -112,7 +113,7 @@ const handleChange = (e) => {
     } else {
       //console.log(`Checkbox with ID ${storeID} is unchecked`);
       // Additional logic when the checkbox is unchecked
-      if(storeID == curStore){
+      if(storeID == curStoreID){
         e.target.checked = true;
       }
     }
@@ -275,7 +276,7 @@ const handleChange = (e) => {
                           id={`store${item.ID}`}
                           name="store"
                           value={item.ID}
-                          defaultChecked={item.ID == curStore}
+                          defaultChecked={item.ID == curStoreID}
                           onChange={(e) => handleCheckboxChange(e, item.ID)}
                           className="mr-2"
                         />
