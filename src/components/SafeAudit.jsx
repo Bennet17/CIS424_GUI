@@ -11,7 +11,7 @@ const SafeAuditPage = () => {
     const auth = useAuth();
 
 	// Const for POST CreateCashCount request (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount)
-	const CreateCashCountURL = "";
+	const CreateCashCountURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount";
 
 	// Const to hold the form data
     const [formData, setFormData] = useState({
