@@ -55,8 +55,8 @@ const VarianceAuditPage = () =>{
         function GetGeneralVariance() {
             // Get the store ID, start date, and end date from the form data
             const storeID = formData.store;
-            const startDate = formData.startDate.toISOString().split('T')[0];
-            const endDate = formData.endDate.toISOString().split('T')[0];
+            const startDate = new Date(formData.startDate).toISOString().split('T')[0];
+            const endDate = new Date(formData.endDate).toISOString().split('T')[0];
 
             // GET request to the General Variance API
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`)
