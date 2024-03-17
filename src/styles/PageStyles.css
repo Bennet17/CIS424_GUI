@@ -208,6 +208,17 @@
     user-select: text;
 }
 
+/* Variance Audit page styles */
+
+.table-variance {
+    border-collapse: collapse;
+    border-color: rgb(57, 70, 83);
+    border-spacing: 0;
+    border-style: solid;
+    border-width: 1px;
+    width: 100%;
+}
+
 pre {
     font-family: 'Roboto Mono', monospace;
 }

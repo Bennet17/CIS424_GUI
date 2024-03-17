@@ -11,6 +11,7 @@ function ForgotPassword() {
   const navigate = useNavigate();
 
 
+
   const [username, setUsername] = useState('');
   const [usernameFound, setUsernameFound] = useState(false);
   const [managerUsername, setManagerUsername] = useState('');
@@ -18,23 +19,47 @@ function ForgotPassword() {
   const [managerFound, setManagerFound] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
+  const[passwordUpdated, setPasswordUpdated] = useState(false);
+const[userPosition, setUserPosition] = useState('');
 
-
-  function handleCancel(){
+  function handleCancel(event){
+    event.preventDefault();
      navigate(routes.signout);
      setMessage('');
   }
 
 
-  function handleNewPasswordSubmit(){
-    //handle new password post request
+  function handleNewPasswordSubmit(event){
+     //event.preventDefault();
+  
+      //handle new password post request
+      axios
+      .post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateUserPassword',
+      {
+        "username": username,
+        "password": newPassword
+      })
+        .then(response => {
+          //console.log(response.data.Message);
+          if (response.data.Message === 'Password updated successfully.'){
+              //console.log(response.data + "hello");
+              setMessage('Password Updated!');
+              setPasswordUpdated(true);
+  
+          }
+  
+        })
+        .catch(error => {
+          console.error(error);
+          setMessage("There was an error. Try again.")
     
-
+        });
+  
 
   }
 
-  function handleUsernameSubmit() {
-   
+  function handleUsernameSubmit(event) {
+    event.preventDefault();
     setMessage('');
 
     // e.preventDefault();
@@ -48,6 +73,7 @@ function ForgotPassword() {
           if (username === item.username) {
             setMessage('');
             setManagerUsername('');
+            setUserPosition(item.position);
             setUsernameFound(true);
             break;
           } else {
@@ -60,7 +86,8 @@ function ForgotPassword() {
       });
   }
 
-  function handleManagerSubmit() {
+  function handleManagerSubmit(event) {
+    event.preventDefault();
     setMessage(' ');
     // e.preventDefault();
     const data = {
@@ -72,10 +99,20 @@ function ForgotPassword() {
       .then(response => {
         console.log(response.data);
         if (response.data.IsValid == true){
-            console.log(response.data);
-            setMessage('');
-            setManagerFound(true);
-
+            console.log(response.data + "Look here");
+            console.log(response.data.user.position);
+            if(userPosition == "Employee" && (response.data.user.position == "Manager" || response.data.user.position == "Owner")) {
+              setMessage('');
+              setManagerFound(true);
+            }
+            else if(userPosition == "Manager" && response.data.user.position == "Owner"){
+              setMessage('');
+              setManagerFound(true);
+            }
+            else{
+              console.log("Invalid credentials");
+              setMessage("Invalid Manager Credentials");
+            }
         }
       else{
           //invalid credentials
@@ -95,56 +132,38 @@ function ForgotPassword() {
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 className="text-xl font-semibold mb-4">Forgot Password</h2>
           <h2 className="text-red-500 font-semibold mb-4">{message}</h2>
-          {managerFound ? (
-            <>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">New Password:</label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <button
-                  onClick={handleCancel}
-                  className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Cancel
-                </button>
-                <button
-                
-                  className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Submit
-                </button>
-              </div>
-            </>
+          {passwordUpdated ? (
+            <button
+              onClick={handleCancel}
+              className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Go To Login
+            </button>
           ) : (
             <>
-              {!usernameFound ? (
+              {managerFound ? (
                 <>
                   <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">Enter your username:</label>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">New Password:</label>
                     <input
-                      placeholder="Enter your username"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      onChange={(e) => setUsername(e.target.value)}
                       required
                     />
                   </div>
-                
                   <div className="flex items-center justify-between">
-                  <button
+                    <button
+                      type="button"
                       onClick={handleCancel}
                       className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
                       Cancel
                     </button>
                     <button
-                      onClick={handleUsernameSubmit}
+                      type="submit"
+                      onClick={handleNewPasswordSubmit}
                       className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
                       Submit
@@ -153,38 +172,72 @@ function ForgotPassword() {
                 </>
               ) : (
                 <>
-                  <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">Manager's Username:</label>
-                    <input
-                      value={managerUsername}
-                      onChange={(e) => setManagerUsername(e.target.value)}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">Manager's Password:</label>
-                    <input
-                      type="password"
-                      onChange={(e) => setManagerPassword(e.target.value)}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      required
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <button
-                      onClick={handleCancel}
-                      className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleManagerSubmit}
-                      className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    >
-                      Submit
-                    </button>
-                  </div>
+                  {!usernameFound ? (
+                    <>
+                      <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Enter your username:</label>
+                        <input
+                          placeholder="Enter your username"
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          onChange={(e) => setUsername(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <button
+                          onClick={handleCancel}
+                          type="button"
+                          className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleUsernameSubmit}
+                          type="submit"
+                          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Manager's Username:</label>
+                        <input
+                          value={managerUsername}
+                          onChange={(e) => setManagerUsername(e.target.value)}
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          required
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Manager's Password:</label>
+                        <input
+                          type="password"
+                          onChange={(e) => setManagerPassword(e.target.value)}
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          required
+                        />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <button
+                          onClick={handleCancel}
+                          type="button"
+                          className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleManagerSubmit}
+                          type="submit"
+                          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </>
@@ -193,6 +246,5 @@ function ForgotPassword() {
       </div>
     </div>
   );
-              }
-
-export default ForgotPassword;
+                  }
+  export default ForgotPassword;
