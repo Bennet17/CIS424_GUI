@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {useAuth} from '../AuthProvider.js';
 
 const EditUser = (user) => {
 
+  const auth = useAuth();
 
 
     console.log(user.user.name);
@@ -23,8 +25,9 @@ const EditUser = (user) => {
   const [result, setResult] = useState("");
 
 
-    const curStore = localStorage.getItem('curStore');
-    const curStoreName = localStorage.getItem('curStoreName');
+  const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
+  const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
+
 
     //console.log(curStore +'in form');
     // Retrieve the serialized string from local storage
