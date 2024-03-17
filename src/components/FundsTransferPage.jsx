@@ -404,7 +404,7 @@ const FundsTransferPage = () => {
     // Function to format negative values in parentheses
     function NegativeValueParantheses(transferValue) {
         if (transferValue < 0) 
-            return `(${Math.abs(transferValue).toFixed(2)})`;
+            return `($${Math.abs(transferValue).toFixed(2)})`;
         else 
             return `$${transferValue.toFixed(2)}`;
     }
