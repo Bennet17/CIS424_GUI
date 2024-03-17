@@ -19,8 +19,8 @@ const VarianceAuditPage = () =>{
 
     // Set the start date to 7 days ago and the end date to today
     const today = new Date();
-    const sevenDaysAgo = new Date(today);
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const monthAgo = new Date(today);
+    monthAgo.setDate(monthAgo.getDate() - 30);
 
     // Array of variances and its information
     const [arrVariances, setArrVariances] = useState([]);
@@ -30,7 +30,7 @@ const VarianceAuditPage = () =>{
         name: auth.cookie.user.name,
         store: auth.cookie.user.viewingStoreID,
         storeName: auth.cookie.user.viewingStoreLocation,
-        startDate: sevenDaysAgo,
+        startDate: monthAgo,
         endDate: today,
         expectedAmount: "",
         total: "",
