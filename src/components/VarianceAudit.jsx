@@ -7,6 +7,12 @@ import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import {useAuth} from '../AuthProvider.js';
 
+/*
+    TODO:
+        - Look into last 30 days and next page instead of just a start date and end date input
+        - Style the table
+*/
+
 const VarianceAuditPage = () =>{
     const auth = useAuth();
     const navigate = useNavigate();
