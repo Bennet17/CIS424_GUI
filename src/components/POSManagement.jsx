@@ -9,38 +9,10 @@ import axios from "axios";
 
 const POSManagementPage = () => {
   const auth = useAuth();
-  console.log(auth.cookie.user.storeID);
-  const curStoreID = auth.cookie.user.storeID_CSV[0]; //stores the current Store we are viewing
-  const [curStoreName, setCurStoreName] = useState(null); // Initialize curStoreName as null
+  const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
+ const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
 
 
-  localStorage.setItem('curStore', curStoreID); //sets current store into local storage 
-
-  useEffect(() => {
-    function fetchStoreName() {
-      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStores`;
-
-      axios.get(url)
-        .then((response) => {
-          console.log('Data:', response.data);
-          var jsonData = response.data;
-          // Using forEach method
-          jsonData.forEach(function(item) {
-            if(item.ID == curStoreID){
-              setCurStoreName(item.location); // Update curStoreName in the state
-              console.log(item.location);
-            }
-            console.log(item.ID, item.location);
-          });
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
-    }
-
-    // Call the function to initiate the GET request with specific details
-    fetchStoreName();
-  }, [curStoreID]); // Include curStoreID in the dependency array so that useEffect runs whenever it changes
 
   return (
     <div className="flex h-screen bg-custom-accent">

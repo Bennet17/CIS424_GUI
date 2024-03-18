@@ -6,7 +6,8 @@ import { useAuth } from "../AuthProvider.js";
 
 function AddPOS() {
 
-  const curStoreID = localStorage.getItem('curStore');
+  const auth = useAuth();
+  const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
 
 
   const [name, setPosName] = useState("");

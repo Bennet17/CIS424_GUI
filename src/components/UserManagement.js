@@ -20,12 +20,11 @@ const UserManagementPage = () => {
   //console.log(auth.cookie.user.storeID);
 
   
-  const curStoreID = auth.cookie.user.storeID_CSV[0]; //stores the current Store we are viewing
-  localStorage.setItem('curStore', curStoreID); //sets current store into local storage 
+  const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
+ const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
 
   
   //useState variables for the current store name and for an array of stores to be saved
-  const [curStoreName, setCurStoreName] = useState(null); // Initialize curStoreName as null
   const[storeArray,setStoreArray] = useState([]);
 
   //UseEffect is a method that fires as soon as the component is loaded
@@ -42,15 +41,6 @@ let updatedStoreArray = [];
 
 // Iterate over the response data to extract store information
 response.data.forEach(function(item) {
-  // Check if the current item matches the current store ID
-  if (item.ID == curStoreID) {
-    // Set the current store name
-    setCurStoreName(item.location);
-    // Store the current store name in local storage
-    localStorage.setItem('curStoreName', curStoreName);
-    console.log(curStoreName);
-  }
-  
   // Store each store ID and location in local storage
   localStorage.setItem(item.ID, item.location);
   
