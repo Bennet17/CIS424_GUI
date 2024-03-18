@@ -45,7 +45,7 @@ function StoreTable() {
               axios
               .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EnableStore", 
                 {
-                  "ID": pos.ID,
+                  "ID": store.ID,
                 })
               .then((response) => {
         
@@ -131,13 +131,13 @@ function StoreTable() {
             <tr 
               key={store.location} 
               onClick={() => handleRowClick(store.location)} 
-              className={`cursor-pointer hover:bg-gray-100 ${pos.enabled ? '' : 'bg-gray-300'}`}
+              className={`cursor-pointer hover:bg-gray-100 ${store.enabled ? '' : 'bg-gray-300'}`}
             >
               <td className="border px-4 py-2">{store.location}</td>
               <td className="border px-4 py-2">{store.opened ? 'Open' : 'Closed'}</td>
               <td className="border px-4 py-2">
                 <button onClick={() => toggleActivity(store)} className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
-                  {pos.enabled ? 'Disable' : 'Enable'}
+                  {store.enabled ? 'Disable' : 'Enable'}
                 </button>
               </td>
             </tr>
