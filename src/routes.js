@@ -2,7 +2,6 @@
 //it can easily be done so here, and all affecting pages will be updated
 
 const routes = {
-
   home: "/Home",
   selectstore: "/SelectStore",
   openday: "/OpenDay",
@@ -10,13 +9,14 @@ const routes = {
   security: "/Security",
   usermanagement: "/Security/UserManagement",
   posmanagement: "/Security/POSManagement",
+  storemanagement: "Security/StoreManagement",
   fundstransfer: "/TransferFunds",
   cashmanager: "/CashManager",
   safeaudit: "/CashManager/SafeAudit",
   varianceaudit: "/CashManager/VarianceAudit",
   deposithistory: "/CashManager/DepositHistory",
   signout: "/",
-  forgotpassword: "/forgotPassword"
+  forgotpassword: "/forgotPassword",
 
   //add more here
 };
