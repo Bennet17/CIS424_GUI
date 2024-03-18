@@ -11,9 +11,7 @@ const SafeAuditPage = () => {
     const auth = useAuth();
 
 	// Const for POST CreateCashCount request (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount)
-	const CreateCashCountURL = "";
-
-	// GET Expected amount (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID={storeID}&registerID={registerID})
+	const CreateCashCountURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount";
 
 	// Const to hold the form data
     const [formData, setFormData] = useState({
@@ -51,24 +49,40 @@ const SafeAuditPage = () => {
 
 	// Loads expected count on page load
 	useEffect(() => {
-		// Get the expected amount from the server
+		function GetExpectedSafeCount() {
+			axios.get(
+				`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`
+			)
+			.then((response) => {
+				// Get the safe ID from the response based on the name property
+				const safeID = response.data.find((obj) => obj.name === "SAFE").regID;
 
-		// Currently waiting for API
-		// axios
-		//     .get(
-		//         `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${formData.store}&registerID=${formData.register}`
-		//     )
-		//     .then((response) => {
-		//         // Update the expected amount in the form data
-		//         setFormData((prevFormData) => ({
-		//             ...prevFormData,
-		//             expectedAmount: response.data,
-		//         }));
-		//     })
-		//     .catch((error) => {
-		//         console.log(error);
-		//     });
-		formData.expectedAmount = 0.00;
+				// If the safe ID is found, get the expected amount from the server
+				if (safeID != null) {
+					axios.get(
+						`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${formData.store}&registerID=${safeID}`
+					)
+					.then((response) => {
+						// Update the expected amount in the form data
+						setFormData((prevFormData) => ({
+							...prevFormData,
+							expectedAmount: response.data,
+						}));
+					})
+					.catch((error) => {
+						console.log(error);
+					});
+				}
+				else {
+					console.log("Safe not found");
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+		}
+
+		GetExpectedSafeCount();
 	}, []);
 
 	// Function to check if amount fields are empty

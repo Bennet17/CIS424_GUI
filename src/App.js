@@ -10,9 +10,10 @@ import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
 import SelectStorePage from "./components/SelectStore";
 import OpenDayPage from "./components/OpenDay";
-import CloseDayPage from './components/CloseDay';
+import CloseDayPage from "./components/CloseDay";
 import FundsTransferPage from "./components/FundsTransferPage";
 import UserManagementPage from "./components/UserManagement.js";
+import StoreManagementPage from "./components/StoreManagement.jsx";
 import SafeAudit from "./components/SafeAudit";
 import POSManagementPage from "./components/POSManagement.jsx";
 import VarianceAudit from "./components/VarianceAudit.jsx";
@@ -33,7 +34,7 @@ function App() {
           Lastly, note the index property for the login page instead of a path. This means that the path
           for this page will be on the root "localhost:3000" url */}
           <Route index element={<LoginPage />} />
-              <Route path={routes.forgotpassword} element={<ForgotPassword />} />
+          <Route path={routes.forgotpassword} element={<ForgotPassword />} />
           <Route element={<PrivateRoute />}>
             <Route path={routes.home} element={<HomePage />} />
             <Route path={routes.selectstore} element={<SelectStorePage />} />
@@ -48,10 +49,20 @@ function App() {
                 path={routes.posmanagement}
                 element={<POSManagementPage />}
               />
+              <Route
+                path={routes.storemanagement}
+                element={<StoreManagementPage />}
+              />
             </Route>
-            <Route path={routes.security} >
-              <Route path={routes.usermanagement} element={<UserManagementPage/>} />
-              <Route path={routes.posmanagement} element={<POSManagementPage/>} />
+            <Route path={routes.security}>
+              <Route
+                path={routes.usermanagement}
+                element={<UserManagementPage />}
+              />
+              <Route
+                path={routes.posmanagement}
+                element={<POSManagementPage />}
+              />
             </Route>
             <Route
               path={routes.fundstransfer}

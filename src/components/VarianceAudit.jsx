@@ -7,14 +7,20 @@ import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import {useAuth} from '../AuthProvider.js';
 
+/*
+    TODO:
+        - Look into last 30 days and next page instead of just a start date and end date input
+        - Style the table
+*/
+
 const VarianceAuditPage = () =>{
     const auth = useAuth();
     const navigate = useNavigate();
 
     // Set the start date to 7 days ago and the end date to today
     const today = new Date();
-    const sevenDaysAgo = new Date(today);
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const monthAgo = new Date(today);
+    monthAgo.setDate(monthAgo.getDate() - 30);
 
     // Array of variances and its information
     const [arrVariances, setArrVariances] = useState([]);
@@ -24,7 +30,7 @@ const VarianceAuditPage = () =>{
         name: auth.cookie.user.name,
         store: auth.cookie.user.viewingStoreID,
         storeName: auth.cookie.user.viewingStoreLocation,
-        startDate: sevenDaysAgo,
+        startDate: monthAgo,
         endDate: today,
         expectedAmount: "",
         total: "",
@@ -49,8 +55,8 @@ const VarianceAuditPage = () =>{
         function GetGeneralVariance() {
             // Get the store ID, start date, and end date from the form data
             const storeID = formData.store;
-            const startDate = formData.startDate.toISOString().split('T')[0];
-            const endDate = formData.endDate.toISOString().split('T')[0];
+            const startDate = new Date(formData.startDate).toISOString().split('T')[0];
+            const endDate = new Date(formData.endDate).toISOString().split('T')[0];
 
             // GET request to the General Variance API
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`)
@@ -78,14 +84,12 @@ const VarianceAuditPage = () =>{
         const newStartDate = decrementDate(formData.startDate);
         const newEndDate = decrementDate(formData.endDate);
 
-        // If the new end date is greater than today, do not update the date
-        if (newEndDate < today) {
-            setFormData((prev) => ({
-                ...prev,
-                startDate: newStartDate,
-                endDate: newEndDate,
-            }));
-        }
+        // Update the date
+        setFormData((prev) => ({
+            ...prev,
+            startDate: newStartDate,
+            endDate: newEndDate,
+        }));
     };
 
     // Event handler for incrementing the date by one day when the right arrow button is clicked
@@ -96,14 +100,12 @@ const VarianceAuditPage = () =>{
         const newStartDate = incrementDate(formData.startDate);
         const newEndDate = incrementDate(formData.endDate);
     
-        // If the new end date is greater than today, do not update the date
-        if (newEndDate < today) {
-            setFormData((prev) => ({
-                ...prev,
-                startDate: newStartDate,
-                endDate: newEndDate,
-            }));
-        }
+        // Update the date
+        setFormData((prev) => ({
+            ...prev,
+            startDate: newStartDate,
+            endDate: newEndDate,
+        }));
     };
 
     // Function to increment the date by one day

@@ -40,8 +40,8 @@ const OSBarChart = () => {
       const response = await axios.post(url, {
         // TODO - Not dynamic
         storeID: "1",
-        startDate: "2024-02-01",
-        endDate: "2024-02-16",
+        startDate: "2024-03-16",
+        endDate: "2024-03-17",
       });
       const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
       console.log(data);
