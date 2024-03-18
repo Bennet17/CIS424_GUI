@@ -7,7 +7,7 @@ import POSTable from "./POSTable.jsx";
 import axios from "axios";
 import StoreTable from "./StoreTable.jsx";
 
-const StoreManagement = () => {
+const StoreManagementPage = () => {
 
 
   return (
@@ -33,4 +33,4 @@ const StoreManagement = () => {
   );
 };
 
-export default StoreManagement;
+export default StoreManagementPage;
