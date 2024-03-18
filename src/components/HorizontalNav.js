@@ -133,6 +133,7 @@ export default function HorizotalNav() {
                   </div>
                   <Transition
                     as={Fragment}
+                    show={storeMenuOn}
                     enter="transition ease-out duration-100"
                     enterFrom="transform opacity-0 scale-95"
                     enterTo="transform opacity-100 scale-100"
@@ -144,12 +145,7 @@ export default function HorizotalNav() {
                       {
                         <Menu.Item key={"title"}>
                           {({ active }) => (
-                            <a
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block font-medium px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
+                            <a className="block font-medium px-4 py-2 text-sm text-gray-700">
                               {"Storeview"}
                             </a>
                           )}
@@ -163,7 +159,7 @@ export default function HorizotalNav() {
                             <a
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700 flex justify-between mx-3"
+                                "block rounded-md px-4 py-2 text-sm text-gray-700 flex justify-between mx-3 my-1"
                               )}
                               onClick={() =>
                                 handleSwitchviewClick(store.ID, store.location)
@@ -202,7 +198,7 @@ export default function HorizotalNav() {
                             <a
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700 flex "
+                                "block rounded-md px-4 py-2 text-sm text-gray-700 flex m-1"
                               )}
                               onClick={() => navigate(routes.storemanagement)}
                             >
