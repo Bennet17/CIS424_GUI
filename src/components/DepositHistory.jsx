@@ -12,11 +12,11 @@ const DepositHistory = () => {
 
     //sample data, which populates the table based on each store location
     const dummyData = [
-        {date: Date.now(), amount: 100, location: 1, user: 5, status: "open"}, 
-        {date: Date.now(), amount: 120, location: 1, user: 1, status: "closed"},
-        {date: Date.now(), amount: 80, location: 1, user: 3, status: "pending"},
-        {date: Date.now(), amount: 30, location: 1, user: 4, status: "open"},
-        {date: Date.now(), amount: 3000, location: 1, user: 2, status: "closed"},
+        {date: new Date().toLocaleDateString(), amount: 100, location: 1, user: 5, status: "open"}, 
+        {date: new Date().toLocaleDateString(), amount: 120, location: 1, user: 1, status: "closed"},
+        {date: new Date().toLocaleDateString(), amount: 80, location: 1, user: 3, status: "pending"},
+        {date: new Date().toLocaleDateString(), amount: 30, location: 1, user: 4, status: "open"},
+        {date: new Date().toLocaleDateString(), amount: 3000, location: 1, user: 2, status: "closed"},
     ];
     const [selectedRow, SetSelectedRow] = useState(null);
 
@@ -212,10 +212,10 @@ const DepositHistory = () => {
                                 <td>
                                 </td>
                                 <td colSpan="2">
-                                    <button type="submit" value="submit" className={buttonStyle} onClick={Submit}>Submit</button>
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${selectedRow == null ? "" : "hover:bg-indigo-500"} ${selectedRow == null ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${selectedRow == null ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Submit</button>
                                 </td>
                                 <td colSpan="2">
-                                    <button type="submit" value="submit" className={buttonStyle} onClick={Abort}>Abort Deposit</button>
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${selectedRow == null ? "" : "hover:bg-indigo-500"} ${selectedRow == null ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${selectedRow == null ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Abort}>Abort Deposit</button>
                                 </td>
                             </tr>
                         </tbody>

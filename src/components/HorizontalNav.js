@@ -4,7 +4,15 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider.js";
 import routes from "../routes.js";
-import { Store, Eye } from "lucide-react";
+import {
+  Store,
+  Eye,
+  MapPin,
+  MapPinned,
+  ScanEye,
+  Scan,
+  Shirt,
+} from "lucide-react";
 import axios from "axios";
 
 /*
@@ -26,6 +34,12 @@ export default function HorizotalNav() {
   const [storeMenuOn, setStoreMenu] = useState(false);
   const [allStores, setAllStores] = useState([]);
   const [userAssociatedStores, setUserAssociatedStores] = useState([]);
+
+  const handleSwitchviewClick = (storeID, storeName) => {
+    auth.setUserStores(auth.cookie.user.workingStoreID, storeID, storeName);
+    console.log("");
+    navigate(routes.home);
+  };
 
   useEffect(() => {
     // Fetch all store objects
@@ -73,8 +87,9 @@ export default function HorizotalNav() {
     <Disclosure as="nav" className="bg-gray-500 shadow">
       {({ open }) => (
         <>
-          <p className="float-left translate-x-6 translate-y-4 text-2xl text-custom-accent">
-            PLATO'S CLOSET - {auth.cookie.user.name} (
+          <p className="float-left translate-x-6 translate-y-4 text-2xl text-custom-accent flex items-center">
+            <Shirt className="text-custom-accent mx-1.5 w-7 h-7" />
+            Plato's Closet - {auth.cookie.user.name} (
             {auth.cookie.user.position})
           </p>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -148,17 +163,55 @@ export default function HorizotalNav() {
                             <a
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700 flex justify-between"
+                                "block px-4 py-2 text-sm text-gray-700 flex justify-between mx-3"
                               )}
+                              onClick={() =>
+                                handleSwitchviewClick(store.ID, store.location)
+                              }
                             >
                               {store.location}
-                              {store.ID === auth.cookie.user.viewingStoreID && (
-                                <Eye className="text-gray-500" />
-                              )}
+
+                              {store.ID === auth.cookie.user.viewingStoreID &&
+                                store.ID ===
+                                  auth.cookie.user.workingStoreID && (
+                                  <ScanEye className="text-gray-500 h-5 w-5" />
+                                )}
+
+                              {store.ID !== auth.cookie.user.viewingStoreID &&
+                                store.ID ===
+                                  auth.cookie.user.workingStoreID && (
+                                  <Scan className="text-gray-500 h-5 w-5" />
+                                )}
+
+                              {store.ID === auth.cookie.user.viewingStoreID &&
+                                store.ID !==
+                                  auth.cookie.user.workingStoreID && (
+                                  <Eye className="text-gray-500 h-5 w-5" />
+                                )}
                             </a>
                           )}
                         </Menu.Item>
                       ))}
+
+                      {auth.cookie.user.position === "Owner" && (
+                        <hr className="mx-3 border-gray-300 " />
+                      )}
+                      {auth.cookie.user.position === "Owner" && (
+                        <Menu.Item key={"manage"}>
+                          {({ active }) => (
+                            <a
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700 flex "
+                              )}
+                              onClick={() => navigate(routes.storemanagement)}
+                            >
+                              <MapPinned className="text-gray-500 h-5 w-5 mr-2" />
+                              {"Manage Stores"}
+                            </a>
+                          )}
+                        </Menu.Item>
+                      )}
                     </Menu.Items>
                   </Transition>
                 </Menu>
