@@ -94,6 +94,7 @@ const VarianceAuditPage = () =>{
                     if (response.data && response.data.length > 0) {
                         setArrVariances(response.data);
                         setRegisterName("General Variance");
+                        setStatus("");
                     }
                     else {
                         setArrVariances([]);
@@ -103,7 +104,7 @@ const VarianceAuditPage = () =>{
                 .catch((error) => {
                     console.log(error);
                     setArrVariances([]);
-                    setStatus("No generalvariances found for the selected store.");
+                    setStatus("No general variances found for the selected store.");
                 });
         }
         
