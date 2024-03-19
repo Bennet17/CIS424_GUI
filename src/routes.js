@@ -9,7 +9,7 @@ const routes = {
   security: "/Security",
   usermanagement: "/Security/UserManagement",
   posmanagement: "/Security/POSManagement",
-  storemanagement: "Security/StoreManagement",
+  storemanagement: "/Security/StoreManagement",
   fundstransfer: "/TransferFunds",
   cashmanager: "/CashManager",
   safeaudit: "/CashManager/SafeAudit",

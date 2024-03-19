@@ -112,11 +112,6 @@ const OpenDayPage = () =>{
         }
     }
 
-    //changes the text to display on the pos submission status
-    function SetPosStatusText(txt){
-        SetPosStatusText(txt);
-    }
-
     //clears all the inpout fields to default values
     function ClearAllFields(){
         setElmPennies(0);
@@ -140,15 +135,17 @@ const OpenDayPage = () =>{
 
     //call on component load AND when poss state has refreshed
     useEffect(() => {
-        //update current pos
-        SetCurrentPosIndex(0);
-        SetPosHasLoaded(true);
+        if (poss.length > 0){
+            //update current pos
+            SetCurrentPosIndex(0);
+            SetPosHasLoaded(true);
+        }
     }, [poss]);
 
     //call on component load AND when postSuccess is updated
     useEffect(() => {
         function Initialize(){
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID_CSV[0]}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`)
             .then(response => {
                 console.log(response);
                 //set the pos information data
@@ -166,7 +163,7 @@ const OpenDayPage = () =>{
     function GetExpectedCount(){
         //wait until we have our pos data before attempting to execute
         if (poss.length > 0 && poss[currentPosIndex]){
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.storeID_CSV[0]}&registerID=${poss[currentPosIndex].ID}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`)
             .then(response => {
                 console.log("getting cash count for " + poss[currentPosIndex].name + ", see below");
                 console.log(response);
@@ -186,9 +183,11 @@ const OpenDayPage = () =>{
         //check if our currently-selected pos is open
         if (!poss[currentPosIndex].opened){
             axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
+                "storeID": auth.cookie.user.viewingStoreID,
                 "usrID": auth.cookie.user.ID,
-                "itemCounted": poss[currentPosIndex].name,
                 "total": totalAmount,
+                "type": "OPEN",
+                "itemCounted": poss[currentPosIndex].name,
                 "amountExpected": expectedAmount,
                 "hundred": elm100Dollar,
                 "fifty": elm50Dollar,
@@ -259,7 +258,7 @@ const OpenDayPage = () =>{
                 </div>
                 <div className="text-main-color float-left ml-16 mt-12">
                     {
-                        poss.length > 0 ? 
+                        posHasLoaded ? 
                         <p className="text-2xl" >Enter denominations for {poss[currentPosIndex].name}</p>
                         :
                         <p className="text-2xl" >Waiting for POS data...</p>
