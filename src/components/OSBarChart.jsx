@@ -17,7 +17,7 @@ const OSBarChart = () => {
 
   useEffect(() => {
     fetchData();
-  }, []); // Run once when the component mounts
+  }, [auth.cookie.user.viewingStoreID]); // Run once when the component mounts
 
   // Update annotation positioning whenever chart data changes
   useEffect(() => {
@@ -38,20 +38,17 @@ const OSBarChart = () => {
   const fetchData = async () => {
     // TODO - Correct route but it's not working
     const storeID = auth.cookie.user.viewingStoreID;
-    const url =
-      "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance";
 
-    const curDate = new Date();
-    const startDate = curDate.getDate() - 14; // Days shown in chart, should be a constant but who cares
     const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 14); // Days shown in chart, should be a constant but who cares
+
+    const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${
+      auth.cookie.user.viewingStoreID
+    }&startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`;
 
     try {
-      const response = await axios.post(url, {
-        // TODO - Not dynamic
-        storeID: auth.cookie.user.viewingStoreID,
-        startDate: formatDate(startDate),
-        endDate: formatDate(endDate),
-      });
+      const response = await axios.get(url);
       const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
       console.log(data);
 
@@ -60,13 +57,13 @@ const OSBarChart = () => {
         series: [
           {
             name: "Variance",
-            data: data.map((dayVariance) => dayVariance.Variance),
+            data: data.map((dayVariance) => dayVariance.variance),
           },
         ],
         // Map corresponding date values
         // Looks scary but it's all formatting
         categories: data.map((weekday) => {
-          const date = new Date(weekday.Date); // Get date from data
+          const date = new Date(weekday.date); // Get date from data
           const dayOfWeek = date.toLocaleDateString("en-US", {
             weekday: "short",
           }); // Get the short day name (e.g., "Mon")
