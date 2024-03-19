@@ -9,6 +9,7 @@ import {useAuth} from '../AuthProvider.js';
 
 /*
     TODO:
+        - Refactor once new general variance route is created
         - Look into last 30 days and next page instead of just a start date and end date input
         - Style the table
 */
@@ -22,7 +23,6 @@ const VarianceAuditPage = () =>{
     const monthAgo = new Date(today);
     monthAgo.setDate(monthAgo.getDate() - 30);
 
-    
     const [arrRegisters, setArrRegisters] = useState([]); // Array of a store's registers and its information
     const [arrVariances, setArrVariances] = useState([]); // Array of variances and its information
 
@@ -52,11 +52,16 @@ const VarianceAuditPage = () =>{
         }
     });
 
-    // GET request to the General Variance API
-    useEffect(() => {
+    function UpdateInputDates() {
         // Set the start and end date to the correct format
         document.getElementById("startDate").value = new Date(formData.startDate).toISOString().split('T')[0];
         document.getElementById("endDate").value = new Date(formData.endDate).toISOString().split('T')[0];
+    }
+
+    // GET request to the General Variance API
+    useEffect(() => {
+        // Set the start and end date to the correct format
+        UpdateInputDates();
 
         function GetRegisters() {
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${formData.store}`)
@@ -68,45 +73,34 @@ const VarianceAuditPage = () =>{
                 // Commented out for testing until registers are open
                 // .filter(register => register.opened)
 
-                if (newRegisters.length === 0)
+                if (newRegisters.length === 0) {
                     // Set status message if no registers are open
                     setStatus("No registers are currently open.");
-                else
+                    setArrRegisters([]);
+                }
+                else {
                     // Update arrSources using functional form of setState to avoid duplicates
                     setArrRegisters(newRegisters);
+                    
+                    // Update the register ID to the first register in the array
+                    setFormData((prev) => ({
+                        ...prev,
+                        registerID: newRegisters[0].id
+                    }));
+                }
             })
             .catch(error => {
                 console.error(error);
             });
         }
 
-        // GET request to the General Variance API
-        function GetGeneralVariance() {
-            // Get the store ID, start date, and end date from the form data
-            const storeID = formData.store;
-            const startDate = new Date(formData.startDate).toISOString().split('T')[0];
-            const endDate = new Date(formData.endDate).toISOString().split('T')[0];
+        GetRegisters();
+    }, [formData.store]);
 
-            // GET request to the General Variance API
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`)
-                .then((response) => {
-                    // If the response contains data, set the array of variances to the response data
-                    if (response.data && response.data.length > 0) {
-                        setArrVariances(response.data);
-                        setRegisterName("General Variance");
-                        setStatus("");
-                    }
-                    else {
-                        setArrVariances([]);
-                        setStatus("No general variances found for the selected store.");
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    setArrVariances([]);
-                    setStatus("No general variances found for the selected store.");
-                });
-        }
+    // Load the register variances when the form data changes
+    useEffect(() => {
+        // Set the start and end date to the correct format
+        UpdateInputDates();
         
         // GET request to the Register Variance API
         function GetRegisterVariance() {
@@ -126,25 +120,20 @@ const VarianceAuditPage = () =>{
                     }
                     else {
                         setArrVariances([]);
-                        setRegisterName(arrRegisters.find(register => register.id === registerID).name);
+                        setRegisterName([]);
                         setStatus("No variances found for the selected register.");
                     }
                 })
                 .catch((error) => {
-                    console.log(error);
+                    //console.log(error);
                     setArrVariances([]);
-                    setRegisterName(arrRegisters.find(register => register.id === registerID).name);
+                    setRegisterName([]);
                     setStatus("No variances found for the selected register.");
                 });
         }
 
-        GetRegisters();
-
-        if (formData.registerID === -1)
-            GetGeneralVariance();
-        else
-            GetRegisterVariance();
-    }, [formData]);
+        GetRegisterVariance();
+    }, [formData.registerID, formData.startDate, formData.endDate]);
 
     // Event handler for decrementing the date by one day when the left arrow button is clicked
     const handlePreviousDay = (event) => {
@@ -246,7 +235,6 @@ const VarianceAuditPage = () =>{
                             value={formData.registerID}
                             onChange={HandleChange}
                         >
-                            <option value="-1">General Variance</option>
                             {arrRegisters.map((register, index) => {
                                 return (
                                     <option key={index} value={register.id}>{register.name}</option>
