@@ -101,7 +101,7 @@ const VarianceAuditPage = () =>{
     useEffect(() => {
         // Set the start and end date to the correct format
         UpdateInputDates();
-        
+
         // GET request to the Register Variance API
         function GetRegisterVariance() {
             // Get the register ID, start date, and end date from the form data
@@ -201,13 +201,16 @@ const VarianceAuditPage = () =>{
     const HandleChange = (event) => {
         const {name, value} = event.target;
 
+        // If the input is the register select, update the register ID
         if (name === "posSelect") {
             setFormData((prev) => ({
                 ...prev,
                 registerID: parseInt(value)
             }));
         }
-        else {
+        // If the input is the date and value isn't empty, update the date
+        else if (value !== "") {
+            console.log(name, value);
             setFormData((prev) => ({
                 ...prev,
                 [name]: value
