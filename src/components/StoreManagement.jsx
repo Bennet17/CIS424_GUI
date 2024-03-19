@@ -11,6 +11,7 @@ const StoreManagementPage = () => {
 
 
   return (
+
 <div className="flex h-screen bg-custom-accent">
   <SideBar currentPage={8} />
   <div className="flex flex-col w-full">
