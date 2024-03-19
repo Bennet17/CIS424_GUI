@@ -54,16 +54,6 @@ function App() {
                 element={<StoreManagementPage />}
               />
             </Route>
-            <Route path={routes.security}>
-              <Route
-                path={routes.usermanagement}
-                element={<UserManagementPage />}
-              />
-              <Route
-                path={routes.posmanagement}
-                element={<POSManagementPage />}
-              />
-            </Route>
             <Route
               path={routes.fundstransfer}
               element={<FundsTransferPage />}
