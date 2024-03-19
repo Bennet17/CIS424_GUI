@@ -821,7 +821,7 @@ const SafeAuditPage = () => {
 									placeholder="$0.00"
 									readOnly={true}
 									className="text-2xl safe-amount-input"
-									value={formData.expectedAmount.toFixed(2)}
+									value={parseFloat(formData.expectedAmount).toFixed(2)}
 									onValueChange={(value, name) => {
 										setFormData((prevFormData) => ({
 											...prevFormData,
