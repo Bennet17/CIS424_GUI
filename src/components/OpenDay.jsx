@@ -145,7 +145,7 @@ const OpenDayPage = () =>{
     //call on component load AND when postSuccess is updated
     useEffect(() => {
         function Initialize(){
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID_CSV[0]}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`)
             .then(response => {
                 console.log(response);
                 //set the pos information data
@@ -163,7 +163,7 @@ const OpenDayPage = () =>{
     function GetExpectedCount(){
         //wait until we have our pos data before attempting to execute
         if (poss.length > 0 && poss[currentPosIndex]){
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.storeID_CSV[0]}&registerID=${poss[currentPosIndex].ID}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`)
             .then(response => {
                 console.log("getting cash count for " + poss[currentPosIndex].name + ", see below");
                 console.log(response);
