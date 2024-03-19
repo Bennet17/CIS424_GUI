@@ -22,14 +22,21 @@ const VarianceAuditPage = () =>{
     const monthAgo = new Date(today);
     monthAgo.setDate(monthAgo.getDate() - 30);
 
-    // Array of variances and its information
-    const [arrVariances, setArrVariances] = useState([]);
+    
+    const [arrRegisters, setArrRegisters] = useState([]); // Array of a store's registers and its information
+    const [arrVariances, setArrVariances] = useState([]); // Array of variances and its information
+
+    const [registerName, setRegisterName] = useState(""); // Register name
+
+    // Status message to display if no registers are open
+    const [status, setStatus] = useState("");
 
     const [formData, setFormData] = useState({
         user: auth.cookie.user.ID,
         name: auth.cookie.user.name,
         store: auth.cookie.user.viewingStoreID,
         storeName: auth.cookie.user.viewingStoreLocation,
+        registerID: -1,
         startDate: monthAgo,
         endDate: today,
         expectedAmount: "",
@@ -51,6 +58,28 @@ const VarianceAuditPage = () =>{
         document.getElementById("startDate").value = new Date(formData.startDate).toISOString().split('T')[0];
         document.getElementById("endDate").value = new Date(formData.endDate).toISOString().split('T')[0];
 
+        function GetRegisters() {
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${formData.store}`)
+            .then(response => {
+                // Extract register names and ID from the response and filter based on opened status
+                const newRegisters = response.data
+                .map(register => ({ id: register.ID, name: register.name }));
+
+                // Commented out for testing until registers are open
+                // .filter(register => register.opened)
+
+                if (newRegisters.length === 0)
+                    // Set status message if no registers are open
+                    setStatus("No registers are currently open.");
+                else
+                    // Update arrSources using functional form of setState to avoid duplicates
+                    setArrRegisters(newRegisters);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+
         // GET request to the General Variance API
         function GetGeneralVariance() {
             // Get the store ID, start date, and end date from the form data
@@ -62,18 +91,58 @@ const VarianceAuditPage = () =>{
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`)
                 .then((response) => {
                     // If the response contains data, set the array of variances to the response data
-                    if (response.data && response.data.length > 0)
+                    if (response.data && response.data.length > 0) {
                         setArrVariances(response.data);
+                        setRegisterName("General Variance");
+                    }
                     else {
                         setArrVariances([]);
+                        setStatus("No general variances found for the selected store.");
                     }
                 })
                 .catch((error) => {
                     console.log(error);
+                    setArrVariances([]);
+                    setStatus("No generalvariances found for the selected store.");
+                });
+        }
+        
+        // GET request to the Register Variance API
+        function GetRegisterVariance() {
+            // Get the register ID, start date, and end date from the form data
+            const registerID = formData.registerID;
+            const startDate = new Date(formData.startDate).toISOString().split('T')[0];
+            const endDate = new Date(formData.endDate).toISOString().split('T')[0];
+
+            // GET request to the General Variance API
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&startDate=${startDate}&endDate=${endDate}`)
+                .then((response) => {
+                    // If the response contains data, set the array of variances to the response data
+                    if (response.data && response.data.length > 0) {
+                        setArrVariances(response.data);
+                        setRegisterName(arrRegisters.find(register => register.id === registerID).name);
+                        setStatus("");
+                    }
+                    else {
+                        setArrVariances([]);
+                        setRegisterName(arrRegisters.find(register => register.id === registerID).name);
+                        setStatus("No variances found for the selected register.");
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    setArrVariances([]);
+                    setRegisterName(arrRegisters.find(register => register.id === registerID).name);
+                    setStatus("No variances found for the selected register.");
                 });
         }
 
-        GetGeneralVariance();
+        GetRegisters();
+
+        if (formData.registerID === -1)
+            GetGeneralVariance();
+        else
+            GetRegisterVariance();
     }, [formData]);
 
     // Event handler for decrementing the date by one day when the left arrow button is clicked
@@ -142,13 +211,18 @@ const VarianceAuditPage = () =>{
     const HandleChange = (event) => {
         const {name, value} = event.target;
 
-        setFormData((prev) => {
-            return {
+        if (name === "posSelect") {
+            setFormData((prev) => ({
+                ...prev,
+                registerID: parseInt(value)
+            }));
+        }
+        else {
+            setFormData((prev) => ({
                 ...prev,
                 [name]: value
-            }
-        });
-
+            }));
+        }
         console.log(formData);
     }
 
@@ -160,6 +234,26 @@ const VarianceAuditPage = () =>{
                 <div className="text-main-color float-left ml-8 mt-12">
 					<h1 className="text-3xl font-bold">Variance Audit for {formData.storeName}</h1>
 					<br />
+                    <div>
+                        {/* General/Register Variance Select */}
+                        <strong>
+                            <label htmlFor="posSelect">Register Variance:</label>
+                        </strong>
+                        <select 
+                            name="posSelect" 
+                            id="pos"
+                            value={formData.registerID}
+                            onChange={HandleChange}
+                        >
+                            <option value="-1">General Variance</option>
+                            {arrRegisters.map((register, index) => {
+                                return (
+                                    <option key={index} value={register.id}>{register.name}</option>
+                                );
+                            })}
+                        </select>
+                        <p className="mt-4 ml-6 text-red-500">{status}</p>
+                    </div>
                     <div>
                         {/* Left arrow button */}
                         <button onClick={handlePreviousDay}>←</button>
@@ -186,6 +280,7 @@ const VarianceAuditPage = () =>{
                         {/* Right arrow button */}
                         <button onClick={handleNextDay}>→</button>
                     </div>
+                    <p className="mt-4 ml-6">{registerName}</p>
                     <table className="table-variance">
                         <thead className="">
                             <tr>
