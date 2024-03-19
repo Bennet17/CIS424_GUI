@@ -72,14 +72,14 @@ function SelectStore() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center">
-            {stores.map((store) => (
+            {stores.map((store, index) => (
               <div key={store.ID} className="flex items-center w-1/4 mb-4">
                 <input
                   type="radio"
                   id={store.ID}
                   name="store"
                   value={store.ID}
-                  checked={selectedStoreID === store.ID}
+                  defaultChecked={index === 0 ? true : false}
                   onChange={() =>
                     handleStoreSelection(store.ID, store.location)
                   }
