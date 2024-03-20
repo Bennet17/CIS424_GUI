@@ -45,6 +45,7 @@ const FundsTransferPage = () => {
     const [arrDestinations, setArrDestinations] = useState([]); // Array to hold the destination register names
 
     const [status, setStatus] = useState(""); // Status message to display after form submission
+    const [registerStatus, setRegisterStatus] = useState(""); // Status message to display on page load
     const [report, setReport] = useState(""); // Report message to display after form submission
     const successClass = "text-green-500"; // CSS class for success
     const errorClass = "text-red-500"; // CSS class for error
@@ -64,12 +65,12 @@ const FundsTransferPage = () => {
                 .filter(register => register.opened)
                 .map(register => ({ id: register.regID, name: register.name }));
 
-                if (newSources.length === 0)
-                    // Set status message if no registers are open
-                    setStatus("No registers are currently open.");
-                else
-                    // Update arrSources using functional form of setState to avoid duplicates
+                if (newSources.length > 0)
                     setArrSources(newSources);
+
+                if (newSources.length === 0 || newSources.length === 1 || newSources === undefined || newSources === null)
+                    setRegisterStatus("No registers are currently open for transfer.");
+                
             })
             .catch(error => {
                 console.error(error);
@@ -690,6 +691,10 @@ const FundsTransferPage = () => {
                                 </tr>
                             </tbody>
                         </table>
+
+                        <div>
+                            <p className={statusClass}>{registerStatus}</p>
+                        </div>
 
                         {/* Denominations */}
                         <strong>
