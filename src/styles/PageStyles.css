@@ -219,6 +219,21 @@
     width: 100%;
 }
 
+.variance-audit-page {
+    position: relative;
+}
+
+.pagination {
+    position: fixed;
+    bottom: 20px;
+    left: 50%; 
+    transform: translateX(-50%);
+}
+
+.variance-audit-button:disabled {
+    opacity: 0.5;
+}
+
 pre {
     font-family: 'Roboto Mono', monospace;
 }
