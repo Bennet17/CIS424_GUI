@@ -9,7 +9,7 @@ import {useAuth} from '../AuthProvider.js';
 
 /*
     TODO:
-        - Look into last 30 days and next page instead of just a start date and end date input
+        - Look into table export options (CSV, Excel, PDF)
         - Style the table
 */
 
@@ -242,21 +242,24 @@ const VarianceAuditPage = () =>{
 					<br />
                     <div>
                         {/* General/Register Variance Select */}
-                        <strong>
-                            <label htmlFor="posSelect">Register Variance:</label>
-                        </strong>
-                        <select 
-                            name="posSelect" 
-                            id="pos"
-                            value={formData.registerID}
-                            onChange={HandleChange}
-                        >
-                            {arrRegisters.map((register, index) => {
-                                return (
-                                    <option key={index} value={register.id}>{register.name}</option>
-                                );
-                            })}
-                        </select>
+                        <div className="label-above-select">
+                            <strong>
+                                <label htmlFor="pos">Register Variance:</label>
+                            </strong>
+                            <select 
+                                name="posSelect" 
+                                id="pos"
+                                className="variance-select"
+                                value={formData.registerID}
+                                onChange={HandleChange}
+                            >
+                                {arrRegisters.map((register, index) => {
+                                    return (
+                                        <option key={index} value={register.id}>{register.name}</option>
+                                    );
+                                })}
+                            </select>
+                        </div>
                         <p className="mt-4 ml-6 text-red-500">{status}</p>
                     </div>
                     <div>
@@ -309,7 +312,9 @@ const VarianceAuditPage = () =>{
 
                     {/* Pagination */}
                     <div className="pagination">
-                        <p>Page: {currentPage}</p>
+                        {/* Page # of # */}
+                        <p>Page {currentPage} of {Math.ceil(arrVariances.length / pageSize)}</p>
+                        {/* Previous and Next buttons */}
                         <button className="variance-audit-button" onClick={() => GoToPage(currentPage - 1)} disabled={currentPage === 1}>
                             Previous
                         </button>
