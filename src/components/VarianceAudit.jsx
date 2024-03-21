@@ -1,6 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect, useCallback} from 'react';
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import {useNavigate} from 'react-router-dom';
@@ -9,8 +9,7 @@ import {useAuth} from '../AuthProvider.js';
 
 /*
     TODO:
-        - Refactor once new general variance route is created
-        - Look into last 30 days and next page instead of just a start date and end date input
+        - Look into table export options (CSV, Excel, PDF)
         - Style the table
 */
 
@@ -18,15 +17,28 @@ const VarianceAuditPage = () =>{
     const auth = useAuth();
     const navigate = useNavigate();
 
-    // Set the start date to 7 days ago and the end date to today
+    // Set the start date to 30 days ago and the end date to today
     const today = new Date();
     const monthAgo = new Date(today);
     monthAgo.setDate(monthAgo.getDate() - 30);
+
+    const pageSize = 10; // Number of variances to display per page
 
     const [arrRegisters, setArrRegisters] = useState([]); // Array of a store's registers and its information
     const [arrVariances, setArrVariances] = useState([]); // Array of variances and its information
 
     const [registerName, setRegisterName] = useState(""); // Register name
+
+    const [currentPage, setCurrentPage] = useState(1); // Current page number
+
+    // Calculate the start and end index of variances to display on the current page
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, arrVariances.length);
+
+    // Function to handle pagination navigation
+    const GoToPage = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     // Status message to display if no registers are open
     const [status, setStatus] = useState("");
@@ -52,11 +64,12 @@ const VarianceAuditPage = () =>{
         }
     });
 
-    function UpdateInputDates() {
+    // Function to update the input dates to the correct format
+    const UpdateInputDates = useCallback(() => {
         // Set the start and end date to the correct format
         document.getElementById("startDate").value = new Date(formData.startDate).toISOString().split('T')[0];
         document.getElementById("endDate").value = new Date(formData.endDate).toISOString().split('T')[0];
-    }
+    }, [formData.startDate, formData.endDate]);
 
     // GET request to the General Variance API
     useEffect(() => {
@@ -95,7 +108,7 @@ const VarianceAuditPage = () =>{
         }
 
         GetRegisters();
-    }, [formData.store]);
+    }, [formData.store, UpdateInputDates]);
 
     // Load the register variances when the form data changes
     useEffect(() => {
@@ -133,7 +146,7 @@ const VarianceAuditPage = () =>{
         }
 
         GetRegisterVariance();
-    }, [formData.registerID, formData.startDate, formData.endDate]);
+    }, [formData.registerID, formData.startDate, formData.endDate, UpdateInputDates, arrRegisters]);
 
     // Event handler for decrementing the date by one day when the left arrow button is clicked
     const handlePreviousDay = (event) => {
@@ -220,7 +233,7 @@ const VarianceAuditPage = () =>{
     }
 
     return (
-        <div className="flex h-screen bg-custom-accent">
+        <div className="flex h-screen bg-custom-accent variance-audit-page">
             <SideBar currentPage={5} />
             <div className="flex flex-col w-full">
                 <HorizontalNav />
@@ -229,21 +242,24 @@ const VarianceAuditPage = () =>{
 					<br />
                     <div>
                         {/* General/Register Variance Select */}
-                        <strong>
-                            <label htmlFor="posSelect">Register Variance:</label>
-                        </strong>
-                        <select 
-                            name="posSelect" 
-                            id="pos"
-                            value={formData.registerID}
-                            onChange={HandleChange}
-                        >
-                            {arrRegisters.map((register, index) => {
-                                return (
-                                    <option key={index} value={register.id}>{register.name}</option>
-                                );
-                            })}
-                        </select>
+                        <div className="label-above-select">
+                            <strong>
+                                <label htmlFor="pos">Register Variance:</label>
+                            </strong>
+                            <select 
+                                name="posSelect" 
+                                id="pos"
+                                className="variance-select"
+                                value={formData.registerID}
+                                onChange={HandleChange}
+                            >
+                                {arrRegisters.map((register, index) => {
+                                    return (
+                                        <option key={index} value={register.id}>{register.name}</option>
+                                    );
+                                })}
+                            </select>
+                        </div>
                         <p className="mt-4 ml-6 text-red-500">{status}</p>
                     </div>
                     <div>
@@ -274,27 +290,39 @@ const VarianceAuditPage = () =>{
                     </div>
                     <p className="mt-4 ml-6">{registerName}</p>
                     <table className="table-variance">
-                        <thead className="">
-                            <tr>
-                                <th>Date</th>
-                                <th>Expected Amount</th>
-                                <th>Total</th>
-                                <th>Variance</th>
-                            </tr>
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Expected Amount</th>
+                            <th>Total</th>
+                            <th>Variance</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {arrVariances.map((item, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{new Date(item.Date).toISOString().split('T')[0]}</td>
-                                        <td>${parseFloat(item.amountExpected).toFixed(2)}</td>
-                                        <td>${parseFloat(item.total).toFixed(2)}</td>
-                                        <td>{NegativeValueParantheses(parseFloat(item.Variance))}</td>
-                                    </tr>
-                                );
-                            })}
+                            {arrVariances.slice(startIndex, endIndex).map((item, index) => (
+                                <tr key={index}>
+                                    <td>{new Date(item.Date).toISOString().split('T')[0]}</td>
+                                    <td>${parseFloat(item.amountExpected).toFixed(2)}</td>
+                                    <td>${parseFloat(item.total).toFixed(2)}</td>
+                                    <td>{NegativeValueParantheses(parseFloat(item.Variance))}</td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
+
+                    {/* Pagination */}
+                    <div className="pagination">
+                        {/* Page # of # */}
+                        <p>Page {currentPage} of {Math.ceil(arrVariances.length / pageSize)}</p>
+                        {/* Previous and Next buttons */}
+                        <button className="variance-audit-button" onClick={() => GoToPage(currentPage - 1)} disabled={currentPage === 1}>
+                            Previous
+                        </button>
+                        <span> </span>
+                        <button className="variance-audit-button" onClick={() => GoToPage(currentPage + 1)} disabled={endIndex >= arrVariances.length}>
+                            Next
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

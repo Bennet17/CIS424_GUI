@@ -219,6 +219,35 @@
     width: 100%;
 }
 
+.variance-audit-page {
+    position: relative;
+}
+
+.variance-select {
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    margin-left: 0;
+    margin-right: 2.5rem;
+    width: 7rem;
+    /* center text */
+    text-align-last: center;
+    border: 2px solid rgb(57, 70, 83); 
+    border-radius: 5px;
+    background-color: #FFFFFF; 
+
+}
+
+.pagination {
+    position: fixed;
+    bottom: 20px;
+    left: 50%; 
+    transform: translateX(-50%);
+}
+
+.variance-audit-button:disabled {
+    opacity: 0.5;
+}
+
 pre {
     font-family: 'Roboto Mono', monospace;
 }
