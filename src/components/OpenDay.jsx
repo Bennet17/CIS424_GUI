@@ -15,7 +15,6 @@ const OpenDayPage = () =>{
     const [currentPosIndex, SetCurrentPosIndex] = useState(-1);
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("show extras ▼");
-    //let currentPosIndex = -1;
 
     //dom fields
     const [elmPennies, setElmPennies] = useState(0);
@@ -245,7 +244,7 @@ const OpenDayPage = () =>{
                                             onChange={(e) => SetCurrentPosIndex(index)} 
                                             disabled={item.opened ? true : false}
                                             type="radio" 
-                                            name="POS" 
+                                            name={"POS"} 
                                             value={item.name} 
                                         />
                                         {item.name} - {item.opened ? "Open" : "Closed"}
@@ -493,8 +492,8 @@ const OpenDayPage = () =>{
                     <div>
                         <label> Current Total:
                             <input 
-                                value={totalAmount} 
-                                className={totalAmountStyle} 
+                                value={"$" + totalAmount}
+                                className={totalAmountStyle}
                                 type="text" 
                                 disabled={true}
                             />
@@ -504,10 +503,10 @@ const OpenDayPage = () =>{
                     <div>
                         <label> Expected Total:
                             <input 
-                                value={expectedAmount} 
+                                value={"$" + expectedAmount}
                                 disabled={true}
                                 className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
-                                type="number" 
+                                type="text" 
                             />
                         </label>
                     </div>
