@@ -244,7 +244,7 @@ const OpenDayPage = () =>{
                                             onChange={(e) => SetCurrentPosIndex(index)} 
                                             disabled={item.opened ? true : false}
                                             type="radio" 
-                                            name={item.name} 
+                                            name={"POS"} 
                                             value={item.name} 
                                         />
                                         {item.name} - {item.opened ? "Open" : "Closed"}
