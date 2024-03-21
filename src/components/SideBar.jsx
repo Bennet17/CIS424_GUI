@@ -178,7 +178,7 @@ const SideBar = (props) => {
               <span className="ml-3">Safe Audit</span>
             </li>
           )}
-          {auth.CheckAuthorization(["Manager", "District Manager", "CEO"]) && cashManagerOn && (
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) && cashManagerOn && (
             <li
               onClick={toVarianceAudit}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
@@ -192,7 +192,7 @@ const SideBar = (props) => {
               <span className="ml-3">Variance Audit</span>
             </li>
           )}
-          {auth.CheckAuthorization(["Manager", "District Manager", "CEO"]) && cashManagerOn && (
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) && cashManagerOn && (
             <li
               onClick={toDepositHistory}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 

@@ -44,7 +44,7 @@ const DepositHistory = () => {
     //check the permissions of the logged in user on page load, passing in
     //the required permissions
     useLayoutEffect(() => {
-        if (!auth.CheckAuthorization(["Manager", "District Manager", "CEO"])){
+        if (!auth.CheckAuthorization(["Manager", "District Manager", "Owner"])){
             navigate(routes.home);
         }
     })
