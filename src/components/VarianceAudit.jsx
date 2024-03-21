@@ -107,46 +107,46 @@ const VarianceAuditPage = () =>{
         }
 
         GetRegisters();
-    }, [formData.store, UpdateInputDates, formData.registerID, formData.startDate, formData.endDate, arrRegisters]);
+    }, [formData.store, UpdateInputDates]);
 
     // Load the register variances when the form data changes
     useEffect(() => {
-        // Set the start and end date to the correct format
-        UpdateInputDates();
+        if (formData.registerID !== -1) {
+            // Set the start and end date to the correct format
+            UpdateInputDates();
 
-        // GET request to the Register Variance API
-        function GetRegisterVariance() {
-            // Get the register ID, start date, and end date from the form data
-            const registerID = formData.registerID;
-            const startDate = new Date(formData.startDate).toISOString().split('T')[0];
-            const endDate = new Date(formData.endDate).toISOString().split('T')[0];
+            // GET request to the Register Variance API
+            function GetRegisterVariance() {
+                // Get the register ID, start date, and end date from the form data
+                const registerID = formData.registerID;
+                const startDate = new Date(formData.startDate).toISOString().split('T')[0];
+                const endDate = new Date(formData.endDate).toISOString().split('T')[0];
 
-            // GET request to the General Variance API
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&startDate=${startDate}&endDate=${endDate}`)
-                .then((response) => {
-                    // If the response contains data, set the array of variances to the response data
-                    if (response.data && response.data.length > 0) {
-                        setArrVariances(response.data);
-                        setRegisterName(arrRegisters.find(register => register.id === registerID).name);
-                        setStatus("");
-                    }
-                    else {
+                // GET request to the General Variance API
+                axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&startDate=${startDate}&endDate=${endDate}`)
+                    .then((response) => {
+                        // If the response contains data, set the array of variances to the response data
+                        if (response.data && response.data.length > 0) {
+                            setArrVariances(response.data);
+                            setRegisterName(arrRegisters.find(register => register.id === registerID).name);
+                            setStatus("");
+                        }
+                        else {
+                            setArrVariances([]);
+                            setRegisterName([]);
+                            setStatus("No variances found for the selected register.");
+                        }
+                    })
+                    .catch((error) => {
+                        //console.log(error);
                         setArrVariances([]);
                         setRegisterName([]);
-                        setStatus("No variances found for the selected register.");
-                    }
-                })
-                .catch((error) => {
-                    //console.log(error);
-                    setArrVariances([]);
-                    setRegisterName([]);
-                    setStatus("Error loading variances for the selected register.");
-                });
-        }
+                        setStatus("Error loading variances for the selected register.");
+                    });
+            }
 
-        if (formData.registerID !== -1)
             GetRegisterVariance();
-
+        }
     }, [formData.registerID, formData.startDate, formData.endDate, UpdateInputDates, arrRegisters]);
 
     // Event handler for decrementing the date by one day when the left arrow button is clicked
