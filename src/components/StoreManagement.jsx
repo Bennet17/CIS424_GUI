@@ -11,25 +11,21 @@ const StoreManagementPage = () => {
 
 
   return (
-    <div className="flex h-screen bg-custom-accent">
-      <SideBar currentPage={42069} />
-      <div className="flex flex-col w-full">
-        <HorizotalNav />
-        <div className="flex flex-col mt-8 px-6">
-          <div>
-            <div className="flex mt-8 px-6"> 
-              <div className="w-1/2 mr-4"> 
-                <StoreTable />
-              </div>
-              <div className="w-1/2 mt-4"> 
-             {/* <AddPOS /> */}
-              </div>
-            </div>
 
-          </div>
+<div className="flex h-screen bg-custom-accent">
+  <SideBar currentPage={20} />
+  <div className="flex flex-col w-full">
+    <HorizotalNav />
+    <div className="flex flex-col items-center justify-center mt-8 px-6"> {/* Added items-center justify-center */}
+      <div className="w-full max-w-screen-lg"> {/* Limiting width to maintain responsiveness */}
+        <div className="flex mt-4 px-6 justify-center"> {/* Centering horizontally */}
+          <StoreTable />
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 

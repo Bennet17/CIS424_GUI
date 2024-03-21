@@ -135,23 +135,6 @@ const EditUser = (user) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const handleSubmit = (event) => {
     event.preventDefault();
 

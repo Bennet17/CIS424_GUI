@@ -10,8 +10,8 @@ const FundsTransferPage = () => {
     // Authentication context
     const auth = useAuth();
 
-    // Const to hold the POST request fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
-    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer";
+    // Const to hold the POST request fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer)
+    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer";
 
     // Const to hold the form data
     const [formData, setFormData] = useState({
@@ -55,14 +55,14 @@ const FundsTransferPage = () => {
     // Loads the source options from the store
     useEffect(() => {
         function Initialize() {
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${formData.store}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`)
             .then(response => {
                 console.log(response.data)
 
                 // Extract register names and ID from the response and filter based on opened status
                 const newSources = response.data
                 .filter(register => register.opened)
-                .map(register => ({ id: register.ID, name: register.name }));
+                .map(register => ({ id: register.regID, name: register.name }));
 
                 if (newSources.length === 0)
                     // Set status message if no registers are open

@@ -94,7 +94,6 @@ const SafeAuditPage = () => {
 			// Adds error class to fields
 			document.getElementById("currentAmount_input").classList.add("safe-amount-input-error");
 
-
 			// Return true to prevent form submission
 			return true;
 		}
