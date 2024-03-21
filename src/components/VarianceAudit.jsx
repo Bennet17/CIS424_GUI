@@ -41,7 +41,8 @@ const VarianceAuditPage = () =>{
     };
 
     // Status message to display if no registers are open
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState("Loading...");
+    const errorClass = "text-red-500"; // CSS class for error
 
     const [formData, setFormData] = useState({
         user: auth.cookie.user.ID,
@@ -79,12 +80,10 @@ const VarianceAuditPage = () =>{
         function GetRegisters() {
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${formData.store}`)
             .then(response => {
-                // Extract register names and ID from the response and filter based on opened status
+                // Extract register names and ID from the response and filter out closed registers
                 const newRegisters = response.data
-                .map(register => ({ id: register.ID, name: register.name }));
-
-                // Commented out for testing until registers are open
-                // .filter(register => register.opened)
+                    //.filter(register => register.opened)
+                    .map(register => ({id: register.ID, name: register.name}));
 
                 if (newRegisters.length === 0) {
                     // Set status message if no registers are open
@@ -108,7 +107,7 @@ const VarianceAuditPage = () =>{
         }
 
         GetRegisters();
-    }, [formData.store, UpdateInputDates]);
+    }, [formData.store, UpdateInputDates, formData.registerID, formData.startDate, formData.endDate, arrRegisters]);
 
     // Load the register variances when the form data changes
     useEffect(() => {
@@ -141,20 +140,22 @@ const VarianceAuditPage = () =>{
                     //console.log(error);
                     setArrVariances([]);
                     setRegisterName([]);
-                    setStatus("No variances found for the selected register.");
+                    setStatus("Error loading variances for the selected register.");
                 });
         }
 
-        GetRegisterVariance();
+        if (formData.registerID !== -1)
+            GetRegisterVariance();
+
     }, [formData.registerID, formData.startDate, formData.endDate, UpdateInputDates, arrRegisters]);
 
     // Event handler for decrementing the date by one day when the left arrow button is clicked
-    const handlePreviousDay = (event) => {
+    const HandlePreviousDay = (event) => {
         event.preventDefault();
 
         // Decrement the start and end date by one day
-        const newStartDate = decrementDate(formData.startDate);
-        const newEndDate = decrementDate(formData.endDate);
+        const newStartDate = DecrementDate(formData.startDate);
+        const newEndDate = DecrementDate(formData.endDate);
 
         // Update the date
         setFormData((prev) => ({
@@ -165,12 +166,12 @@ const VarianceAuditPage = () =>{
     };
 
     // Event handler for incrementing the date by one day when the right arrow button is clicked
-    const handleNextDay = (event) => {
+    const HandleNextDay = (event) => {
         event.preventDefault();
 
         // Increment the start and end date by one day
-        const newStartDate = incrementDate(formData.startDate);
-        const newEndDate = incrementDate(formData.endDate);
+        const newStartDate = IncrementDate(formData.startDate);
+        const newEndDate = IncrementDate(formData.endDate);
     
         // Update the date
         setFormData((prev) => ({
@@ -181,7 +182,7 @@ const VarianceAuditPage = () =>{
     };
 
     // Function to increment the date by one day
-    const incrementDate = (dateString) => {
+    const IncrementDate = (dateString) => {
         // Convert the date string to a Date object
         const date = new Date(dateString);
 
@@ -192,7 +193,7 @@ const VarianceAuditPage = () =>{
     };
 
     // Function to decrement the date by one day
-    const decrementDate = (dateString) => {
+    const DecrementDate = (dateString) => {
         // Convert the date string to a Date object
         const date = new Date(dateString);
 
@@ -216,6 +217,9 @@ const VarianceAuditPage = () =>{
 
         // If the input is the register select, update the register ID
         if (name === "posSelect") {
+            // Update page number to 1
+            setCurrentPage(1);
+
             setFormData((prev) => ({
                 ...prev,
                 registerID: parseInt(value)
@@ -223,7 +227,6 @@ const VarianceAuditPage = () =>{
         }
         // If the input is the date and value isn't empty, update the date
         else if (value !== "") {
-            console.log(name, value);
             setFormData((prev) => ({
                 ...prev,
                 [name]: value
@@ -231,6 +234,9 @@ const VarianceAuditPage = () =>{
         }
         console.log(formData);
     }
+
+    // If status is not ...loading, set class to errorClass
+    const statusClass = status === "Loading..." ? "" : errorClass;
 
     return (
         <div className="flex h-screen bg-custom-accent variance-audit-page">
@@ -260,11 +266,11 @@ const VarianceAuditPage = () =>{
                                 })}
                             </select>
                         </div>
-                        <p className="mt-4 ml-6 text-red-500">{status}</p>
+                        <p className={`mt-4 ml-6 ${statusClass}`}>{status}</p>
                     </div>
                     <div>
                         {/* Left arrow button */}
-                        <button onClick={handlePreviousDay}>←</button>
+                        <button onClick={HandlePreviousDay}>←</button>
                         {/* Start date */}
                         <label htmlFor="startDate">Start Date:</label>
                         <input 
@@ -286,7 +292,7 @@ const VarianceAuditPage = () =>{
                             onChange={HandleChange}
                         />
                         {/* Right arrow button */}
-                        <button onClick={handleNextDay}>→</button>
+                        <button onClick={HandleNextDay}>→</button>
                     </div>
                     <p className="mt-4 ml-6">{registerName}</p>
                     <table className="table-variance">
@@ -312,8 +318,8 @@ const VarianceAuditPage = () =>{
 
                     {/* Pagination */}
                     <div className="pagination">
-                        {/* Page # of # */}
-                        <p>Page {currentPage} of {Math.ceil(arrVariances.length / pageSize)}</p>
+                        {/* Page # of # (Page 1 of 1 if arrVariances is empty*/}
+                        <p>Page {currentPage} of {Math.ceil(arrVariances.length / pageSize) || 1}</p>
                         {/* Previous and Next buttons */}
                         <button className="variance-audit-button" onClick={() => GoToPage(currentPage - 1)} disabled={currentPage === 1}>
                             Previous
