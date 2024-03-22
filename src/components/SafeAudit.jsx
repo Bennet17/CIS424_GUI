@@ -41,10 +41,6 @@ const SafeAuditPage = () => {
         pennyRoll: 0,
     });
 
-    const [status, setStatus] = useState(""); // Status message to display after form submission
-    const successClass = "text-green-500"; // CSS class for success
-    const errorClass = "text-red-500"; // CSS class for error
-
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
 
@@ -90,7 +86,7 @@ const SafeAuditPage = () => {
 	function CheckFields() {
 		if (formData.currentAmount === "" || formData.currentAmount === 0) {
 			// Update the status message
-            toast.warn("Please fill in all fields correctly.");
+            toast.warning("Please fill in all fields correctly.");
 
 			// Adds error class to fields
 			document.getElementById("currentAmount_input").classList.add("safe-amount-input-error");
@@ -279,6 +275,9 @@ const SafeAuditPage = () => {
 			nickelRoll: 0,
 			pennyRoll: 0,
 		});
+
+		if (formData.currentAmount !== "") 
+			toast.info("Fields have been reset.");
 	}
 
 	//toggles the variable that displays the niche changes, such as $2 bills and $1 coins

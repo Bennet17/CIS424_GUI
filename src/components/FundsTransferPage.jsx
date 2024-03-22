@@ -155,14 +155,8 @@ const FundsTransferPage = () => {
 
         // If the source or destination field is changed, remove the error class from both
         if (name === "source" || name === "destination") {
-            const otherField = name === "source" ? "destination" : "source";
-            const otherValue = formData[otherField];
-
-            // If the other field is already filled and does not match the current field, remove the error class from both
-            if (value !== otherValue && otherValue !== "") {
-                document.getElementById("source_select").classList.remove("error");
-                document.getElementById("destination_select").classList.remove("error");
-            }
+            document.getElementById("source_select").classList.remove("select-input-error");
+            document.getElementById("destination_select").classList.remove("select-input-error");
         }
 
         // Calculate the amount based on the denomination fields
@@ -201,7 +195,7 @@ const FundsTransferPage = () => {
         if (formData.source === formData.destination) {
             // Set the status message
             blnError = true;
-            toast.warn("Source and destination cannot be the same.");
+            toast.warning("Source and destination cannot be the same.");
 
             // Highlight the source and destination fields with red border
             document.getElementById("source_select").classList.add("select-input-error");
@@ -214,7 +208,7 @@ const FundsTransferPage = () => {
             formData.amount === "0.00") {
             // Set the status message
             blnError = true;
-            toast.warn("Please fill in all fields correctly.");
+            toast.warning("Please fill in all fields correctly.");
 
             // Highlight empty fields with red border
             if (formData.source === "") 
