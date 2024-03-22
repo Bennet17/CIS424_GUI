@@ -47,6 +47,7 @@ const FundsTransferPage = () => {
 
     const [registerStatus, setRegisterStatus] = useState(""); // Status message to display on page load
     const [report, setReport] = useState(""); // Report message to display after form submission
+    const [showReport, setShowReport] = useState(false); // Boolean to show/hide the report message
 
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
@@ -275,7 +276,7 @@ const FundsTransferPage = () => {
         }
 
         // Submit the form data
-        if (SubmitTransfer(
+        if (!SubmitTransfer(
             event,
             user,
             source,
@@ -295,6 +296,7 @@ const FundsTransferPage = () => {
     
             // Set the report message
             setReport(report);
+            setShowReport(true);
     
             // Reset the form fields
             setFormData({
@@ -1159,7 +1161,17 @@ const FundsTransferPage = () => {
                                             Cancel
                                         </button>
                                     </td>
-                                    <td></td>
+                                    <td>
+                                    {report && (
+                                        <button
+                                            type="button"
+                                            className="flex w-5/6 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                            onClick={() => setShowReport(!showReport)}
+                                        >
+                                            View Report
+                                        </button>
+                                    )}
+                                    </td>
                                     <td>
                                         <button
                                             type="submit"
@@ -1168,14 +1180,26 @@ const FundsTransferPage = () => {
                                             Submit
                                         </button>
                                     </td>
-                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
                     </form>
 
                     {/* Shows report with successful submissions */}
-                    {report && <div>{report}</div>}
+                    {showReport && (
+                        <div className="report-overlay">
+                            <div className="report-container">
+                                {report}
+                                <br />
+                                <button 
+                                    className="flex w-4/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={() => setShowReport(false)}
+                                >
+                                    Close Report
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
