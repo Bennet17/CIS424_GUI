@@ -5,6 +5,7 @@ import CurrencyInput from "react-currency-input-field";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
+import { Toaster, toast } from 'sonner';
 
 const FundsTransferPage = () => {
     // Authentication context
@@ -44,11 +45,8 @@ const FundsTransferPage = () => {
     const [arrSources, setArrSources] = useState([]); // Array to hold the source register names
     const [arrDestinations, setArrDestinations] = useState([]); // Array to hold the destination register names
 
-    const [status, setStatus] = useState(""); // Status message to display after form submission
     const [registerStatus, setRegisterStatus] = useState(""); // Status message to display on page load
     const [report, setReport] = useState(""); // Report message to display after form submission
-    const successClass = "text-green-500"; // CSS class for success
-    const errorClass = "text-red-500"; // CSS class for error
 
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
@@ -203,7 +201,7 @@ const FundsTransferPage = () => {
         if (formData.source === formData.destination) {
             // Set the status message
             blnError = true;
-            setStatus("Source and destination cannot be the same.");
+            toast.warn("Source and destination cannot be the same.");
 
             // Highlight the source and destination fields with red border
             document.getElementById("source_select").classList.add("select-input-error");
@@ -216,7 +214,7 @@ const FundsTransferPage = () => {
             formData.amount === "0.00") {
             // Set the status message
             blnError = true;
-            setStatus("Please fill in all fields correctly.");
+            toast.warn("Please fill in all fields correctly.");
 
             // Highlight empty fields with red border
             if (formData.source === "") 
@@ -260,11 +258,13 @@ const FundsTransferPage = () => {
             user,
             name,
             store,
+            storeName,
             source,
             destination,
             amount: fltAmount,
             ...currencyFields
         } = formData;
+
         
         // Get the source and destination register IDs
         let sourceID = arrSources.find(register => register.name === source).id;
@@ -281,44 +281,42 @@ const FundsTransferPage = () => {
         }
 
         // Submit the form data
-        SubmitTransfer(
+        if (SubmitTransfer(
             event,
             user,
             source,
             destination,
             fltAmount,
             currencyFields // Includes zeroes
-        );
-
-        // Set the status message
-        setStatus("Successfully submitted transfer!");
-
-        // Generate the report
-        const report = await GenerateReport(
-            source,
-            destination,
-            sourceID,
-            destinationID,
-            fltAmount,
-            newCurrencyFields
-        );
-
-        // Set the report message
-        setReport(report);
-        
-        // Reset the form fields
-        setFormData({
-            user: user,
-            name: name,
-            store: store,
-            source: "",
-            destination: "",
-            amount: "",
-            ...Object.keys(currencyFields).reduce((acc, key) => {
-                acc[key] = 0;
-                return acc;
-            }, {}),
-        });
+        )) {
+            // Generate the report
+            const report = await GenerateReport(
+                source,
+                destination,
+                sourceID,
+                destinationID,
+                fltAmount,
+                newCurrencyFields
+            );
+    
+            // Set the report message
+            setReport(report);
+    
+            // Reset the form fields
+            setFormData({
+                user: user,
+                name: name,
+                store: store,
+                storeName: storeName,
+                source: "",
+                destination: "",
+                amount: "",
+                ...Object.keys(currencyFields).reduce((acc, key) => {
+                    acc[key] = 0;
+                    return acc;
+                }, {}),
+            });
+        }
     };
 
     const HandleCancel = (event) => {
@@ -326,7 +324,8 @@ const FundsTransferPage = () => {
         setFormData({
             user: auth.cookie.user.ID,
             name: auth.cookie.user.name,
-            store: auth.cookie.user.storeID,
+            store: auth.cookie.user.viewingStoreID,
+            storeName: auth.cookie.user.viewingStoreLocation,
             source: "",
             destination: "",
             amount: "",
@@ -349,8 +348,9 @@ const FundsTransferPage = () => {
             pennyRoll: 0,
         });
 
-        // Reset the status message
-        setStatus("");
+        // If all fields are already empty, don't show a toast notification
+        if (formData.source !== "" || formData.destination !== "" || formData.amount !== "")
+            toast.info("Fields have been reset.");
 
         // Reset the report message
         setReport("");
@@ -383,22 +383,31 @@ const FundsTransferPage = () => {
             storeID: formData.store,
             origin: strSource,
             destination: strDestination,
-            total: fltAmount,
+            total: parseFloat(fltAmount),
             ...currencyFields,
         };
+
+        // console log json stringify the request
+        console.log(JSON.stringify(request));
 
         // Submit the form data
         axios.post(FundTransferURL, request).then((response) => {
             console.log(response);
 
             // Check if the transfer was successful
-            if (response.data.IsValid == true)
-                console.log("Successfully submitted transfer");
-            else 
-                console.log("Failed to submit transfer");
+            if (response.data.IsValid) {
+                toast.success("Transfer successful!");
+                return true;
+            }
+            else {
+                toast.error("Failed to submit transfer.");
+                return false;
+            }
         })
         .catch((error) => {
             console.error(error);
+			toast.error("A server error occurred during submission. Please try again later.");
+            return false;
         });
     }
 
@@ -598,11 +607,15 @@ const FundsTransferPage = () => {
         );
     };
 
-    // Determine the class based on the status
-    const statusClass = status.startsWith("Successfully") ? successClass : errorClass;
-
     return (
         <div className="flex h-screen bg-custom-accent">
+            <Toaster 
+                richColors 
+                position="bottom-right"
+                expand={true}
+                duration={5000}
+                pauseWhenPageIsHidden={true}
+            />
             <SideBar currentPage={3} />
             <div className="flex flex-col w-full">
                 <HorizontalNav />
@@ -693,7 +706,7 @@ const FundsTransferPage = () => {
                         </table>
 
                         <div>
-                            <p className={statusClass}>{registerStatus}</p>
+                            <p className="text-red-500">{registerStatus}</p>
                         </div>
 
                         {/* Denominations */}
@@ -1166,9 +1179,6 @@ const FundsTransferPage = () => {
                             </tbody>
                         </table>
                     </form>
-
-                    {/* Shows submission status */}
-                    <p className={`mt-4 ml-6 ${statusClass}`}>{status}</p>
 
                     {/* Shows report with successful submissions */}
                     {report && <div>{report}</div>}
