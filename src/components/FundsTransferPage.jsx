@@ -57,8 +57,6 @@ const FundsTransferPage = () => {
         function Initialize() {
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`)
             .then(response => {
-                console.log(response.data)
-
                 // Extract register names and ID from the response and filter based on opened status
                 const newSources = response.data
                 .filter(register => register.opened)
@@ -276,7 +274,7 @@ const FundsTransferPage = () => {
         }
 
         // Submit the form data
-        if (!SubmitTransfer(
+        if (await SubmitTransfer(
             event,
             user,
             source,
@@ -363,7 +361,7 @@ const FundsTransferPage = () => {
     };
 
     // Axios post request to submit the transfer
-    function SubmitTransfer(
+    async function SubmitTransfer(
         event,
         user,
         strSource,
@@ -373,38 +371,34 @@ const FundsTransferPage = () => {
     ) {
         event.preventDefault();
 
-        // Request object
-        const request = {
-            usrID: user,
-            storeID: formData.store,
-            origin: strSource,
-            destination: strDestination,
-            total: parseFloat(fltAmount),
-            ...currencyFields,
-        };
+        
+        try {
+            // Request object
+            const request = {
+                usrID: user,
+                storeID: formData.store,
+                origin: strSource,
+                destination: strDestination,
+                total: parseFloat(fltAmount),
+                ...currencyFields,
+            };
 
-        // console log json stringify the request
-        console.log(JSON.stringify(request));
-
-        // Submit the form data
-        axios.post(FundTransferURL, request).then((response) => {
-            console.log(response);
+            // Submit the form data
+            const response = await axios.post(FundTransferURL, request);
 
             // Check if the transfer was successful
-            if (response.data.IsValid) {
+            if (response.data.response === "Fund Transfer created successfully.") {
                 toast.success("Transfer successful!");
                 return true;
-            }
-            else {
+            } else {
                 toast.error("Failed to submit transfer.");
                 return false;
             }
-        })
-        .catch((error) => {
+        } catch (error) {
             console.error(error);
-			toast.error("A server error occurred during submission. Please try again later.");
+            toast.error("A server error occurred during submission. Please try again later.");
             return false;
-        });
+        }
     }
 
     // Function to format negative values in parentheses
