@@ -371,7 +371,6 @@ const FundsTransferPage = () => {
     ) {
         event.preventDefault();
 
-        
         try {
             // Request object
             const request = {
@@ -444,8 +443,8 @@ const FundsTransferPage = () => {
         fltAmount,
         newCurrencyFields
     ) => {
-        // Get the current date and user details
-        const currentDate = new Date().toLocaleDateString();
+        // Get the current date and timestamp
+        const currentDate = new Date().toLocaleString();
 
         // Array of denominations
         const denominations = {

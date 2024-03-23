@@ -1,11 +1,19 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, {useState, useEffect, useLayoutEffect, useCallback} from 'react';
+import React, {useRef, useState, useEffect, useLayoutEffect, useCallback} from 'react';
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import {useAuth} from '../AuthProvider.js';
+import { Toaster, toast } from 'sonner';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { format } from 'date-fns';
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import 'primeicons/primeicons.css';
+import { classNames } from "primereact/utils";
 
 /*
     TODO:
@@ -22,23 +30,13 @@ const VarianceAuditPage = () =>{
     const monthAgo = new Date(today);
     monthAgo.setDate(monthAgo.getDate() - 30);
 
-    const pageSize = 10; // Number of variances to display per page
+    const rowCount = 10; // Number of variances to display per page
 
     const [arrRegisters, setArrRegisters] = useState([]); // Array of a store's registers and its information
     const [arrVariances, setArrVariances] = useState([]); // Array of variances and its information
+    const [emptyRows, setEmptyRows] = useState([]); // Empty rows to fill the last page of the table
 
     const [registerName, setRegisterName] = useState(""); // Register name
-
-    const [currentPage, setCurrentPage] = useState(1); // Current page number
-
-    // Calculate the start and end index of variances to display on the current page
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, arrVariances.length);
-
-    // Function to handle pagination navigation
-    const GoToPage = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
 
     // Status message to display if no registers are open
     const [status, setStatus] = useState("Loading...");
@@ -127,21 +125,42 @@ const VarianceAuditPage = () =>{
                     .then((response) => {
                         // If the response contains data, set the array of variances to the response data
                         if (response.data && response.data.length > 0) {
+                            // Set the array of variances
                             setArrVariances(response.data);
+
+                            // Calculate the number of empty rows to fill the last page of the table
+                            // Prime react datatable doesn't lock the number of rows to the page size so
+                            // the paginator jumps up and down when the number of variances changes.
+                            // This fixes that by adding empty rows to the last page since there's no 
+                            // way to lock the number of rows :(.
+                            const remainingEmptyRows = rowCount - (response.data.length % rowCount);
+                            const emptyRows = Array.from({ length: remainingEmptyRows }, () => ({
+                                Date: null, //"\u00A0"
+                                amountExpected: null,
+                                total: null,
+                                Variance: null
+                            }));
+
+                            console.log(emptyRows);
+                            
+                            setEmptyRows(emptyRows);
+
+                            // Set the register name
                             setRegisterName(arrRegisters.find(register => register.id === registerID).name);
                             setStatus("");
                         }
                         else {
                             setArrVariances([]);
+                            setEmptyRows([]);
                             setRegisterName([]);
-                            setStatus("No variances found for the selected register.");
                         }
                     })
                     .catch((error) => {
                         //console.log(error);
                         setArrVariances([]);
+                        setEmptyRows([]);
                         setRegisterName([]);
-                        setStatus("Error loading variances for the selected register.");
+                        toast.error("A server error occurred while retrieving register variances. Please try again later.");
                     });
             }
 
@@ -203,13 +222,46 @@ const VarianceAuditPage = () =>{
         return date;
     };
 
-    // Function to format negative values in parentheses
-    function NegativeValueParantheses(transferValue) {
-        if (transferValue < 0) 
-            return `($${Math.abs(transferValue).toFixed(2)})`;
-        else 
-            return `$${transferValue.toFixed(2)}`;
+    // Function to format the date
+    const FormatDate = (dateStr) => {
+        // Convert the date string to a Date object
+        const date = new Date(dateStr);
+
+        // Return the formatted date
+        return format(date, "yyyy/MM/dd HH:mm:ss");
+    };
+
+    // Function to format negative values in parentheses as currency
+    const FormatCurrency = (value) => {
+        // Format the value as currency
+        const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Math.abs(value));
+
+        // Return the formatted value in parentheses if it's negative
+        return value < 0 ? `(${formattedValue})` : formattedValue;
     }
+
+    // Function to change class based on positive/negative variances
+    const VariancePositiveNegative = (variance) => {
+        // If the variance is null, return null
+        if (variance === null) {
+            return null;
+        }
+
+        // Change the class based on the variance
+        const varianceClass = classNames('', {
+            'text-red-500': variance < 0,
+            'text-green-500': variance > 0
+        });
+
+        // Return the variance in the correct class
+        return (
+            <span className={varianceClass}>
+                {variance !== null ? FormatCurrency(variance) : ''}
+            </span>
+        );
+    };
+
+
 
     // Handles the change of the input fields
     const HandleChange = (event) => {
@@ -217,9 +269,6 @@ const VarianceAuditPage = () =>{
 
         // If the input is the register select, update the register ID
         if (name === "posSelect") {
-            // Update page number to 1
-            setCurrentPage(1);
-
             setFormData((prev) => ({
                 ...prev,
                 registerID: parseInt(value)
@@ -240,6 +289,13 @@ const VarianceAuditPage = () =>{
 
     return (
         <div className="flex h-screen bg-custom-accent variance-audit-page">
+        <Toaster 
+            richColors 
+            position="bottom-right"
+            expand={true}
+            duration={5000}
+            pauseWhenPageIsHidden={true}
+        />
             <SideBar currentPage={5} />
             <div className="flex flex-col w-full">
                 <HorizontalNav />
@@ -294,40 +350,33 @@ const VarianceAuditPage = () =>{
                         {/* Right arrow button */}
                         <button onClick={HandleNextDay}>→</button>
                     </div>
-                    <p className="mt-4 ml-6">{registerName}</p>
-                    <table className="table-variance">
-                        <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Expected Amount</th>
-                            <th>Total</th>
-                            <th>Variance</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            {arrVariances.slice(startIndex, endIndex).map((item, index) => (
-                                <tr key={index}>
-                                    <td>{new Date(item.Date).toISOString().split('T')[0]}</td>
-                                    <td>${parseFloat(item.amountExpected).toFixed(2)}</td>
-                                    <td>${parseFloat(item.total).toFixed(2)}</td>
-                                    <td>{NegativeValueParantheses(parseFloat(item.Variance))}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-                    {/* Pagination */}
-                    <div className="pagination">
-                        {/* Page # of # (Page 1 of 1 if arrVariances is empty*/}
-                        <p>Page {currentPage} of {Math.ceil(arrVariances.length / pageSize) || 1}</p>
-                        {/* Previous and Next buttons */}
-                        <button className="variance-audit-button" onClick={() => GoToPage(currentPage - 1)} disabled={currentPage === 1}>
-                            Previous
-                        </button>
-                        <span> </span>
-                        <button className="variance-audit-button" onClick={() => GoToPage(currentPage + 1)} disabled={endIndex >= arrVariances.length}>
-                            Next
-                        </button>
+                    <br />
+                    <div>
+                        <DataTable 
+                            value={[...arrVariances, ...emptyRows]} 
+                            rows={rowCount}
+                            size="small"
+                            paginator={true}
+                            showGridlines
+                            stripedRows
+                            removableSort
+                            header={`Variances for ${registerName}`}
+                            emptyMessage="No variances found for the selected register."
+                            style={{width: "65%", fontSize: ".9rem"}}
+                        >
+                            <Column field="Date" header="Date" sortable body={(rowData) => (
+                                <span className={rowData.Date === null ? "invisible-row" : ""}>{FormatDate(rowData.Date)}</span>
+                            )}></Column>
+                            <Column field="amountExpected" header="Expected Amount" sortable body={(rowData) => (
+                                <span className={rowData.amountExpected === null ? "invisible-row" : ""}>{FormatCurrency(rowData.amountExpected)}</span>
+                            )}></Column>
+                            <Column field="total" header="Total" sortable body={(rowData) => (
+                                <span className={rowData.total === null ? "invisible-row" : ""}>{FormatCurrency(rowData.total)}</span>
+                            )}></Column>
+                            <Column field="Variance" header="Variance" sortable body={(rowData) => (
+                                <span className={rowData.Variance === null ? "invisible-row" : ""}>{rowData.Variance !== null ? VariancePositiveNegative(rowData.Variance) : ''}</span>
+                            )}></Column>
+                        </DataTable>
                     </div>
                 </div>
             </div>

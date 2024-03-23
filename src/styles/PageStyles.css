@@ -255,6 +255,11 @@
 
 }
 
+.variance-table {
+    border: 2px solid rgb(57, 70, 83);
+    min-height: 95vh;
+}
+
 .pagination {
     position: fixed;
     bottom: 20px;
@@ -264,6 +269,11 @@
 
 .variance-audit-button:disabled {
     opacity: 0.5;
+}
+
+/* Invisible row for data table */
+.invisible-row {
+    color: transparent;
 }
 
 pre {
