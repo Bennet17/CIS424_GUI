@@ -15,6 +15,7 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
 import { classNames } from "primereact/utils";
+
 const VarianceAuditPage = () =>{
     const auth = useAuth();
     const navigate = useNavigate();

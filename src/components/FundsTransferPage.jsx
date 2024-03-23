@@ -6,6 +6,11 @@ import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
 import { Toaster, toast } from 'sonner';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import 'primeicons/primeicons.css';
 
 const FundsTransferPage = () => {
     // Authentication context
@@ -378,9 +383,11 @@ const FundsTransferPage = () => {
                 storeID: formData.store,
                 origin: strSource,
                 destination: strDestination,
-                total: parseFloat(fltAmount),
+                total: parseFloat(fltAmount).toFixed(2),
                 ...currencyFields,
             };
+
+            console.log(JSON.stringify(request));
 
             // Submit the form data
             const response = await axios.post(FundTransferURL, request);
@@ -469,15 +476,9 @@ const FundsTransferPage = () => {
 
         // Array to hold the denominations details
         const denominationsDetails = [];
-
-        // Loop through the currency fields and add the non-zero denominations to the report
         for (const [key, value] of Object.entries(newCurrencyFields)) {
             if (denominations[key]) {
-                denominationsDetails.push(
-                    <tr key={key}>
-                        <td className="tg-i817">{value} x ${denominations[key]}</td>
-                    </tr>
-                );
+                denominationsDetails.push({ denomination: `${value} x ${denominations[key]}` });
             }
         }
 
@@ -493,7 +494,40 @@ const FundsTransferPage = () => {
         // Report details
         return (
             <div>
-                <table className="tg">
+                <DataTable 
+                    value={[
+                        { field: 'Store:', value: formData.storeName },
+                        { field: 'User:', value: `${formData.user} (${formData.name})` },
+                        { field: 'Date:', value: currentDate },
+                        { field: 'Source:', value: strSource },
+                        { field: 'Destination:', value: strDestination },
+                        { field: 'Amount:', value: `$${fltAmount}` },
+                        { field: 'Denominations:', value: (
+                            <table>
+                                <tbody>{denominationsDetails.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{item.denomination}</td>
+                                    </tr>
+                                ))}</tbody>
+                            </table>
+                        ) },
+                        { field: `Expected amount in ${strSource} before transfer:`, value: `$${expectedSource}` },
+                        { field: `Expected amount in ${strSource} after transfer:`, value: afterTransferSource },
+                        { field: `Actual amount in ${strSource} after transfer:`, value: 'blank' },
+                        { field: `Expected amount in ${strDestination} before transfer:`, value: `$${expectedDestination}` },
+                        { field: `Expected amount in ${strDestination} after transfer:`, value: afterTransferDestination },
+                        { field: `Actual amount in ${strDestination} after transfer:`, value: 'blank' }
+                    ]}
+                    size="small"
+                    stripedRows
+                    scrollable
+                    scrollHeight="50vh"
+                    style={{width: "90%", fontSize: ".9rem"}}
+                >
+                    <Column field="field" header="Fund Transfer Report" style={{ width: '70%' }} />
+                    <Column field="value" style={{ width: '30%' }} />
+                </DataTable>
+                {/* <table className="tg">
                     <thead>
                         <tr>
                             <th className="tg-mqa1" colSpan="2">
@@ -591,7 +625,7 @@ const FundsTransferPage = () => {
                             <td className="tg-i817">blank</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> */}
             </div>
         );
     };
