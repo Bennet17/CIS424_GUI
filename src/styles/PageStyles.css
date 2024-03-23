@@ -252,7 +252,26 @@
     border: 2px solid rgb(57, 70, 83); 
     border-radius: 5px;
     background-color: #FFFFFF; 
+}
 
+.variance-select:hover {
+    background-color: #F3F4F6;
+}
+
+
+.variance-date {
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    width: 10rem;
+    /* center text */
+    text-align-last: center;
+    border: 2px solid rgb(57, 70, 83); 
+    border-radius: 5px;
+    background-color: #FFFFFF; 
+}
+
+.variance-date:hover {
+    background-color: #F3F4F6;
 }
 
 .variance-table {
@@ -260,15 +279,9 @@
     min-height: 95vh;
 }
 
-.pagination {
-    position: fixed;
-    bottom: 20px;
-    left: 50%; 
-    transform: translateX(-50%);
-}
-
-.variance-audit-button:disabled {
-    opacity: 0.5;
+.variance-header {
+    font-size: 1.3rem;
+    font-weight: bold;
 }
 
 /* Invisible row for data table */

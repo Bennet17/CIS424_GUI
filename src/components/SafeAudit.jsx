@@ -303,7 +303,7 @@ const SafeAuditPage = () => {
 			<SideBar currentPage={4} />
 			<div className="flex flex-col w-full">
 				<HorizontalNav />
-				<div className="text-main-color float-left ml-8 mt-12">
+				<div className="text-main-color float-left ml-8 mt-6">
 					<h1 className="text-3xl font-bold">Safe Audit for {formData.storeName}</h1>
 					<br />
 					<form onSubmit={HandleSubmit} onReset={HandleCancel} className="tables-container">

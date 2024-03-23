@@ -15,7 +15,6 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
 import { classNames } from "primereact/utils";
-
 const VarianceAuditPage = () =>{
     const auth = useAuth();
     const navigate = useNavigate();
@@ -131,13 +130,20 @@ const VarianceAuditPage = () =>{
                             // This fixes that by adding empty rows to the last page since there's no 
                             // way to lock the number of rows :(.
                             const remainingEmptyRows = rowCount - (response.data.length % rowCount);
-                            const emptyRows = Array.from({ length: remainingEmptyRows }, () => ({
-                                Date: null, //"\u00A0"
-                                amountExpected: null,
-                                total: null,
-                                Variance: null
-                            }));
-                            
+
+                            // Create an array of empty rows to fill the last page of the table
+                            let emptyRows = [];
+
+                            // Check if there are remaining empty rows to fill, and if the number of data rows is not a multiple of rowCount
+                            if (remainingEmptyRows > 0 && response.data.length % rowCount !== 0) {
+                                emptyRows = Array.from({ length: remainingEmptyRows }, () => ({
+                                    Date: null,
+                                    amountExpected: null,
+                                    total: null,
+                                    Variance: null
+                                }));
+                            }
+
                             setEmptyRows(emptyRows);
 
                             // Set the register name
@@ -147,14 +153,14 @@ const VarianceAuditPage = () =>{
                         else {
                             setArrVariances([]);
                             setEmptyRows([]);
-                            setRegisterName([]);
+                            setRegisterName(arrRegisters.find(register => register.id === registerID).name);
                         }
                     })
                     .catch((error) => {
                         //console.log(error);
                         setArrVariances([]);
                         setEmptyRows([]);
-                        setRegisterName([]);
+                        setRegisterName(arrRegisters.find(register => register.id === registerID).name);
                         toast.error("A server error occurred while retrieving register variances. Please try again later.");
                     });
             }
@@ -233,7 +239,7 @@ const VarianceAuditPage = () =>{
         const endDate = FormatDate(formData.endDate);
 
         // Return the file name
-        return `${startDate}_${endDate}_${registerName}_VarianceAudit`
+        return `${formData.storeName}_${registerName}_${startDate}_${endDate}_VarianceAudit`
     }
 
     // Function to format the date
@@ -294,16 +300,13 @@ const VarianceAuditPage = () =>{
             }));
         }
         console.log(formData);
-    }
-
-    // If status is not ...loading, set class to errorClass
-    const statusClass = status === "Loading..." ? "" : errorClass;
-
+    };
+    
     // Table header
     const header = (
         <div className="flex justify-between align-items-center">
-        <h1>Variances for {registerName}</h1>
-            <Button type="button" icon="pi pi-file" rounded onClick={() => exportCSV(false)} data-pr-tooltip="CSV" />
+        <h1 className="variance-header">Variances for {registerName}</h1>
+            <Button type="button" icon="pi pi-file" rounded size="small" onClick={() => exportCSV(false)} data-pr-tooltip="CSV" label="Export to CSV"/>
         </div>
     )
 
@@ -319,11 +322,11 @@ const VarianceAuditPage = () =>{
             <SideBar currentPage={5} />
             <div className="flex flex-col w-full">
                 <HorizontalNav />
-                <div className="text-main-color float-left ml-8 mt-12">
+                <div className="text-main-color float-left ml-8 mt-6">
 					<h1 className="text-3xl font-bold">Variance Audit for {formData.storeName}</h1>
 					<br />
-                    <div>
-                        {/* General/Register Variance Select */}
+                    <div className="flex items-center space-x-4">
+                        {/* Register Variance Select */}
                         <div className="label-above-select">
                             <strong>
                                 <label htmlFor="pos">Register Variance:</label>
@@ -342,35 +345,57 @@ const VarianceAuditPage = () =>{
                                 })}
                             </select>
                         </div>
-                        <p className={`mt-4 ml-6 ${statusClass}`}>{status}</p>
-                    </div>
-                    <div>
                         {/* Left arrow button */}
-                        <button onClick={HandlePreviousDay}>←</button>
+                        <Button
+                            onClick={HandlePreviousDay}
+                            icon="pi pi-arrow-left"
+                            iconPos="left"
+                            size="small"
+                            text
+                            rounded
+                            aria-label="Previous Day"
+                            style={{ marginTop: "6px", boxShadow: "none"}}
+                        />
                         {/* Start date */}
-                        <label htmlFor="startDate">Start Date:</label>
-                        <input 
-                            type="date" 
-                            id="startDate" 
-                            name="startDate" 
-                            className="" 
-                            date={formData.startDate}
-                            onChange={HandleChange}
-                        />
+                        <div className="label-above-select">
+                            <strong>
+                                <label htmlFor="startDate">Start Date:</label>
+                            </strong>
+                            <input 
+                                type="date" 
+                                id="startDate" 
+                                name="startDate"
+                                className="variance-date"
+                                date={formData.startDate}
+                                onChange={HandleChange}
+                            />
+                        </div>
                         {/* End date */}
-                        <label htmlFor="endDate">End Date:</label>
-                        <input 
-                            type="date" 
-                            id="endDate" 
-                            name="endDate" 
-                            className="" 
-                            date={formData.endDate}
-                            onChange={HandleChange}
-                        />
+                        <div className="label-above-select">
+                            <strong>
+                                <label htmlFor="endDate">End Date:</label>
+                            </strong>
+                            <input 
+                                type="date" 
+                                id="endDate" 
+                                name="endDate" 
+                                className="variance-date"
+                                date={formData.endDate}
+                                onChange={HandleChange}
+                            />
+                        </div>
                         {/* Right arrow button */}
-                        <button onClick={HandleNextDay}>→</button>
+                        <Button
+                            onClick={HandleNextDay}
+                            icon="pi pi-arrow-right"
+                            iconPos="right"
+                            size="small"
+                            rounded
+                            text
+                            aria-label="Next Day"
+                            style={{ marginTop: "6px", boxShadow: "none"}}
+                        />
                     </div>
-                    <br />
                     <div>
                         <DataTable 
                             ref={tableRef}
@@ -386,16 +411,16 @@ const VarianceAuditPage = () =>{
                             style={{width: "65%", fontSize: ".9rem"}}
                             exportFilename={GetFileName()}
                         >
-                            <Column field="Date" header="Date" sortable body={(rowData) => (
+                            <Column field="Date" header="Date" style={{maxWidth: "4em"}} sortable body={(rowData) => (
                                 <span className={rowData.Date === null ? "invisible-row" : ""}>{FormatDate(rowData.Date)}</span>
                             )}></Column>
-                            <Column field="amountExpected" header="Expected Amount" sortable body={(rowData) => (
+                            <Column field="amountExpected" header="Expected Amount" style={{maxWidth: "5em"}} sortable body={(rowData) => (
                                 <span className={rowData.amountExpected === null ? "invisible-row" : ""}>{FormatCurrency(rowData.amountExpected)}</span>
                             )}></Column>
-                            <Column field="total" header="Total" sortable body={(rowData) => (
+                            <Column field="total" header="Total" style={{maxWidth: "5em"}} sortable body={(rowData) => (
                                 <span className={rowData.total === null ? "invisible-row" : ""}>{FormatCurrency(rowData.total)}</span>
                             )}></Column>
-                            <Column field="Variance" header="Variance" sortable body={(rowData) => (
+                            <Column field="Variance" header="Variance" style={{maxWidth: "5em"}} sortable body={(rowData) => (
                                 <span className={rowData.Variance === null ? "invisible-row" : ""}>{rowData.Variance !== null ? VariancePositiveNegative(rowData.Variance) : ''}</span>
                             )}></Column>
                         </DataTable>
