@@ -12,6 +12,9 @@ function ForgotPassword() {
 
 
 
+
+
+
   const [username, setUsername] = useState('');
   const [usernameFound, setUsernameFound] = useState(false);
   const [managerUsername, setManagerUsername] = useState('');
@@ -21,10 +24,38 @@ function ForgotPassword() {
   const [message, setMessage] = useState('');
   const[passwordUpdated, setPasswordUpdated] = useState(false);
 const[userPosition, setUserPosition] = useState('');
+const [errorMessage, setErrorMessage] = useState('');
+const[validPassword, setValidPassword] = useState('');
+
+
+  
+
+const validatePassword = (password) => {
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+    const isValid = regex.test(password);
+    console.log(isValid);
+    //if its not valid, set the error message to appear conditionally
+    if (!isValid) {
+      setValidPassword(false);
+      setErrorMessage(
+        <>
+          Include 8 characters,<br />
+          1 number, and 1 symbol.
+        </>
+      );
+    }
+    else {
+      setErrorMessage(''); //make error disappear when valid
+      setValidPassword(true);
+    }
+  };
+
+
 
   function handleCancel(event){
     event.preventDefault();
      navigate(routes.signout);
+     setErrorMessage("");
      setMessage('');
   }
 
@@ -85,6 +116,14 @@ const[userPosition, setUserPosition] = useState('');
         console.error('Error fetching data:', error);
       });
   }
+
+  const handleChange = (e) => {
+    // Update the password state with the new value
+    setNewPassword(e.target.value);
+  
+    // Call validatePassword with the new password value
+    validatePassword(e.target.value);
+  };
 
   function handleManagerSubmit(event) {
     event.preventDefault();
@@ -147,11 +186,12 @@ const[userPosition, setUserPosition] = useState('');
                     <label className="block text-gray-700 text-sm font-bold mb-2">New Password:</label>
                     <input
                       type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
+                      onChange={(e) => handleChange(e)}
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       required
                     />
+                   {errorMessage && <div className="text-red-500 text-sm mt-1 ">{errorMessage}</div>}
+
                   </div>
                   <div className="flex items-center justify-between">
                     <button
