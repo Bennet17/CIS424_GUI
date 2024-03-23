@@ -9,17 +9,12 @@ import {useAuth} from '../AuthProvider.js';
 import { Toaster, toast } from 'sonner';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
 import { format } from 'date-fns';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
 import { classNames } from "primereact/utils";
-
-/*
-    TODO:
-        - Look into table export options (CSV, Excel, PDF)
-        - Style the table
-*/
 
 const VarianceAuditPage = () =>{
     const auth = useAuth();
@@ -37,6 +32,8 @@ const VarianceAuditPage = () =>{
     const [emptyRows, setEmptyRows] = useState([]); // Empty rows to fill the last page of the table
 
     const [registerName, setRegisterName] = useState(""); // Register name
+
+    const tableRef = useRef(null); // Reference to the table element 
 
     // Status message to display if no registers are open
     const [status, setStatus] = useState("Loading...");
@@ -140,8 +137,6 @@ const VarianceAuditPage = () =>{
                                 total: null,
                                 Variance: null
                             }));
-
-                            console.log(emptyRows);
                             
                             setEmptyRows(emptyRows);
 
@@ -222,13 +217,32 @@ const VarianceAuditPage = () =>{
         return date;
     };
 
+    // Function to export the table as a CSV file with timestamps
+    const exportCSV = (selectionOnly) => {
+        // Export the table as a CSV file
+        tableRef.current.exportCSV({ selectionOnly });
+
+        // Show a success message
+        toast.success("Table exported successfully.");
+    };
+
+    // Function to get the file name for the exported CSV file
+    function GetFileName() {
+        // Get the start date and end date from the form data
+        const startDate = FormatDate(formData.startDate);
+        const endDate = FormatDate(formData.endDate);
+
+        // Return the file name
+        return `${startDate}_${endDate}_${registerName}_VarianceAudit`
+    }
+
     // Function to format the date
     const FormatDate = (dateStr) => {
         // Convert the date string to a Date object
         const date = new Date(dateStr);
 
         // Return the formatted date
-        return format(date, "yyyy/MM/dd HH:mm:ss");
+        return format(date, "yyyy-MM-dd");
     };
 
     // Function to format negative values in parentheses as currency
@@ -261,8 +275,6 @@ const VarianceAuditPage = () =>{
         );
     };
 
-
-
     // Handles the change of the input fields
     const HandleChange = (event) => {
         const {name, value} = event.target;
@@ -286,6 +298,14 @@ const VarianceAuditPage = () =>{
 
     // If status is not ...loading, set class to errorClass
     const statusClass = status === "Loading..." ? "" : errorClass;
+
+    // Table header
+    const header = (
+        <div className="flex justify-between align-items-center">
+        <h1>Variances for {registerName}</h1>
+            <Button type="button" icon="pi pi-file" rounded onClick={() => exportCSV(false)} data-pr-tooltip="CSV" />
+        </div>
+    )
 
     return (
         <div className="flex h-screen bg-custom-accent variance-audit-page">
@@ -353,6 +373,7 @@ const VarianceAuditPage = () =>{
                     <br />
                     <div>
                         <DataTable 
+                            ref={tableRef}
                             value={[...arrVariances, ...emptyRows]} 
                             rows={rowCount}
                             size="small"
@@ -360,9 +381,10 @@ const VarianceAuditPage = () =>{
                             showGridlines
                             stripedRows
                             removableSort
-                            header={`Variances for ${registerName}`}
+                            header={header}
                             emptyMessage="No variances found for the selected register."
                             style={{width: "65%", fontSize: ".9rem"}}
+                            exportFilename={GetFileName()}
                         >
                             <Column field="Date" header="Date" sortable body={(rowData) => (
                                 <span className={rowData.Date === null ? "invisible-row" : ""}>{FormatDate(rowData.Date)}</span>
