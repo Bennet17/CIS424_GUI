@@ -387,8 +387,6 @@ const FundsTransferPage = () => {
                 ...currencyFields,
             };
 
-            console.log(JSON.stringify(request));
-
             // Submit the form data
             const response = await axios.post(FundTransferURL, request);
 
