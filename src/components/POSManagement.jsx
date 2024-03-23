@@ -26,9 +26,7 @@ const POSManagementPage = () => {
               <div className="w-1/2 mr-4"> 
                 <POSTable />
               </div>
-              <div className="w-1/2 mt-4"> 
-                <AddPOS />
-              </div>
+
             </div>
 
           </div>
