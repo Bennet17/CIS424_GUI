@@ -390,12 +390,14 @@ const FundsTransferPage = () => {
             // Submit the form data
             const response = await axios.post(FundTransferURL, request);
 
+            console.log(response.data.response);
+
             // Check if the transfer was successful
             if (response.data.response === "Fund Transfer created successfully.") {
-                toast.success("Transfer successful!");
+                toast.success("Successfully submitted transfer!");
                 return true;
-            } else {
-                toast.error("Failed to submit transfer.");
+            } else if (response.data.response === "Error in updating safe total: Error: Negative value detected in one or more fields.") {
+                toast.error("Failed to submit transfer. Source has insufficient funds.");
                 return false;
             }
         } catch (error) {
