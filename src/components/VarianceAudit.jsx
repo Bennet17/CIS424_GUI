@@ -408,6 +408,8 @@ const VarianceAuditPage = () =>{
                             stripedRows
                             removableSort
                             header={header}
+                            scrollable
+                            scrollHeight="50vh"
                             emptyMessage="No variances found for the selected register."
                             style={{width: "65%", fontSize: ".9rem"}}
                             exportFilename={GetFileName()}
