@@ -9,20 +9,23 @@ const EditStore = (store) => {
 
     const [storeID, setStoreID] = useState(store.store.ID);
     const [location, setLocation] = useState(store.store.location);
-    const [hundredRegisterMax, setHundredRegisterMax] = useState(store.store.hundredRegisterMax);
-    const [twentyRegisterMax, setTwentyRegisterMax] = useState(store.store.twentyRegisterMax);
-    const [fiftyRegisterMax, setFiftyRegisterMax] = useState(store.store.fiftyRegisterMax);
-    const [hundredMax, setHundredMax] = useState(store.store.hundredMax);
-    const [fiftyMax, setFiftyMax] = useState(store.store.fiftyMax);
-    const [twentyMax, setTwentyMax] = useState(store.store.twentyMax);
-    const [tenMax, setTenMax] = useState(store.store.tenMax);
-    const [fiveMax, setFiveMax] = useState(store.store.fiveMax);
-    const [twoMax, setTwoMax] = useState(store.store.twoMax);
-    const [oneMax, setOneMax] = useState(store.store.oneMax);
-    const [quarterRollMax, setQuarterRollMax] = useState(store.store.quarterRollMax);
-    const [nickelRollMax, setNickelRollMax] = useState(store.store.nickelRollMax);
-    const [dimeRollMax, setDimeRollMax] = useState(store.store.dimeRollMax);
-    const [pennyRollMax, setPennyRollMax] = useState(store.store.pennyRollMax);
+    const [hundredRegisterMax, setHundredRegisterMax] = useState('');
+    const [twentyRegisterMax, setTwentyRegisterMax] = useState('');
+    const [fiftyRegisterMax, setFiftyRegisterMax] = useState('');
+    const [hundredMax, setHundredMax] = useState('');
+    const [fiftyMax, setFiftyMax] = useState('');
+    const [twentyMax, setTwentyMax] = useState('');
+    const [tenMax, setTenMax] = useState('');
+    const [fiveMax, setFiveMax] = useState('');
+    const [twoMax, setTwoMax] = useState('');
+    const [oneMax, setOneMax] = useState('');
+    const [quarterRollMax, setQuarterRollMax] = useState('');
+    const [nickelRollMax, setNickelRollMax] = useState('');
+    const [dimeRollMax, setDimeRollMax] = useState('');
+    const [pennyRollMax, setPennyRollMax] = useState('');
+    const [result, setResult] = useState("");
+
+    
     
     
     
@@ -34,6 +37,23 @@ const EditStore = (store) => {
 
   const openModal = () => {
     setIsOpen(true);
+    setHundredRegisterMax(store.store.hundredRegisterMax);
+    setTwentyRegisterMax(store.store.twentyRegisterMax);
+    setFiftyRegisterMax(store.store.fiftyRegisterMax);
+    setHundredMax(store.store.hundredMax);
+    setFiftyMax(store.store.fiftyMax);
+    setTwentyMax(store.store.twentyMax);
+    setTenMax(store.store.tenMax);
+    setFiveMax(store.store.fiveMax);
+    setTwoMax(store.store.twoMax);
+    setOneMax(store.store.oneMax);
+    setQuarterRollMax(store.store.quarterRollMax);
+    setNickelRollMax(store.store.nickelRollMax);
+    setDimeRollMax(store.store.dimeRollMax);
+    setPennyRollMax(store.store.pennyRollMax);
+    
+
+
   };
 
   const closeModal = () => {
@@ -76,7 +96,6 @@ const EditStore = (store) => {
     
               } else {
                 console.error("Failed to disable store");
-      
               }
       
       
@@ -128,7 +147,7 @@ const EditStore = (store) => {
       axios
       .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateMaximums", 
         {
-         "ID": store.store.ID,
+         "StoreId": store.store.ID,
          "Enabled": store.store.enabled,
          "Opened": store.store.opened,
          "Hundred_Register": parseInt(hundredRegisterMax),
@@ -146,38 +165,24 @@ const EditStore = (store) => {
          "NickelRoll": parseInt(nickelRollMax),
          "PennyRoll": parseInt(pennyRollMax)
 
-
-        
    
         })
-   
-   
-   
       .then((response) => {
-        //console.log(response.data.response);
-        
-        //if the response data was not an API error
-        //the following line indicates a successful entry
-        if (response.data.response == "Store Updated successfully.") {
-          //console.log("User was created!");
+        console.log(response.data.Message);
+        if (response.data.Message === "Store and Totals updated successfully.") {
            closeModal();
-             //setResult("User Successfully edited.")
             window.location.reload(); // This will refresh the page
-   
         } else {
           //a valid API request but user was not created because there was already a user with that username
-          console.error("Failed to create user");
-         // setResult("Username already taken. Try again")
-   
+          console.error("Failed to update store");
+          setResult("Failed to Update Store")
         }
-   
-   
       })
       //error if the API request failed
       .catch((error) => {
         console.error("API request failed:", error);
       // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
-      //setResult("Request Failed. Try again.")
+        setResult("Request Failed. Try again.")
       });
    
    
@@ -204,6 +209,8 @@ const EditStore = (store) => {
               &times;
             </span>
             <h2 className="text-2xl font-bold mb-4">Edit Store Information: {store.store.location} </h2>
+            <h2 className="text-lg font-bold mb-4">{result}</h2>
+
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <p className='text font-bold mb-3'>Maximum Denominations in Registers:</p>
               <div className="grid grid-cols-3 gap-4">
