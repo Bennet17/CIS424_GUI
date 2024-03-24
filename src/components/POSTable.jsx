@@ -18,10 +18,10 @@ function POSTable() {
     axios
       .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateRegister", 
         {
-          "storeID": curStoreID 
+          "storeID": parseInt(curStoreID)
         })
       .then((response) => {
-        setResult("POS created successfully");
+        //setResult("POS created successfully");
         console.log(response.data.response);
         window.location.reload(); // This will refresh the page
   
@@ -31,6 +31,7 @@ function POSTable() {
        setResult("Request Failed. Try again.")
       });
   }
+
 
     const toggleActivity = (pos)=> {
       //this pos is currently enabled. lets disable it
@@ -182,6 +183,7 @@ function POSTable() {
       </table>
       <button
             type="submit"
+            onClick={handleSubmit}
             className="bg-indigo-600 hover:bg-indigo-700 mt-5 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
           >
             Add POS Register
