@@ -13,6 +13,7 @@ function EmployeeTable() {
 
   const auth = useAuth();
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
+  const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
 
 
   //useState variables for employees array
@@ -20,21 +21,49 @@ function EmployeeTable() {
   const [selectedUser, setSelectedUser] = useState(null); // State variable to store selected user data
   const [showEditForm, setShowEditForm] = useState(false); // State variable to manage form visibility
   const [showAddForm, setShowAddForm] = useState(false); // State variable to manage form visibility
-
+  const [numOwners, setNumOwners] = useState("");
   const tableRef = useRef(null);
+
+
+
+
+  const date = new Date();
+
+let day = date.getDate();
+let month = date.getMonth() + 1;
+let year = date.getFullYear();
+
+// This arrangement can be altered based on how we want the date's format to appear.
+let currentDate = `${month}-${day}-${year}`;
+console.log(currentDate); // "17-6-2022"
+
+
 
   //this method handles downloads to a excel file
   const { onDownload } = useDownloadExcel({
     currentTableRef: tableRef.current,
-    filename: 'Employees table',
-    sheet: 'Employees'
+    filename: curStoreName+"_Employees_"+currentDate,
+    sheet: curStoreName+"Employees"
   });
 
     //this table handles grabbing the corresponding employee object from a row click
     const handleRowClick = (employee) => {
+
+      //console.log(employee.position);
+      
+
+
+
+      if(employee.position != "Owner"){
       setSelectedUser(employee); // Set the selected user data
-      //console.log(employee);
       setShowEditForm(true); // Show the edit form button
+      }
+      else if(auth.cookie.user.position === "Owner"){
+        setSelectedUser(employee); // Set the selected user data
+        console.log(employee);
+        setShowEditForm(true); // Show the edit form button
+      }
+
     };
 
   //useEffect will launch as soon as the component is loaded
@@ -53,9 +82,20 @@ function EmployeeTable() {
             name: employee.name,
            // password: employee.password,
             position: employee.position,
-            storeID: employee.storeID, //get storename from local storage
+            storeID_CSV: employee.storeID_CSV, //get storename from local storage
             enabled: employee.enabled
+
           })));
+
+          employees.forEach((employee, index) => {
+            if(employee.position === "Owner"){
+              setNumOwners(numOwners++);
+              localStorage.setItem("numberOfOwners", numOwners);
+            }
+          });
+
+
+
         })
         .catch((error) => {
           //if the API request errored
@@ -66,6 +106,7 @@ function EmployeeTable() {
     fetchEmployeeTable();
   }, []);
 
+
   return (
     <div>
       <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
@@ -75,7 +116,7 @@ function EmployeeTable() {
               <th className="px-4 py-2">Username</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Position</th>
-              {/* <th className="px-4 py-2">Enabled</th> */}
+              <th className="px-4 py-2">Status</th>
 
             </tr>
           </thead>
@@ -89,7 +130,7 @@ function EmployeeTable() {
               <td className="border px-4 py-2">{employee.username}</td>
               <td className="border px-4 py-2">{employee.name}</td>
               <td className="border px-4 py-2">{employee.position}</td>
-              {/* <td className="border px-4 py-2">{employee.enabled.toString()}</td> */}
+              <td className="border px-4 py-2">{employee.enabled ? 'Active' : 'Inactive'}</td>
             </tr>
           ))}
 

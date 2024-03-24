@@ -17,6 +17,9 @@ const AddUserForm = () => {
 
   const openModal = () => {
     setIsOpen(true);
+    if (!selectedStores.includes(curStoreID.toString())) {
+      setSelectedStores([...selectedStores, curStoreID.toString()]);
+    }
   };
 
   const closeModal = () => {
@@ -29,6 +32,10 @@ const AddUserForm = () => {
     setStoreID('')
     setErrorMessage('')
     setValidPassword(false);
+
+    setSelectedStores([]);
+
+
   };
 
 
@@ -49,11 +56,13 @@ const AddUserForm = () => {
 
 
   //use state variables for the input of user data
+  const [selectedStores, setSelectedStores] = useState([curStoreID.toString()]);
+
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [position, setPosition] = useState("");
+  const [position, setPosition] = useState("Employee");
   const [storeIDs, setStoreID] = useState(curStoreID);
   const [result, setResult] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
@@ -104,22 +113,40 @@ const handleChange = (e) => {
   };
 
 
-  const handleCheckboxChange = (e, storeID) => {
-    const isChecked = e.target.checked; // Get the new checked state from the event
-    // Do something with the checked state and item ID
-    if (isChecked) {
-      console.log(`Checkbox with ID ${storeID} is checked`);
-      // Additional logic when the checkbox is checked
+
+  const handleCheckboxChange = (e) => {
+    const storeID = e.target.value;
+    if (e.target.checked) {
+      console.log("Store ID Selected" + storeID)
+
+      setSelectedStores([...selectedStores, storeID]);
     } else {
-      //console.log(`Checkbox with ID ${storeID} is unchecked`);
-      // Additional logic when the checkbox is unchecked
-      if(storeID == curStoreID){
-        e.target.checked = true;
+      console.log("Store ID Unselected" + storeID)
+      setSelectedStores(selectedStores.filter(id => id !== storeID));
+    }
+
+
+  
+    
+
+  };
+  getCSV();
+  console.log(selectedStores);
+
+  function getCSV() {
+    let CSV = "";
+ 
+    for (let i = 0; i < selectedStores.length; i++) {
+      const storeID = selectedStores[i];
+      if (i === selectedStores.length - 1) {
+        CSV += storeID;
+      } else {
+        CSV += storeID + ",";
       }
     }
-  };
-  
- 
+    
+    return CSV;
+  }
 
 
   //this method handles the submit button click on the add user form
@@ -130,7 +157,7 @@ const handleChange = (e) => {
       //concantenate last name and first name entry
       const name = lastname + ", "+firstname;
 
-      console.log(username,name,password,position,storeIDs)
+      console.log(username,name,password,position,getCSV());
       
       //create an axios POST request to create a new user with inputs from the form
       axios
@@ -140,7 +167,7 @@ const handleChange = (e) => {
             "name": name,
             "password": password,
             "position": position,
-            "storeID": storeIDs,
+            "storeCSV": getCSV()
 
           })
         .then((response) => {
@@ -187,7 +214,7 @@ const handleChange = (e) => {
           <div className="bg-white p-8 rounded shadow-md w-auto">
           <span onClick={closeModal} className="absolute top-0 right-0 cursor-pointer text-gray-700 hover:text-gray-900">&times;</span>
             <h2 className="text-2xl font-bold mb-4">Add User Information</h2>
-            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <form  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <h2 className="text-lg font-bold mb-4">{result}</h2>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="mb-4">
@@ -240,32 +267,47 @@ const handleChange = (e) => {
                       </div>
                       <div className="mb-4">
                     <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
-                    <div className="flex items-center">
-                      <input
-                        required
-                        type="radio"
-                        id="employee"
-                        name="role"
-                        value="Employee"
-                        defaultChecked={position === "Employee"} // Assuming position is the state variable for the selected role
-                        onChange={(e) => setPosition(e.target.value)}
-                        className="mr-2"
-                      />
-                      <label htmlFor="employee" className="mr-4">Employee</label>
-                      <input
-                        
-                        type="radio"
-                        id="manager"
-                        name="role"
-                        value="Manager"
-                       // checked={position === "Manager"} // Assuming position is the state variable for the selected role
-                        onChange={(e) => setPosition(e.target.value)}
-                        className="mr-2"
-                      />
-                      <label htmlFor="manager">Manager</label>
-                    </div>
-                  </div>
+                    <div className="flex flex-col">
+  <div className="flex items-center">
+    <input
+      required
+      type="radio"
+      id="employee"
+      name="role"
+      value="Employee"
+      defaultChecked={"Employee"} // Assuming position is the state variable for the selected role
+      onChange={(e) => setPosition(e.target.value)}
+      className="mr-2"
+    />
+    <label htmlFor="employee" className="mr-4">Employee</label>
+  </div>
+  <div className="flex items-center">
+    <input
+      type="radio"
+      id="manager"
+      name="role"
+      value="Manager"
+      onChange={(e) => setPosition(e.target.value)}
+      className="mr-2"
+    />
+    <label htmlFor="manager">Manager</label>
+  </div>
+  {auth.cookie.user.position === "Owner" && (
+    <div className="flex items-center">
+      <input
+        type="radio"
+        id="owner"
+        name="role"
+        value="Owner"
+        onChange={(e) => setPosition(e.target.value)}
+        className="mr-2"
+      />
+      <label htmlFor="owner">Owner</label>
+    </div>
+  )}
+</div>
 
+</div>
                   <div className="mb-4">
                     <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
                     {storeArray.map(item => (
@@ -296,7 +338,8 @@ const handleChange = (e) => {
                       </button>
                       <button 
                         type="submit"
-                        disabled={validPassword}
+                        onClick={handleSubmit}
+                       // disabled={validPassword}
                         className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                       >
                         Add User
