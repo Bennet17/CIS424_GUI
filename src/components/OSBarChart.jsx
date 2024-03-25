@@ -35,6 +35,13 @@ const OSBarChart = () => {
     return `${year}-${month}-${day}`;
   };
 
+  const formatDateOtherWay = (date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero based
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${month}-${day}-${year}`;
+  };
+
   const fetchData = async () => {
     // TODO - Correct route but it's not working
     const storeID = auth.cookie.user.viewingStoreID;
@@ -42,6 +49,8 @@ const OSBarChart = () => {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - 14); // Days shown in chart, should be a constant but who cares
+    console.log(formatDate(endDate));
+    console.log(formatDate(startDate));
 
     const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${
       auth.cookie.user.viewingStoreID
@@ -88,6 +97,23 @@ const OSBarChart = () => {
       height: 350,
       toolbar: {
         show: true, // Display the toolbar with the hamburger menu
+        export: {
+          svg: {
+            filename: `${
+              auth.cookie.user.viewingStoreLocation
+            }_BiweekSummary_${formatDateOtherWay(new Date())}`,
+          },
+          png: {
+            filename: `${
+              auth.cookie.user.viewingStoreLocation
+            }_BiweekSummary_${formatDateOtherWay(new Date())}`,
+          },
+          csv: {
+            filename: `${
+              auth.cookie.user.viewingStoreLocation
+            }_BiweekSummary_${formatDateOtherWay(new Date())}`,
+          },
+        },
       },
       fontFamily: "Roboto, sans-serif", // Chart font
       foreColor: "#616161", // HEX CODE FOR GRAY-700
@@ -162,25 +188,26 @@ const OSBarChart = () => {
         fontWeight: "bold",
       },
     },
-    annotations: {
-      yaxis: [
-        {
-          y: 0,
-          borderColor: "#6c757d",
-          borderWidth: 1,
-          strokeDashArray: 5,
-          label: {
-            borderColor: "#6c757d",
-            style: {
-              color: "#fff",
-              background: "#6c757d",
-            },
-            text: "No Variance", // Annotation for zero variance
-            offsetY: annotationOffset,
-          },
-        },
-      ],
-    },
+    // TM: This is the 'No Variance' label
+    // annotations: {
+    //   yaxis: [
+    //     {
+    //       y: 0,
+    //       borderColor: "#6c757d",
+    //       borderWidth: 1,
+    //       strokeDashArray: 5,
+    //       label: {
+    //         borderColor: "#6c757d",
+    //         style: {
+    //           color: "#fff",
+    //           background: "#6c757d",
+    //         },
+    //         text: "No Variance", // Annotation for zero variance
+    //         offsetY: annotationOffset,
+    //       },
+    //     },
+    //   ],
+    // },
     tooltip: {
       enabled: true,
       y: {
