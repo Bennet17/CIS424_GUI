@@ -3,19 +3,21 @@
 //Written by Brianna Kline
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import SideBar from "./SideBar.jsx";
 import HorizotalNav from "./HorizontalNav";
 import EmployeeTable from "./EmployeeTable.js";
 import AddUserForm from "./AddUserForm.jsx"
 import {useAuth} from '../AuthProvider.js';
-
+import {useNavigate} from 'react-router-dom';
+import routes from '../routes.js';
 
 
 const UserManagementPage = () => {
 
   //allows for user details to be applied throughout the website
   const auth = useAuth();
+  const navigate = useNavigate();
 
   //console.log(auth.cookie.user.storeID);
 
@@ -26,6 +28,14 @@ const UserManagementPage = () => {
   
   //useState variables for the current store name and for an array of stores to be saved
   const[storeArray,setStoreArray] = useState([]);
+
+  //check the permissions of the logged in user on page load, passing in
+  //the required permissions
+    useLayoutEffect(() => {
+      if (!auth.CheckAuthorization(["Manager", "District Manager", "Owner"])){
+          navigate(routes.home);
+      }
+  })
 
   //UseEffect is a method that fires as soon as the component is loaded
   useEffect(() => {

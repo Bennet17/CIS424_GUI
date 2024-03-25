@@ -84,15 +84,12 @@ const AuthProvider = ({ children }) => {
   //use for when loading into a route. This just verifies the user's position
   //and returns if they should be allowed to have access to the page
   const CheckAuthorization = (position) => {
-    let roles = ["Employee", "Manager", "District Manager", "CEO"];
 
     //scan the array of allowed positions
     for (let i = 0; i < position.length; i++) {
-      //check if any of them match our current position list
-      for (let j = 0; j < roles.length; j++) {
-        if (position[i] == roles[j]) {
-          return true;
-        }
+      //check if any of them match our current position
+      if (position[i] == cookie.user.position) {
+        return true;
       }
     }
 
