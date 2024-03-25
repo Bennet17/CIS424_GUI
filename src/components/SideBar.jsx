@@ -105,51 +105,66 @@ const SideBar = (props) => {
             <Home />
             <span className="ml-3">Home</span>
           </li>
-          <li
-            onClick={toOpenDay}
-            className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+          {auth.cookie.user.viewingStoreID ===
+            auth.cookie.user.workingStoreID && (
+            <li
+              onClick={toOpenDay}
+              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
                  transition-colors ${
                    props.currentPage === OPEN_DAY_PAGE_NAME
                      ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                      : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
                  }`}
-          >
-            <Sun />
-            <span className="ml-3">Open Day</span>
-          </li>
-          <li
-            onClick={toCloseDay}
-            className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+            >
+              <Sun />
+              <span className="ml-3">Open Day</span>
+            </li>
+          )}
+          {auth.cookie.user.viewingStoreID ===
+            auth.cookie.user.workingStoreID && (
+            <li
+              onClick={toCloseDay}
+              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
                  transition-colors ${
                    props.currentPage === CLOSE_DAY_PAGE_NAME
                      ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                      : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
                  }`}
-          >
-            <Moon />
-            <span className="ml-3">Close Day</span>
-          </li>
-          <li
-            onClick={toTransferFunds}
-            className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+            >
+              <Moon />
+              <span className="ml-3">Close Day</span>
+            </li>
+          )}
+          {auth.cookie.user.viewingStoreID ===
+            auth.cookie.user.workingStoreID && (
+            <li
+              onClick={toTransferFunds}
+              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
                  transition-colors ${
                    props.currentPage === TRANSFER_FUNDS_PAGE_NAME
                      ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                      : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
                  }`}
-          >
-            <HandCoins />
-            <span className="ml-3">Transfer Funds</span>
-          </li>
+            >
+              <HandCoins />
+              <span className="ml-3">Transfer Funds</span>
+            </li>
+          )}
           <li
             onClick={() => {
-              if (props.currentPage !== SAFE_AUDIT_PAGE_NAME) {
+              if (
+                props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
+                props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
+                props.currentPage != DEPOSIT_HISTORY_PAGE_NAME
+              ) {
                 setCashManager(!cashManagerOn);
               }
             }}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors text-gray-600 ${
-              props.currentPage !== SAFE_AUDIT_PAGE_NAME
+              props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
+              props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
+              props.currentPage != DEPOSIT_HISTORY_PAGE_NAME
                 ? "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800"
                 : ""
             }`}
@@ -164,48 +179,52 @@ const SideBar = (props) => {
             )}
           </li>
           {cashManagerOn && <hr className="border-gray-300" />}
-          {cashManagerOn && (
-            <li
-              onClick={toSafeAudit}
-              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+          {cashManagerOn &&
+            auth.cookie.user.viewingStoreID ===
+              auth.cookie.user.workingStoreID && (
+              <li
+                onClick={toSafeAudit}
+                className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
               props.currentPage === SAFE_AUDIT_PAGE_NAME
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
-            >
-              <KeyRound />
-              <span className="ml-3">Safe Audit</span>
-            </li>
-          )}
-          {auth.CheckAuthorization(["Manager", "District Manager", "CEO"]) && cashManagerOn && (
-            <li
-              onClick={toVarianceAudit}
-              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+              >
+                <KeyRound />
+                <span className="ml-3">Safe Audit</span>
+              </li>
+            )}
+          {auth.CheckAuthorization(["Manager", "District Manager", "CEO"]) &&
+            cashManagerOn && (
+              <li
+                onClick={toVarianceAudit}
+                className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
               props.currentPage === VARIANCE_AUDIT_PAGE_NAME
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
-            >
-              <AlignHorizontalDistributeCenter />
-              <span className="ml-3">Variance Audit</span>
-            </li>
-          )}
-          {auth.CheckAuthorization(["Manager", "District Manager", "CEO"]) && cashManagerOn && (
-            <li
-              onClick={toDepositHistory}
-              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+              >
+                <AlignHorizontalDistributeCenter />
+                <span className="ml-3">Variance Audit</span>
+              </li>
+            )}
+          {auth.CheckAuthorization(["Manager", "District Manager", "CEO"]) &&
+            cashManagerOn && (
+              <li
+                onClick={toDepositHistory}
+                className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
               props.currentPage === DEPOSIT_HISTORY_PAGE_NAME
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
-            >
-              <DollarSign />
-              <span className="ml-3">Deposit History</span>
-            </li>
-          )}
+              >
+                <DollarSign />
+                <span className="ml-3">Deposit History</span>
+              </li>
+            )}
           <li
             onClick={() => {
               if (
