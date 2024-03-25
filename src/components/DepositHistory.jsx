@@ -122,6 +122,8 @@ const DepositHistory = () => {
         //don't let the user try and submit or abort closed/aborted records or when no records are selected
         if (selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED"){
             toast.error("Cannot change status of closed or aborted deposit!");
+        }else if (auth.cookie.user.viewingStoreID !== auth.cookie.user.workingStoreID){
+            toast.error("Cannot perform action when page is view-only");
         }else{
             axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateDepositStatus', {
                 "ID": records[selectedRow].fID
@@ -194,7 +196,7 @@ const DepositHistory = () => {
                                 records.map((item, index) => (
                                     <tr onClick={() => (selectedRow == index) ? SetSelectedRow(null) : SetSelectedRow(index)} className={`${selectedRow == index && "bg-amber-200"}`} >
                                         <FieldStatus data={item.status} />
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-52 h-8 pl-2`}>{item.date}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-52 h-8 pl-2`}>{item.date.split("T")[0]}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.destination}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.name}</td>
