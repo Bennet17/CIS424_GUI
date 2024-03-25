@@ -8,38 +8,68 @@ function POSTable() {
 
   const auth = useAuth();
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
+  const [result, setResult] = useState("");
+
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    
+    axios
+      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateRegister", 
+        {
+          "storeID": parseInt(curStoreID)
+        })
+      .then((response) => {
+        //setResult("POS created successfully");
+        console.log(response.data.response);
+        window.location.reload(); // This will refresh the page
+  
+      })
+      .catch((error) => {
+        console.error("API request failed:", error);
+       setResult("Request Failed. Try again.")
+      });
+  }
 
 
     const toggleActivity = (pos)=> {
       //this pos is currently enabled. lets disable it
-      if(pos.enabled == true){
-        //create a disable POS request
-        axios
-        .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableRegister", 
-          {
-            "ID": pos.ID,
-          })
-        .then((response) => {
-  
-          console.log(response.data.response);
-  
-          if (response.data.response == "Disabled") {
-              console.log("Register successfully disabled");
-              window.location.reload(); // This will refresh the page
+      if(pos.enabled == true ){
+        if(pos.opened == true){
+          setResult("Cannot disable an open register. Please close and try again.")
+        }
+        else{
+              //create a disable POS request
+              axios
+              .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableRegister", 
+                {
+                  "ID": pos.ID,
+                })
+              .then((response) => {
+        
+                console.log(response.data.response);
+        
+                if (response.data.response == "Disabled") {
+                    console.log("Register successfully disabled");
+                    window.location.reload(); // This will refresh the page
 
-          } else {
-            console.error("Failed to disable register");
-  
-          }
-  
-  
-        })
-        .catch((error) => {
-          console.error("API request failed:", error);
-         // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
-         //setResult("Request Failed. Try again.")
-        });
+                } else {
+                  console.error("Failed to disable register");
+                  
+        
+                }
+        
+        
+              })
+              .catch((error) => {
+                console.error("API request failed:", error);
+              // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
+              //setResult("Request Failed. Try again.")
+              });
+            }
     }
+
     if(pos.enabled == false){
               //create a disable POS request
               axios
@@ -118,6 +148,8 @@ function POSTable() {
 
   return (
     <div>
+      <h2 className="text-lg text-red-500 font-bold mb-4">{result}</h2>
+
       <table className="w-auto">
         <thead>
           <tr>
@@ -149,6 +181,13 @@ function POSTable() {
 
         </tbody>
       </table>
+      <button
+            type="submit"
+            onClick={handleSubmit}
+            className="bg-indigo-600 hover:bg-indigo-700 mt-5 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
+          >
+            Add POS Register
+          </button>
         
     </div>
   );

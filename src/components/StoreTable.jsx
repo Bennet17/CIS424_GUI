@@ -26,11 +26,23 @@ function StoreTable() {
 
   const tableRef = useRef(null);
 
+
+
+  const date = new Date();
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  
+  // This arrangement can be altered based on how we want the date's format to appear.
+  let currentDate = `${month}-${day}-${year}`;
+  console.log(currentDate); // "17-6-2022"
+
   //this method handles downloads to a excel file
   const { onDownload } = useDownloadExcel({
     currentTableRef: tableRef.current,
-    filename: 'Employees table',
-    sheet: 'Employees'
+    filename: "Plato's_Closet_Stores_"+currentDate,
+    sheet: 'Store Locations'
   });
 
     //this table handles grabbing the corresponding employee object from a row click
