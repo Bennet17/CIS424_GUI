@@ -15,6 +15,8 @@ const CloseDayPage = () =>{
     const [poss, setPoss] = useState([]);
     const [currentPosIndex, setCurrentPosIndex] = useState(-1);
     const [showExtraChange, setShowExtraChange] = useState(false);
+    const [creditExpected, setCreditExpected] = useState(0);
+    const [creditActual, setCreditActual] = useState(0);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("show extras ▼");
     //let currentPosIndex = -1;
 
@@ -40,6 +42,8 @@ const CloseDayPage = () =>{
     //threshold fields
     const [showPopup, setShowPopup] = useState(false);
     const [popupInfo, setPopupInfo] = useState({});
+
+    
 
     //calculates the total of all denominations with rounding
     const totalAmount = 
@@ -69,6 +73,7 @@ const CloseDayPage = () =>{
     const [expectedAmount, setExpectedAmount] = useState(0);
     const [postSuccess, setPostSuccess] = useState(null);
     const [possSuccessTxt, setPosSuccessTxt] = useState("");
+    
 
     //Stores the general styling for the current total denominations text field.
     //here, we simply change the text color based on if we're over, under, or at expected value
@@ -383,8 +388,8 @@ const CloseDayPage = () =>{
                 "dimeRoll": elmDimesRolled,
                 "nickelRoll": elmNicklesRolled,
                 "pennyRoll": elmPenniesRolled,
-                "creditExpected": 0,
-                "creditActual": 0,
+                "creditExpected": creditExpected,
+                "creditActual": creditActual,
                 "cashToSafeTotal": totalTransferAmount,
                 "hundredToSafe": info.hundred,
                 "fiftyToSafe": info.fifty,
@@ -696,12 +701,37 @@ const CloseDayPage = () =>{
                         <label> Expected Total:
                             <input 
                                 value={expectedAmount} 
-                                disabled={true}
+                                onChange={e => setExpectedAmount(clamp(e.target.value))} 
+                                disabled={currentPosIndex === 0}
                                 className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
                                 type="number" 
                             />
                         </label>
                     </div>
+                    <br/>
+                        { currentPosIndex !== 0 && (<div>
+                            <div>
+                                <label> Credit Actual:
+                                    <input
+                                        value={creditActual} 
+                                        onChange={e => setCreditActual(clamp(e.target.value))}  
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                        type="number" 
+                                    />
+                                </label>
+                            </div>
+                            <br/>
+                            <div>
+                                <label> Credit Expected:
+                                    <input 
+                                        value={creditExpected} 
+                                        onChange={e => setCreditExpected(clamp(e.target.value))} 
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                        type="number" 
+                                    />
+                                </label>
+                            </div>
+                        </div>)}
                     <div>
                         {postSuccess === true && <p className="text-base font-bold text-green-500">{possSuccessTxt}</p>}
                         {postSuccess === false && <p className="text-base font-bold text-red-500">{possSuccessTxt}</p>}
