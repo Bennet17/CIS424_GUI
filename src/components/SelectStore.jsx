@@ -27,7 +27,6 @@ function SelectStore() {
 
         // This is being done for render formatting
         if (filteredStores.length > 5) {
-          console.log("longer than five i guess");
           // Declare emtpy two-dimensional array for user's stores
           const storeRows = Math.ceil(filteredStores.length / 5);
           let segmentedStores = new Array(storeRows);
@@ -45,14 +44,9 @@ function SelectStore() {
             }
           }
 
-          console.log("segment:");
-          console.log(segmentedStores);
           // Set formatted filtered stores
           setStores(segmentedStores);
         } else {
-          console.log("not longer than five i guess");
-          // Set filtered stores
-          //console.log(filteredStores);
           // This bit's just for consistent object formatting, dynamic rendering and such
           let segmentedStores = new Array(1);
           segmentedStores[0] = filteredStores;
