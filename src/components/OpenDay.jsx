@@ -150,6 +150,7 @@ const OpenDayPage = () =>{
                 console.log(response);
                 //set the pos information data
                 setPoss(response.data);
+                SetPostSuccess(false);
             })
             .catch(error => {
                 console.error(error);
@@ -212,11 +213,9 @@ const OpenDayPage = () =>{
                 if (response.status == 200){
                     //open POS
                     SetPostSuccess(true);
-                    SetPosSuccessTxt(poss[currentPosIndex].name + " opened successfully!");
                     toast.success(poss[currentPosIndex].name + " opened successfully!");
                 }else{
                     SetPostSuccess(false);
-                    SetPosSuccessTxt("Error trying to open" + poss[currentPosIndex].name);
                     toast.error("Error trying to open" + poss[currentPosIndex].name);
                 }
             })
@@ -225,8 +224,6 @@ const OpenDayPage = () =>{
                 toast.error("Unknown error occured");
             });
         }else{
-            SetPostSuccess(false);
-            SetPosSuccessTxt(poss[currentPosIndex].name + " is already open!");
             toast.error(poss[currentPosIndex].name + " is already open!");
         }
     }
@@ -490,7 +487,7 @@ const OpenDayPage = () =>{
                                 </tr>
                                 <tr>
                                     <td>
-                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Open POS</button>
+                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Open</button>
                                     </td>
                                     <td>
                                         <button onClick={ClearAllFields} type="button" value="button" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Clear all fields</button>
