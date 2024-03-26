@@ -83,7 +83,9 @@ const VarianceAuditPage = () =>{
                 if (newRegisters.length === 0) {
                     // Set status message if no registers are open
                     setStatus("No registers are currently open.");
-                    setArrRegisters([]);
+
+                    // Add placeholder to the register select
+                    setArrRegisters([{id: -1, name: "<Empty>"}]);
                 }
                 else {
                     // Update arrSources using functional form of setState to avoid duplicates
@@ -411,7 +413,7 @@ const VarianceAuditPage = () =>{
                             scrollable
                             scrollHeight="50vh"
                             emptyMessage="No variances found for the selected register."
-                            style={{width: "65%", fontSize: ".9rem"}}
+                            style={{width: "65%", fontSize: ".9rem", backgroundColor: "white"}}
                             exportFilename={GetFileName()}
                         >
                             <Column field="Date" header="Date" style={{maxWidth: "4em"}} sortable body={(rowData) => (
