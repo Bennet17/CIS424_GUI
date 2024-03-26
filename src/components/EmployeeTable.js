@@ -21,7 +21,6 @@ function EmployeeTable() {
   const [selectedUser, setSelectedUser] = useState(null); // State variable to store selected user data
   const [showEditForm, setShowEditForm] = useState(false); // State variable to manage form visibility
   const [showAddForm, setShowAddForm] = useState(false); // State variable to manage form visibility
-  const [numOwners, setNumOwners] = useState("");
   const tableRef = useRef(null);
 
 
@@ -87,13 +86,17 @@ console.log(currentDate); // "17-6-2022"
 
           })));
 
-          employees.forEach((employee, index) => {
-            if(employee.position === "Owner"){
-              setNumOwners(numOwners++);
-              localStorage.setItem("numberOfOwners", numOwners);
-            }
-          });
+          let numOwners = 0;
+           // console.log(response.data);
+            response.data.forEach(person => {
+              console.log(person.position);
+              if(person.position ==="Owner"){
+                numOwners++;
+              }
 
+          });
+          localStorage.setItem("numberOfOwners", numOwners);
+          console.log(numOwners);
 
 
         })
