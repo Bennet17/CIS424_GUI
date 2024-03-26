@@ -106,6 +106,7 @@ const DepositHistory = () => {
                 //set our records array after we have all of our deposits to bank
                 console.log(dataArr);
                 setRecords(dataArr);
+                setPostSuccess(false);
             })
             .catch(error => {
                 console.error(error);
@@ -132,6 +133,7 @@ const DepositHistory = () => {
                 console.log(response);
                 if (response.status == 200){
                     toast.success("Deposit successfully updated!");
+                    setPostSuccess(true);
                 }
             })
             .catch(error => {
