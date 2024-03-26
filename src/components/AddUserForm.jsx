@@ -281,6 +281,8 @@ const handleChange = (e) => {
     />
     <label htmlFor="employee" className="mr-4">Employee</label>
   </div>
+  {auth.cookie.user.position === "Owner" && (
+    <div>
   <div className="flex items-center">
     <input
       type="radio"
@@ -292,7 +294,7 @@ const handleChange = (e) => {
     />
     <label htmlFor="manager">Manager</label>
   </div>
-  {auth.cookie.user.position === "Owner" && (
+  
     <div className="flex items-center">
       <input
         type="radio"
@@ -303,6 +305,7 @@ const handleChange = (e) => {
         className="mr-2"
       />
       <label htmlFor="owner">Owner</label>
+    </div>
     </div>
   )}
 </div>
