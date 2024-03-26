@@ -8,11 +8,17 @@ function POSTable() {
 
   const auth = useAuth();
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
+  const workingStore = auth.cookie.user.workingStoreID
+  console.log(curStoreID);
+  console.log(workingStore);
+
   const [result, setResult] = useState("");
 
 
   function handleSubmit(event) {
     event.preventDefault();
+
+
 
     
     axios
@@ -149,13 +155,15 @@ function POSTable() {
   return (
     <div>
       <h2 className="text-lg text-red-500 font-bold mb-4">{result}</h2>
-
-      <table className="w-auto">
+      <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+      <table className="min-w-full text-center">
         <thead>
           <tr>
             <th className="px-4 py-2">POS Name</th>
-            <th className="px-4 py-2">POS Current Status</th>
-            {/* <th className="px-4 py-2"></th> */}
+            <th className="px-4 py-2">Today's Status</th>
+             {workingStore == curStoreID && (
+                  <th className="px-4 py-2">In Use</th>
+                )}
 
 
           </tr>
@@ -169,18 +177,21 @@ function POSTable() {
             >
               <td className="border px-4 py-2">{pos.name}</td>
               <td className="border px-4 py-2">{pos.opened ? 'Open' : 'Closed'}</td>
-              {/* <td className="border px-4 py-2">{pos.enabled ? 'Enabled' : 'Disabled'}</td> */}
+              {workingStore == curStoreID && (
               <td className="border px-4 py-2">
+            
                 <button onClick={() => toggleActivity(pos)} className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
                   {pos.enabled ? 'Disable' : 'Enable'}
                 </button>
-              </td>
+                   </td>
+           )}
             </tr>
           ))}
 
 
         </tbody>
       </table>
+      </div>
       <button
             type="submit"
             onClick={handleSubmit}
