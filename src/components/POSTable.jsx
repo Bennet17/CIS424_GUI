@@ -161,9 +161,8 @@ function POSTable() {
           <tr>
             <th className="px-4 py-2">POS Name</th>
             <th className="px-4 py-2">Today's Status</th>
-             {workingStore == curStoreID && (
                   <th className="px-4 py-2">In Use</th>
-                )}
+     
 
 
           </tr>
@@ -177,14 +176,14 @@ function POSTable() {
             >
               <td className="border px-4 py-2">{pos.name}</td>
               <td className="border px-4 py-2">{pos.opened ? 'Open' : 'Closed'}</td>
-              {workingStore == curStoreID && (
+          
               <td className="border px-4 py-2">
             
                 <button onClick={() => toggleActivity(pos)} className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
                   {pos.enabled ? 'Disable' : 'Enable'}
                 </button>
                    </td>
-           )}
+      
             </tr>
           ))}
 

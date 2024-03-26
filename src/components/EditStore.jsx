@@ -74,12 +74,18 @@ const EditStore = (store) => {
     setNickelRollMax('');
     setDimeRollMax('');
     setPennyRollMax('');
+    setResult('');
 
   };
 
-  const toggleAbility = () =>{
+  const toggleAbility = (event) =>{
+    event.preventDefault();
           //this pos is currently enabled. lets disable it
-          if(store.store.enabled == true){
+          if(store.store.enabled == true ){
+            if(store.store.opened == true){
+              setResult("You cannot disable an open store. Please close day and try again.");
+            }
+            else{
             //create a disable POS request
             axios
             .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableStore", 
@@ -105,6 +111,7 @@ const EditStore = (store) => {
              // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
              //setResult("Request Failed. Try again.")
             });
+          }
         }
         if(store.store.enabled == false){
                   //create a disable POS request
@@ -211,7 +218,7 @@ const EditStore = (store) => {
             <h2 className="text-2xl font-bold mb-4">Edit Store Information: {store.store.location} </h2>
             <h2 className="text-lg font-bold mb-4">{result}</h2>
 
-            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <form  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <p className='text font-bold mb-3'>Maximum Denominations in Registers:</p>
               <div className="grid grid-cols-3 gap-4">
               
@@ -412,6 +419,7 @@ const EditStore = (store) => {
                     className="flex-1 bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                     {store.store.enabled ? 'Disable Store' : 'Enable Store'}
+
                 </button>
                 </div>
 

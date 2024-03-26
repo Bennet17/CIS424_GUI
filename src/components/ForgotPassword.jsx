@@ -61,7 +61,7 @@ const validatePassword = (password) => {
 
 
   function handleNewPasswordSubmit(event){
-     //event.preventDefault();
+     event.preventDefault();
   
       //handle new password post request
       axios
