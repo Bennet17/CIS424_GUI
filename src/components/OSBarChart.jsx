@@ -161,6 +161,7 @@ const OSBarChart = () => {
           fontSize: "12px",
           fontWeight: "bold",
         },
+        offsetX: -35, // TM: Hacky attempt to achieve true center
       },
     },
     yaxis: {
