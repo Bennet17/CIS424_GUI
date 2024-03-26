@@ -81,7 +81,7 @@ const EditUser = (user) => {
 
   }
   
-  let numOwners = localStorage.getItem("numberOfOwners");
+  let numActiveOwners = localStorage.getItem("numberOfActiveOwners");
 
   const openModal = () => {
     setIsOpen(true);
@@ -114,11 +114,12 @@ const EditUser = (user) => {
 
   const toggleAbility = (event) => {
     event.preventDefault();
-    //this pos is currently enabled. lets disable it
+    console.log(numActiveOwners + "number of owners");
+        //this pos is currently enabled. lets disable it
       if (user.user.enabled == true) {
-        if(user.user.position === "Owner" && numOwners <= 1){
-          console.log("Cannot disable the only owner.");
-          setResult("Cannot disable the only owner.");
+        if(user.user.position === "Owner" && numActiveOwners <= 1 ){
+          console.log("Cannot disable the only active owner.");
+          setResult("Cannot disable the only active owner.");
         }
         else{
           axios
@@ -134,6 +135,7 @@ const EditUser = (user) => {
               }
               else {
                 console.error("Failed to disable user");
+              
               }
             })
             .catch((error) => {
@@ -201,10 +203,15 @@ const EditUser = (user) => {
            closeModal();
              setResult("User Successfully edited.")
             window.location.reload(); // This will refresh the page
+        }
+         else if(response.data.response === "Please choose a different username.") {
+          setResult("This username is taken. Please choose a different one.");
+        
    
         } else {
           //a valid API request but user was not created because there was already a user with that username
           console.error("Failed to create user");
+          
   
         }
    

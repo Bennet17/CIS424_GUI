@@ -192,31 +192,49 @@ const SideBar = (props) => {
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
+<<<<<<< HEAD
               >
                 <KeyRound />
                 <span className="ml-3">Safe Audit</span>
               </li>
             )}
           {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) &&
+=======
+            >
+              <KeyRound />
+              <span className="ml-3">Safe Audit</span>
+            </li>
+          )}
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) && 
+>>>>>>> main
             cashManagerOn && (
-              <li
-                onClick={toVarianceAudit}
-                className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+            <li
+              onClick={toVarianceAudit}
+              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
               props.currentPage === VARIANCE_AUDIT_PAGE_NAME
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
+<<<<<<< HEAD
               >
                 <AlignHorizontalDistributeCenter />
                 <span className="ml-3">Variance Audit</span>
               </li>
             )}
           {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) &&
+=======
+            >
+              <AlignHorizontalDistributeCenter />
+              <span className="ml-3">Variance Audit</span>
+            </li>
+          )}
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) && 
+>>>>>>> main
             cashManagerOn && (
-              <li
-                onClick={toDepositHistory}
-                className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+            <li
+              onClick={toDepositHistory}
+              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
               props.currentPage === DEPOSIT_HISTORY_PAGE_NAME
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
@@ -256,7 +274,7 @@ const SideBar = (props) => {
             </li>
           )}
           {securityOn && <hr className="border-gray-300" />}
-          {securityOn && (
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) && securityOn && (
             <li
               onClick={toUserManagement}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
@@ -270,7 +288,11 @@ const SideBar = (props) => {
               <span className="ml-3">User Management</span>
             </li>
           )}
+<<<<<<< HEAD
           {securityOn && auth.cookie.user.position === "Owner" && (
+=======
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) && securityOn && (
+>>>>>>> main
             <li
               onClick={toPosManagement}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 

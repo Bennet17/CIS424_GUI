@@ -7,22 +7,15 @@ import classNames from 'classnames';
 import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import {useAuth} from '../AuthProvider.js';
+import { Toaster, toast } from 'sonner';
 
 const DepositHistory = () => {
 
     const [records, setRecords] = useState([]);
     const [hasRecords, setHasRecords] = useState(false);
     const [date, setDate] = useState(GetTodaysDate());
-
-    //sample data, which populates the table based on each store location
-    const dummyData = [
-        {date: new Date().toLocaleDateString(), amount: 100, location: 1, user: 5, status: "open"}, 
-        {date: new Date().toLocaleDateString(), amount: 120, location: 1, user: 1, status: "closed"},
-        {date: new Date().toLocaleDateString(), amount: 80, location: 1, user: 3, status: "pending"},
-        {date: new Date().toLocaleDateString(), amount: 30, location: 1, user: 4, status: "open"},
-        {date: new Date().toLocaleDateString(), amount: 3000, location: 1, user: 2, status: "closed"},
-    ];
     const [selectedRow, SetSelectedRow] = useState(null);
+    const [postSuccess, setPostSuccess] = useState(false);
 
     const auth = useAuth();
     const navigate = useNavigate();
@@ -44,7 +37,7 @@ const DepositHistory = () => {
     //check the permissions of the logged in user on page load, passing in
     //the required permissions
     useLayoutEffect(() => {
-        if (!auth.CheckAuthorization(["Manager", "District Manager", "CEO"])){
+        if (!auth.CheckAuthorization(["Manager", "District Manager", "Owner"])){
             navigate(routes.home);
         }
     })
@@ -76,16 +69,15 @@ const DepositHistory = () => {
         );
     }
 
-    //selects the row's index
-    function SelectRow(fieldIndex){
-        if (selectedRow != fieldIndex){
-            SetSelectedRow(fieldIndex);
-            console.log("Selected row index " + fieldIndex); 
+    //call on component load AND when we select a new row
+    useEffect(() => {
+        if (selectedRow != null){
+            console.log("Selected row index " + selectedRow);
+            console.log(records[selectedRow]);
         }else{
-            SetSelectedRow(null);
-            console.log("Deselected row index " + fieldIndex); 
-        }     
-    }
+            console.log("Deselected row"); 
+        }
+    }, [selectedRow]);
 
     //call on component load AND when we attempt to retrieve new records
     useEffect(() => {
@@ -114,6 +106,7 @@ const DepositHistory = () => {
                 //set our records array after we have all of our deposits to bank
                 console.log(dataArr);
                 setRecords(dataArr);
+                setPostSuccess(false);
             })
             .catch(error => {
                 console.error(error);
@@ -121,21 +114,33 @@ const DepositHistory = () => {
         }
 
         Initialize();
-    }, [date]);
+    }, [date, postSuccess]);
     
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
         event.preventDefault();
 
-        axios.post('', {
-        })
-        .then(response => {
-            console.log(response);
-            
-        })
-        .catch(error => {
-            console.error(error);
-        });
+        //don't let the user try and submit or abort closed/aborted records or when no records are selected
+        if (selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED"){
+            toast.error("Cannot change status of closed or aborted deposit!");
+        }else if (auth.cookie.user.viewingStoreID !== auth.cookie.user.workingStoreID){
+            toast.error("Cannot perform action when page is view-only");
+        }else{
+            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateDepositStatus', {
+                "ID": records[selectedRow].fID
+            })
+            .then(response => {
+                console.log(response);
+                if (response.status == 200){
+                    toast.success("Deposit successfully updated!");
+                    setPostSuccess(true);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                toast.error("Unknown error occured");
+            });
+        }
     }
 
     function Abort(event){
@@ -155,6 +160,13 @@ const DepositHistory = () => {
 
     return (
         <div className="flex h-screen bg-custom-accent">
+            <Toaster 
+                richColors 
+                position="bottom-right"
+                expand={true}
+                duration={5000}
+                pauseWhenPageIsHidden={true}
+            />
             <SideBar currentPage={6} />
             <div className="w-full">
                 <HorizontalNav />
@@ -184,9 +196,9 @@ const DepositHistory = () => {
                             </tr>
                             {hasRecords === true &&
                                 records.map((item, index) => (
-                                    <tr onClick={() => SelectRow(index)} className={`${selectedRow == index && "bg-amber-200"}`} >
+                                    <tr onClick={() => (selectedRow == index) ? SetSelectedRow(null) : SetSelectedRow(index)} className={`${selectedRow == index && "bg-amber-200"}`} >
                                         <FieldStatus data={item.status} />
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-52 h-8 pl-2`}>{item.date}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-52 h-8 pl-2`}>{item.date.split("T")[0]}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.destination}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.name}</td>
@@ -199,10 +211,10 @@ const DepositHistory = () => {
                                 <td>
                                 </td>
                                 <td colSpan="2">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${selectedRow == null ? "" : "hover:bg-indigo-500"} ${selectedRow == null ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${selectedRow == null ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Submit</button>
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Submit</button>
                                 </td>
                                 <td colSpan="2">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${selectedRow == null ? "" : "hover:bg-indigo-500"} ${selectedRow == null ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${selectedRow == null ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Abort}>Abort Deposit</button>
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Abort}>Abort Deposit</button>
                                 </td>
                             </tr>
                         </tbody>
