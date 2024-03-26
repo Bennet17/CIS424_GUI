@@ -134,6 +134,7 @@ const EditUser = (user) => {
               }
               else {
                 console.error("Failed to disable user");
+              
               }
             })
             .catch((error) => {
@@ -201,10 +202,15 @@ const EditUser = (user) => {
            closeModal();
              setResult("User Successfully edited.")
             window.location.reload(); // This will refresh the page
+        }
+         else if(response.data.response === "Please choose a different username.") {
+          setResult("This username is taken. Please choose a different one.");
+        
    
         } else {
           //a valid API request but user was not created because there was already a user with that username
           console.error("Failed to create user");
+          
   
         }
    
