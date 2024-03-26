@@ -226,7 +226,6 @@
     margin-left: 0;
     margin-right: 2.5rem;
     width: 7rem;
-    /* center text */
     text-align-last: center;
     border: 2px solid rgb(57, 70, 83); 
     border-radius: 5px;
@@ -242,7 +241,6 @@
     box-sizing: border-box;
     margin-bottom: 1rem;
     width: 10rem;
-    /* center text */
     text-align-last: center;
     border: 2px solid rgb(57, 70, 83); 
     border-radius: 5px;
@@ -251,11 +249,6 @@
 
 .variance-date:hover {
     background-color: #F3F4F6;
-}
-
-.variance-table {
-    border: 2px solid rgb(57, 70, 83);
-    min-height: 95vh;
 }
 
 .variance-header {

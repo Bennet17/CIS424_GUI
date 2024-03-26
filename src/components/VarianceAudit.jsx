@@ -10,7 +10,7 @@ import { Toaster, toast } from 'sonner';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
@@ -25,7 +25,7 @@ const VarianceAuditPage = () =>{
     const monthAgo = new Date(today);
     monthAgo.setDate(monthAgo.getDate() - 30);
 
-    const rowCount = 10; // Number of variances to display per page
+    const [rowCount, setRowCount] = useState(10); // Number of rows to display per page
 
     const [arrRegisters, setArrRegisters] = useState([]); // Array of a store's registers and its information
     const [arrVariances, setArrVariances] = useState([]); // Array of variances and its information
@@ -81,8 +81,8 @@ const VarianceAuditPage = () =>{
                     .map(register => ({id: register.ID, name: register.name}));
 
                 if (newRegisters.length === 0) {
-                    // Set status message if no registers are open
-                    setStatus("No registers are currently open.");
+                    // Set toast message if no registers are open
+                    toast.warning(`No registers are currently open for ${formData.storeName}.`);
 
                     // Add placeholder to the register select
                     setArrRegisters([{id: -1, name: "<Empty>"}]);
@@ -100,6 +100,7 @@ const VarianceAuditPage = () =>{
             })
             .catch(error => {
                 console.error(error);
+                toast.error("A server error occurred while loading registers. Please try again later.");
             });
         }
 
@@ -124,8 +125,8 @@ const VarianceAuditPage = () =>{
                     .then((response) => {
                         // If the response contains data, set the array of variances to the response data
                         if (response.data && response.data.length > 0) {
-                            // Set the array of variances
-                            setArrVariances(response.data);
+                            // Set the array of variances after sorting by date
+                            setArrVariances(response.data.sort((a, b) => new Date(a.Date) - new Date(b.Date)));
 
                             // Calculate the number of empty rows to fill the last page of the table
                             // Prime react datatable doesn't lock the number of rows to the page size so
@@ -151,7 +152,6 @@ const VarianceAuditPage = () =>{
 
                             // Set the register name
                             setRegisterName(arrRegisters.find(register => register.id === registerID).name);
-                            setStatus("");
                         }
                         else {
                             setArrVariances([]);
@@ -164,13 +164,12 @@ const VarianceAuditPage = () =>{
                         setArrVariances([]);
                         setEmptyRows([]);
                         setRegisterName(arrRegisters.find(register => register.id === registerID).name);
-                        toast.error("A server error occurred while retrieving register variances. Please try again later.");
                     });
             }
 
             GetRegisterVariance();
         }
-    }, [formData.registerID, formData.startDate, formData.endDate, UpdateInputDates, arrRegisters]);
+    }, [formData.registerID, formData.startDate, formData.endDate, UpdateInputDates, arrRegisters, rowCount]);
 
     // Event handler for decrementing the date by one day when the left arrow button is clicked
     const HandlePreviousDay = (event) => {
@@ -312,7 +311,17 @@ const VarianceAuditPage = () =>{
             <Button type="button" icon="pi pi-file" rounded size="small" onClick={() => exportCSV(false)} data-pr-tooltip="CSV" label="Export to CSV"/>
         </div>
     )
+    const [currentPage, setCurrentPage] = useState(0); // Initialize currentPage with default value
 
+    const OnRowChange = (event) => {
+        // Update the row count with the selected value
+        setRowCount(event.rows);
+
+        // Update the current page
+        setCurrentPage(event.page);
+    }
+    
+    
     return (
         <div className="flex h-screen bg-custom-accent variance-audit-page">
         <Toaster 
@@ -404,6 +413,9 @@ const VarianceAuditPage = () =>{
                             ref={tableRef}
                             value={[...arrVariances, ...emptyRows]} 
                             rows={rowCount}
+                            rowsPerPageOptions={[5, 10, 15]}
+                            onPage={OnRowChange}
+                            first={currentPage * rowCount}
                             size="small"
                             paginator={true}
                             showGridlines
@@ -411,7 +423,7 @@ const VarianceAuditPage = () =>{
                             removableSort
                             header={header}
                             scrollable
-                            scrollHeight="50vh"
+                            scrollHeight="35vh"
                             emptyMessage="No variances found for the selected register."
                             style={{width: "65%", fontSize: ".9rem", backgroundColor: "white"}}
                             exportFilename={GetFileName()}
