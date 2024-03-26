@@ -67,6 +67,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "",
     "postcss-cli": "^11.0.0",
     "react-router-dom": "^6.22.0",
     "tailwindcss": "^3.4.1"

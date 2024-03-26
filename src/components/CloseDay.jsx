@@ -97,9 +97,11 @@ const CloseDayPage = () =>{
         }
     );
 
-    function clamp(value, min = 0){
+    function clamp(value, min = 0, max = 100000){
         if (value < min){
             return min;
+        }else if (value > max){
+            return max;
         }
         return value;
     }
@@ -162,6 +164,7 @@ const CloseDayPage = () =>{
                 console.log(response);
                 //set the pos information data
                 setPoss(response.data);
+                setPostSuccess(false);  //reset status on page refresh
             })
             .catch(error => {
                 console.error(error);
@@ -427,6 +430,21 @@ const CloseDayPage = () =>{
         }
     }
 
+    //used to enable the safe button only if all pos' are closed
+    function IfAllOtherPOSsAreDisabled(isSafe){
+        let disable = false;
+        
+        if (isSafe){
+            for (let i = 1; i < poss.length; i ++){
+                if (poss[i].opened){
+                    disable = true;
+                }
+            }
+        }
+
+        return disable;
+    }
+
     return (
         <div className="flex h-screen bg-custom-accent">
             <Toaster 
@@ -448,9 +466,9 @@ const CloseDayPage = () =>{
                                     <label>
                                         <input 
                                             key={item.name} 
-                                            defaultChecked={index === 0 ? true : false}
+                                            defaultChecked={index === 0}
                                             onChange={(e) => setCurrentPosIndex(index)} 
-                                            disabled={!item.opened}
+                                            disabled={(!item.opened) || IfAllOtherPOSsAreDisabled(index === 0)}
                                             type="radio" 
                                             name="POS" 
                                             value={item.name} 
@@ -744,8 +762,8 @@ const CloseDayPage = () =>{
                             </div>
                         </div>)}
                     <div>
-                        {postSuccess === true && <p className="text-base font-bold text-green-500">{possSuccessTxt}</p>}
-                        {postSuccess === false && <p className="text-base font-bold text-red-500">{possSuccessTxt}</p>}
+                        {/*postSuccess === true && <p className="text-base font-bold text-green-500">{possSuccessTxt}</p>*/}
+                        {/*postSuccess === false && <p className="text-base font-bold text-red-500">{possSuccessTxt}</p>*/}
                     </div>
                 </div>
                 {showPopup && (
