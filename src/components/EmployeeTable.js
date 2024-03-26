@@ -86,17 +86,19 @@ console.log(currentDate); // "17-6-2022"
 
           })));
 
-          let numOwners = 0;
+          let numActiveOwners = 0;
            // console.log(response.data);
             response.data.forEach(person => {
               console.log(person.position);
-              if(person.position ==="Owner"){
-                numOwners++;
+              console.log(person.enabled);
+              if(person.position ==="Owner" && person.enabled == true){
+                numActiveOwners++;
+                console.log("YES");
               }
 
           });
-          localStorage.setItem("numberOfOwners", numOwners);
-          console.log(numOwners);
+          localStorage.setItem("numberOfActiveOwners", numActiveOwners);
+          console.log(numActiveOwners + "Hello");
 
 
         })

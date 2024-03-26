@@ -81,7 +81,7 @@ const EditUser = (user) => {
 
   }
   
-  let numOwners = localStorage.getItem("numberOfOwners");
+  let numActiveOwners = localStorage.getItem("numberOfActiveOwners");
 
   const openModal = () => {
     setIsOpen(true);
@@ -114,11 +114,12 @@ const EditUser = (user) => {
 
   const toggleAbility = (event) => {
     event.preventDefault();
-    //this pos is currently enabled. lets disable it
+    console.log(numActiveOwners + "number of owners");
+        //this pos is currently enabled. lets disable it
       if (user.user.enabled == true) {
-        if(user.user.position === "Owner" && numOwners <= 1){
-          console.log("Cannot disable the only owner.");
-          setResult("Cannot disable the only owner.");
+        if(user.user.position === "Owner" && numActiveOwners <= 1 ){
+          console.log("Cannot disable the only active owner.");
+          setResult("Cannot disable the only active owner.");
         }
         else{
           axios
