@@ -105,7 +105,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("curStoreID");
     localStorage.removeItem("curStoreName");
     localStorage.removeItem("stores");
-    localStorage.removeItem("numberOfOwners");
+    localStorage.removeItem("numberOfActiveOwners");
     navigate(routes.signout);
   };
 
