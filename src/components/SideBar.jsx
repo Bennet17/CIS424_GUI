@@ -150,17 +150,18 @@ const SideBar = (props) => {
               <span className="ml-3">Transfer Funds</span>
             </li>
           )}
-          <li
-            onClick={() => {
-              if (
-                props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
-                props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
-                props.currentPage != DEPOSIT_HISTORY_PAGE_NAME
-              ) {
-                setCashManager(!cashManagerOn);
-              }
-            }}
-            className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+          {auth.cookie.user.position !== "Employee" && (
+            <li
+              onClick={() => {
+                if (
+                  props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
+                  props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
+                  props.currentPage != DEPOSIT_HISTORY_PAGE_NAME
+                ) {
+                  setCashManager(!cashManagerOn);
+                }
+              }}
+              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors text-gray-600 ${
               props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
               props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
@@ -168,16 +169,17 @@ const SideBar = (props) => {
                 ? "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800"
                 : ""
             }`}
-          >
-            <PiggyBank />
-            <span className="ml-3">Cash Manager</span>
+            >
+              <PiggyBank />
+              <span className="ml-3">Cash Manager</span>
 
-            {cashManagerOn ? (
-              <ChevronDown className="ml-6" />
-            ) : (
-              <ChevronRight className="ml-6" />
-            )}
-          </li>
+              {cashManagerOn ? (
+                <ChevronDown className="ml-6" />
+              ) : (
+                <ChevronRight className="ml-6" />
+              )}
+            </li>
+          )}
           {cashManagerOn && <hr className="border-gray-300" />}
           {cashManagerOn &&
             auth.cookie.user.viewingStoreID ===
@@ -195,7 +197,7 @@ const SideBar = (props) => {
                 <span className="ml-3">Safe Audit</span>
               </li>
             )}
-          {auth.CheckAuthorization(["Manager", "District Manager", "CEO"]) &&
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) &&
             cashManagerOn && (
               <li
                 onClick={toVarianceAudit}
@@ -210,7 +212,7 @@ const SideBar = (props) => {
                 <span className="ml-3">Variance Audit</span>
               </li>
             )}
-          {auth.CheckAuthorization(["Manager", "District Manager", "CEO"]) &&
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) &&
             cashManagerOn && (
               <li
                 onClick={toDepositHistory}
@@ -225,32 +227,34 @@ const SideBar = (props) => {
                 <span className="ml-3">Deposit History</span>
               </li>
             )}
-          <li
-            onClick={() => {
-              if (
-                props.currentPage !== USER_MANAGEMENT_PAGE_NAME &&
-                props.currentPage !== POS_MANAGEMENT_PAGE_NAME
-              ) {
-                setSecurity(!securityOn);
-              }
-            }}
-            className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+          {auth.cookie.user.position !== "Employee" && (
+            <li
+              onClick={() => {
+                if (
+                  props.currentPage !== USER_MANAGEMENT_PAGE_NAME &&
+                  props.currentPage !== POS_MANAGEMENT_PAGE_NAME
+                ) {
+                  setSecurity(!securityOn);
+                }
+              }}
+              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors text-gray-600 ${
               props.currentPage !== USER_MANAGEMENT_PAGE_NAME &&
               props.currentPage !== POS_MANAGEMENT_PAGE_NAME
                 ? "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800"
                 : ""
             }`}
-          >
-            <Lock />
-            <span className="ml-3">Security</span>
+            >
+              <Lock />
+              <span className="ml-3">Security</span>
 
-            {securityOn ? (
-              <ChevronDown className="ml-16" />
-            ) : (
-              <ChevronRight className="ml-16" />
-            )}
-          </li>
+              {securityOn ? (
+                <ChevronDown className="ml-16" />
+              ) : (
+                <ChevronRight className="ml-16" />
+              )}
+            </li>
+          )}
           {securityOn && <hr className="border-gray-300" />}
           {securityOn && (
             <li
@@ -266,7 +270,7 @@ const SideBar = (props) => {
               <span className="ml-3">User Management</span>
             </li>
           )}
-          {securityOn && (
+          {securityOn && auth.cookie.user.position === "Owner" && (
             <li
               onClick={toPosManagement}
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
