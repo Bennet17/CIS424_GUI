@@ -86,7 +86,7 @@ const OpenDayPage = () =>{
     );
 
     //keep values clamped between a minimum and maxium value
-    function clamp(value, min = 0, max = 1000000){
+    function clamp(value, min = 0, max = 100000){
         if (value < min){
             return min;
         }else if (value > max){
@@ -256,9 +256,9 @@ const OpenDayPage = () =>{
                                     <label>
                                         <input 
                                             key={item.name} 
-                                            defaultChecked={index === 0 ? true : false}
+                                            defaultChecked={index === 0}
                                             onChange={(e) => SetCurrentPosIndex(index)} 
-                                            disabled={item.opened ? true : false}
+                                            disabled={item.opened || ((poss[0].opened ? false : true) && (index > 0))}
                                             type="radio" 
                                             name={"POS"} 
                                             value={item.name} 
