@@ -5,6 +5,7 @@ import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import CloseDayOver from "./CloseDayOver.jsx";
 import { useAuth } from "../AuthProvider.js";
+import { Toaster, toast } from 'sonner';
 import classNames from 'classnames';
 
 const CloseDayPage = () =>{
@@ -42,6 +43,7 @@ const CloseDayPage = () =>{
     //threshold fields
     const [showPopup, setShowPopup] = useState(false);
     const [popupInfo, setPopupInfo] = useState({});
+    const [isSafe, setIsSafe] = useState(false);
 
     
 
@@ -339,18 +341,19 @@ const CloseDayPage = () =>{
                 if (response.status === 200){
                     //close POS
                     setPostSuccess(true);
-                    setPosSuccessTxt(poss[currentPosIndex].name + " closed successfully!");
+                    toast.success(poss[currentPosIndex].name + " closed successfully!");
                 }else{
                     setPostSuccess(false);
-                    setPosSuccessTxt("Error trying to close" + poss[currentPosIndex].name);
+                    toast.error(poss[currentPosIndex].name + " failed to close!");
                 }
             })
             .catch(error => {
-                console.error(error);
+                toast.error("Network or server error on: " + poss[currentPosIndex].name);
             });
 
             if (totalTransferAmount > 0) {
                 setShowPopup(true);
+                setIsSafe(true);
                 setPopupInfo({
                     hundred: info.hundred,
                     fifty: info.fifty,
@@ -403,20 +406,21 @@ const CloseDayPage = () =>{
                 if (response.status === 200){
                     //close POS
                     setPostSuccess(true);
-                    setPosSuccessTxt(poss[currentPosIndex].name + " closed successfully!");
+                    toast.success(poss[currentPosIndex].name + " closed successfully!");
                 }else{
-                    setPostSuccess(false);
-                    setPosSuccessTxt("Error trying to close" + poss[currentPosIndex].name);
+                    setPostSuccess(false);                                      
+                    toast.error(poss[currentPosIndex].name + " failed to close!");
                 }
             })
             .catch(error => {
                 console.error(error);
-                setPostSuccess(false);
-                setPosSuccessTxt("Network or server error");
+                setPostSuccess(false);                                  
+                toast.error("Network or server error on: " + poss[currentPosIndex].name);
             });
 
             if (totalTransferAmount > 0) {
                 setShowPopup(true);
+                setIsSafe(false);
                 setPopupInfo({
                     hundred: info.hundred,
                     fifty: info.fifty,
@@ -443,6 +447,13 @@ const CloseDayPage = () =>{
 
     return (
         <div className="flex h-screen bg-custom-accent">
+            <Toaster 
+                richColors 
+                position="bottom-right"
+                expand={true}
+                duration={5000}
+                pauseWhenPageIsHidden={true}
+            />
             <SideBar currentPage={2} />
             <div className="w-full">
                 <HorizontalNav />
@@ -761,7 +772,7 @@ const CloseDayPage = () =>{
                             setShowPopup(false);
                         }}
                         details={popupInfo}
-                        isSafe={currentPosIndex === 0}
+                        isSafe={isSafe}
                     />
                 )}
             </div>

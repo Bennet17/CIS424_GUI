@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect } from "react";
+
 
 const CloseDayOver = ({ onClose, details, isSafe }) => {
+    console.log(isSafe)
+    useEffect(() => {
+        console.log(isSafe)
+    }, []);
     return (
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-8 rounded-lg shadow-lg">
