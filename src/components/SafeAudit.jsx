@@ -5,6 +5,7 @@ import CurrencyInput from "react-currency-input-field";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
+import { Toaster, toast } from 'sonner';
 
 const SafeAuditPage = () => {
     // Authentication context
@@ -39,10 +40,6 @@ const SafeAuditPage = () => {
         nickelRoll: 0,
         pennyRoll: 0,
     });
-
-    const [status, setStatus] = useState(""); // Status message to display after form submission
-    const successClass = "text-green-500"; // CSS class for success
-    const errorClass = "text-red-500"; // CSS class for error
 
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
@@ -89,11 +86,10 @@ const SafeAuditPage = () => {
 	function CheckFields() {
 		if (formData.currentAmount === "" || formData.currentAmount === 0) {
 			// Update the status message
-			setStatus("Please fill out the current amount field.");
+            toast.warning("Please fill in all fields correctly.");
 
 			// Adds error class to fields
 			document.getElementById("currentAmount_input").classList.add("safe-amount-input-error");
-
 
 			// Return true to prevent form submission
 			return true;
@@ -101,7 +97,6 @@ const SafeAuditPage = () => {
 		else {
 			// Removes error class from fields
 			document.getElementById("currentAmount_input").classList.remove("safe-amount-input-error");
-			setStatus("");
 
 			// Return to default class
 			document.getElementById("currentAmount_input").classList.add("safe-amount-input");
@@ -166,7 +161,6 @@ const SafeAuditPage = () => {
 		// If current amount was changed, remove error class
 		if (value !== "") {
 			document.getElementById("currentAmount_input").classList.remove("safe-amount-input-error");
-			setStatus("");
 		}
 
         // Update the form data
@@ -202,20 +196,19 @@ const SafeAuditPage = () => {
 			...currencyFields,
 		};
 
-		console.log(request)
-
 		// POST the cash count to the server
 		axios.post(CreateCashCountURL, request).then((response) => {
 			console.log(response);
 
 			 // Check if the count was successful
 			if (response.data.IsValid == true)
-				console.log("Successfully submitted safe count");
+				toast.success("Safe count submitted successfully.");
 			else 
-				console.log("Failed to submit safe count");
+				toast.error("Failed to submit safe count.");
 		})
 		.catch((error) => {
 			console.error(error);
+			toast.error("A server error occurred during submission. Please try again later.");
 		});
 	}
 
@@ -242,9 +235,6 @@ const SafeAuditPage = () => {
 		fltCurrentAmount = parseFloat(formData.currentAmount).toFixed(2);
 		fltExpectedAmount = parseFloat(formData.expectedAmount).toFixed(2);
 
-        // Set the status message
-        setStatus("Successfully submitted mid day cash count!");
-
 		// Submit the cash count
 		SubmitCashCount(
 			event,
@@ -264,8 +254,9 @@ const SafeAuditPage = () => {
 			user: auth.cookie.user.ID,
 			name: auth.cookie.user.name,
 			store: auth.cookie.user.viewingStoreID,
+			storeName: auth.cookie.user.viewingStoreLocation,
 			currentAmount: "",
-			expectedAmount: 0,
+			expectedAmount: formData.expectedAmount,
 			hundred: 0,
 			fifty: 0,
 			twenty: 0,
@@ -284,6 +275,9 @@ const SafeAuditPage = () => {
 			nickelRoll: 0,
 			pennyRoll: 0,
 		});
+
+		if (formData.currentAmount !== "") 
+			toast.info("Fields have been reset.");
 	}
 
 	//toggles the variable that displays the niche changes, such as $2 bills and $1 coins
@@ -297,15 +291,19 @@ const SafeAuditPage = () => {
             setShowExtraChangeTxt("▼ Show extras");
     }
 
-    // Determine the class based on the status
-    const statusClass = status.startsWith("Successfully") ? successClass : errorClass;
-
 	return (
 		<div className="flex h-screen bg-custom-accent">
+			<Toaster 
+				richColors 
+				position="bottom-right"
+				expand={true}
+				duration={5000}
+				pauseWhenPageIsHidden={true}
+			/>
 			<SideBar currentPage={4} />
 			<div className="flex flex-col w-full">
 				<HorizontalNav />
-				<div className="text-main-color float-left ml-8 mt-12">
+				<div className="text-main-color float-left ml-8 mt-6">
 					<h1 className="text-3xl font-bold">Safe Audit for {formData.storeName}</h1>
 					<br />
 					<form onSubmit={HandleSubmit} onReset={HandleCancel} className="tables-container">
@@ -832,8 +830,6 @@ const SafeAuditPage = () => {
 							</div>
 						</div>
 					</form>
-                    {/* Shows submission status */}
-                    <p className={`mt-4 ml-6 ${statusClass}`}>{status}</p>
 				</div>
 			</div>
 		</div>

@@ -3,18 +3,22 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
+import CloseDayOver from "./CloseDayOver.jsx";
 import { useAuth } from "../AuthProvider.js";
 import classNames from 'classnames';
 
 const CloseDayPage = () =>{
     const auth = useAuth();
 
-    //sample data to demonstrate how this all works. In reality, we would get all the POS data with a post get request to the db and store it in an array
-    const [posHasLoaded, SetPosHasLoaded] = useState(false);
+    //pos-related data
+    const [posHasLoaded, setPosHasLoaded] = useState(false);
     const [poss, setPoss] = useState([]);
+    const [currentPosIndex, setCurrentPosIndex] = useState(-1);
     const [showExtraChange, setShowExtraChange] = useState(false);
+    const [creditExpected, setCreditExpected] = useState(0);
+    const [creditActual, setCreditActual] = useState(0);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("show extras ▼");
-    let currentPosIndex = -1;
+    //let currentPosIndex = -1;
 
     //dom fields
     const [elmPennies, setElmPennies] = useState(0);
@@ -34,6 +38,12 @@ const CloseDayPage = () =>{
     const [elm1DollarCoin, setElm1DollarCoin] = useState(0);
     const [elm2Dollar, setElm2Dollar] = useState(0);
     const [elmHalfDollarCoin, setElmHalfDollarCoin] = useState(0);
+
+    //threshold fields
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupInfo, setPopupInfo] = useState({});
+
+    
 
     //calculates the total of all denominations with rounding
     const totalAmount = 
@@ -57,9 +67,13 @@ const CloseDayPage = () =>{
                 (elm2Dollar * 2) +
                 (elmHalfDollarCoin * 0.5)
             ) * 100
-        ) / 100;
+        ) / 100
+    ;
 
     const [expectedAmount, setExpectedAmount] = useState(0);
+    const [postSuccess, setPostSuccess] = useState(null);
+    const [possSuccessTxt, setPosSuccessTxt] = useState("");
+    
 
     //Stores the general styling for the current total denominations text field.
     //here, we simply change the text color based on if we're over, under, or at expected value
@@ -81,16 +95,6 @@ const CloseDayPage = () =>{
         }
     );
 
-    //Stores the general styling for the pos system label/radio buttons.
-    //here, we simply change the text color based on whether the pos is open
-    /*const posLabelStyle = classNames(
-        '',
-        {
-            'text-green-500': currentPos.open == true,
-            'text-rose-600': currentPos.open == false,
-        }
-    );*/
-
     function clamp(value, min = 0){
         if (value < min){
             return min;
@@ -98,11 +102,14 @@ const CloseDayPage = () =>{
         return value;
     }
 
-    //changes the currently-selected pos
-    function changeCurrentPos(id){
-        currentPosIndex = id
-        console.log(currentPosIndex);
-    }
+    //call on component load AND when the currently-selected pos has refreshed
+    useEffect(() => {
+        console.log("setting pos array index to " + currentPosIndex + ", see below");
+        console.log(poss[currentPosIndex]);
+
+        //update the expected total amount
+        GetExpectedCount();
+    }, [currentPosIndex]);
 
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
     //(also change arrow text thing)
@@ -136,22 +143,23 @@ const CloseDayPage = () =>{
         setElmHalfDollarCoin(0);
     }
 
-    //make this call immediately on component load
+    //call on component load AND when poss state has refreshed
+    useEffect(() => {
+        if (poss.length > 0){
+            //update current pos
+            setCurrentPosIndex(0);
+            setPosHasLoaded(true);
+        }
+    }, [poss]);
+
+    //call on component load AND when postSuccess is updated
     useEffect(() => {
         function Initialize(){
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${auth.cookie.user.storeID_CSV[0]}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`)
             .then(response => {
                 console.log(response);
-                if (true){
-                    //set the pos information data
-                    setPoss(response.data);
-
-                    //update current pos
-                    changeCurrentPos(response.data[0].ID);
-                    SetPosHasLoaded(true);
-                }else{
-                    //something broke, oh no
-                }
+                //set the pos information data
+                setPoss(response.data);
             })
             .catch(error => {
                 console.error(error);
@@ -159,17 +167,140 @@ const CloseDayPage = () =>{
         }
 
         Initialize();
-    },[]);
+    }, [postSuccess]);
 
-    function Submit(event){
+    //gets the expected count for this pos
+    function GetExpectedCount() {
+        // Wait until we have our pos data before attempting to execute
+        if (poss.length > 0 && poss[currentPosIndex]) {
+          const posName = poss[currentPosIndex].name;
+      
+          // Check if currentPosIndex is not 0
+          if (currentPosIndex !== 0) {
+            setExpectedAmount(0);
+            return; // Exit the function early since expectedAmount is set to 0
+          }
+      
+          axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`)
+            .then(response => {
+              console.log("Getting cash count for " + posName);
+              console.log(response);
+              setExpectedAmount(response.data);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        }
+      }
+    
+
+    const Submit = async (event) => {
         //prevents default behavior of sending data to current URL And refreshing page
         event.preventDefault();
 
-        axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
+        const thresholdsResponse = await axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`);
+        const thresholds = thresholdsResponse.data;
+        console.log(thresholds);
+
+        let info = {
+            hundred: 0,
+            fifty: 0,
+            twenty: 0,
+            ten: 0,
+            five: 0,
+            two: 0,
+            one: 0,
+            quarterRoll: 0,
+            dimeRoll: 0,
+            nickelRoll: 0,
+            pennyRoll: 0,
+        };
+        let over = false;
+
+        if (currentPosIndex !== 0) {
+            if (elm100Dollar > thresholds.hundredRegisterMax) {
+                info.hundred = elm100Dollar - thresholds.hundredRegisterMax;
+                over = true;
+            }
+            if (elm50Dollar > thresholds.fiftyRegisterMax) {
+                info.fifty = elm50Dollar - thresholds.fiftyRegisterMax;
+                over = true;
+            }
+            if (elm20Dollar > thresholds.twentyRegisterMax) {
+                info.twenty = elm20Dollar - thresholds.twentyRegisterMax;
+                over = true;
+            }
+        } else {
+            if (elm100Dollar > thresholds.hundredMax) {
+                info.hundred = elm100Dollar - thresholds.hundredMax;
+                over = true;
+            }
+            if (elm50Dollar > thresholds.fiftyMax) {
+                info.fifty = elm50Dollar - thresholds.fiftyMax;
+                over = true;
+            }
+            if (elm20Dollar > thresholds.twentyMax) {
+                info.twenty = elm20Dollar - thresholds.twentyMax;
+                over = true;
+            }
+            if (elm10Dollar > thresholds.tenMax) {
+                info.ten = elm10Dollar - thresholds.tenMax;
+                over = true;
+            }
+            if (elm5Dollar > thresholds.fiveMax) {
+                info.five = elm5Dollar - thresholds.fiveMax;
+                over = true;
+            }
+            if (elm2Dollar > thresholds.twoMax) {
+                info.two = elm2Dollar - thresholds.twoMax;
+                over = true;
+            }
+            if (elm1Dollar > thresholds.oneMax) {
+                info.one = elm1Dollar - thresholds.oneMax;
+                over = true;
+            }
+            if (elmQuartersRolled > thresholds.quarterRollMax) {
+                info.quarterRoll = elmQuartersRolled - thresholds.quarterRollMax;
+                over = true;
+            }
+            if (elmDimesRolled > thresholds.dimeRollMax) {
+                info.dimeRoll = elmDimesRolled - thresholds.dimeRollMax;
+                over = true;
+            }
+            if (elmNicklesRolled > thresholds.nickelRollMax) {
+                info.nickelRoll = elmNicklesRolled - thresholds.nickelRollMax;
+                over = true;
+            }
+            if (elmPenniesRolled > thresholds.pennyRollMax) {
+                info.pennyRoll = elmPenniesRolled - thresholds.pennyRollMax;
+                over = true;
+            }
+        }
+
+        let totalTransferAmount = 
+        (info.hundred * 100) + 
+        (info.fifty * 50) + 
+        (info.twenty * 20) + 
+        (info.ten * 10) + 
+        (info.five * 5) + 
+        (info.two * 2) + 
+        (info.one * 1) + 
+        (info.quarterRoll * 10) + 
+        (info.dimeRoll * 5) + 
+        (info.nickelRoll * 2) + 
+        (info.pennyRoll * 0.50);
+    
+        // Round the total value to the nearest cent
+        totalTransferAmount = Math.round(totalTransferAmount * 100) / 100;
+
+        if (currentPosIndex === 0){
+            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
+            "storeID": auth.cookie.user.viewingStoreID,
             "usrID": auth.cookie.user.ID,
-            "itemCounted": poss[currentPosIndex],
             "total": totalAmount,
-            "amountExpected": null,
+            "type": "CLOSE",
+            "itemCounted": poss[currentPosIndex].name,
+            "amountExpected": expectedAmount,
             "hundred": elm100Dollar,
             "fifty": elm50Dollar,
             "twenty": elm20Dollar,
@@ -186,22 +317,111 @@ const CloseDayPage = () =>{
             "quarterRoll": elmQuartersRolled,
             "dimeRoll": elmDimesRolled,
             "nickelRoll": elmNicklesRolled,
-            "pennyRoll": elmPenniesRolled
-        })
-        .then(response => {
-            console.log(response);
-            if (true){
-                //open POS
-            }else{
-                //close POS
+            "pennyRoll": elmPenniesRolled,
+            "cashToBankTotal": totalTransferAmount,
+            "hundredToBank": info.hundred,
+            "fiftyToBank": info.fifty,
+            "twentyToBank": info.twenty,
+            "tenToBank": info.ten,
+            "fiveToBank": info.five,
+            "twoToBank": info.two,
+            "oneToBank": info.one,
+            "quarterRollToBank": info.quarterRoll,
+            "dimeRollToBank": info.dimeRoll,
+            "nickelRollToBank": info.nickelRoll,
+            "pennyRollToBank": info.pennyRoll
+            })
+            .then(response => {
+                console.log(response);
+                if (response.status === 200){
+                    //close POS
+                    setPostSuccess(true);
+                    setPosSuccessTxt(poss[currentPosIndex].name + " closed successfully!");
+                }else{
+                    setPostSuccess(false);
+                    setPosSuccessTxt("Error trying to close" + poss[currentPosIndex].name);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+            if (totalTransferAmount > 0) {
+                setShowPopup(true);
+                setPopupInfo({
+                    hundred: info.hundred,
+                    fifty: info.fifty,
+                    twenty: info.twenty,
+                    ten: info.ten,
+                    five: info.five,
+                    two: info.two,
+                    one: info.one,
+                    quarterRoll: info.quarterRoll,
+                    dimeRoll: info.dimeRoll,
+                    nickelRoll: info.nickelRoll,
+                    pennyRoll: info.pennyRoll,
+                });
             }
-        })
-        .catch(error => {
-            console.error(error);
-        });
+
+        }else {
+            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount', {
+                "storeID": auth.cookie.user.viewingStoreID,
+                "usrID": auth.cookie.user.ID,
+                "total": totalAmount,
+                "type": "CLOSE",
+                "itemCounted": poss[currentPosIndex].name,
+                "amountExpected": expectedAmount,
+                "hundred": elm100Dollar,
+                "fifty": elm50Dollar,
+                "twenty": elm20Dollar,
+                "ten": elm10Dollar,
+                "five": elm5Dollar,
+                "two": elm2Dollar,
+                "one": elm1Dollar,
+                "dollarCoin": elm1DollarCoin,
+                "halfDollar": elmHalfDollarCoin,
+                "quarter": elmQuarters,
+                "dime": elmDimes,
+                "nickel": elmNickles,
+                "penny": elmPennies,
+                "quarterRoll": elmQuartersRolled,
+                "dimeRoll": elmDimesRolled,
+                "nickelRoll": elmNicklesRolled,
+                "pennyRoll": elmPenniesRolled,
+                "creditExpected": creditExpected,
+                "creditActual": creditActual,
+                "cashToSafeTotal": totalTransferAmount,
+                "hundredToSafe": info.hundred,
+                "fiftyToSafe": info.fifty,
+                "twentyToSafe": info.twenty
+            })
+            .then(response => {
+                console.log(response);
+                if (response.status === 200){
+                    //close POS
+                    setPostSuccess(true);
+                    setPosSuccessTxt(poss[currentPosIndex].name + " closed successfully!");
+                }else{
+                    setPostSuccess(false);
+                    setPosSuccessTxt("Error trying to close" + poss[currentPosIndex].name);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                setPostSuccess(false);
+                setPosSuccessTxt("Network or server error");
+            });
+
+            if (totalTransferAmount > 0) {
+                setShowPopup(true);
+                setPopupInfo({
+                    hundred: info.hundred,
+                    fifty: info.fifty,
+                    twenty: info.twenty,
+                });
+            }
+        }
     }
-
-
 
     return (
         <div className="flex h-screen bg-custom-accent">
@@ -212,15 +432,16 @@ const CloseDayPage = () =>{
                     <p className="text-2xl mb-2">Select a POS to close</p>
                     {posHasLoaded ? 
                         <>
-                            {poss.map(item => (
+                            {poss.map((item, index) => (
                                 <>
                                     <label>
                                         <input 
                                             key={item.name} 
-                                            defaultChecked={item.ID === 1 ? true : false}
-                                            onChange={(e) => changeCurrentPos(item.ID)} 
+                                            defaultChecked={index === 0 ? true : false}
+                                            onChange={(e) => setCurrentPosIndex(index)} 
+                                            disabled={!item.opened}
                                             type="radio" 
-                                            name="pos" 
+                                            name="POS" 
                                             value={item.name} 
                                         />
                                         {item.name} - {item.opened ? "Open" : "Closed"}
@@ -229,10 +450,15 @@ const CloseDayPage = () =>{
                                 </>
                             ))}
                         </>
-                    : <p>Wait...</p>}
+                    : <p>Loading...</p>}
                 </div>
                 <div className="text-main-color float-left ml-16 mt-12">
-                    {currentPosIndex > 0 && <p className="text-2xl" >Enter denominations for {poss[currentPosIndex].name}</p>}
+                    {
+                        posHasLoaded ? 
+                        <p className="text-2xl" >Enter denominations for {poss[currentPosIndex].name}</p>
+                        :
+                        <p className="text-2xl" >Waiting for POS data...</p>
+                    }
                     <br/><hr/><br/>
                     <form onSubmit={Submit}>
                         <table>
@@ -449,7 +675,7 @@ const CloseDayPage = () =>{
                                 </tr>
                                 <tr>
                                     <td>
-                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Open POS</button>
+                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Close POS</button>
                                     </td>
                                     <td>
                                         <button onClick={ClearAllFields} type="button" value="button" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Clear all fields</button>
@@ -463,7 +689,7 @@ const CloseDayPage = () =>{
                     <div>
                         <label> Current Total:
                             <input 
-                                value={"$" + totalAmount} 
+                                value={totalAmount} 
                                 className={totalAmountStyle} 
                                 type="text" 
                                 disabled={true}
@@ -476,13 +702,50 @@ const CloseDayPage = () =>{
                             <input 
                                 value={expectedAmount} 
                                 onChange={e => setExpectedAmount(clamp(e.target.value))} 
-                                min="0" 
-                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                disabled={currentPosIndex === 0}
+                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
                                 type="number" 
                             />
                         </label>
                     </div>
+                    <br/>
+                        { currentPosIndex !== 0 && (<div>
+                            <div>
+                                <label> Credit Actual:
+                                    <input
+                                        value={creditActual} 
+                                        onChange={e => setCreditActual(clamp(e.target.value))}  
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                        type="number" 
+                                    />
+                                </label>
+                            </div>
+                            <br/>
+                            <div>
+                                <label> Credit Expected:
+                                    <input 
+                                        value={creditExpected} 
+                                        onChange={e => setCreditExpected(clamp(e.target.value))} 
+                                        className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                        type="number" 
+                                    />
+                                </label>
+                            </div>
+                        </div>)}
+                    <div>
+                        {postSuccess === true && <p className="text-base font-bold text-green-500">{possSuccessTxt}</p>}
+                        {postSuccess === false && <p className="text-base font-bold text-red-500">{possSuccessTxt}</p>}
+                    </div>
                 </div>
+                {showPopup && (
+                    <CloseDayOver
+                        onClose={() => {
+                            setShowPopup(false);
+                        }}
+                        details={popupInfo}
+                        isSafe={currentPosIndex === 0}
+                    />
+                )}
             </div>
         </div>
     )

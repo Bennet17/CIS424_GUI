@@ -78,11 +78,6 @@ export default function HorizotalNav() {
       });
   }, []); // Run this effect only on component mount
 
-  function signOut() {
-    auth.logOut();
-    navigate(routes.signout);
-  }
-
   return (
     <Disclosure as="nav" className="bg-gray-500 shadow">
       {({ open }) => (
@@ -133,23 +128,20 @@ export default function HorizotalNav() {
                   </div>
                   <Transition
                     as={Fragment}
+                    show={storeMenuOn}
                     enter="transition ease-out duration-100"
                     enterFrom="transform opacity-0 scale-95"
                     enterTo="transform opacity-100 scale-100"
                     leave="transition ease-in duration-75"
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
+                    style={{ zIndex: 999 }}
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {
                         <Menu.Item key={"title"}>
                           {({ active }) => (
-                            <a
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block font-medium px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
+                            <a className="block font-medium px-4 py-2 text-sm text-gray-700">
                               {"Storeview"}
                             </a>
                           )}
@@ -163,7 +155,7 @@ export default function HorizotalNav() {
                             <a
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700 flex justify-between mx-3"
+                                "block rounded-md px-4 py-2 text-sm text-gray-700 flex justify-between mx-3 my-1"
                               )}
                               onClick={() =>
                                 handleSwitchviewClick(store.ID, store.location)
@@ -202,7 +194,7 @@ export default function HorizotalNav() {
                             <a
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700 flex "
+                                "block rounded-md px-4 py-2 text-sm text-gray-700 flex m-1"
                               )}
                               onClick={() => navigate(routes.storemanagement)}
                             >

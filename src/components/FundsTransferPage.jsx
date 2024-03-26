@@ -5,13 +5,19 @@ import CurrencyInput from "react-currency-input-field";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
+import { Toaster, toast } from 'sonner';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import 'primeicons/primeicons.css';
 
 const FundsTransferPage = () => {
     // Authentication context
     const auth = useAuth();
 
-    // Const to hold the POST request fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer)
-    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/FundTransfer";
+    // Const to hold the POST request fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer)
+    const FundTransferURL = "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer";
 
     // Const to hold the form data
     const [formData, setFormData] = useState({
@@ -44,10 +50,9 @@ const FundsTransferPage = () => {
     const [arrSources, setArrSources] = useState([]); // Array to hold the source register names
     const [arrDestinations, setArrDestinations] = useState([]); // Array to hold the destination register names
 
-    const [status, setStatus] = useState(""); // Status message to display after form submission
+    const [registerStatus, setRegisterStatus] = useState(""); // Status message to display on page load
     const [report, setReport] = useState(""); // Report message to display after form submission
-    const successClass = "text-green-500"; // CSS class for success
-    const errorClass = "text-red-500"; // CSS class for error
+    const [showReport, setShowReport] = useState(false); // Boolean to show/hide the report message
 
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
@@ -55,21 +60,19 @@ const FundsTransferPage = () => {
     // Loads the source options from the store
     useEffect(() => {
         function Initialize() {
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${formData.store}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`)
             .then(response => {
-                console.log(response.data)
-
                 // Extract register names and ID from the response and filter based on opened status
                 const newSources = response.data
                 .filter(register => register.opened)
-                .map(register => ({ id: register.ID, name: register.name }));
+                .map(register => ({ id: register.regID, name: register.name }));
 
-                if (newSources.length === 0)
-                    // Set status message if no registers are open
-                    setStatus("No registers are currently open.");
-                else
-                    // Update arrSources using functional form of setState to avoid duplicates
+                if (newSources.length > 0)
                     setArrSources(newSources);
+
+                if (newSources.length === 0 || newSources.length === 1 || newSources === undefined || newSources === null)
+                    setRegisterStatus("No registers are currently open for transfer.");
+                
             })
             .catch(error => {
                 console.error(error);
@@ -156,14 +159,8 @@ const FundsTransferPage = () => {
 
         // If the source or destination field is changed, remove the error class from both
         if (name === "source" || name === "destination") {
-            const otherField = name === "source" ? "destination" : "source";
-            const otherValue = formData[otherField];
-
-            // If the other field is already filled and does not match the current field, remove the error class from both
-            if (value !== otherValue && otherValue !== "") {
-                document.getElementById("source_select").classList.remove("error");
-                document.getElementById("destination_select").classList.remove("error");
-            }
+            document.getElementById("source_select").classList.remove("select-input-error");
+            document.getElementById("destination_select").classList.remove("select-input-error");
         }
 
         // Calculate the amount based on the denomination fields
@@ -202,7 +199,7 @@ const FundsTransferPage = () => {
         if (formData.source === formData.destination) {
             // Set the status message
             blnError = true;
-            setStatus("Source and destination cannot be the same.");
+            toast.warning("Source and destination cannot be the same.");
 
             // Highlight the source and destination fields with red border
             document.getElementById("source_select").classList.add("select-input-error");
@@ -215,7 +212,7 @@ const FundsTransferPage = () => {
             formData.amount === "0.00") {
             // Set the status message
             blnError = true;
-            setStatus("Please fill in all fields correctly.");
+            toast.warning("Please fill in all fields correctly.");
 
             // Highlight empty fields with red border
             if (formData.source === "") 
@@ -259,11 +256,13 @@ const FundsTransferPage = () => {
             user,
             name,
             store,
+            storeName,
             source,
             destination,
             amount: fltAmount,
             ...currencyFields
         } = formData;
+
         
         // Get the source and destination register IDs
         let sourceID = arrSources.find(register => register.name === source).id;
@@ -280,44 +279,43 @@ const FundsTransferPage = () => {
         }
 
         // Submit the form data
-        SubmitTransfer(
+        if (await SubmitTransfer(
             event,
             user,
             source,
             destination,
             fltAmount,
             currencyFields // Includes zeroes
-        );
-
-        // Set the status message
-        setStatus("Successfully submitted transfer!");
-
-        // Generate the report
-        const report = await GenerateReport(
-            source,
-            destination,
-            sourceID,
-            destinationID,
-            fltAmount,
-            newCurrencyFields
-        );
-
-        // Set the report message
-        setReport(report);
-        
-        // Reset the form fields
-        setFormData({
-            user: user,
-            name: name,
-            store: store,
-            source: "",
-            destination: "",
-            amount: "",
-            ...Object.keys(currencyFields).reduce((acc, key) => {
-                acc[key] = 0;
-                return acc;
-            }, {}),
-        });
+        )) {
+            // Generate the report
+            const report = await GenerateReport(
+                source,
+                destination,
+                sourceID,
+                destinationID,
+                fltAmount,
+                newCurrencyFields
+            );
+    
+            // Set the report message
+            setReport(report);
+            setShowReport(true);
+    
+            // Reset the form fields
+            setFormData({
+                user: user,
+                name: name,
+                store: store,
+                storeName: storeName,
+                source: "",
+                destination: "",
+                amount: "",
+                ...Object.keys(currencyFields).reduce((acc, key) => {
+                    acc[key] = 0;
+                    return acc;
+                }, {}),
+            });
+        }
     };
 
     const HandleCancel = (event) => {
@@ -325,7 +323,8 @@ const FundsTransferPage = () => {
         setFormData({
             user: auth.cookie.user.ID,
             name: auth.cookie.user.name,
-            store: auth.cookie.user.storeID,
+            store: auth.cookie.user.viewingStoreID,
+            storeName: auth.cookie.user.viewingStoreLocation,
             source: "",
             destination: "",
             amount: "",
@@ -348,8 +347,9 @@ const FundsTransferPage = () => {
             pennyRoll: 0,
         });
 
-        // Reset the status message
-        setStatus("");
+        // If all fields are already empty, don't show a toast notification
+        if (formData.source !== "" || formData.destination !== "" || formData.amount !== "")
+            toast.info("Fields have been reset.");
 
         // Reset the report message
         setReport("");
@@ -366,7 +366,7 @@ const FundsTransferPage = () => {
     };
 
     // Axios post request to submit the transfer
-    function SubmitTransfer(
+    async function SubmitTransfer(
         event,
         user,
         strSource,
@@ -376,29 +376,35 @@ const FundsTransferPage = () => {
     ) {
         event.preventDefault();
 
-        // Request object
-        const request = {
-            usrID: user,
-            storeID: formData.store,
-            origin: strSource,
-            destination: strDestination,
-            total: fltAmount,
-            ...currencyFields,
-        };
+        try {
+            // Request object
+            const request = {
+                usrID: user,
+                storeID: formData.store,
+                origin: strSource,
+                destination: strDestination,
+                total: parseFloat(fltAmount).toFixed(2),
+                ...currencyFields,
+            };
 
-        // Submit the form data
-        axios.post(FundTransferURL, request).then((response) => {
-            console.log(response);
+            // Submit the form data
+            const response = await axios.post(FundTransferURL, request);
+
+            console.log(response.data.response);
 
             // Check if the transfer was successful
-            if (response.data.IsValid == true)
-                console.log("Successfully submitted transfer");
-            else 
-                console.log("Failed to submit transfer");
-        })
-        .catch((error) => {
+            if (response.data.response === "Fund Transfer created successfully.") {
+                toast.success("Successfully submitted transfer!");
+                return true;
+            } else if (response.data.response === "Error in updating safe total: Error: Negative value detected in one or more fields.") {
+                toast.error("Failed to submit transfer. Source has insufficient funds.");
+                return false;
+            }
+        } catch (error) {
             console.error(error);
-        });
+            toast.error("A server error occurred during submission. Please try again later.");
+            return false;
+        }
     }
 
     // Function to format negative values in parentheses
@@ -444,8 +450,8 @@ const FundsTransferPage = () => {
         fltAmount,
         newCurrencyFields
     ) => {
-        // Get the current date and user details
-        const currentDate = new Date().toLocaleDateString();
+        // Get the current date and timestamp
+        const currentDate = new Date().toLocaleString();
 
         // Array of denominations
         const denominations = {
@@ -470,15 +476,9 @@ const FundsTransferPage = () => {
 
         // Array to hold the denominations details
         const denominationsDetails = [];
-
-        // Loop through the currency fields and add the non-zero denominations to the report
         for (const [key, value] of Object.entries(newCurrencyFields)) {
             if (denominations[key]) {
-                denominationsDetails.push(
-                    <tr key={key}>
-                        <td className="tg-i817">{value} x ${denominations[key]}</td>
-                    </tr>
-                );
+                denominationsDetails.push({ denomination: `${value} x ${denominations[key]}` });
             }
         }
 
@@ -494,118 +494,56 @@ const FundsTransferPage = () => {
         // Report details
         return (
             <div>
-                <table className="tg">
-                    <thead>
-                        <tr>
-                            <th className="tg-mqa1" colSpan="2">
-                                Transfer of Funds Report
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td className="tg-mcqj" colSpan="2">
-                                User Details:
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="tg-i817">Store:</td>
-                            <td className="tg-i817">{formData.storeName}</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-i817">User:</td>
-                            <td className="tg-i817">{formData.user} ({formData.name})</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-73oq">Date:</td>
-                            <td className="tg-73oq">{currentDate}</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-c10m" colSpan="2">
-                                Transfer Details:
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="tg-73oq">Source:</td>
-                            <td className="tg-73oq">{strSource}</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-i817">Destination:</td>
-                            <td className="tg-i817">{strDestination}</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-73oq">Amount:</td>
-                            <td className="tg-73oq">${fltAmount}</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-i817">Denominations:</td>
-                            <td className="tg-i817">
-                                <table>
-                                    <tbody>{denominationsDetails}</tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="tg-mcqj" colSpan="2">
-                                Source Details:
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="tg-i817">
-                                Expected amount in {strSource} before transfer:
-                            </td>
-                            <td className="tg-i817">${expectedSource}</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-73oq">
-                                Expected amount in {strSource} after transfer:
-                            </td>
-                            <td className="tg-73oq">{afterTransferSource}</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-i817">
-                                Actual amount in {strSource} after transfer:
-                            </td>
-                            <td className="tg-i817">blank</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-mcqj" colSpan="2">
-                                Destination Details:
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="tg-i817">
-                                Expected amount in {strDestination} before transfer:
-                            </td>
-                            <td className="tg-i817">${expectedDestination}</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-73oq">
-                                Expected amount in {strDestination} after transfer:
-                            </td>
-                            <td className="tg-73oq">{afterTransferDestination}</td>
-                        </tr>
-                        <tr>
-                            <td className="tg-i817">
-                                Actual amount in {strDestination} after transfer:
-                            </td>
-                            <td className="tg-i817">blank</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <DataTable 
+                    value={[
+                        { field: 'Store:', value: formData.storeName },
+                        { field: 'User:', value: `${formData.user} (${formData.name})` },
+                        { field: 'Date:', value: currentDate },
+                        { field: 'Source:', value: strSource },
+                        { field: 'Destination:', value: strDestination },
+                        { field: 'Amount:', value: `$${fltAmount}` },
+                        { field: 'Denominations:', value: (
+                            <table>
+                                <tbody>{denominationsDetails.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{item.denomination}</td>
+                                    </tr>
+                                ))}</tbody>
+                            </table>
+                        ) },
+                        { field: `Expected amount in ${strSource} before transfer:`, value: `$${expectedSource}` },
+                        { field: `Expected amount in ${strSource} after transfer:`, value: afterTransferSource },
+                        { field: `Actual amount in ${strSource} after transfer:`, value: 'blank' },
+                        { field: `Expected amount in ${strDestination} before transfer:`, value: `$${expectedDestination}` },
+                        { field: `Expected amount in ${strDestination} after transfer:`, value: afterTransferDestination },
+                        { field: `Actual amount in ${strDestination} after transfer:`, value: 'blank' }
+                    ]}
+                    size="small"
+                    stripedRows
+                    scrollable
+                    scrollHeight="50vh"
+                    style={{width: "90%", fontSize: ".9rem"}}
+                >
+                    <Column field="field" header="Fund Transfer Report" style={{ width: '70%' }} />
+                    <Column field="value" style={{ width: '30%' }} />
+                </DataTable>
             </div>
         );
     };
 
-    // Determine the class based on the status
-    const statusClass = status.startsWith("Successfully") ? successClass : errorClass;
-
     return (
         <div className="flex h-screen bg-custom-accent">
+            <Toaster 
+                richColors 
+                position="bottom-right"
+                expand={true}
+                duration={5000}
+                pauseWhenPageIsHidden={true}
+            />
             <SideBar currentPage={3} />
             <div className="flex flex-col w-full">
                 <HorizontalNav />
-                <div className="text-main-color float-left ml-8 mt-12">
+                <div className="text-main-color float-left ml-8 mt-6">
 					<h1 className="text-3xl font-bold">Transfer funds for {formData.storeName}</h1>
 					<br />
                     <form onSubmit={HandleSubmit} onReset={HandleCancel}>
@@ -690,6 +628,10 @@ const FundsTransferPage = () => {
                                 </tr>
                             </tbody>
                         </table>
+
+                        <div>
+                            <p className="text-red-500">{registerStatus}</p>
+                        </div>
 
                         {/* Denominations */}
                         <strong>
@@ -1147,7 +1089,17 @@ const FundsTransferPage = () => {
                                             Cancel
                                         </button>
                                     </td>
-                                    <td></td>
+                                    <td>
+                                    {report && (
+                                        <button
+                                            type="button"
+                                            className="flex w-5/6 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                            onClick={() => setShowReport(!showReport)}
+                                        >
+                                            View Report
+                                        </button>
+                                    )}
+                                    </td>
                                     <td>
                                         <button
                                             type="submit"
@@ -1156,17 +1108,26 @@ const FundsTransferPage = () => {
                                             Submit
                                         </button>
                                     </td>
-                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
                     </form>
 
-                    {/* Shows submission status */}
-                    <p className={`mt-4 ml-6 ${statusClass}`}>{status}</p>
-
                     {/* Shows report with successful submissions */}
-                    {report && <div>{report}</div>}
+                    {showReport && (
+                        <div className="report-overlay">
+                            <div className="report-container">
+                                {report}
+                                <br />
+                                <button 
+                                    className="flex w-4/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={() => setShowReport(false)}
+                                >
+                                    Close Report
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

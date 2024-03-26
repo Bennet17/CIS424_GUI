@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
+import { Toaster, toast } from 'sonner';
 import classNames from 'classnames';
 
 const OpenDayPage = () =>{
@@ -15,7 +16,6 @@ const OpenDayPage = () =>{
     const [currentPosIndex, SetCurrentPosIndex] = useState(-1);
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("show extras ▼");
-    //let currentPosIndex = -1;
 
     //dom fields
     const [elmPennies, setElmPennies] = useState(0);
@@ -150,6 +150,7 @@ const OpenDayPage = () =>{
                 console.log(response);
                 //set the pos information data
                 setPoss(response.data);
+                SetPostSuccess(false);
             })
             .catch(error => {
                 console.error(error);
@@ -212,23 +213,30 @@ const OpenDayPage = () =>{
                 if (response.status == 200){
                     //open POS
                     SetPostSuccess(true);
-                    SetPosSuccessTxt(poss[currentPosIndex].name + " opened successfully!");
+                    toast.success(poss[currentPosIndex].name + " opened successfully!");
                 }else{
                     SetPostSuccess(false);
-                    SetPosSuccessTxt("Error trying to open" + poss[currentPosIndex].name);
+                    toast.error("Error trying to open" + poss[currentPosIndex].name);
                 }
             })
             .catch(error => {
                 console.error(error);
+                toast.error("Unknown error occured");
             });
         }else{
-            SetPostSuccess(false);
-            SetPosSuccessTxt(poss[currentPosIndex].name + " is already open!");
+            toast.error(poss[currentPosIndex].name + " is already open!");
         }
     }
 
     return (
         <div className="flex h-screen bg-custom-accent">
+            <Toaster 
+                richColors 
+                position="bottom-right"
+                expand={true}
+                duration={5000}
+                pauseWhenPageIsHidden={true}
+            />
             <SideBar currentPage={1} />
             <div className="w-full">
                 <HorizontalNav />
@@ -245,7 +253,7 @@ const OpenDayPage = () =>{
                                             onChange={(e) => SetCurrentPosIndex(index)} 
                                             disabled={item.opened ? true : false}
                                             type="radio" 
-                                            name="POS" 
+                                            name={"POS"} 
                                             value={item.name} 
                                         />
                                         {item.name} - {item.opened ? "Open" : "Closed"}
@@ -479,7 +487,7 @@ const OpenDayPage = () =>{
                                 </tr>
                                 <tr>
                                     <td>
-                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Open POS</button>
+                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Open</button>
                                     </td>
                                     <td>
                                         <button onClick={ClearAllFields} type="button" value="button" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Clear all fields</button>
@@ -493,8 +501,8 @@ const OpenDayPage = () =>{
                     <div>
                         <label> Current Total:
                             <input 
-                                value={totalAmount} 
-                                className={totalAmountStyle} 
+                                value={"$" + totalAmount}
+                                className={totalAmountStyle}
                                 type="text" 
                                 disabled={true}
                             />
@@ -504,16 +512,16 @@ const OpenDayPage = () =>{
                     <div>
                         <label> Expected Total:
                             <input 
-                                value={expectedAmount} 
+                                value={"$" + expectedAmount}
                                 disabled={true}
                                 className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
-                                type="number" 
+                                type="text" 
                             />
                         </label>
                     </div>
                     <div>
-                        {postSuccess == true && <p className="text-base font-bold text-green-500">{possSuccessTxt}</p>}
-                        {postSuccess == false && <p className="text-base font-bold text-red-500">{possSuccessTxt}</p>}
+                        {/*postSuccess == true && <p className="text-base font-bold text-green-500">{possSuccessTxt}</p>*/}
+                        {/*postSuccess == false && <p className="text-base font-bold text-red-500">{possSuccessTxt}</p>*/}
                     </div>
                 </div>
             </div>

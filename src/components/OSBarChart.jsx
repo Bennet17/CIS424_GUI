@@ -17,7 +17,7 @@ const OSBarChart = () => {
 
   useEffect(() => {
     fetchData();
-  }, []); // Run once when the component mounts
+  }, [auth.cookie.user.viewingStoreID]); // Run once when the component mounts
 
   // Update annotation positioning whenever chart data changes
   useEffect(() => {
@@ -28,21 +28,36 @@ const OSBarChart = () => {
     }
   }, [chartData]);
 
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero based
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatDateOtherWay = (date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero based
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${month}-${day}-${year}`;
+  };
+
   const fetchData = async () => {
     // TODO - Correct route but it's not working
     const storeID = auth.cookie.user.viewingStoreID;
-    const url =
-      "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance";
 
-    // const obj =
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 14); // Days shown in chart, should be a constant but who cares
+    console.log(formatDate(endDate));
+    console.log(formatDate(startDate));
+
+    const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${
+      auth.cookie.user.viewingStoreID
+    }&startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`;
 
     try {
-      const response = await axios.post(url, {
-        // TODO - Not dynamic
-        storeID: "1",
-        startDate: "2024-03-16",
-        endDate: "2024-03-17",
-      });
+      const response = await axios.get(url);
       const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
       console.log(data);
 
@@ -51,13 +66,13 @@ const OSBarChart = () => {
         series: [
           {
             name: "Variance",
-            data: data.map((dayVariance) => dayVariance.Variance),
+            data: data.map((dayVariance) => dayVariance.variance),
           },
         ],
         // Map corresponding date values
         // Looks scary but it's all formatting
         categories: data.map((weekday) => {
-          const date = new Date(weekday.Date); // Get date from data
+          const date = new Date(weekday.date); // Get date from data
           const dayOfWeek = date.toLocaleDateString("en-US", {
             weekday: "short",
           }); // Get the short day name (e.g., "Mon")
@@ -82,6 +97,23 @@ const OSBarChart = () => {
       height: 350,
       toolbar: {
         show: true, // Display the toolbar with the hamburger menu
+        export: {
+          svg: {
+            filename: `${
+              auth.cookie.user.viewingStoreLocation
+            }_BiweekSummary_${formatDateOtherWay(new Date())}`,
+          },
+          png: {
+            filename: `${
+              auth.cookie.user.viewingStoreLocation
+            }_BiweekSummary_${formatDateOtherWay(new Date())}`,
+          },
+          csv: {
+            filename: `${
+              auth.cookie.user.viewingStoreLocation
+            }_BiweekSummary_${formatDateOtherWay(new Date())}`,
+          },
+        },
       },
       fontFamily: "Roboto, sans-serif", // Chart font
       foreColor: "#616161", // HEX CODE FOR GRAY-700
@@ -147,7 +179,7 @@ const OSBarChart = () => {
     },
     colors: ["#008FFB"], // Color of the bars
     title: {
-      text: "Over/Short Summary", // Title of the chart
+      text: `${auth.cookie.user.viewingStoreLocation}'s Bi-Week Over/Short Summary`, // Title of the chart
       align: "center",
       margin: 10,
       offsetY: 20,
@@ -156,25 +188,26 @@ const OSBarChart = () => {
         fontWeight: "bold",
       },
     },
-    annotations: {
-      yaxis: [
-        {
-          y: 0,
-          borderColor: "#6c757d",
-          borderWidth: 1,
-          strokeDashArray: 5,
-          label: {
-            borderColor: "#6c757d",
-            style: {
-              color: "#fff",
-              background: "#6c757d",
-            },
-            text: "No Variance", // Annotation for zero variance
-            offsetY: annotationOffset,
-          },
-        },
-      ],
-    },
+    // TM: This is the 'No Variance' label
+    // annotations: {
+    //   yaxis: [
+    //     {
+    //       y: 0,
+    //       borderColor: "#6c757d",
+    //       borderWidth: 1,
+    //       strokeDashArray: 5,
+    //       label: {
+    //         borderColor: "#6c757d",
+    //         style: {
+    //           color: "#fff",
+    //           background: "#6c757d",
+    //         },
+    //         text: "No Variance", // Annotation for zero variance
+    //         offsetY: annotationOffset,
+    //       },
+    //     },
+    //   ],
+    // },
     tooltip: {
       enabled: true,
       y: {
