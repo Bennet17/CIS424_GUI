@@ -85,9 +85,12 @@ const OpenDayPage = () =>{
         }
     );
 
-    function clamp(value, min = 0){
+    //keep values clamped between a minimum and maxium value
+    function clamp(value, min = 0, max = 1000000){
         if (value < min){
             return min;
+        }else if (value > max){
+            return max;
         }
         return value;
     }
@@ -166,6 +169,7 @@ const OpenDayPage = () =>{
         if (poss.length > 0 && poss[currentPosIndex]){
             axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`)
             .then(response => {
+                //set the expected amount of the currently-selected pos
                 console.log("getting cash count for " + poss[currentPosIndex].name + ", see below");
                 console.log(response);
                 setExpectedAmount(response.data);
@@ -215,15 +219,18 @@ const OpenDayPage = () =>{
                     SetPostSuccess(true);
                     toast.success(poss[currentPosIndex].name + " opened successfully!");
                 }else{
+                    //send toast saying that the pos could not be opened
                     SetPostSuccess(false);
                     toast.error("Error trying to open" + poss[currentPosIndex].name);
                 }
             })
             .catch(error => {
+                //uh oh, fucky wucky
                 console.error(error);
                 toast.error("Unknown error occured");
             });
         }else{
+            //prevent users from opening an already-opened pos
             toast.error(poss[currentPosIndex].name + " is already open!");
         }
     }

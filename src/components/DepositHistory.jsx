@@ -22,7 +22,7 @@ const DepositHistory = () => {
 
     //build todays date as a string that our input field will accept because i hate js why doesn't it have this built-in what the fuck
     function GetTodaysDate(){
-        const date = new Date();
+        const date = new Date(Date.now());
         let y = date.getFullYear().toString();
 
         let m = date.getMonth().toString();

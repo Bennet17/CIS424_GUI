@@ -95,9 +95,11 @@ const CloseDayPage = () =>{
         }
     );
 
-    function clamp(value, min = 0){
+    function clamp(value, min = 0, max = 1000000){
         if (value < min){
             return min;
+        }else if (value > max){
+            return max;
         }
         return value;
     }
