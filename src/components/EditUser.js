@@ -343,7 +343,6 @@ const EditUser = (user) => {
           <input
             type="checkbox"
             id={`store${item.ID}`}
-            required
             name="store"
             value={item.ID}
             defaultChecked={user.user.storeID_CSV.includes(item.ID.toString())}
