@@ -31,8 +31,8 @@ const[validPassword, setValidPassword] = useState('');
   
 
 const validatePassword = (password) => {
-    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
-    const isValid = regex.test(password);
+  const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*+=?><:;'"|~`-])[a-zA-Z0-9!@#$%^&*+=?><:;'"|~`-]{8,}$/;
+  const isValid = regex.test(password);
     console.log(isValid);
     //if its not valid, set the error message to appear conditionally
     if (!isValid) {
@@ -203,9 +203,12 @@ const validatePassword = (password) => {
                     </button>
                     <button
                       type="submit"
+                      disabled={validPassword === false} 
                       onClick={handleNewPasswordSubmit}
-                      className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    >
+                      className={`py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+                        validPassword ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-gray-400 cursor-not-allowed text-gray-600'
+                      }`}
+                      >
                       Submit
                     </button>
                   </div>
