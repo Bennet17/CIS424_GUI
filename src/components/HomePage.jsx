@@ -18,8 +18,7 @@ const HomePage = () => {
 
         {/* Content area */}
         <div className="flex flex-grow justify-center items-center">
-          {auth.cookie.user.position == "Manager"}
-          <OSBarChart />
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) && <OSBarChart />}
         </div>
       </div>
     </div>
