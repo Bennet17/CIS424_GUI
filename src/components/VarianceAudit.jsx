@@ -1,6 +1,7 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useRef, useState, useEffect, useLayoutEffect, useCallback} from 'react';
+import CurrencyInput from "react-currency-input-field";
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import {useNavigate} from 'react-router-dom';
@@ -10,6 +11,7 @@ import { Toaster, toast } from 'sonner';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { MultiSelect } from 'primereact/multiselect';
 import { format, set } from 'date-fns';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
@@ -32,12 +34,35 @@ const VarianceAuditPage = () =>{
     const [emptyRows, setEmptyRows] = useState([]); // Empty rows to fill the last page of the table
 
     const [registerName, setRegisterName] = useState(""); // Register name
+    
+    const [currentPage, setCurrentPage] = useState(0); // Initialize currentPage with default value of 0
 
     const tableRef = useRef(null); // Reference to the table element 
 
     // Status message to display if no registers are open
     const [status, setStatus] = useState("Loading...");
     const errorClass = "text-red-500"; // CSS class for error
+
+    const varianceColumns = [
+        {field: "POSName", header: "POS Name"},
+        {field: "OpenerName", header: "Opener Name"},
+        {field: "OpenExpected", header: "Open Expected"},
+        {field: "OpenActual", header: "Open Actual"},
+        {field: "CloserName", header: "Closer Name"},
+        {field: "CloseExpected", header: "Close Expected"},
+        {field: "CloseActual", header: "Close Actual"},
+        {field: "CashToSafe", header: "Cash to Safe"},
+        {field: "CloseCreditActual", header: "Close Credit Actual"},
+        {field: "CloseCreditExpected", header: "Close Credit Expected"},
+        {field: "OpenVariance", header: "Open Variance"},
+        {field: "CloseVariance", header: "Close Variance"},
+        {field: "TotalCashVariance", header: "Total Cash Variance"},
+        {field: "CreditVariance", header: "Credit Variance"},
+        {field: "TotalVariance", header: "Total Variance"}
+    ]
+
+    // State to store the visible columns in the table
+    const [visibleColumns, setVisibleColumns] = useState(varianceColumns.filter(col => ["Name", "OpenerName", "CloserName", "TotalVariance"].includes(col.field)));
 
     const [formData, setFormData] = useState({
         user: auth.cookie.user.ID,
@@ -117,11 +142,12 @@ const VarianceAuditPage = () =>{
             function GetRegisterVariance() {
                 // Get the register ID, start date, and end date from the form data
                 const registerID = formData.registerID;
+                const storeID = formData.store;
                 const startDate = new Date(formData.startDate).toISOString().split('T')[0];
                 const endDate = new Date(formData.endDate).toISOString().split('T')[0];
 
-                // GET request to the General Variance API
-                axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&startDate=${startDate}&endDate=${endDate}`)
+                // GET request to the Register Variance API
+                axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`)
                     .then((response) => {
                         // If the response contains data, set the array of variances to the response data
                         if (response.data && response.data.length > 0) {
@@ -303,16 +329,8 @@ const VarianceAuditPage = () =>{
         }
         console.log(formData);
     };
-    
-    // Table header
-    const header = (
-        <div className="flex justify-between align-items-center">
-        <h1 className="variance-header">Variances for {registerName}</h1>
-            <Button type="button" icon="pi pi-file" rounded size="small" onClick={() => exportCSV(false)} data-pr-tooltip="CSV" label="Export to CSV"/>
-        </div>
-    )
-    const [currentPage, setCurrentPage] = useState(0); // Initialize currentPage with default value
 
+    // Function to handle the change of the row count
     const OnRowChange = (event) => {
         // Update the row count with the selected value
         setRowCount(event.rows);
@@ -320,7 +338,37 @@ const VarianceAuditPage = () =>{
         // Update the current page
         setCurrentPage(event.page);
     }
+
+    const HandleColumnToggle = (event) => {
+        // Update the visible columns in the table
+        setVisibleColumns(event.value);
+    }
     
+    // Table header
+    const header = (
+        <div className="flex justify-between align-items-center">
+            <h1 className="variance-header">Variances for {registerName}</h1>
+            <MultiSelect 
+                value={visibleColumns} 
+                options={varianceColumns} 
+                optionLabel="header" 
+                filter
+                placeholder="Select columns to display"
+                onChange={HandleColumnToggle} 
+                style={{width: '40em', fontSize: '.9rem', marginRight: '1em'}}
+                display="chip" 
+            />
+            <Button 
+                type="button" 
+                icon="pi pi-file" 
+                rounded 
+                size="small" 
+                onClick={() => exportCSV(false)} 
+                data-pr-tooltip="CSV" 
+                label="Export to CSV"
+            />
+        </div>
+    )
     
     return (
         <div className="flex h-screen bg-custom-accent variance-audit-page">
@@ -409,38 +457,64 @@ const VarianceAuditPage = () =>{
                         />
                     </div>
                     <div>
-                        <DataTable 
-                            ref={tableRef}
-                            value={[...arrVariances, ...emptyRows]} 
-                            rows={rowCount}
-                            rowsPerPageOptions={[5, 10, 15]}
-                            onPage={OnRowChange}
-                            first={currentPage * rowCount}
-                            size="small"
-                            paginator={true}
-                            showGridlines
-                            stripedRows
-                            removableSort
-                            header={header}
-                            scrollable
-                            scrollHeight="35vh"
-                            emptyMessage="No variances found for the selected register."
-                            style={{width: "65%", fontSize: ".9rem", backgroundColor: "white"}}
-                            exportFilename={GetFileName()}
-                        >
-                            <Column field="Date" header="Date" style={{maxWidth: "4em"}} sortable body={(rowData) => (
-                                <span className={rowData.Date === null ? "invisible-row" : ""}>{FormatDate(rowData.Date)}</span>
-                            )}></Column>
-                            <Column field="amountExpected" header="Expected Amount" style={{maxWidth: "5em"}} sortable body={(rowData) => (
-                                <span className={rowData.amountExpected === null ? "invisible-row" : ""}>{FormatCurrency(rowData.amountExpected)}</span>
-                            )}></Column>
-                            <Column field="total" header="Total" style={{maxWidth: "5em"}} sortable body={(rowData) => (
-                                <span className={rowData.total === null ? "invisible-row" : ""}>{FormatCurrency(rowData.total)}</span>
-                            )}></Column>
-                            <Column field="Variance" header="Variance" style={{maxWidth: "5em"}} sortable body={(rowData) => (
-                                <span className={rowData.Variance === null ? "invisible-row" : ""}>{rowData.Variance !== null ? VariancePositiveNegative(rowData.Variance) : ''}</span>
-                            )}></Column>
-                        </DataTable>
+                    <DataTable 
+                        ref={tableRef}
+                        value={[...arrVariances, ...emptyRows]} 
+                        rows={rowCount}
+                        rowsPerPageOptions={[5, 10, 15]}
+                        onPage={OnRowChange}
+                        first={currentPage * rowCount}
+                        size="small"
+                        paginator={true}
+                        showGridlines
+                        stripedRows
+                        removableSort
+                        header={header}
+                        scrollable
+                        scrollHeight="40vh"
+                        emptyMessage="No variances found for the selected register."
+                        style={{ width: "80%", fontSize: ".9rem", backgroundColor: "white" }}
+                        exportFilename={GetFileName()}
+                    >
+                        <Column field="Date" header="Date" sortable body={(rowData) => (
+                            <span className={rowData.Date === null ? "invisible-row" : ""}>{FormatDate(rowData.Date)}</span>
+                        )}></Column>
+                        {visibleColumns.map(column => (
+                            <Column 
+                                key={column.field}
+                                field={column.field} 
+                                header={column.header} 
+                                style={{ minWidth: "10em" }}
+                                sortable 
+                                body={(rowData) => {
+                                    // Check if the column is a currency column
+                                    if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
+                                        return (
+                                            <span className={rowData[column.field] === null ? "invisible-row" : ""}>
+                                                {FormatCurrency(rowData[column.field])}
+                                            </span>
+                                        );
+                                    }
+                                    // Check if the column is a variance column
+                                    else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
+                                        return (
+                                            <span className={rowData[column.field] === null ? "invisible-row" : ""}>
+                                                {rowData[column.field] !== null ? VariancePositiveNegative(rowData[column.field]) : ''}
+                                            </span>
+                                        );
+                                    }
+                                    // For other columns, just return the value
+                                    else {
+                                        return (
+                                            <span className={rowData[column.field] === null ? "invisible-row" : ""}>
+                                                {rowData[column.field]}
+                                            </span>
+                                        );
+                                    }
+                                }}
+                            />
+                        ))}
+                    </DataTable>
                     </div>
                 </div>
             </div>
