@@ -50,6 +50,9 @@ const FundsTransferPage = () => {
     const [arrSources, setArrSources] = useState([]); // Array to hold the source register names
     const [arrDestinations, setArrDestinations] = useState([]); // Array to hold the destination register names
 
+    // Bank element to hard-code to the source register names
+    const bankElement = [{ id: -1, name: "BANK" }];
+
     const [registerStatus, setRegisterStatus] = useState(""); // Status message to display on page load
     const [report, setReport] = useState(""); // Report message to display after form submission
     const [showReport, setShowReport] = useState(false); // Boolean to show/hide the report message
@@ -66,6 +69,9 @@ const FundsTransferPage = () => {
                 const newSources = response.data
                 .filter(register => register.opened)
                 .map(register => ({ id: register.regID, name: register.name }));
+
+                // Add the bank as a source
+                newSources.unshift(...bankElement)
 
                 if (newSources.length > 0)
                     setArrSources(newSources);
