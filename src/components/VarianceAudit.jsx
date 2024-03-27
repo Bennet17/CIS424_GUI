@@ -44,25 +44,36 @@ const VarianceAuditPage = () =>{
     const errorClass = "text-red-500"; // CSS class for error
 
     const varianceColumns = [
-        {field: "POSName", header: "POS Name"},
-        {field: "OpenerName", header: "Opener Name"},
-        {field: "OpenExpected", header: "Open Expected"},
-        {field: "OpenActual", header: "Open Actual"},
-        {field: "CloserName", header: "Closer Name"},
-        {field: "CloseExpected", header: "Close Expected"},
-        {field: "CloseActual", header: "Close Actual"},
-        {field: "CashToSafe", header: "Cash to Safe"},
-        {field: "CloseCreditActual", header: "Close Credit Actual"},
-        {field: "CloseCreditExpected", header: "Close Credit Expected"},
-        {field: "OpenVariance", header: "Open Variance"},
-        {field: "CloseVariance", header: "Close Variance"},
-        {field: "TotalCashVariance", header: "Total Cash Variance"},
-        {field: "CreditVariance", header: "Credit Variance"},
-        {field: "TotalVariance", header: "Total Variance"}
+        { field: "POSName", header: "POS Name", order: 1 },
+        { field: "OpenerName", header: "Opener Name", order: 2 },
+        { field: "CloserName", header: "Closer Name", order: 3 },
+        { field: "OpenExpected", header: "Open Expected", order: 4 },
+        { field: "OpenActual", header: "Open Actual", order: 5 },
+        { field: "CloseExpected", header: "Close Expected", order: 6 },
+        { field: "CloseActual", header: "Close Actual", order: 7 },
+        { field: "CashToSafe", header: "Cash to Safe", order: 8 },
+        { field: "CloseCreditActual", header: "Close Credit Actual", order: 9 },
+        { field: "CloseCreditExpected", header: "Close Credit Expected", order: 10 },
+        { field: "OpenVariance", header: "Open Variance", order: 11 },
+        { field: "CloseVariance", header: "Close Variance", order: 12 },
+        { field: "TotalCashVariance", header: "Total Cash Variance", order: 13 },
+        { field: "CreditVariance", header: "Credit Variance", order: 14 },
+        { field: "TotalVariance", header: "Total Variance", order: 15 }
     ]
 
     // State to store the visible columns in the table
-    const [visibleColumns, setVisibleColumns] = useState(varianceColumns.filter(col => ["Name", "OpenerName", "CloserName", "TotalVariance"].includes(col.field)));
+    const [visibleColumns, setVisibleColumns] = useState(varianceColumns.filter(col => [
+        "POSName", 
+        "OpenerName", 
+        "CloserName", 
+        "OpenExpected", 
+        "OpenActual", 
+        "OpenVariance", 
+        "CloseExpected", 
+        "CloseActual",
+        "CloseVariance", 
+        "TotalVariance"]
+        .includes(col.field)));
 
     const [formData, setFormData] = useState({
         user: auth.cookie.user.ID,
@@ -339,9 +350,16 @@ const VarianceAuditPage = () =>{
         setCurrentPage(event.page);
     }
 
+    // Function to show the selected columns in the table from the multi-select dropdown
     const HandleColumnToggle = (event) => {
-        // Update the visible columns in the table
-        setVisibleColumns(event.value);
+        // Get the columns and selected columns from the event
+        let selectedColumns = event.value;
+    
+        // Sort the selected columns based on the order property
+        selectedColumns.sort((a, b) => a.order - b.order);
+    
+        // Set the visible columns
+        setVisibleColumns(selectedColumns);
     }
     
     // Table header
@@ -490,11 +508,10 @@ const VarianceAuditPage = () =>{
                                         // Check if the column is a currency column
                                         if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
                                             // Check if the value is null or undefined
-                                            if (rowData[column.field] == null) {
+                                            if (rowData[column.field] == null) 
                                                 return <span className="invisible-row">-</span>; // Display '-' for null or undefined values
-                                            } else {
+                                            else 
                                                 return <span>{FormatCurrency(rowData[column.field])}</span>; // Format the currency value
-                                            }
                                         }
                                         // Check if the column is a variance column
                                         else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
