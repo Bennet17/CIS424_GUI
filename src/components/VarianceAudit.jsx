@@ -457,64 +457,62 @@ const VarianceAuditPage = () =>{
                         />
                     </div>
                     <div>
-                    <DataTable 
-                        ref={tableRef}
-                        value={[...arrVariances, ...emptyRows]} 
-                        rows={rowCount}
-                        rowsPerPageOptions={[5, 10, 15]}
-                        onPage={OnRowChange}
-                        first={currentPage * rowCount}
-                        size="small"
-                        paginator={true}
-                        showGridlines
-                        stripedRows
-                        removableSort
-                        header={header}
-                        scrollable
-                        scrollHeight="40vh"
-                        emptyMessage="No variances found for the selected register."
-                        style={{ width: "80%", fontSize: ".9rem", backgroundColor: "white" }}
-                        exportFilename={GetFileName()}
-                    >
-                        <Column field="Date" header="Date" sortable body={(rowData) => (
-                            <span className={rowData.Date === null ? "invisible-row" : ""}>{FormatDate(rowData.Date)}</span>
-                        )}></Column>
-                        {visibleColumns.map(column => (
-                            <Column 
-                                key={column.field}
-                                field={column.field} 
-                                header={column.header} 
-                                style={{ minWidth: "10em" }}
-                                sortable 
-                                body={(rowData) => {
-                                    // Check if the column is a currency column
-                                    if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
-                                        return (
-                                            <span className={rowData[column.field] === null ? "invisible-row" : ""}>
-                                                {FormatCurrency(rowData[column.field])}
-                                            </span>
-                                        );
-                                    }
-                                    // Check if the column is a variance column
-                                    else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
-                                        return (
-                                            <span className={rowData[column.field] === null ? "invisible-row" : ""}>
-                                                {rowData[column.field] !== null ? VariancePositiveNegative(rowData[column.field]) : ''}
-                                            </span>
-                                        );
-                                    }
-                                    // For other columns, just return the value
-                                    else {
-                                        return (
-                                            <span className={rowData[column.field] === null ? "invisible-row" : ""}>
-                                                {rowData[column.field]}
-                                            </span>
-                                        );
-                                    }
-                                }}
-                            />
-                        ))}
-                    </DataTable>
+                        <DataTable 
+                            ref={tableRef}
+                            value={[...arrVariances, ...emptyRows]} 
+                            rows={rowCount}
+                            rowsPerPageOptions={[5, 10, 15]}
+                            onPage={OnRowChange}
+                            first={currentPage * rowCount}
+                            size="small"
+                            paginator={true}
+                            showGridlines
+                            stripedRows
+                            removableSort
+                            header={header}
+                            scrollable
+                            scrollHeight="40vh"
+                            emptyMessage="No variances found for the selected register."
+                            style={{ width: "80%", fontSize: ".9rem", backgroundColor: "white" }}
+                            exportFilename={GetFileName()}
+                        >
+                            <Column field="Date" header="Date" sortable body={(rowData) => (
+                                <span className={rowData.Date === null ? "invisible-row" : ""}>{FormatDate(rowData.Date)}</span>
+                            )}></Column>
+                            {visibleColumns.map(column => (
+                                <Column 
+                                    key={column.field}
+                                    field={column.field} 
+                                    header={column.header} 
+                                    style={{ minWidth: "10em" }}
+                                    sortable 
+                                    body={(rowData) => {
+                                        // Check if the column is a currency column
+                                        if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
+                                            // Check if the value is null or undefined
+                                            if (rowData[column.field] == null) {
+                                                return <span className="invisible-row">-</span>; // Display '-' for null or undefined values
+                                            } else {
+                                                return <span>{FormatCurrency(rowData[column.field])}</span>; // Format the currency value
+                                            }
+                                        }
+                                        // Check if the column is a variance column
+                                        else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
+                                            // Check if the value is null or undefined
+                                            if (rowData[column.field] == null) {
+                                                return <span className="invisible-row">-</span>; // Display '-' for null or undefined values
+                                            } else {
+                                                return <span>{VariancePositiveNegative(rowData[column.field])}</span>; // Format the variance value
+                                            }
+                                        }
+                                        // For other columns, display value as is
+                                        else {
+                                            return <span>{rowData[column.field]}</span>;
+                                        }
+                                    }}
+                                />
+                            ))}
+                        </DataTable>
                     </div>
                 </div>
             </div>
