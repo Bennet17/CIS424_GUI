@@ -330,8 +330,7 @@ const handleChange = (e) => {
                           id={`store${item.ID}`}
                           name="store"
                           value={item.ID}
-                          required
-                          defaultChecked={item.ID == curStoreID}
+                          defaultChecked={item.ID === curStoreID}
                           onChange={(e) => handleCheckboxChange(e, item.ID)}
                           className="mr-2"
                         />
