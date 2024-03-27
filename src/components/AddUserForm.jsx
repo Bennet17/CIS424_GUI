@@ -20,17 +20,20 @@ const AddUserForm = () => {
     if (!selectedStores.includes(curStoreID.toString())) {
       setSelectedStores([...selectedStores, curStoreID.toString()]);
     }
+    setPosition("Employee");
+  
+    
   };
 
   const closeModal = () => {
     setIsOpen(false);
-    setLastName('')
-    setFirstName('')
-    setUsername('')
-    setPosition('')
-    setPassword('')
-    setStoreID('')
-    setErrorMessage('')
+    setLastName("")
+    setFirstName("")
+    setUsername("")
+    setPosition("")
+    setPassword("")
+    setStoreID("")
+    setErrorMessage("")
     setValidPassword(false);
 
     setSelectedStores([]);
@@ -65,7 +68,7 @@ const AddUserForm = () => {
   const [position, setPosition] = useState("Employee");
   const [storeIDs, setStoreID] = useState(curStoreID);
   const [result, setResult] = useState("");
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   //const [selectedStores, setSelectedStores] = useState([])
   const[validPassword, setValidPassword] = useState(false);
 
@@ -87,12 +90,13 @@ const handleChange = (e) => {
   //check functionaloity
   //REGEX tests for 8 characters, 1 captial, and 1 symbol
   const validatePassword = (password) => {
-    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*+=?><:;'"|~`-])[a-zA-Z0-9!@#$%^&*+=?><:;'"|~`-]{8,}$/;
     const isValid = regex.test(password);
       console.log(isValid);
 
     //if its not valid, set the error message to appear conditionally
     if (!isValid) {
+      
       setValidPassword(false);
       setErrorMessage(
         <>
@@ -101,11 +105,8 @@ const handleChange = (e) => {
         </>
       );    
     }
-
-       else {
-
-
-      setErrorMessage(''); //make error disappear when valid
+      else{
+      setErrorMessage(""); //make error disappear when valid
       setValidPassword(true);
     }
 
@@ -130,29 +131,34 @@ const handleChange = (e) => {
     
 
   };
-  getCSV();
-  console.log(selectedStores);
-
   function getCSV() {
-    let CSV = "";
- 
-    for (let i = 0; i < selectedStores.length; i++) {
-      const storeID = selectedStores[i];
-      if (i === selectedStores.length - 1) {
-        CSV += storeID;
-      } else {
-        CSV += storeID + ",";
-      }
-    }
+    let temp = "";
+   
+ // Get all checkbox elements
+ const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+ // Iterate through checkboxes
+ checkboxes.forEach((checkbox) => {
+     // Check if the checkbox is checked
+     if (checkbox.checked) {
+         console.log(`Checkbox with value ${checkbox.value} is selected.`);
+         temp += checkbox.value +","
+
+     }
+ });
+
+
+ let csv = temp.substring(0, temp.length - 1); 
     
-    return CSV;
+    return csv;
+
   }
 
 
   //this method handles the submit button click on the add user form
-  function handleSubmit(event) {
-    if(validPassword == true){
+  const handleSubmit = (event) => {
       event.preventDefault(); //prevent refresh TEST THIS
+      let temp = getCSV();
 
       //concantenate last name and first name entry
       const name = lastname + ", "+firstname;
@@ -196,7 +202,8 @@ const handleChange = (e) => {
         // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
         setResult("Request Failed. Try again.")
         });
-    }
+
+    
 
   }
 
@@ -205,25 +212,23 @@ const handleChange = (e) => {
 <div className="relative ml-5 ">
       <button
         onClick={openModal}
-        
        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       > Add User</button>
-
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
           <div className="bg-white p-8 rounded shadow-md w-auto">
           <span onClick={closeModal} className="absolute top-0 right-0 cursor-pointer text-gray-700 hover:text-gray-900">&times;</span>
             <h2 className="text-2xl font-bold mb-4">Add User Information</h2>
-            <form  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <h2 className="text-lg font-bold mb-4">{result}</h2>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="mb-4">
                         <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">First Name:</label>
                         <input
-                        required
+                          required
                           id="firstName"
                           type="text"
-                          value={firstname}
+                          //value={firstname}
                           onChange={(e) => setFirstName(e.target.value)}
                           className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                         />
@@ -231,10 +236,11 @@ const handleChange = (e) => {
                       <div className="mb-4">
                         <label htmlFor="lastName" className="block text-gray-700 font-bold mb-2">Last Name:</label>
                         <input
-                        required
+                     
                           id="lastName"
                           type="text"
-                          value={lastname}
+                          required
+                         // value={lastname}
                           onChange={(e) => setLastName(e.target.value)}
                           className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                         />
@@ -242,9 +248,9 @@ const handleChange = (e) => {
                       <div className="mb-4">
                         <label htmlFor="username" className="block text-gray-700 font-bold mb-2">Username:</label>
                         <input
-                        required
                           id="username"
                           type="text"
+                          required
                           onChange={(e) => setUsername(e.target.value)}
                           className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                         />
@@ -268,49 +274,52 @@ const handleChange = (e) => {
                       <div className="mb-4">
                     <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
                     <div className="flex flex-col">
-  <div className="flex items-center">
-    <input
-      required
-      type="radio"
-      id="employee"
-      name="role"
-      value="Employee"
-      defaultChecked={"Employee"} // Assuming position is the state variable for the selected role
-      onChange={(e) => setPosition(e.target.value)}
-      className="mr-2"
-    />
-    <label htmlFor="employee" className="mr-4">Employee</label>
-  </div>
-  {auth.cookie.user.position === "Owner" && (
-    <div>
-  <div className="flex items-center">
-    <input
-      type="radio"
-      id="manager"
-      name="role"
-      value="Manager"
-      onChange={(e) => setPosition(e.target.value)}
-      className="mr-2"
-    />
-    <label htmlFor="manager">Manager</label>
-  </div>
-  
-    <div className="flex items-center">
-      <input
-        type="radio"
-        id="owner"
-        name="role"
-        value="Owner"
-        onChange={(e) => setPosition(e.target.value)}
-        className="mr-2"
-      />
-      <label htmlFor="owner">Owner</label>
-    </div>
-    </div>
-  )}
-</div>
+                        <div className="flex items-center">
+                          <input
+                         
+                            type="radio"
+                            id="employee"
+                            name="role"
+                            value="Employee"
+                            required
+                            defaultChecked={"Employee"} // Assuming position is the state variable for the selected role
+                            onChange={(e) => setPosition(e.target.value)}
+                            className="mr-2"
+                          />
+                          <label htmlFor="employee" className="mr-4">Employee</label>
+                        </div>
+                        {auth.cookie.user.position === "Owner" && (
+                          <div>
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            id="manager"
+                            name="role"
+                            required
+                            value="Manager"
+                            onChange={(e) => setPosition(e.target.value)}
+                            className="mr-2"
+                          />
+                          <label htmlFor="manager">Manager</label>
+                        </div>
+                        
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="owner"
+                              name="role"
+                              value="Owner"
+                              required
+                              onChange={(e) => setPosition(e.target.value)}
+                              className="mr-2"
+                            />
+                            <label htmlFor="owner">Owner</label>
+                          </div>
+                          </div>
+                        )}
+                      </div>
 
-</div>
+                      </div>
                   <div className="mb-4">
                     <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
                     {storeArray.map(item => (
@@ -321,6 +330,7 @@ const handleChange = (e) => {
                           id={`store${item.ID}`}
                           name="store"
                           value={item.ID}
+                          required
                           defaultChecked={item.ID == curStoreID}
                           onChange={(e) => handleCheckboxChange(e, item.ID)}
                           className="mr-2"
@@ -329,7 +339,6 @@ const handleChange = (e) => {
                       </div>
                     ))}
                   </div>
-
                     </div>
                     <div className="flex justify-between">
                       <button
@@ -339,14 +348,15 @@ const handleChange = (e) => {
                       >
                         Cancel
                       </button>
-                      <button 
-                        type="submit"
-                        onClick={handleSubmit}
-                       // disabled={validPassword}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                      >
-                        Add User
-                      </button>
+                      <button
+                    type="submit"
+                    disabled={validPassword === false} 
+                    className={`py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+                      validPassword ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-gray-400 cursor-not-allowed text-gray-600'
+                    }`}
+                    >
+                    Add User
+                    </button>
                     </div>
                     
                   </form>

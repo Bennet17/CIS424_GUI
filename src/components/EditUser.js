@@ -177,6 +177,7 @@ const EditUser = (user) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    let temp = getCSV();
     
     console.log(getCSV());
 
@@ -214,6 +215,8 @@ const EditUser = (user) => {
           
   
         }
+      
+      
    
    
       })
@@ -223,7 +226,7 @@ const EditUser = (user) => {
       // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
       setResult("Request Failed. Try again.")
       });
-   
+    
    
   };
 
@@ -302,6 +305,7 @@ const EditUser = (user) => {
   <div>
   <div className="flex items-center">
     <input
+      required
       type="radio"
       id="manager"
       name="role"
@@ -314,6 +318,7 @@ const EditUser = (user) => {
   </div>
     <div className="flex items-center">
       <input
+      required
         type="radio"
         id="owner"
         name="role"
@@ -338,6 +343,7 @@ const EditUser = (user) => {
           <input
             type="checkbox"
             id={`store${item.ID}`}
+            required
             name="store"
             value={item.ID}
             defaultChecked={user.user.storeID_CSV.includes(item.ID.toString())}
