@@ -193,15 +193,18 @@ const SafeAuditPage = () => {
 			itemCounted: "SAFE",
 			amountExpected: parseFloat(expectedAmount),
 			total: parseFloat(currentAmount),
+			type: "MID",
 			...currencyFields,
 		};
+
+		console.log(request);
 
 		// POST the cash count to the server
 		axios.post(CreateCashCountURL, request).then((response) => {
 			console.log(response);
 
 			 // Check if the count was successful
-			if (response.data.IsValid == true)
+			if (response.status == 200)
 				toast.success("Safe count submitted successfully.");
 			else 
 				toast.error("Failed to submit safe count.");
@@ -228,6 +231,7 @@ const SafeAuditPage = () => {
 			store,
 			currentAmount: fltCurrentAmount,
 			expectedAmount: fltExpectedAmount,
+			storeName,
 			...currencyFields
 		} = formData;
 
