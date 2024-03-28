@@ -144,41 +144,39 @@ const FundsTransferPage = () => {
 
     // Function to handle changes in the form fields
     const HandleChange = (event) => {
-        // Get the field name and value
         const { name, value } = event.target;
-
-        // Parse the value to a number, defaulting to 0 for non-numeric or negative inputs
-        let parsedValue = parseFloat(value);
-        if (isNaN(parsedValue) || parsedValue < 0) {
-            parsedValue = 0;
-            event.target.value = "0"; // Update the input field value to "0"
-        }
-
-        // Update the form data
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [name]: parsedValue,
-        }));
-        
-        // Remove error class when the field is filled for empty fields
-        if (value !== "") 
-            event.target.classList.remove("error");
-
-        // If the source or destination field is changed, remove the error class from both
+    
         if (name === "source" || name === "destination") {
+            // Directly use the string value for the source and destination dropdowns
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                [name]: value,
+            }));
+            // Remove the error class, if any, from the dropdowns
             document.getElementById("source_select").classList.remove("select-input-error");
             document.getElementById("destination_select").classList.remove("select-input-error");
+        } else {
+            // For numeric fields, parse the value to a number, defaulting to 0 for non-numeric or negative inputs
+            let parsedValue = parseFloat(value);
+            if (isNaN(parsedValue) || parsedValue < 0) {
+                parsedValue = 0;
+                event.target.value = "0"; // Update the input field value to "0"
+            }
+            // Update the form data for numeric inputs
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                [name]: parsedValue,
+            }));
+            // Calculate the amount based on the denomination fields
+            CalculateAmount({
+                ...formData,
+                [name]: parsedValue,
+            });
         }
-
-        // Calculate the amount based on the denomination fields
-        CalculateAmount({
-            ...formData,
-            [name]: parsedValue,
-        });
-
-        // If the amount field is changed from the denominations, remove the error class from the amount field
-        if (name !== "source" || name !== "destination")
-            document.getElementById("amount_input").classList.remove("error");
+    
+        // Remove error class when the field is filled for other fields
+        if (name !== "source" && name !== "destination" && value !== "") 
+            event.target.classList.remove("error");
     };
 
     // Function to filter out non-zero currency fields from the form data and return them
@@ -251,80 +249,53 @@ const FundsTransferPage = () => {
     }
 
     // Const to handle form submission
-    const HandleSubmit = async (event) => {
-        event.preventDefault();
+   const HandleSubmit = async (event) => {
+    event.preventDefault();
 
-        // Check if any field is invalid
-        if (CheckFields()) 
+    if (CheckFields()) return;
+
+    let {
+        user,
+        name,
+        store,
+        storeName,
+        source,
+        destination,
+        amount: fltAmount,
+        ...currencyFields
+    } = formData;
+
+    fltAmount = parseFloat(formData.amount).toFixed(2);
+    let newCurrencyFields = FilterDenominations(currencyFields);
+
+    if (fltAmount >= 1000.0) {
+        if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) 
             return;
+    }
 
-        // Stores the form data in the variables
-        let {
-            user,
-            name,
-            store,
-            storeName,
-            source,
-            destination,
-            amount: fltAmount,
-            ...currencyFields
-        } = formData;
-
-        
-        // Get the source and destination register IDs
-        let sourceID = arrSources.find(register => register.name === source).id;
-        let destinationID = arrDestinations.find(register => register.name === destination).id;
-
-        // Filter out non-zero currency fields
-        fltAmount = parseFloat(formData.amount).toFixed(2);
-        let newCurrencyFields = FilterDenominations(currencyFields);
-
-        // If the amount is >= $1000, display a 'Are you sure?' warning message
-        if (fltAmount >= 1000.0) {
-            if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) 
-                return;
-        }
-
-        // Submit the form data
-        if (await SubmitTransfer(
-            event,
-            user,
-            source,
-            destination,
-            fltAmount,
-            currencyFields // Includes zeroes
-        )) {
-            // Generate the report
-            const report = await GenerateReport(
-                source,
-                destination,
-                sourceID,
-                destinationID,
-                fltAmount,
-                newCurrencyFields
-            );
-    
-            // Set the report message
-            setReport(report);
-            setShowReport(true);
-    
-            // Reset the form fields
-            setFormData({
-                user: user,
-                name: name,
-                store: store,
-                storeName: storeName,
-                source: "",
-                destination: "",
-                amount: "",
-                ...Object.keys(currencyFields).reduce((acc, key) => {
-                    acc[key] = 0;
-                    return acc;
-                }, {}),
-            });
-        }
-    };
-
+    if (await SubmitTransfer(
+        event,
+        user,
+        source,
+        destination,
+        fltAmount,
+        currencyFields // Includes zeroes
+    )) {
+        setFormData({
+            user: user,
+            name: name,
+            store: store,
+            storeName: storeName,
+            source: "",
+            destination: "",
+            amount: "",
+            ...Object.keys(currencyFields).reduce((acc, key) => {
+                acc[key] = 0;
+                return acc;
+            }, {}),
+        });
+    }
+};
     const HandleCancel = (event) => {
         // Reset the form fields
         setFormData({
@@ -573,7 +544,7 @@ const FundsTransferPage = () => {
                                                 <option value="">&lt;Please select a source&gt;</option>
                                                 {arrSources.map((register, index) => {
                                                     return (
-                                                        <option key={index} value={register.id}>{register.name}</option>
+                                                        <option key={index} value={register.name}>{register.name}</option>
                                                     );
                                                 })}
                                             </select>
@@ -598,7 +569,7 @@ const FundsTransferPage = () => {
                                                 <option value="">&lt;Please select a destination&gt;</option>
                                                 {arrDestinations.map((register, index) => {
                                                     return (
-                                                        <option key={index} value={register.id}>{register.name}</option>
+                                                        <option key={index} value={register.name}>{register.name}</option>
                                                     );
                                                 })}
                                             </select>
