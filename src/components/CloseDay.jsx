@@ -139,9 +139,9 @@ const CloseDayPage = () =>{
         setElm1Dollar(0);
         setElm5Dollar(0);
         setElm10Dollar(0);
-        setElm2Dollar(0);
-        setElm5Dollar(0);
-        setElm10Dollar(0);
+        setElm20Dollar(0);
+        setElm50Dollar(0);
+        setElm100Dollar(0);
         setElm1DollarCoin(0);
         setElm2Dollar(0);
         setElmHalfDollarCoin(0);
@@ -198,6 +198,12 @@ const CloseDayPage = () =>{
         }
       }
     
+    //prevents the user from pressing enter on accident to submit on the form by disallowing the behavior altogether
+    function PreventKeyDown(event){
+        if (event.keyCode === 13){
+            event.preventDefault();
+        }
+    }
 
     const Submit = async (event) => {
         //prevents default behavior of sending data to current URL And refreshing page
@@ -458,7 +464,7 @@ const CloseDayPage = () =>{
             <div className="w-full">
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-12">
-                    <p className="text-2xl mb-2">Select a POS to close</p>
+                <p className="text-2xl w-44 mb-2">Select a POS or Safe to close</p>
                     {posHasLoaded ? 
                         <>
                             {poss.map((item, index) => (
@@ -489,7 +495,7 @@ const CloseDayPage = () =>{
                         <p className="text-2xl" >Waiting for POS data...</p>
                     }
                     <br/><hr/><br/>
-                    <form onSubmit={Submit}>
+                    <form onKeyDown={PreventKeyDown} onSubmit={Submit}>
                         <table>
                             <tbody>
                                 <tr>
