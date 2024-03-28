@@ -56,7 +56,7 @@ const DepositHistory = () => {
         }else if (data == "pending" || data == "PENDING"){
             cssTxt = "text-yellow-700 " + cssTxt;
             cssBg = "bg-yellow-500 " + cssBg;
-        }else if (data == "closed" || data == "CLOSED"){
+        }else if (data == "closed" || data == "CLOSED" || data == "aborted" || data == "ABORTED"){
             cssTxt = "text-red-600 " + cssTxt;
             cssBg = "bg-red-500 " + cssBg;
         }
@@ -108,9 +108,11 @@ const DepositHistory = () => {
                 console.log(dataArr);
                 setRecords(dataArr);
                 setPostSuccess(false);
+                SetSelectedRow(null);
             })
             .catch(error => {
                 console.error(error);
+                toast.error("Unknown error fetching deposits from server: " + error.message);
             });
         }
 
@@ -121,25 +123,26 @@ const DepositHistory = () => {
         //prevents default behavior of sending data to current URL And refreshing page
         event.preventDefault();
 
-        //don't let the user try and submit or abort closed/aborted records or when no records are selected
+        //don't let the user try and submit closed/aborted records or when no records are selected
         if (selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED"){
             toast.error("Cannot change status of closed or aborted deposit!");
         }else if (auth.cookie.user.viewingStoreID !== auth.cookie.user.workingStoreID){
             toast.error("Cannot perform action when page is view-only");
         }else{
             axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateDepositStatus', {
-                "ID": records[selectedRow].fID
+                "fID": records[selectedRow].fID
             })
             .then(response => {
                 console.log(response);
                 if (response.status == 200){
                     toast.success("Deposit successfully updated!");
-                    setPostSuccess(true);
                 }
+                setPostSuccess(true);
+                SetSelectedRow(null);
             })
             .catch(error => {
                 console.error(error);
-                toast.error("Unknown error occured");
+                toast.error("Unknown error trying to change status: " + error.message);
             });
         }
     }
@@ -148,15 +151,30 @@ const DepositHistory = () => {
         //prevents default behavior of sending data to current URL And refreshing page
         event.preventDefault();
 
-        axios.post('', {
-        })
-        .then(response => {
-            console.log(response);
-            
-        })
-        .catch(error => {
-            console.error(error);
-        });
+        //don't let the user try and submit closed/aborted records or when no records are selected
+        if (selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED"){
+            toast.error("Cannot change status of closed or aborted deposit!");
+        }else if (auth.cookie.user.viewingStoreID !== auth.cookie.user.workingStoreID){
+            toast.error("Cannot perform action when page is view-only");
+        }else{
+            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AbortDeposit', {
+                "fID": records[selectedRow].fID
+            })
+            .then(response => {
+                console.log(response);
+                if (response.status == 200 && response.data.status == "ABORTED"){
+                    toast.success("Deposit successfully aborted!");
+                }else if (response.data.status != "ABORTED"){
+                    toast.error("Deposit may have been closed before attempting to abort. Try refreshing the page");
+                }    
+                setPostSuccess(true);
+                SetSelectedRow(null);            
+            })
+            .catch(error => {
+                console.error(error);
+                toast.error("Unknown error trying to change status: " + error.message);
+            });
+        }
     }
 
     return (
@@ -212,10 +230,10 @@ const DepositHistory = () => {
                                 <td>
                                 </td>
                                 <td colSpan="2">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Submit</button>
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Submit</button>
                                 </td>
                                 <td colSpan="2">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Abort}>Abort Deposit</button>
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Abort}>Abort Deposit</button>
                                 </td>
                             </tr>
                         </tbody>
