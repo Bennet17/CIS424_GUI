@@ -47,11 +47,8 @@ const FundsTransferPage = () => {
         pennyRoll: 0,
     });
 
-    const [arrSources, setArrSources] = useState([]); // Array to hold the source register names
-    const [arrDestinations, setArrDestinations] = useState([]); // Array to hold the destination register names
-
-    // Bank element to hard-code to the source register names
-    const bankElement = [{ id: -1, name: "BANK" }];
+    const [arrSources, setArrSources] = useState([{ id: 1, name: "BANK"}]); // Array to hold the source register names
+    const [arrDestinations, setArrDestinations] = useState([{ id: 1, name: "BANK"}]); // Array to hold the destination register names
 
     const [registerStatus, setRegisterStatus] = useState(""); // Status message to display on page load
     const [report, setReport] = useState(""); // Report message to display after form submission
@@ -69,14 +66,22 @@ const FundsTransferPage = () => {
                 const newSources = response.data
                 .filter(register => register.opened)
                 .map(register => ({ id: register.regID, name: register.name }));
+                
+                // Add 'All' option to the register select
+                newSources.unshift({id: 1, name: "BANK"});
 
-                // Add the bank as a source
-                newSources.unshift(...bankElement)
-
-                if (newSources.length > 0)
+                if (newSources.length > 0) {
+                    // Update the source options
                     setArrSources(newSources);
 
-                if (newSources.length === 0 || newSources.length === 1 || newSources === undefined || newSources === null)
+                    // Update the register ID to the first register in the array
+                    setFormData((prev) => ({
+                        ...prev,
+                        source: newSources[0].name,
+                    }));
+                }
+
+                if (newSources.length === 1 || newSources.length === 2)
                     setRegisterStatus("No registers are currently open for transfer.");
                 
             })
@@ -86,7 +91,7 @@ const FundsTransferPage = () => {
         }
 
         Initialize();
-    }, []);
+    }, [formData.store]);
 
     // Set the destination options from arrSources
     useEffect(() => {
@@ -142,21 +147,11 @@ const FundsTransferPage = () => {
         // Get the field name and value
         const { name, value } = event.target;
 
-        // Stores value to be parsed back to number after form change
-        let parsedValue = value;
-
-        // If the value is negative, set it to 0
-		if (value < 0) {
-			event.target.value = 0;
-			return;
-		}
-
-        // If the field is not a select field, parse the value to a number
-        if (event.target.tagName.toLowerCase() !== 'select') {
-            const numericValue = parseFloat(value);
-
-            if (!isNaN(numericValue))
-                parsedValue = numericValue;
+        // Parse the value to a number, defaulting to 0 for non-numeric or negative inputs
+        let parsedValue = parseFloat(value);
+        if (isNaN(parsedValue) || parsedValue < 0) {
+            parsedValue = 0;
+            event.target.value = "0"; // Update the input field value to "0"
         }
 
         // Update the form data
@@ -576,11 +571,11 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a source&gt;</option>
-                                                {arrSources.map((item, index) => (
-                                                    <option key={item.id} value={item.name}>
-                                                        {item.name}
-                                                    </option>
-                                                ))}
+                                                {arrSources.map((register, index) => {
+                                                    return (
+                                                        <option key={index} value={register.id}>{register.name}</option>
+                                                    );
+                                                })}
                                             </select>
                                         </div>
                                     </td>
@@ -600,14 +595,12 @@ const FundsTransferPage = () => {
                                                 value={formData.destination}
                                                 onChange={HandleChange}
                                             >
-                                                <option value="">
-                                                &lt;Please select a destination&gt;
-                                                </option>
-                                                {arrDestinations.map((item, index) => (
-                                                    <option key={item.id} value={item.name}>
-                                                        {item.name}
-                                                    </option>
-                                                ))}
+                                                <option value="">&lt;Please select a destination&gt;</option>
+                                                {arrDestinations.map((register, index) => {
+                                                    return (
+                                                        <option key={index} value={register.id}>{register.name}</option>
+                                                    );
+                                                })}
                                             </select>
                                         </div>
                                     </td>

@@ -173,12 +173,6 @@ const SafeAuditPage = () => {
         // Get the field name and value
         const { name, value } = event.target;
 
-		// Check if the value is negative and set it to 0 if it is
-		if (value < 0) {
-			event.target.value = 0;
-			return;
-		}
-		
 		// Removes error class from fields
 		document.getElementById("currentAmount_input").classList.remove("safe-amount-input-error");
 
