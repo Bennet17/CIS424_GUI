@@ -47,8 +47,8 @@ const FundsTransferPage = () => {
         pennyRoll: 0,
     });
 
-    const [arrSources, setArrSources] = useState([{ id: 1, name: "BANK"}]); // Array to hold the source register names
-    const [arrDestinations, setArrDestinations] = useState([{ id: 1, name: "BANK"}]); // Array to hold the destination register names
+    const [arrSources, setArrSources] = useState([]); // Array to hold the source register names
+    const [arrDestinations, setArrDestinations] = useState([]); // Array to hold the destination register names
 
     const [registerStatus, setRegisterStatus] = useState(""); // Status message to display on page load
     const [report, setReport] = useState(""); // Report message to display after form submission
@@ -68,7 +68,7 @@ const FundsTransferPage = () => {
                 .map(register => ({ id: register.regID, name: register.name }));
                 
                 // Add 'All' option to the register select
-                newSources.unshift({id: 1, name: "BANK"});
+                //newSources.unshift({id: -1, name: "BANK"});
 
                 if (newSources.length > 0) {
                     // Update the source options
@@ -80,13 +80,20 @@ const FundsTransferPage = () => {
                         source: newSources[0].name,
                     }));
                 }
-
-                if (newSources.length === 1 || newSources.length === 2)
+                else {
                     setRegisterStatus("No registers are currently open for transfer.");
+                    setArrSources([]);
+                }
+
+                if (newSources.length === 0 || newSources.length === 1 || newSources.length === 2) {
+                    setRegisterStatus("No registers are currently open for transfer.");
+                    setArrSources([]);
+                }
                 
             })
             .catch(error => {
                 console.error(error);
+                setArrSources([]);
             });
         }
 
@@ -294,6 +301,29 @@ const FundsTransferPage = () => {
                 return acc;
             }, {}),
         });
+
+        if (arrSources.length > 0) {
+            const sourceRegisterID = arrSources.find((register) => register.name === source).id;
+            const destinationRegisterID = arrDestinations.find((register) => register.name === destination).id;
+
+            // Generate the report message
+            setReport(await GenerateReport(
+                source,
+                destination,
+                sourceRegisterID,
+                destinationRegisterID,
+                fltAmount,
+                newCurrencyFields
+            ));
+
+            // Show the report message
+            setShowReport(true);
+
+            // Remove error class from all fields
+            document.getElementById("source_select").classList.remove("select-input-error");
+            document.getElementById("destination_select").classList.remove("select-input-error");
+            document.getElementById("amount_input").classList.remove("amount-input-error");
+        }
     }
 };
     const HandleCancel = (event) => {
@@ -368,8 +398,6 @@ const FundsTransferPage = () => {
             // Submit the form data
             const response = await axios.post(FundTransferURL, request);
 
-            console.log(response.data.response);
-
             // Check if the transfer was successful
             if (response.data.response === "Fund Transfer created successfully.") {
                 toast.success("Successfully submitted transfer!");
@@ -383,6 +411,8 @@ const FundsTransferPage = () => {
             toast.error("A server error occurred during submission. Please try again later.");
             return false;
         }
+
+
     }
 
     // Function to format negative values in parentheses
@@ -542,9 +572,10 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a source&gt;</option>
+                                                <option value="BANK">BANK</option>
                                                 {arrSources.map((register, index) => {
                                                     return (
-                                                        <option key={index} value={register.name}>{register.name}</option>
+                                                        <option key={register.id} value={register.name}>{register.name}</option>
                                                     );
                                                 })}
                                             </select>
@@ -567,9 +598,10 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a destination&gt;</option>
+                                                <option value="BANK">BANK</option>
                                                 {arrDestinations.map((register, index) => {
                                                     return (
-                                                        <option key={index} value={register.name}>{register.name}</option>
+                                                        <option key={register.id} value={register.name}>{register.name}</option>
                                                     );
                                                 })}
                                             </select>
