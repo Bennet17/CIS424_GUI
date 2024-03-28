@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/CIS424_GUI/static/css/main.e83276b8.css",
-    "main.js": "/CIS424_GUI/static/js/main.1150f204.js",
+    "main.css": "/CIS424_GUI/static/css/main.0b179120.css",
+    "main.js": "/CIS424_GUI/static/js/main.a42687d4.js",
     "static/media/primeicons.svg": "/CIS424_GUI/static/media/primeicons.e1441b135b3ca9ad643c.svg",
     "static/media/Inter-SemiBold.woff": "/CIS424_GUI/static/media/Inter-SemiBold.ff53c7406a23717b16a8.woff",
     "static/media/Inter-Regular.woff": "/CIS424_GUI/static/media/Inter-Regular.bafbd62f86d686bb65d0.woff",
@@ -16,11 +16,11 @@
     "static/media/primeicons.ttf": "/CIS424_GUI/static/media/primeicons.ea5358601d0a3fd6670b.ttf",
     "static/media/primeicons.woff2": "/CIS424_GUI/static/media/primeicons.78172950b335ccdb94e2.woff2",
     "index.html": "/CIS424_GUI/index.html",
-    "main.e83276b8.css.map": "/CIS424_GUI/static/css/main.e83276b8.css.map",
-    "main.1150f204.js.map": "/CIS424_GUI/static/js/main.1150f204.js.map"
+    "main.0b179120.css.map": "/CIS424_GUI/static/css/main.0b179120.css.map",
+    "main.a42687d4.js.map": "/CIS424_GUI/static/js/main.a42687d4.js.map"
   },
   "entrypoints": [
-    "static/css/main.e83276b8.css",
-    "static/js/main.1150f204.js"
+    "static/css/main.0b179120.css",
+    "static/js/main.a42687d4.js"
   ]
 }
