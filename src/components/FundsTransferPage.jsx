@@ -145,6 +145,12 @@ const FundsTransferPage = () => {
         // Stores value to be parsed back to number after form change
         let parsedValue = value;
 
+        // If the value is negative, set it to 0
+		if (value < 0) {
+			event.target.value = 0;
+			return;
+		}
+
         // If the field is not a select field, parse the value to a number
         if (event.target.tagName.toLowerCase() !== 'select') {
             const numericValue = parseFloat(value);
