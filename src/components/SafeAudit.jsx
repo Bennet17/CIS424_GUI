@@ -82,6 +82,8 @@ const SafeAuditPage = () => {
 							expectedAmount: 0,
 						}));
 					}
+				} else {
+					toast.warning("Safe not found.");
 				}
 			})
 			.catch((error) => {
