@@ -329,7 +329,7 @@ const OpenDayPage = () =>{
                                             value={elm100DollarExpected} 
                                             //onChange={e => setElm100DollarExpected(clamp(e.target.value))}  
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -353,7 +353,7 @@ const OpenDayPage = () =>{
                                             value={elm50DollarExpected} 
                                             //onChange={e => setElm50DollarExpected(clamp(e.target.value))}  
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -377,7 +377,7 @@ const OpenDayPage = () =>{
                                             value={elm20DollarExpected}
                                             //onChange={e => setElm20DollarExpected(clamp(e.target.value))}
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -401,7 +401,7 @@ const OpenDayPage = () =>{
                                             value={elm10DollarExpected} 
                                             //onChange={e => setElm10DollarExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -425,7 +425,7 @@ const OpenDayPage = () =>{
                                             value={elm5DollarExpected}
                                             //onChange={e => setElm5DollarExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -449,7 +449,7 @@ const OpenDayPage = () =>{
                                             value={elm1DollarExpected}
                                             //onChange={e => setElm1DollarExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -479,7 +479,7 @@ const OpenDayPage = () =>{
                                             value={elmQuartersRolledExpected}
                                             //onChange={e => setElmQuartersRolledExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -503,7 +503,7 @@ const OpenDayPage = () =>{
                                             value={elmDimesRolledExpected}
                                             //onChange={e => setElmDimesRolledExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -527,7 +527,7 @@ const OpenDayPage = () =>{
                                             value={elmNicklesRolledExpected}
                                             //onChange={e => setElmNicklesRolledExpected(clamp(e.target.value))}
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -551,7 +551,7 @@ const OpenDayPage = () =>{
                                             value={elmPenniesRolledExpected}
                                             //onChange={e => setElmPenniesRolledExpected(clamp(e.target.value))}  
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -575,7 +575,7 @@ const OpenDayPage = () =>{
                                             value={elmQuartersExpected}
                                             //onChange={e => setElmQuartersExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -599,7 +599,7 @@ const OpenDayPage = () =>{
                                             value={elmDimesExpected}
                                             //onChange={e => setElmDimesExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -623,7 +623,7 @@ const OpenDayPage = () =>{
                                             value={elmNicklesExpected}
                                             //onChange={e => setElmNicklesExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -647,7 +647,7 @@ const OpenDayPage = () =>{
                                             value={elmPenniesExpected}
                                             //onChange={e => setElmPenniesExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -677,7 +677,7 @@ const OpenDayPage = () =>{
                                             value={elm1DollarCoinExpected}
                                             //onChange={e => setElm1DollarCoinExpected(clamp(e.target.value))} 
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -701,7 +701,7 @@ const OpenDayPage = () =>{
                                             value={elm2DollarExpected}
                                             //onChange={e => setElm2DollarExpected(clamp(e.target.value))}  
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -725,7 +725,7 @@ const OpenDayPage = () =>{
                                             value={elmHalfDollarCoinExpected}
                                             //onChange={e => setElmHalfDollarCoinExpected(clamp(e.target.value))}  
                                             min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                             type="number"
                                             disabled={true}
                                         />
@@ -772,7 +772,7 @@ const OpenDayPage = () =>{
                             <input 
                                 value={"$" + expectedAmount}
                                 disabled={true}
-                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
                                 type="text" 
                             />
                         </label>
