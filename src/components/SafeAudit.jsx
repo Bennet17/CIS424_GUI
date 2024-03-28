@@ -55,36 +55,33 @@ const SafeAuditPage = () => {
 			)
 			.then((response) => {
 				// Get the safe ID from the response based on the name property
-				const safeID = response.data.find((obj) => obj.name === "SAFE").regID;
+				const safeObject = response.data.find((obj) => obj.name === "SAFE");
+				if (safeObject) {
+					if (safeObject.opened === true) {
+						axios.get(
+							`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${formData.store}`
+						)
+						.then((response) => {
+							// Update the expected amount in the form data
+							setFormData((prevFormData) => ({
+								...prevFormData,
+								expectedAmount: response.data,
+							}));
+						})
+						.catch((error) => {
+							console.log(error);
+						});
+					}
+					else {
+						// Display a warning message if the safe is not open
+						toast.warning("Safe is not open. Expected amount cannot be retrieved.");
 
-				// Set the safe status from the response
-				setSafeStatus(response.data.find((obj) => obj.name === "SAFE").opened);
-
-				// If the safe ID is found, get the expected amount from the server
-				if (safeID != null && safeStatus === true) {
-					axios.get(
-						`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${formData.store}&registerID=${safeID}`
-					)
-					.then((response) => {
 						// Update the expected amount in the form data
 						setFormData((prevFormData) => ({
 							...prevFormData,
-							expectedAmount: response.data,
+							expectedAmount: 0,
 						}));
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-				}
-				else {
-					// Display a warning message if the safe is not open
-					toast.warning("Safe is not open. Expected amount cannot be retrieved.");
-
-					// Update the expected amount in the form data
-					setFormData((prevFormData) => ({
-						...prevFormData,
-						expectedAmount: 0,
-					}));
+					}
 				}
 			})
 			.catch((error) => {
