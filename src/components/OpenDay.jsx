@@ -128,9 +128,9 @@ const OpenDayPage = () =>{
         setElm1Dollar(0);
         setElm5Dollar(0);
         setElm10Dollar(0);
-        setElm2Dollar(0);
-        setElm5Dollar(0);
-        setElm10Dollar(0);
+        setElm20Dollar(0);
+        setElm50Dollar(0);
+        setElm100Dollar(0);
         setElm1DollarCoin(0);
         setElm2Dollar(0);
         setElmHalfDollarCoin(0);
@@ -180,6 +180,12 @@ const OpenDayPage = () =>{
         }
     }
     
+    //prevents the user from pressing enter on accident to submit on the form by disallowing the behavior altogether
+    function PreventKeyDown(event){
+        if (event.keyCode === 13){
+            event.preventDefault();
+        }
+    }
 
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
@@ -248,7 +254,7 @@ const OpenDayPage = () =>{
             <div className="w-full">
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-12">
-                    <p className="text-2xl mb-2">Select a POS to open</p>
+                    <p className="text-2xl w-44 mb-2">Select a POS or Safe to open</p>
                     {posHasLoaded ? 
                         <>
                             {poss.map((item, index) => (
@@ -279,7 +285,7 @@ const OpenDayPage = () =>{
                         <p className="text-2xl" >Waiting for POS data...</p>
                     }
                     <br/><hr/><br/>
-                    <form onSubmit={Submit}>
+                    <form onKeyDown={PreventKeyDown} onSubmit={Submit}>
                         <table>
                             <tbody>
                                 <tr>
