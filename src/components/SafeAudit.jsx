@@ -50,6 +50,7 @@ const SafeAuditPage = () => {
 	// Loads expected count on page load
 	useEffect(() => {
 		function GetExpectedSafeCount() {
+			console.log("hello")
 			axios.get(
 				`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`
 			)
@@ -57,6 +58,7 @@ const SafeAuditPage = () => {
 				// Get the safe ID from the response based on the name property
 				const safeObject = response.data.find((obj) => obj.name === "SAFE");
 				if (safeObject) {
+					setSafeStatus(safeObject.opened)
 					if (safeObject.opened === true) {
 						axios.get(
 							`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${formData.store}`
@@ -75,12 +77,6 @@ const SafeAuditPage = () => {
 					else {
 						// Display a warning message if the safe is not open
 						toast.warning("Safe is not open. Expected amount cannot be retrieved.");
-
-						// Update the expected amount in the form data
-						setFormData((prevFormData) => ({
-							...prevFormData,
-							expectedAmount: 0,
-						}));
 					}
 				} else {
 					toast.warning("Safe not found.");
