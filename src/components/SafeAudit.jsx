@@ -50,41 +50,36 @@ const SafeAuditPage = () => {
 	// Loads expected count on page load
 	useEffect(() => {
 		function GetExpectedSafeCount() {
+			console.log("hello")
 			axios.get(
 				`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`
 			)
 			.then((response) => {
 				// Get the safe ID from the response based on the name property
-				const safeID = response.data.find((obj) => obj.name === "SAFE").regID;
-
-				// Set the safe status from the response
-				setSafeStatus(response.data.find((obj) => obj.name === "SAFE").opened);
-
-				// If the safe ID is found, get the expected amount from the server
-				if (safeID != null && safeStatus === true) {
-					axios.get(
-						`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${formData.store}&registerID=${safeID}`
-					)
-					.then((response) => {
-						// Update the expected amount in the form data
-						setFormData((prevFormData) => ({
-							...prevFormData,
-							expectedAmount: response.data,
-						}));
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-				}
-				else {
-					// Display a warning message if the safe is not open
-					toast.warning("Safe is not open. Expected amount cannot be retrieved.");
-
-					// Update the expected amount in the form data
-					setFormData((prevFormData) => ({
-						...prevFormData,
-						expectedAmount: 0,
-					}));
+				const safeObject = response.data.find((obj) => obj.name === "SAFE");
+				if (safeObject) {
+					setSafeStatus(safeObject.opened)
+					if (safeObject.opened === true) {
+						axios.get(
+							`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${formData.store}`
+						)
+						.then((response) => {
+							// Update the expected amount in the form data
+							setFormData((prevFormData) => ({
+								...prevFormData,
+								expectedAmount: response.data,
+							}));
+						})
+						.catch((error) => {
+							console.log(error);
+						});
+					}
+					else {
+						// Display a warning message if the safe is not open
+						toast.warning("Safe is not open. Expected amount cannot be retrieved.");
+					}
+				} else {
+					toast.warning("Safe not found.");
 				}
 			})
 			.catch((error) => {
