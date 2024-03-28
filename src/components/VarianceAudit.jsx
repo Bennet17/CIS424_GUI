@@ -29,35 +29,34 @@ const VarianceAuditPage = () =>{
 
     const [rowCount, setRowCount] = useState(10); // Number of rows to display per page
 
-    const [arrRegisters, setArrRegisters] = useState([]); // Array of a store's registers and its information
+    const [arrRegisters, setArrRegisters] = useState([{ id: -1, name: "All"}]); // Array of a store's registers and its information
     const [arrVariances, setArrVariances] = useState([]); // Array of variances and its information
     const [emptyRows, setEmptyRows] = useState([]); // Empty rows to fill the last page of the table
 
     const [registerName, setRegisterName] = useState(""); // Register name
     
     const [currentPage, setCurrentPage] = useState(0); // Initialize currentPage with default value of 0
+    
+    const [showAuditForm, setShowAuditForm] = useState(false); // Show the audit form
 
     const tableRef = useRef(null); // Reference to the table element 
-
-    // Status message to display if no registers are open
-    const [status, setStatus] = useState("Loading...");
-    const errorClass = "text-red-500"; // CSS class for error
+    const [loading, setLoading] = useState(true); // Loading state for the table
 
     const varianceColumns = [
         { field: "POSName", header: "POS Name", order: 1 },
         { field: "OpenerName", header: "Opener Name", order: 2 },
-        { field: "CloserName", header: "Closer Name", order: 3 },
-        { field: "OpenExpected", header: "Open Expected", order: 4 },
-        { field: "OpenActual", header: "Open Actual", order: 5 },
-        { field: "CloseExpected", header: "Close Expected", order: 6 },
-        { field: "CloseActual", header: "Close Actual", order: 7 },
-        { field: "CashToSafe", header: "Cash to Safe", order: 8 },
-        { field: "CloseCreditActual", header: "Close Credit Actual", order: 9 },
-        { field: "CloseCreditExpected", header: "Close Credit Expected", order: 10 },
-        { field: "OpenVariance", header: "Open Variance", order: 11 },
-        { field: "CloseVariance", header: "Close Variance", order: 12 },
-        { field: "TotalCashVariance", header: "Total Cash Variance", order: 13 },
-        { field: "CreditVariance", header: "Credit Variance", order: 14 },
+        { field: "OpenExpected", header: "Open Expected", order: 3 },
+        { field: "OpenActual", header: "Open Actual", order: 4 },
+        { field: "OpenVariance", header: "Open Variance", order: 5 },
+        { field: "CloserName", header: "Closer Name", order: 6 },
+        { field: "CloseExpected", header: "Close Expected", order: 7 },
+        { field: "CloseActual", header: "Close Actual", order: 8 },
+        { field: "CloseVariance", header: "Close Variance", order: 9 },
+        { field: "CashToSafe", header: "Cash to Safe", order: 10 },
+        { field: "CloseCreditActual", header: "Close Credit Actual", order: 11 },
+        { field: "CloseCreditExpected", header: "Close Credit Expected", order: 12 },
+        { field: "CreditVariance", header: "Credit Variance", order: 13 },
+        { field: "TotalCashVariance", header: "Total Cash Variance", order: 14 },
         { field: "TotalVariance", header: "Total Variance", order: 15 }
     ]
 
@@ -65,10 +64,10 @@ const VarianceAuditPage = () =>{
     const [visibleColumns, setVisibleColumns] = useState(varianceColumns.filter(col => [
         "POSName", 
         "OpenerName", 
-        "CloserName", 
         "OpenExpected", 
         "OpenActual", 
         "OpenVariance", 
+        "CloserName", 
         "CloseExpected", 
         "CloseActual",
         "CloseVariance", 
@@ -83,9 +82,15 @@ const VarianceAuditPage = () =>{
         registerID: -1,
         startDate: monthAgo,
         endDate: today,
-        expectedAmount: "",
-        total: "",
-        variance: "",
+        cashTendered: "0.00",
+        cashBuys: "0.00",
+        pettyCash: "0.00",
+        mastercard: "0.00",
+        visa: "0.00",
+        amex: "0.00",
+        discover: "0.00",
+        debit: "0.00",
+        other: "0.00"
     });
 
     //check the permissions of the logged in user on page load, passing in
@@ -103,7 +108,7 @@ const VarianceAuditPage = () =>{
         document.getElementById("endDate").value = new Date(formData.endDate).toISOString().split('T')[0];
     }, [formData.startDate, formData.endDate]);
 
-    // GET request to the General Variance API
+    // GET request to return registers for the selected store
     useEffect(() => {
         // Set the start and end date to the correct format
         UpdateInputDates();
@@ -116,12 +121,12 @@ const VarianceAuditPage = () =>{
                     //.filter(register => register.opened)
                     .map(register => ({id: register.ID, name: register.name}));
 
-                if (newRegisters.length === 0) {
+                    // Add 'All' option to the register select
+                    newRegisters.unshift({id: -1, name: "All"});
+
+                if (newRegisters.length === 1) {
                     // Set toast message if no registers are open
                     toast.warning(`No registers are currently open for ${formData.storeName}.`);
-
-                    // Add placeholder to the register select
-                    setArrRegisters([{id: -1, name: "<Empty>"}]);
                 }
                 else {
                     // Update arrSources using functional form of setState to avoid duplicates
@@ -145,68 +150,89 @@ const VarianceAuditPage = () =>{
 
     // Load the register variances when the form data changes
     useEffect(() => {
-        if (formData.registerID !== -1) {
-            // Set the start and end date to the correct format
-            UpdateInputDates();
+        // Set the start and end date to the correct format
+        UpdateInputDates();
+
+        // GET request to the Register Variance API
+        function GetRegisterVariance() {
+            // Get the register ID, start date, and end date from the form data
+            const registerID = formData.registerID;
+            const storeID = formData.store;
+            const startDate = new Date(formData.startDate).toISOString().split('T')[0];
+            const endDate = new Date(formData.endDate).toISOString().split('T')[0];
 
             // GET request to the Register Variance API
-            function GetRegisterVariance() {
-                // Get the register ID, start date, and end date from the form data
-                const registerID = formData.registerID;
-                const storeID = formData.store;
-                const startDate = new Date(formData.startDate).toISOString().split('T')[0];
-                const endDate = new Date(formData.endDate).toISOString().split('T')[0];
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`)
+                .then((response) => {
+                    // If the response contains data, set the array of variances to the response data
+                    if (response.data && response.data.length > 0) {
+                        // Set the array of variances after sorting by date
+                        setArrVariances(response.data.sort((a, b) => new Date(a.Date) - new Date(b.Date)));
 
-                // GET request to the Register Variance API
-                axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`)
-                    .then((response) => {
-                        // If the response contains data, set the array of variances to the response data
-                        if (response.data && response.data.length > 0) {
-                            // Set the array of variances after sorting by date
-                            setArrVariances(response.data.sort((a, b) => new Date(a.Date) - new Date(b.Date)));
+                        // Calculate the number of empty rows to fill the last page of the table
+                        // Prime react datatable doesn't lock the number of rows to the page size so
+                        // the paginator jumps up and down when the number of variances changes.
+                        // This fixes that by adding empty rows to the last page since there's no 
+                        // way to lock the number of rows :(.
+                        const remainingEmptyRows = rowCount - (response.data.length % rowCount);
 
-                            // Calculate the number of empty rows to fill the last page of the table
-                            // Prime react datatable doesn't lock the number of rows to the page size so
-                            // the paginator jumps up and down when the number of variances changes.
-                            // This fixes that by adding empty rows to the last page since there's no 
-                            // way to lock the number of rows :(.
-                            const remainingEmptyRows = rowCount - (response.data.length % rowCount);
+                        // Create an array of empty rows to fill the last page of the table
+                        let emptyRows = [];
 
-                            // Create an array of empty rows to fill the last page of the table
-                            let emptyRows = [];
-
-                            // Check if there are remaining empty rows to fill, and if the number of data rows is not a multiple of rowCount
-                            if (remainingEmptyRows > 0 && response.data.length % rowCount !== 0) {
-                                emptyRows = Array.from({ length: remainingEmptyRows }, () => ({
-                                    Date: null,
-                                    amountExpected: null,
-                                    total: null,
-                                    Variance: null
-                                }));
-                            }
-
-                            setEmptyRows(emptyRows);
-
-                            // Set the register name
-                            setRegisterName(arrRegisters.find(register => register.id === registerID).name);
+                        // Check if there are remaining empty rows to fill, and if the number of data rows is not a multiple of rowCount
+                        if (remainingEmptyRows > 0 && response.data.length % rowCount !== 0) {
+                            emptyRows = Array.from({ length: remainingEmptyRows }, () => ({
+                                Date: null,
+                                amountExpected: null,
+                                total: null,
+                                Variance: null
+                            }));
                         }
-                        else {
-                            setArrVariances([]);
-                            setEmptyRows([]);
-                            setRegisterName(arrRegisters.find(register => register.id === registerID).name);
-                        }
-                    })
-                    .catch((error) => {
-                        //console.log(error);
+
+                        // Set the empty rows
+                        setEmptyRows(emptyRows);
+
+                        // Set the register name
+                        setRegisterName(arrRegisters.find(register => register.id === registerID).name);
+
+                        // Set the loading state to false
+                        setLoading(false);
+                    }
+                    else {
                         setArrVariances([]);
                         setEmptyRows([]);
                         setRegisterName(arrRegisters.find(register => register.id === registerID).name);
-                    });
-            }
-
-            GetRegisterVariance();
+                        setLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    //console.log(error);
+                    setArrVariances([]);
+                    setEmptyRows([]);
+                    setRegisterName(arrRegisters.find(register => register.id === registerID).name);
+                    setLoading(false);
+                });
         }
+
+        GetRegisterVariance();
+        
     }, [formData.registerID, formData.startDate, formData.endDate, UpdateInputDates, arrRegisters, rowCount]);
+
+    // OnClick event handler for opening the Over/Short Audit form
+    const OpenOverShortAudit = (event) => {
+        event.preventDefault();
+
+        // Show the Over/Short Audit form
+        setShowAuditForm(true);
+    };
+
+    // OnClick event handler for closing the Over/Short Audit form
+    const CloseOverShortAudit = (event) => {
+        event.preventDefault();
+        
+        // Close the Over/Short Audit form
+        setShowAuditForm(false);
+    };
 
     // Event handler for decrementing the date by one day when the left arrow button is clicked
     const HandlePreviousDay = (event) => {
@@ -341,6 +367,15 @@ const VarianceAuditPage = () =>{
         console.log(formData);
     };
 
+    const HandleCurrencyChange = useCallback((name) => {
+        return (value) => {
+            console.log(name, value);
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value
+            }));
+    }, []});
+
     // Function to handle the change of the row count
     const OnRowChange = (event) => {
         // Update the row count with the selected value
@@ -360,6 +395,97 @@ const VarianceAuditPage = () =>{
     
         // Set the visible columns
         setVisibleColumns(selectedColumns);
+    }
+
+    const AuditForm = ({ onClose }) => {
+        return (
+            <div className="report-overlay">
+                <div className="report-container">
+                    <h2>Over/Short Audit</h2>
+                    <form action="submit">
+                        <div className="flex items-center space-x-4">
+                            {/* Start date */}
+                            <div className="label-above-select">
+                                <strong>
+                                    <label htmlFor="startDateAudit">Start Date:</label>
+                                </strong>
+                                <input 
+                                    type="date" 
+                                    id="startDateAudit" 
+                                    name="startDate"
+                                    className="variance-date"
+                                    value={formData.startDate}
+                                    date={formData.startDate}
+                                    onChange={HandleChange}
+                                />
+                            </div>
+                            {/* End date */}
+                            <div className="label-above-select">
+                                <strong>
+                                    <label htmlFor="endDateAudit">End Date:</label>
+                                </strong>
+                                <input 
+                                    type="date" 
+                                    id="endDateAudit" 
+                                    name="endDate" 
+                                    className="variance-date"
+                                    value={formData.endDate}
+                                    date={formData.endDate}
+                                    onChange={HandleChange}
+                                />
+                            </div>
+                            <div className="label-above-select">
+                                <strong>
+                                    <label htmlFor="cashTendered">Cash Tendered:</label>
+                                </strong>
+                                <CurrencyInput
+                                    id="cashTendered"
+                                    name="cashTendered"
+                                    value={formData.cashTendered}
+                                    onValueChange={(value, name) => {
+										setFormData((prevFormData) => ({
+											...prevFormData,
+											cashTendered: value,
+										}));
+									}}
+                                    prefix="$"
+                                    decimalsLimit={2}
+                                    className="variance-currency"
+                                />
+                            </div>
+                            <div className="label-above-select">
+                                <strong>
+                                    <label htmlFor="cashBuys">Cash Buys:</label>
+                                </strong>
+                                <CurrencyInput
+                                    id="cashBuys"
+                                    name="cashBuys"
+                                    value={formData.cashBuys}
+                                    onValueChange={(value, name) => {
+										setFormData((prevFormData) => ({
+											...prevFormData,
+											cashBuys: value,
+										}));
+									}}
+                                    prefix="$"
+                                    decimalsLimit={2}
+                                    className="variance-currency"
+                                />
+                            </div>
+                        </div>
+
+                    </form>
+                    <button 
+                        onClick={() => {
+                            onClose();
+                        }} 
+                        className="close-button"
+                    >
+                            Close
+                    </button>
+                </div>
+            </div>
+        );
     }
     
     // Table header
@@ -473,6 +599,13 @@ const VarianceAuditPage = () =>{
                             aria-label="Next Day"
                             style={{ marginTop: "6px", boxShadow: "none"}}
                         />
+                        {/* Over/Short Audit button */}
+                        <input
+                            // onClick={OpenOverShortAudit}
+                            type="button"
+                            value="Over/Short Audit"
+                            className="cursor-pointer rounded-md bg-indigo-600 px-10 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        />
                     </div>
                     <div>
                         <DataTable 
@@ -484,6 +617,7 @@ const VarianceAuditPage = () =>{
                             first={currentPage * rowCount}
                             size="small"
                             paginator={true}
+                            loading={loading}
                             showGridlines
                             stripedRows
                             removableSort
@@ -531,6 +665,7 @@ const VarianceAuditPage = () =>{
                             ))}
                         </DataTable>
                     </div>
+                    {showAuditForm && <AuditForm />}
                 </div>
             </div>
         </div>

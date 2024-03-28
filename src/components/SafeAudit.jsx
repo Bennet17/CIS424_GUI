@@ -41,6 +41,9 @@ const SafeAuditPage = () => {
         pennyRoll: 0,
     });
 
+	// Safe open/close status
+	const [safeStatus, setSafeStatus] = useState(false);
+
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
 
@@ -54,8 +57,11 @@ const SafeAuditPage = () => {
 				// Get the safe ID from the response based on the name property
 				const safeID = response.data.find((obj) => obj.name === "SAFE").regID;
 
+				// Set the safe status from the response
+				setSafeStatus(response.data.find((obj) => obj.name === "SAFE").opened);
+
 				// If the safe ID is found, get the expected amount from the server
-				if (safeID != null) {
+				if (safeID != null && safeStatus === true) {
 					axios.get(
 						`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${formData.store}&registerID=${safeID}`
 					)
@@ -71,7 +77,14 @@ const SafeAuditPage = () => {
 					});
 				}
 				else {
-					console.log("Safe not found");
+					// Display a warning message if the safe is not open
+					toast.warning("Safe is not open. Expected amount cannot be retrieved.");
+
+					// Update the expected amount in the form data
+					setFormData((prevFormData) => ({
+						...prevFormData,
+						expectedAmount: 0,
+					}));
 				}
 			})
 			.catch((error) => {
@@ -84,7 +97,12 @@ const SafeAuditPage = () => {
 
 	// Function to check if amount fields are empty
 	function CheckFields() {
-		if (formData.currentAmount === "" || formData.currentAmount === 0) {
+		// Check if safe status is false
+		if (safeStatus === false) {
+			toast.warning("Safe is not open. Please open the safe to count the amount.");
+			return true;
+		}
+		else if (formData.currentAmount === "" || formData.currentAmount === 0) {
 			// Update the status message
             toast.warning("Please fill in all fields correctly.");
 
@@ -155,25 +173,29 @@ const SafeAuditPage = () => {
         // Get the field name and value
         const { name, value } = event.target;
 
-        // Stores value to be parsed back to number after form change
-        let parsedValue = parseFloat(value);
-
-		// If current amount was changed, remove error class
-		if (value !== "") {
-			document.getElementById("currentAmount_input").classList.remove("safe-amount-input-error");
+		// Check if the value is negative and set it to 0 if it is
+		if (value < 0) {
+			event.target.value = 0;
+			return;
 		}
+		
+		// Removes error class from fields
+		document.getElementById("currentAmount_input").classList.remove("safe-amount-input-error");
 
-        // Update the form data
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [name]: parsedValue,
-        }));
+        // Parse the value to a float or default to 0 if not a valid number
+		const parsedValue = parseFloat(value) || 0;
 
-        // Calculate the amount based on the denomination fields
-        CalculateAmount({
-            ...formData,
-            [name]: parsedValue,
-        });
+		// Update the form data
+		setFormData((prevFormData) => ({
+			...prevFormData,
+			[name]: parsedValue,
+		}));
+
+		// Calculate the amount based on the denomination fields
+		CalculateAmount({
+			...formData,
+			[name]: parsedValue,
+		});
     };
 
 	// Function to submit the cash count to the server
@@ -193,15 +215,18 @@ const SafeAuditPage = () => {
 			itemCounted: "SAFE",
 			amountExpected: parseFloat(expectedAmount),
 			total: parseFloat(currentAmount),
+			type: "MID",
 			...currencyFields,
 		};
+
+		console.log(request);
 
 		// POST the cash count to the server
 		axios.post(CreateCashCountURL, request).then((response) => {
 			console.log(response);
 
 			 // Check if the count was successful
-			if (response.data.IsValid == true)
+			if (response.status == 200)
 				toast.success("Safe count submitted successfully.");
 			else 
 				toast.error("Failed to submit safe count.");
@@ -219,7 +244,6 @@ const SafeAuditPage = () => {
         // Check if any field is invalid
         if (CheckFields())
             return;
-		
 
 		// Stores form data to be passed to SubmitCashCount
 		let {
@@ -228,6 +252,7 @@ const SafeAuditPage = () => {
 			store,
 			currentAmount: fltCurrentAmount,
 			expectedAmount: fltExpectedAmount,
+			storeName,
 			...currencyFields
 		} = formData;
 
