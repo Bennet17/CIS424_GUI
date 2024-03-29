@@ -126,7 +126,9 @@ console.log(currentDate); // "17-6-2022"
             </tr>
           </thead>
           <tbody>
-          {employees.map((employee) => (
+          {employees
+              .filter(employee => employee.enabled)
+              .map(employee=>(
             <tr 
               key={employee.ID} 
               onClick={() => handleRowClick(employee)} 
@@ -137,7 +139,8 @@ console.log(currentDate); // "17-6-2022"
               <td className="border px-4 py-2">{employee.position}</td>
               <td className="border px-4 py-2">{employee.enabled ? 'Active' : 'Inactive'}</td>
             </tr>
-          ))}
+              ))
+          }
 
           </tbody>
         </table>
