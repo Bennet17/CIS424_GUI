@@ -572,7 +572,7 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a source&gt;</option>
-                                                <option value="BANK">BANK</option>
+                                                {/*<option value="BANK">BANK</option>*/}
                                                 {arrSources.map((register, index) => {
                                                     return (
                                                         <option key={register.id} value={register.name}>{register.name}</option>
@@ -598,7 +598,7 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a destination&gt;</option>
-                                                <option value="BANK">BANK</option>
+                                                {/*<option value="BANK">BANK</option>*/}
                                                 {arrDestinations.map((register, index) => {
                                                     return (
                                                         <option key={register.id} value={register.name}>{register.name}</option>
@@ -1104,7 +1104,7 @@ const FundsTransferPage = () => {
                                             className="flex w-5/6 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                             onClick={() => setShowReport(!showReport)}
                                         >
-                                            View Report
+                                            View Last Report
                                         </button>
                                     )}
                                     </td>

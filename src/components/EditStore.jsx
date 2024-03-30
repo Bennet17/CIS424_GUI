@@ -418,7 +418,7 @@ const EditStore = (store) => {
                     onClick={toggleAbility}
                     className="flex-1 bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                    {store.store.enabled ? 'Disable Store' : 'Enable Store'}
+                    {store.store.enabled ? 'Deactivate Store' : 'Activate Store'}
 
                 </button>
                 </div>

@@ -101,7 +101,7 @@ function StoreTable() {
           <thead>
             <tr>
               <th className="px-4 py-2">Location</th>
-              <th className="px-4 py-2">Today's Status</th>
+              <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">In Business</th>
               {/* <th className="px-4 py-2">Enabled</th> */}
 
@@ -116,7 +116,7 @@ function StoreTable() {
             >
               <td className="border px-4 py-2">{store.location}</td>
               <td className="border px-4 py-2">{store.opened ? 'Open' : 'Closed'}</td>
-              <td className="border px-4 py-2">{store.enabled ? 'In Business' : 'Closed Indefinitely'}</td>
+              <td className="border px-4 py-2">{store.enabled ? 'Active' : 'Inactive'}</td>
             </tr>
           ))}
 

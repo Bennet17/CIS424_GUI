@@ -374,7 +374,7 @@ const EditUser = (user) => {
     onClick={toggleAbility}
       className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
     >
-  {user.user.enabled ? 'Disable User' : 'Enable User'}
+  {user.user.enabled ? 'Deactivate User' : 'Activate User'}
     </button>
   </div>
 </form>
