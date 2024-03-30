@@ -1,6 +1,7 @@
 import Chart from "react-apexcharts";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { ToggleLeft, ToggleRight } from "lucide-react";
 
 import { useAuth } from "../AuthProvider.js";
 
@@ -43,14 +44,11 @@ const OSBarChart = () => {
   };
 
   const fetchData = async () => {
-    // TODO - Correct route but it's not working
     const storeID = auth.cookie.user.viewingStoreID;
 
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - 14); // Days shown in chart, should be a constant but who cares
-    console.log(formatDate(endDate));
-    console.log(formatDate(startDate));
 
     const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${
       auth.cookie.user.viewingStoreID
@@ -59,7 +57,6 @@ const OSBarChart = () => {
     try {
       const response = await axios.get(url);
       const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
-      console.log(data);
 
       setChartData({
         // Map returned variance values to chart y-axis coordinates
@@ -73,14 +70,14 @@ const OSBarChart = () => {
         // Looks scary but it's all formatting
         categories: data.map((weekday) => {
           const date = new Date(weekday.date); // Get date from data
-          const dayOfWeek = date.toLocaleDateString("en-US", {
-            weekday: "short",
-          }); // Get the short day name (e.g., "Mon")
+          // const dayOfWeek = date.toLocaleDateString("en-US", {
+          //   weekday: "short",
+          // }); // Get the short day name (e.g., "Mon")
           const formattedDate = date.toLocaleDateString("en-US", {
             month: "numeric",
             day: "2-digit",
           }); // Get the formatted date (e.g., "2/01")
-          return `${dayOfWeek}. ${formattedDate}`;
+          return `${formattedDate}`;
         }),
       });
     } catch (error) {
@@ -118,6 +115,15 @@ const OSBarChart = () => {
       fontFamily: "Roboto, sans-serif", // Chart font
       foreColor: "#616161", // HEX CODE FOR GRAY-700
     },
+    subtitle: {
+      text: "(Data labels are rounded to the next whole number)",
+      align: "center",
+      offsetY: 50,
+      style: {
+        fontSize: "12px",
+        color: "#6c757d",
+      },
+    },
     plotOptions: {
       bar: {
         horizontal: false,
@@ -127,11 +133,16 @@ const OSBarChart = () => {
           ranges: [
             {
               from: -Infinity,
-              to: 0,
+              to: -2,
               color: "#ed9d9d", // Red color for negative variance
             },
             {
-              from: 0,
+              from: -2,
+              to: 2,
+              color: "#b0b7bd", // Gray color for indiscernables
+            },
+            {
+              from: 2,
               to: Infinity,
               color: "#77d49a", // Green color for positive variance
             },
@@ -146,11 +157,7 @@ const OSBarChart = () => {
       },
       formatter: function (value) {
         // This wizardry shows no datalabel if it is 0, () if it is negative, and normal otherwise (all to 2 decimal places)
-        return value !== 0
-          ? value < 0
-            ? `(${Math.abs(value).toFixed(2)})`
-            : value.toFixed(2)
-          : "";
+        return value < 0 ? `(${Math.ceil(Math.abs(value))})` : Math.ceil(value);
       },
     },
     xaxis: {
@@ -161,7 +168,7 @@ const OSBarChart = () => {
           fontSize: "12px",
           fontWeight: "bold",
         },
-        offsetX: -35, // TM: Hacky attempt to achieve true center
+        offsetX: -25, // TM: Hacky (yet successful) attempt to achieve true center
       },
     },
     yaxis: {
@@ -180,7 +187,7 @@ const OSBarChart = () => {
     },
     colors: ["#008FFB"], // Color of the bars
     title: {
-      text: `${auth.cookie.user.viewingStoreLocation}'s Bi-Week Over/Short Summary`, // Title of the chart
+      text: `${auth.cookie.user.viewingStoreLocation}'s Bi-Week Summary`, // Title of the chart
       align: "center",
       margin: 10,
       offsetY: 20,
@@ -221,8 +228,22 @@ const OSBarChart = () => {
 
   // Return the JSX for rendering the chart
   return (
-    <div className="bg-white shadow-md p-4 rounded-lg w-3/4">
-      <Chart options={options} series={series} type="bar" height={350} />
+    <div className=" bg-white shadow-md p-4 rounded-lg w-3/4">
+      <div className=" w-full">
+        <Chart options={options} series={series} type="bar" height={350} />
+        {true && (
+          <div className="flex flex-row justify-end">
+            <p className="mr-2 text-sm">Toggle Month-to-Date</p>
+            <ToggleRight className="h-5 w-5 mr-4 text-gray-600" />
+          </div>
+        )}
+        {false && (
+          <div>
+            <ToggleLeft className="text-gray-600" />
+            <p>Toggle Bi-Week</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
