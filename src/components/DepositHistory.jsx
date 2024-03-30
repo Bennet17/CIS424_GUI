@@ -230,21 +230,12 @@ const DepositHistory = () => {
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.date.split("T")[0]}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.name}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>sampletext</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status == "OPEN" ? null : item.verifiedOn}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>sampletext</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.verifiedBy}</td>
                                     </tr>
                                 ))
                             }
-                            <tr>
-                                <td colSpan="6">
-                                <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Submit</button>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
