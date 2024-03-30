@@ -11,9 +11,11 @@ import { Toaster, toast } from 'sonner';
 
 const DepositHistory = () => {
 
+    const [dateStart, setDateStart] = useState(GetTodaysDate());
+    const [dateEnd, setDateEnd] = useState(GetTodaysDate());
+
     const [records, setRecords] = useState([]);
     const [hasRecords, setHasRecords] = useState(false);
-    const [date, setDate] = useState(GetTodaysDate());
     const [selectedRow, SetSelectedRow] = useState(null);
     const [postSuccess, setPostSuccess] = useState(false);
 
@@ -91,9 +93,9 @@ const DepositHistory = () => {
 
     //call on component load AND when we change our date
     useEffect(() => {
-        console.log(date);
+        console.log(dateStart);
         function Initialize(){
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetFundTransfersForStore?storeID=${auth.cookie.user.viewingStoreID}&startDate=${date}&endDate=${date}`)
+            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetFundTransfersForStore?storeID=${auth.cookie.user.viewingStoreID}&startDate=${dateStart}&endDate=${dateEnd}`)
             .then(response => {
                 console.log(response.data);
                 //set the transfer history information data
@@ -117,7 +119,7 @@ const DepositHistory = () => {
         }
 
         Initialize();
-    }, [date, postSuccess]);
+    }, [dateStart, dateEnd, postSuccess]);
     
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
@@ -147,7 +149,7 @@ const DepositHistory = () => {
         }
     }
 
-    function Abort(event){
+    /*function Abort(event){
         //prevents default behavior of sending data to current URL And refreshing page
         event.preventDefault();
 
@@ -175,7 +177,7 @@ const DepositHistory = () => {
                 toast.error("Unknown error trying to change status: " + error.message);
             });
         }
-    }
+    }*/
 
     return (
         <div className="flex h-screen bg-custom-accent">
@@ -189,53 +191,51 @@ const DepositHistory = () => {
             <SideBar currentPage={6} />
             <div className="w-full">
                 <HorizontalNav />
-                <div className="text-main-color w-64 text-2xl float-left ml-8 mt-32">
+                <div className="text-main-color w-72 text-2xl float-left ml-8 mt-32">
                     <p>Select an open deposit to mark as pending or closed</p>
                     <br/>
-                    <label>Date:
+                    <label>Start Date:
                         <input 
-                            value={date} 
-                            onChange={e => setDate(e.target.value)}  
+                            value={dateStart} 
+                            onChange={e => setDateStart(e.target.value)}  
+                            className="box-border text-center text-base mb-4 ml-6 mr-12 w-32 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                            type="date"
+                        />
+                    </label>
+                    <br/>
+                    <label>End Date:
+                        <input 
+                            value={dateEnd} 
+                            onChange={e => setDateEnd(e.target.value)}  
                             className="box-border text-center text-base mb-4 ml-6 mr-12 w-32 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                             type="date"
                         />
                     </label>
                 </div>
-                <div className="float-left ml-4">
+                <div className="float-left ml-12">
                     <p className="text-main-color text-center text-3xl mt-4 mb-4">Deposit History Report</p>
                     <table>
                         <tbody>
                             <tr>
-                                <td className="text-right w-28 h-12"></td>
-                                <td className="text-center w-12 h-12"></td>
                                 <td className="box-border border-border-color border-2 text-center w-28 h-12">Date</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Deposit Amount</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Location</td>
                                 <td className="box-border border-border-color border-2 text-center w-28 h-12">Opened By</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Deposit Amount</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Verified Date</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Verified Status</td>
+                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Verified By</td>
                             </tr>
                             {hasRecords === true &&
                                 records.map((item, index) => (
                                     <tr onClick={() => (selectedRow == index) ? SetSelectedRow(null) : SetSelectedRow(index)} className={`${selectedRow == index && "bg-amber-200"}`} >
-                                        <FieldStatus data={item.status} />
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-52 h-8 pl-2`}>{item.date.split("T")[0]}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.destination}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.date.split("T")[0]}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.name}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status == "OPEN" ? null : item.verifiedOn}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.verifiedBy}</td>
                                     </tr>
                                 ))
                             }
-                            <tr>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td colSpan="2">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Submit</button>
-                                </td>
-                                <td colSpan="2">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Abort}>Abort Deposit</button>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
