@@ -8,6 +8,10 @@ import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import {useAuth} from '../AuthProvider.js';
 import { Toaster, toast } from 'sonner';
+import {
+    Square,
+    Check,
+  } from "lucide-react";
 
 const DepositHistory = () => {
 
@@ -180,7 +184,7 @@ const DepositHistory = () => {
     }*/
 
     return (
-        <div className="flex h-screen bg-custom-accent">
+        <div className="flex min-h-screen bg-custom-accent">
             <Toaster 
                 richColors 
                 position="bottom-right"
@@ -231,11 +235,19 @@ const DepositHistory = () => {
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.name}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status == "OPEN" ? null : item.verifiedOn}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status == "OPEN" ? <Square/> : <Check/>}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.verifiedBy}</td>
                                     </tr>
                                 ))
                             }
+                            <tr>
+                                <td colSpan="5">
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Verify</button>
+                                </td>
+                                <td>
+
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

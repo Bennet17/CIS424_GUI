@@ -166,7 +166,7 @@ const validatePassword = (password) => {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-200">
+    <div className="flex justify-center items-center min-h-screen bg-gray-200">
       <div className="w-full max-w-md">
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 className="text-xl font-semibold mb-4">Forgot Password</h2>

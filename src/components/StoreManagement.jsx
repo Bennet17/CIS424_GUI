@@ -12,7 +12,7 @@ const StoreManagementPage = () => {
 
   return (
 
-<div className="flex h-screen bg-custom-accent">
+<div className="flex min-h-screen bg-custom-accent">
   <SideBar currentPage={20} />
   <div className="flex flex-col w-full">
     <HorizotalNav />

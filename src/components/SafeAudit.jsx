@@ -306,7 +306,7 @@ const SafeAuditPage = () => {
     }
 
 	return (
-		<div className="flex h-screen bg-custom-accent">
+		<div className="flex min-h-screen bg-custom-accent">
 			<Toaster 
 				richColors 
 				position="bottom-right"

@@ -81,7 +81,7 @@ setStoreArray(updatedStoreArray);
 
   //return the pages child components
   return (
-    <div className="flex h-screen bg-custom-accent">
+    <div className="flex mi-h-screen bg-custom-accent">
       <SideBar currentPage={7} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
