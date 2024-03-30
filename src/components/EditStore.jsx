@@ -37,6 +37,7 @@ const EditStore = (store) => {
 
   const openModal = () => {
     setIsOpen(true);
+    setLocation(store.store.location);
     setHundredRegisterMax(store.store.hundredRegisterMax);
     setTwentyRegisterMax(store.store.twentyRegisterMax);
     setFiftyRegisterMax(store.store.fiftyRegisterMax);
@@ -58,6 +59,7 @@ const EditStore = (store) => {
 
   const closeModal = () => {
     setIsOpen(false);
+    setLocation('');
     setStoreID('');
     setLocation('');
     setHundredRegisterMax('');
@@ -155,6 +157,7 @@ const EditStore = (store) => {
       .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateMaximums", 
         {
          "StoreId": store.store.ID,
+         "location": location,
          "Enabled": store.store.enabled,
          "Opened": store.store.opened,
          "Hundred_Register": parseInt(hundredRegisterMax),
@@ -215,14 +218,26 @@ const EditStore = (store) => {
             >
               &times;
             </span>
-            <h2 className="text-2xl font-bold mb-4">Edit Store Information: {store.store.location} </h2>
-            <h2 className="text-lg font-bold mb-4">{result}</h2>
+            <h2 className="text-2xl font-bold mb-2">Edit Store Information: {store.store.location} </h2>
+            <h2 className="text-lg font-bold mb-2">{result}</h2>
 
-            <form  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <form  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-2">
+            <div className="grid grid-cols-3 gap-4">
+            <div className="mb-2 col-span-1">
+                  <label htmlFor="location" className="block text-gray-700 font-bold mb-2">Store Name:</label>
+                  <input
+                    required
+                    id="location"
+                    defaultValue={store.store.location}
+                    type="text"
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="box-border text-center py-1 px-1 mb-4 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                  />
+                </div>
+          </div>
             <p className='text font-bold mb-3'>Maximum Denominations in Registers:</p>
               <div className="grid grid-cols-3 gap-4">
-              
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="hundredRegisterMax" className="block text-gray-700 font-bold mb-2">Hundred:</label>
                   <input
                     required
@@ -234,7 +249,18 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
+                  <label htmlFor="fiftyRegisterMax" className="block text-gray-700 font-bold mb-2">Fifty:</label>
+                  <input
+                    required
+                    id="fiftyRegisterMax"
+                    type="number"
+                   defaultValue={store.store.fiftyRegisterMax}
+                    onChange={(e) => setFiftyRegisterMax(e.target.value)}
+                    className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                  />
+                </div>
+                <div className="mb-2 col-span-1">
                   <label htmlFor="twentyRegisterMax" className="block text-gray-700 font-bold mb-2">Twenty:</label>
                   <input
                     required
@@ -246,24 +272,13 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
-                  <label htmlFor="fiftyRegisterMax" className="block text-gray-700 font-bold mb-2">Fifty:</label>
-                  <input
-                    required
-                    id="fiftyRegisterMax"
-                    type="number"
-                   defaultValue={store.store.fiftyRegisterMax}
-                    onChange={(e) => setFiftyRegisterMax(e.target.value)}
-                    className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                  />
-                </div>
 
-                <div className="mb-4 col-span-3">
+                <div className="mb-2 col-span-3">
                     <p className="text font-bold ">Maximum Denominations in Safe:</p>
                 </div>
                
 
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
     
                   <label htmlFor="hundredMax" className="block text-gray-700 font-bold mb-2">Hundred:</label>
                   <input
@@ -276,7 +291,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="fiftyMax" className="block text-gray-700 font-bold mb-2">Fifty:</label>
                   <input
                     required
@@ -288,7 +303,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="twentyMax" className="block text-gray-700 font-bold mb-2">Twenty:</label>
                   <input
                     required
@@ -300,7 +315,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="tenMax" className="block text-gray-700 font-bold mb-2">Ten:</label>
                   <input
                     required
@@ -312,7 +327,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="fiveMax" className="block text-gray-700 font-bold mb-2">Five:</label>
                   <input
                     required
@@ -323,7 +338,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="twoMax" className="block text-gray-700 font-bold mb-2">Two:</label>
                   <input
                     required
@@ -335,7 +350,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="oneMax" className="block text-gray-700 font-bold mb-2">One:</label>
                   <input
                     required
@@ -347,7 +362,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="quarterRollMax" className="block text-gray-700 font-bold mb-2">Quarter Rolls:</label>
                   <input
                     required
@@ -360,7 +375,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="nickelRollMax" className="block text-gray-700 font-bold mb-2">Nickel Rolls:</label>
                   <input
                     required
@@ -373,7 +388,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="dimeRollMax" className="block text-gray-700 font-bold mb-2">Dime Rolls:</label>
                   <input
                     required
@@ -386,7 +401,7 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                <div className="mb-4 col-span-1">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="pennyRollMax" className="block text-gray-700 font-bold mb-2">Penny Rolls:</label>
                   <input
                     required

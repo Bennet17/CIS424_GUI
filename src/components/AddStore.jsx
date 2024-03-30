@@ -84,7 +84,7 @@ const AddStoreForm = () => {
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-2">
             <div className="grid grid-cols-3 gap-4">
               <div className="mb-2 col-span-1">
-                  <label htmlFor="location" className="block text-gray-700 font-bold mb-4">Store Name:</label>
+                  <label htmlFor="location" className="block text-gray-700 font-bold mb-3">Store Name:</label>
                   <input
                     required
                     id="location"
@@ -108,6 +108,16 @@ const AddStoreForm = () => {
                   />
                 </div>
                 <div className="mb-2 col-span-1">
+                  <label htmlFor="fiftyRegisterMax" className="block text-gray-700 font-bold mb-2">Fifty:</label>
+                  <input
+                    required
+                    id="fiftyRegisterMax"
+                    type="number"
+                    onChange={(e) => setFiftyRegisterMax(e.target.value)}
+                    className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                  />
+                </div>
+                <div className="mb-2 col-span-1">
                   <label htmlFor="twentyRegisterMax" className="block text-gray-700 font-bold mb-2">Twenty:</label>
                   <input
                     required
@@ -115,16 +125,6 @@ const AddStoreForm = () => {
                     type="number"
 
                     onChange={(e) => setTwentyRegisterMax(e.target.value)}
-                    className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                  />
-                </div>
-                <div className="mb-2 col-span-1">
-                  <label htmlFor="fiftyRegisterMax" className="block text-gray-700 font-bold mb-2">Fifty:</label>
-                  <input
-                    required
-                    id="fiftyRegisterMax"
-                    type="number"
-                    onChange={(e) => setFiftyRegisterMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
