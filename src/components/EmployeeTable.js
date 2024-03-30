@@ -11,6 +11,8 @@ import {useAuth} from '../AuthProvider.js';
 
 function EmployeeTable() {
 
+  const [showAllEmployees, setShowAllEmployees] = useState(false);
+
   const auth = useAuth();
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
   const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
@@ -110,9 +112,8 @@ console.log(currentDate); // "17-6-2022"
 
     fetchEmployeeTable();
   }, []);
-
-
-  return (
+  
+    return (
     <div>
       <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table ref={tableRef} className="min-w-full">
@@ -127,7 +128,7 @@ console.log(currentDate); // "17-6-2022"
           </thead>
           <tbody>
           {employees
-              .filter(employee => employee.enabled)
+              .filter(employee => showAllEmployees || employee.enabled)
               .map(employee=>(
             <tr 
               key={employee.ID} 
@@ -145,8 +146,26 @@ console.log(currentDate); // "17-6-2022"
           </tbody>
         </table>
       </div>
+
+
+      <div style={{ position: 'relative', width: '100%' }}>
+        <div style={{ position: 'absolute', top: 50, right: 10 }}>
+          
+          <label className=" "style={{ position: 'relative', top: '10px', right: '10px' }}>
+            <input
+              type="checkbox"
+              onChange={() => setShowAllEmployees(!showAllEmployees)}
+            />{' '}
+            Show Disabled Employees
+          
+        </label>
+        </div>
+      </div>
+
+      
+
       <div className="flex flex-row-reverse mt-3">
-        
+
       <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
           <button onClick={onDownload}>Export to Excel</button>
         </div>
