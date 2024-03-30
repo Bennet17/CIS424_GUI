@@ -11,6 +11,8 @@ import {useAuth} from '../AuthProvider.js';
 
 function EmployeeTable() {
 
+  const [showAllEmployees, setShowAllEmployees] = useState(false);
+
   const auth = useAuth();
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
   const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
@@ -126,7 +128,7 @@ console.log(currentDate); // "17-6-2022"
           </thead>
           <tbody>
           {employees
-              .filter(employee => employee.enabled)
+              .filter(employee => showAllEmployees || employee.enabled)
               .map(employee=>(
             <tr 
               key={employee.ID} 
@@ -152,8 +154,7 @@ console.log(currentDate); // "17-6-2022"
           <label className=" "style={{ position: 'relative', top: '10px', right: '10px' }}>
             <input
               type="checkbox"
-              //checked={showDisabled}
-              //onChange={() => setShowDisabled(!showDisabled)}
+              onChange={() => setShowAllEmployees(!showAllEmployees)}
             />{' '}
             Show Disabled Employees
           
