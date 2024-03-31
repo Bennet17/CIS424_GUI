@@ -13,8 +13,10 @@ import {
   ChevronRight,
   ChevronDown,
   KeyRound,
+  Vault,
   AlignHorizontalDistributeCenter,
   DollarSign,
+  LandMark,
   Lock,
   CreditCard,
   UserRound,
@@ -193,7 +195,7 @@ const SideBar = (props) => {
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
               >
-                <KeyRound />
+                <Vault />
                 <span className="ml-3">Safe Audit</span>
               </li>
             )}
