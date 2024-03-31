@@ -18,7 +18,7 @@ const HomePage = () => {
 
         {/* Content area */}
         <div className="flex flex-grow justify-center items-center">
-          {auth.CheckAuthorization(["Employee", "Manager", "District Manager", "Owner"]) && <OSBarChart />}
+          <OSBarChart />
         </div>
       </div>
     </div>

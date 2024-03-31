@@ -124,6 +124,10 @@ const DepositHistory = () => {
 
         Initialize();
     }, [dateStart, dateEnd, postSuccess]);
+
+    function ShowConfirmPopup(){
+
+    }
     
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
@@ -132,8 +136,6 @@ const DepositHistory = () => {
         //don't let the user try and submit closed/aborted records or when no records are selected
         if (selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED"){
             toast.error("Cannot change status of closed or aborted deposit!");
-        }else if (auth.cookie.user.viewingStoreID !== auth.cookie.user.workingStoreID){
-            toast.error("Cannot perform action when page is view-only");
         }else{
             axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateDepositStatus', {
                 "fID": records[selectedRow].fID
@@ -234,8 +236,8 @@ const DepositHistory = () => {
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.date.split("T")[0]}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.name}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status == "OPEN" ? null : item.verifiedOn}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status == "OPEN" ? <Square/> : <Check/>}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.verifiedOn == null ? null : item.verifiedOn.split("T")[0]}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 relative inset-0 w-28 h-8 pl-2`}>{item.status == "OPEN" ? <Square/> : <Check/>}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.verifiedBy}</td>
                                     </tr>
                                 ))
