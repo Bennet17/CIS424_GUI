@@ -22,34 +22,6 @@ const OSBarChart = () => {
     fetchData();
   }, [auth.cookie.user.viewingStoreID, chartVersion]);
 
-  useEffect(() => {
-    // Move logic here to ensure totalVariance is updated before using it
-    const emptyDataPoint = {
-      name: "Total",
-      data: [totalVariance],
-    };
-
-    setChartData((prevChartData) => {
-      const newData =
-        prevChartData.series.length > 0
-          ? [
-              ...prevChartData.series[0].data.slice(0, -1), // Exclude the last element (Total)
-              totalVariance,
-            ]
-          : [totalVariance];
-
-      return {
-        ...prevChartData,
-        series: [
-          {
-            ...prevChartData.series[0],
-            data: newData,
-          },
-        ],
-      };
-    });
-  }, [totalVariance]);
-
   const formatDate = (date) => {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero based
@@ -78,53 +50,51 @@ const OSBarChart = () => {
       auth.cookie.user.viewingStoreID
     }&startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`;
 
-    try {
-      const response = await axios.get(url);
-      const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
+    axios
+      .get(url)
+      .then((response) => {
+        const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
 
-      let sum = 0;
-      data.forEach((obj) => {
-        sum += obj.variance;
+        // Add an extra value for variance sum
+        let varianceSum = 0;
+
+        setChartData({
+          // Map returned variance values to chart y-axis coordinates
+          series: [
+            {
+              name: "Variance",
+              data: [
+                ...data.map((dayVariance) => {
+                  varianceSum += dayVariance.variance;
+                  return dayVariance.variance;
+                }),
+                varianceSum.toFixed(2),
+              ],
+            },
+          ],
+          // Map corresponding date values
+          // Looks scary but it's all formatting
+          categories: [
+            ...data.map((weekday) => {
+              const date = new Date(weekday.date); // Get date from data
+              // const dayOfWeek = date.toLocaleDateString("en-US", {
+              //   weekday: "short",
+              // }); // Get the short day name (e.g., "Mon")
+              const formattedDate = date.toLocaleDateString("en-US", {
+                month: "numeric",
+                day: "2-digit",
+              }); // Get the formatted date (e.g., "2/01")
+              return `${formattedDate}`;
+            }),
+            "Total",
+          ],
+        });
+
+        setTotalVariance(varianceSum.toFixed(2));
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
-      setTotalVariance(sum.toFixed(2));
-
-      // Add an extra value for variance sum
-      const emptyDataPoint = {
-        name: "Total",
-        data: [totalVariance],
-      };
-
-      setChartData({
-        // Map returned variance values to chart y-axis coordinates
-        series: [
-          {
-            name: "Variance",
-            data: [
-              ...data.map((dayVariance) => dayVariance.variance),
-              emptyDataPoint,
-            ],
-          },
-        ],
-        // Map corresponding date values
-        // Looks scary but it's all formatting
-        categories: [
-          ...data.map((weekday) => {
-            const date = new Date(weekday.date); // Get date from data
-            // const dayOfWeek = date.toLocaleDateString("en-US", {
-            //   weekday: "short",
-            // }); // Get the short day name (e.g., "Mon")
-            const formattedDate = date.toLocaleDateString("en-US", {
-              month: "numeric",
-              day: "2-digit",
-            }); // Get the formatted date (e.g., "2/01")
-            return `${formattedDate}`;
-          }),
-          "Total",
-        ],
-      });
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
   };
 
   const { series, categories } = chartData;
