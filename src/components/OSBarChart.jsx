@@ -238,7 +238,9 @@ const OSBarChart = () => {
             borderColor: "#777",
             borderWidth: 1.5,
             offsetY: -5,
+            offsetX: -5,
             style: {
+              fontSize: "12px",
               color: "#777",
               background: "#fff",
               fontWeight: "bold",
