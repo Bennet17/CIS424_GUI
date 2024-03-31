@@ -4,30 +4,51 @@ import axios from "axios";
 import { ToggleLeft, ToggleRight } from "lucide-react";
 
 import { useAuth } from "../AuthProvider.js";
+import { chart } from "highcharts";
 
 // Component for displaying a bar chart representing Over/Short by Day
 const OSBarChart = () => {
-  const defaultAnnotationOffset = -3;
   const [chartData, setChartData] = useState({ series: [], categories: [] });
-  const [annotationOffset, setAnnotationOffset] = useState(
-    defaultAnnotationOffset
-  );
+  const [totalVariance, setTotalVariance] = useState(0);
+
+  // Bi-Week or Month-to-Date
+  const [chartVersion, setChartVersion] = useState(0);
 
   //import the authentication function from AuthProvider.js
   const auth = useAuth();
 
+  // update chart data
   useEffect(() => {
     fetchData();
-  }, [auth.cookie.user.viewingStoreID]); // Run once when the component mounts
+  }, [auth.cookie.user.viewingStoreID, chartVersion]);
 
-  // Update annotation positioning whenever chart data changes
   useEffect(() => {
-    if (chartData.series.length > 0) {
-      const lastVarianceVal =
-        chartData.series[0].data[chartData.series[0].data.length - 1];
-      setAnnotationOffset(lastVarianceVal > 0 ? 20 : defaultAnnotationOffset);
-    }
-  }, [chartData]);
+    // Move logic here to ensure totalVariance is updated before using it
+    const emptyDataPoint = {
+      name: "Total",
+      data: [totalVariance],
+    };
+
+    setChartData((prevChartData) => {
+      const newData =
+        prevChartData.series.length > 0
+          ? [
+              ...prevChartData.series[0].data.slice(0, -1), // Exclude the last element (Total)
+              totalVariance,
+            ]
+          : [totalVariance];
+
+      return {
+        ...prevChartData,
+        series: [
+          {
+            ...prevChartData.series[0],
+            data: newData,
+          },
+        ],
+      };
+    });
+  }, [totalVariance]);
 
   const formatDate = (date) => {
     const year = date.getFullYear();
@@ -44,11 +65,14 @@ const OSBarChart = () => {
   };
 
   const fetchData = async () => {
-    const storeID = auth.cookie.user.viewingStoreID;
-
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setDate(endDate.getDate() - 14); // Days shown in chart, should be a constant but who cares
+    if (chartVersion === 0) {
+      startDate.setDate(endDate.getDate() - 14); // Days shown in chart, should be a constant but who cares
+    } else {
+      startDate.setDate(1);
+      console.log(formatDate(startDate));
+    }
 
     const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${
       auth.cookie.user.viewingStoreID
@@ -58,27 +82,45 @@ const OSBarChart = () => {
       const response = await axios.get(url);
       const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
 
+      let sum = 0;
+      data.forEach((obj) => {
+        sum += obj.variance;
+      });
+      setTotalVariance(sum.toFixed(2));
+
+      // Add an extra value for variance sum
+      const emptyDataPoint = {
+        name: "Total",
+        data: [totalVariance],
+      };
+
       setChartData({
         // Map returned variance values to chart y-axis coordinates
         series: [
           {
             name: "Variance",
-            data: data.map((dayVariance) => dayVariance.variance),
+            data: [
+              ...data.map((dayVariance) => dayVariance.variance),
+              emptyDataPoint,
+            ],
           },
         ],
         // Map corresponding date values
         // Looks scary but it's all formatting
-        categories: data.map((weekday) => {
-          const date = new Date(weekday.date); // Get date from data
-          // const dayOfWeek = date.toLocaleDateString("en-US", {
-          //   weekday: "short",
-          // }); // Get the short day name (e.g., "Mon")
-          const formattedDate = date.toLocaleDateString("en-US", {
-            month: "numeric",
-            day: "2-digit",
-          }); // Get the formatted date (e.g., "2/01")
-          return `${formattedDate}`;
-        }),
+        categories: [
+          ...data.map((weekday) => {
+            const date = new Date(weekday.date); // Get date from data
+            // const dayOfWeek = date.toLocaleDateString("en-US", {
+            //   weekday: "short",
+            // }); // Get the short day name (e.g., "Mon")
+            const formattedDate = date.toLocaleDateString("en-US", {
+              month: "numeric",
+              day: "2-digit",
+            }); // Get the formatted date (e.g., "2/01")
+            return `${formattedDate}`;
+          }),
+          "Total",
+        ],
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -96,19 +138,34 @@ const OSBarChart = () => {
         show: true, // Display the toolbar with the hamburger menu
         export: {
           svg: {
-            filename: `${
-              auth.cookie.user.viewingStoreLocation
-            }_BiweekSummary_${formatDateOtherWay(new Date())}`,
+            filename:
+              chartVersion === 0
+                ? `${
+                    auth.cookie.user.viewingStoreLocation
+                  }_BW_Summary_${formatDateOtherWay(new Date())}`
+                : `${
+                    auth.cookie.user.viewingStoreLocation
+                  }_MTD_Summary_${formatDateOtherWay(new Date())}`,
           },
           png: {
-            filename: `${
-              auth.cookie.user.viewingStoreLocation
-            }_BiweekSummary_${formatDateOtherWay(new Date())}`,
+            filename:
+              chartVersion === 0
+                ? `${
+                    auth.cookie.user.viewingStoreLocation
+                  }_BW_Summary_${formatDateOtherWay(new Date())}`
+                : `${
+                    auth.cookie.user.viewingStoreLocation
+                  }_MTD_Summary_${formatDateOtherWay(new Date())}`,
           },
           csv: {
-            filename: `${
-              auth.cookie.user.viewingStoreLocation
-            }_BiweekSummary_${formatDateOtherWay(new Date())}`,
+            filename:
+              chartVersion === 0
+                ? `${
+                    auth.cookie.user.viewingStoreLocation
+                  }_BW_Summary_${formatDateOtherWay(new Date())}`
+                : `${
+                    auth.cookie.user.viewingStoreLocation
+                  }_MTD_Summary_${formatDateOtherWay(new Date())}`,
           },
         },
       },
@@ -187,7 +244,10 @@ const OSBarChart = () => {
     },
     colors: ["#008FFB"], // Color of the bars
     title: {
-      text: `${auth.cookie.user.viewingStoreLocation}'s Bi-Week Summary`, // Title of the chart
+      text:
+        chartVersion === 0
+          ? `${auth.cookie.user.viewingStoreLocation}'s Bi-Week Summary`
+          : `${auth.cookie.user.viewingStoreLocation}'s Month-to-Date Summary`, // Title of the chart
       align: "center",
       margin: 10,
       offsetY: 20,
@@ -196,26 +256,28 @@ const OSBarChart = () => {
         fontWeight: "bold",
       },
     },
-    // TM: This is the 'No Variance' label
-    // annotations: {
-    //   yaxis: [
-    //     {
-    //       y: 0,
-    //       borderColor: "#6c757d",
-    //       borderWidth: 1,
-    //       strokeDashArray: 5,
-    //       label: {
-    //         borderColor: "#6c757d",
-    //         style: {
-    //           color: "#fff",
-    //           background: "#6c757d",
-    //         },
-    //         text: "No Variance", // Annotation for zero variance
-    //         offsetY: annotationOffset,
-    //       },
-    //     },
-    //   ],
-    // },
+    annotations: {
+      points: [
+        {
+          x: "Total",
+          y: totalVariance,
+          marker: {
+            size: 0,
+          },
+          label: {
+            borderColor: "#777",
+            borderWidth: 1.5,
+            offsetY: -5,
+            style: {
+              color: "#777",
+              background: "#fff",
+              fontWeight: "bold",
+            },
+            text: totalVariance,
+          },
+        },
+      ],
+    },
     tooltip: {
       enabled: true,
       y: {
@@ -231,16 +293,27 @@ const OSBarChart = () => {
     <div className=" bg-white shadow-md p-4 rounded-lg w-3/4">
       <div className=" w-full">
         <Chart options={options} series={series} type="bar" height={350} />
-        {true && (
-          <div className="flex flex-row justify-end">
-            <p className="mr-2 text-sm">Toggle Month-to-Date</p>
-            <ToggleRight className="h-5 w-5 mr-4 text-gray-600" />
+
+        {chartVersion === 0 && (
+          <div className="flex flex-row justify-end items-center">
+            <p className="mr-2 text-xs font-bold text-gray-500 ">
+              Toggle Month-to-Date
+            </p>
+            <ToggleRight
+              className="h-8 w-8 mr-4 text-gray-500"
+              onClick={() => setChartVersion(1)}
+            />
           </div>
         )}
-        {false && (
-          <div>
-            <ToggleLeft className="text-gray-600" />
-            <p>Toggle Bi-Week</p>
+        {chartVersion === 1 && (
+          <div className="flex flex-row justify-end items-center">
+            <p className="mr-2 text-xs font-bold text-gray-500 ">
+              Toggle Bi-Week
+            </p>
+            <ToggleLeft
+              className="h-8 w-8 mr-4 text-gray-500"
+              onClick={() => setChartVersion(0)}
+            />
           </div>
         )}
       </div>
