@@ -9,11 +9,12 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
     return (
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-8 rounded-lg shadow-lg">
-                <h2>Threshold Exceeded</h2>
+                <h2>Rule: Safe Limit Reached</h2>
                 {isSafe ? (
                     <>
-                        <p>Safe has exceeded the threshold.</p>
+                        <p>Safe has Reached the Max Amount.</p>
                         <p>Please deposit the following to the bank:</p>
+                        <p></p>
                         <ul>
                             <li>Hundreds: {details.hundred}</li>
                             <li>Fifties: {details.fifty}</li>
