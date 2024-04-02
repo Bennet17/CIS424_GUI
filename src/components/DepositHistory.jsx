@@ -17,6 +17,7 @@ const DepositHistory = () => {
 
     const [dateStart, setDateStart] = useState(GetTodaysDate());
     const [dateEnd, setDateEnd] = useState(GetTodaysDate());
+    const [showConfirm, setShowConfirm] = useState(false);
 
     const [records, setRecords] = useState([]);
     const [hasRecords, setHasRecords] = useState(false);
@@ -197,7 +198,7 @@ const DepositHistory = () => {
             <SideBar currentPage={6} />
             <div className="w-full">
                 <HorizontalNav />
-                <div className="text-main-color w-72 text-2xl float-left ml-8 mt-32">
+                <div className="text-main-color w-72 text-2xl float-left ml-8 mt-16">
                     <p>Select an open deposit to mark as pending or closed</p>
                     <br/>
                     <label>Start Date:
@@ -218,7 +219,7 @@ const DepositHistory = () => {
                         />
                     </label>
                 </div>
-                <div className="float-left ml-12">
+                <div className="float-left ml-12 mt-16">
                     <p className="text-main-color text-center text-3xl mt-4 mb-4">Deposit History Report</p>
                     <table>
                         <tbody>
@@ -243,15 +244,36 @@ const DepositHistory = () => {
                                 ))
                             }
                             <tr>
-                                <td colSpan="5">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Verify</button>
+                                <td colSpan="4">
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={e => setShowConfirm(true)}>Verify</button>
                                 </td>
-                                <td>
+                                <td colSpan="2">
 
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+
+                    {showConfirm && 
+                        <div className="report-overlay">
+                            <div className="report-container">
+                                Are you sure you want to Verify this deposit?
+                                <br/><br/>
+                                <button 
+                                    className="flex w-4/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={Submit}
+                                >
+                                    Confirm
+                                </button>
+                                <button 
+                                    className="flex w-4/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={() => setShowConfirm(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
