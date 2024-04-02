@@ -13,8 +13,10 @@ import {
   ChevronRight,
   ChevronDown,
   KeyRound,
+  Vault,
   AlignHorizontalDistributeCenter,
   DollarSign,
+  LandMark,
   Lock,
   CreditCard,
   UserRound,
@@ -85,7 +87,7 @@ const SideBar = (props) => {
   }
 
   return (
-    <aside className="h-screen">
+    <aside className="min-h-screen">
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <img src={logo} className="w-64" alt="Plato's Closet Logo" />
@@ -193,7 +195,7 @@ const SideBar = (props) => {
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
               >
-                <KeyRound />
+                <Vault />
                 <span className="ml-3">Safe Audit</span>
               </li>
             )}

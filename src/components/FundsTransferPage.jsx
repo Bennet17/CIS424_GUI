@@ -66,21 +66,39 @@ const FundsTransferPage = () => {
                 const newSources = response.data
                 .filter(register => register.opened)
                 .map(register => ({ id: register.regID, name: register.name }));
+                
+                // Add 'All' option to the register select
+                //newSources.unshift({id: -1, name: "BANK"});
 
-                if (newSources.length > 0)
+                if (newSources.length > 0) {
+                    // Update the source options
                     setArrSources(newSources);
 
-                if (newSources.length === 0 || newSources.length === 1 || newSources === undefined || newSources === null)
+                    // Update the register ID to the first register in the array
+                    setFormData((prev) => ({
+                        ...prev,
+                        source: newSources[0].name,
+                    }));
+                }
+                else {
                     setRegisterStatus("No registers are currently open for transfer.");
+                    setArrSources([]);
+                }
+
+                if (newSources.length === 0 || newSources.length === 1 || newSources.length === 2) {
+                    setRegisterStatus("No registers are currently open for transfer.");
+                    setArrSources([]);
+                }
                 
             })
             .catch(error => {
                 console.error(error);
+                setArrSources([]);
             });
         }
 
         Initialize();
-    }, []);
+    }, [formData.store]);
 
     // Set the destination options from arrSources
     useEffect(() => {
@@ -133,45 +151,39 @@ const FundsTransferPage = () => {
 
     // Function to handle changes in the form fields
     const HandleChange = (event) => {
-        // Get the field name and value
         const { name, value } = event.target;
-
-        // Stores value to be parsed back to number after form change
-        let parsedValue = value;
-
-        // If the field is not a select field, parse the value to a number
-        if (event.target.tagName.toLowerCase() !== 'select') {
-            const numericValue = parseFloat(value);
-
-            if (!isNaN(numericValue))
-                parsedValue = numericValue;
-        }
-
-        // Update the form data
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [name]: parsedValue,
-        }));
-        
-        // Remove error class when the field is filled for empty fields
-        if (value !== "") 
-            event.target.classList.remove("error");
-
-        // If the source or destination field is changed, remove the error class from both
+    
         if (name === "source" || name === "destination") {
+            // Directly use the string value for the source and destination dropdowns
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                [name]: value,
+            }));
+            // Remove the error class, if any, from the dropdowns
             document.getElementById("source_select").classList.remove("select-input-error");
             document.getElementById("destination_select").classList.remove("select-input-error");
+        } else {
+            // For numeric fields, parse the value to a number, defaulting to 0 for non-numeric or negative inputs
+            let parsedValue = parseFloat(value);
+            if (isNaN(parsedValue) || parsedValue < 0) {
+                parsedValue = 0;
+                event.target.value = "0"; // Update the input field value to "0"
+            }
+            // Update the form data for numeric inputs
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                [name]: parsedValue,
+            }));
+            // Calculate the amount based on the denomination fields
+            CalculateAmount({
+                ...formData,
+                [name]: parsedValue,
+            });
         }
-
-        // Calculate the amount based on the denomination fields
-        CalculateAmount({
-            ...formData,
-            [name]: parsedValue,
-        });
-
-        // If the amount field is changed from the denominations, remove the error class from the amount field
-        if (name !== "source" || name !== "destination")
-            document.getElementById("amount_input").classList.remove("error");
+    
+        // Remove error class when the field is filled for other fields
+        if (name !== "source" && name !== "destination" && value !== "") 
+            event.target.classList.remove("error");
     };
 
     // Function to filter out non-zero currency fields from the form data and return them
@@ -244,80 +256,76 @@ const FundsTransferPage = () => {
     }
 
     // Const to handle form submission
-    const HandleSubmit = async (event) => {
-        event.preventDefault();
+   const HandleSubmit = async (event) => {
+    event.preventDefault();
 
-        // Check if any field is invalid
-        if (CheckFields()) 
+    if (CheckFields()) return;
+
+    let {
+        user,
+        name,
+        store,
+        storeName,
+        source,
+        destination,
+        amount: fltAmount,
+        ...currencyFields
+    } = formData;
+
+    fltAmount = parseFloat(formData.amount).toFixed(2);
+    let newCurrencyFields = FilterDenominations(currencyFields);
+
+    if (fltAmount >= 1000.0) {
+        if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) 
             return;
+    }
 
-        // Stores the form data in the variables
-        let {
-            user,
-            name,
-            store,
-            storeName,
-            source,
-            destination,
-            amount: fltAmount,
-            ...currencyFields
-        } = formData;
+    if (await SubmitTransfer(
+        event,
+        user,
+        source,
+        destination,
+        fltAmount,
+        currencyFields // Includes zeroes
+    )) {
+        setFormData({
+            user: user,
+            name: name,
+            store: store,
+            storeName: storeName,
+            source: "",
+            destination: "",
+            amount: "",
+            ...Object.keys(currencyFields).reduce((acc, key) => {
+                acc[key] = 0;
+                return acc;
+            }, {}),
+        });
 
-        
-        // Get the source and destination register IDs
-        let sourceID = arrSources.find(register => register.name === source).id;
-        let destinationID = arrDestinations.find(register => register.name === destination).id;
+        if (arrSources.length > 0) {
+            const sourceRegisterID = arrSources.find((register) => register.name === source).id;
+            const destinationRegisterID = arrDestinations.find((register) => register.name === destination).id;
 
-        // Filter out non-zero currency fields
-        fltAmount = parseFloat(formData.amount).toFixed(2);
-        let newCurrencyFields = FilterDenominations(currencyFields);
-
-        // If the amount is >= $1000, display a 'Are you sure?' warning message
-        if (fltAmount >= 1000.0) {
-            if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) 
-                return;
-        }
-
-        // Submit the form data
-        if (await SubmitTransfer(
-            event,
-            user,
-            source,
-            destination,
-            fltAmount,
-            currencyFields // Includes zeroes
-        )) {
-            // Generate the report
-            const report = await GenerateReport(
+            // Generate the report message
+            setReport(await GenerateReport(
                 source,
                 destination,
-                sourceID,
-                destinationID,
+                sourceRegisterID,
+                destinationRegisterID,
                 fltAmount,
                 newCurrencyFields
-            );
-    
-            // Set the report message
-            setReport(report);
-            setShowReport(true);
-    
-            // Reset the form fields
-            setFormData({
-                user: user,
-                name: name,
-                store: store,
-                storeName: storeName,
-                source: "",
-                destination: "",
-                amount: "",
-                ...Object.keys(currencyFields).reduce((acc, key) => {
-                    acc[key] = 0;
-                    return acc;
-                }, {}),
-            });
-        }
-    };
+            ));
 
+            // Show the report message
+            setShowReport(true);
+
+            // Remove error class from all fields
+            document.getElementById("source_select").classList.remove("select-input-error");
+            document.getElementById("destination_select").classList.remove("select-input-error");
+            document.getElementById("amount_input").classList.remove("amount-input-error");
+        }
+    }
+};
     const HandleCancel = (event) => {
         // Reset the form fields
         setFormData({
@@ -390,8 +398,6 @@ const FundsTransferPage = () => {
             // Submit the form data
             const response = await axios.post(FundTransferURL, request);
 
-            console.log(response.data.response);
-
             // Check if the transfer was successful
             if (response.data.response === "Fund Transfer created successfully.") {
                 toast.success("Successfully submitted transfer!");
@@ -405,6 +411,8 @@ const FundsTransferPage = () => {
             toast.error("A server error occurred during submission. Please try again later.");
             return false;
         }
+
+
     }
 
     // Function to format negative values in parentheses
@@ -532,7 +540,7 @@ const FundsTransferPage = () => {
     };
 
     return (
-        <div className="flex h-screen bg-custom-accent">
+        <div className="flex min-h-screen bg-custom-accent">
             <Toaster 
                 richColors 
                 position="bottom-right"
@@ -564,11 +572,12 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a source&gt;</option>
-                                                {arrSources.map((item, index) => (
-                                                    <option key={item.id} value={item.name}>
-                                                        {item.name}
-                                                    </option>
-                                                ))}
+                                                {/*<option value="BANK">BANK</option>*/}
+                                                {arrSources.map((register, index) => {
+                                                    return (
+                                                        <option key={register.id} value={register.name}>{register.name}</option>
+                                                    );
+                                                })}
                                             </select>
                                         </div>
                                     </td>
@@ -588,14 +597,13 @@ const FundsTransferPage = () => {
                                                 value={formData.destination}
                                                 onChange={HandleChange}
                                             >
-                                                <option value="">
-                                                &lt;Please select a destination&gt;
-                                                </option>
-                                                {arrDestinations.map((item, index) => (
-                                                    <option key={item.id} value={item.name}>
-                                                        {item.name}
-                                                    </option>
-                                                ))}
+                                                <option value="">&lt;Please select a destination&gt;</option>
+                                                {/*<option value="BANK">BANK</option>*/}
+                                                {arrDestinations.map((register, index) => {
+                                                    return (
+                                                        <option key={register.id} value={register.name}>{register.name}</option>
+                                                    );
+                                                })}
                                             </select>
                                         </div>
                                     </td>
@@ -1096,7 +1104,7 @@ const FundsTransferPage = () => {
                                             className="flex w-5/6 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                             onClick={() => setShowReport(!showReport)}
                                         >
-                                            View Report
+                                            View Last Report
                                         </button>
                                     )}
                                     </td>
