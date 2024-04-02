@@ -138,8 +138,9 @@ const DepositHistory = () => {
         if (selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED"){
             toast.error("Cannot change status of closed or aborted deposit!");
         }else{
-            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateDepositStatus', {
-                "fID": records[selectedRow].fID
+            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/VerifyDeposit', {
+                "fID": records[selectedRow].fID,
+                "vID": auth.cookie.user.ID
             })
             .then(response => {
                 console.log(response);
@@ -148,6 +149,7 @@ const DepositHistory = () => {
                 }
                 setPostSuccess(true);
                 SetSelectedRow(null);
+                setShowConfirm(false);
             })
             .catch(error => {
                 console.error(error);
@@ -260,13 +262,13 @@ const DepositHistory = () => {
                                 Are you sure you want to Verify this deposit?
                                 <br/><br/>
                                 <button 
-                                    className="flex w-4/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    className="flex w-32 float-left justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     onClick={Submit}
                                 >
                                     Confirm
                                 </button>
                                 <button 
-                                    className="flex w-4/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    className="flex w-32 float-right justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     onClick={() => setShowConfirm(false)}
                                 >
                                     Cancel

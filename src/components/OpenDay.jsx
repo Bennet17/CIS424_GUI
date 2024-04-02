@@ -55,6 +55,8 @@ const OpenDayPage = () =>{
     const [elm2DollarExpected, setElm2DollarExpected] = useState(0);
     const [elmHalfDollarCoinExpected, setElmHalfDollarCoinExpected] = useState(0);
 
+    const [showConfirm, setShowConfirm] = useState(false);
+
     const colorChangeThreshold = 2;
 
     //calculates the total of all denominations with rounding
@@ -101,16 +103,26 @@ const OpenDayPage = () =>{
         'border-2',
         'bg-white',
         {
-            'bg-yellow-200': totalAmount > expectedAmount + colorChangeThreshold,
-            'text-yellow-600': totalAmount > expectedAmount + colorChangeThreshold,
+            'bg-yellow-200': CurrentIsPastThreshold() == 1,
+            'text-yellow-600': CurrentIsPastThreshold() == 1,
 
-            'bg-rose-300': totalAmount < expectedAmount - colorChangeThreshold,
-            'text-rose-700': totalAmount < expectedAmount - colorChangeThreshold,
+            'bg-rose-300': CurrentIsPastThreshold() == -1,
+            'text-rose-700': CurrentIsPastThreshold() == -1,
 
-            'bg-green-300': totalAmount <= expectedAmount + colorChangeThreshold && totalAmount >= expectedAmount - colorChangeThreshold,
-            'text-green-700': totalAmount <= expectedAmount + colorChangeThreshold && totalAmount >= expectedAmount - colorChangeThreshold,
+            'bg-green-300': CurrentIsPastThreshold() == 0,
+            'text-green-700': CurrentIsPastThreshold() == 0,
         }
     );
+
+    function CurrentIsPastThreshold(){
+        if (totalAmount > expectedAmount + colorChangeThreshold){
+            return 1;
+        }else if (totalAmount < expectedAmount - colorChangeThreshold){
+            return -1;
+        }else if (totalAmount <= expectedAmount + colorChangeThreshold && totalAmount >= expectedAmount - colorChangeThreshold){
+            return 0;
+        }
+    }
 
     //keep values clamped between a minimum and maxium value
     function clamp(value, min = 0, max = 100000){
@@ -256,6 +268,8 @@ const OpenDayPage = () =>{
                     SetPostSuccess(false);
                     toast.error("Error trying to open" + poss[currentPosIndex].name);
                 }
+
+                setShowConfirm(false);
             })
             .catch(error => {
                 //uh oh, fucky wucky
@@ -312,7 +326,7 @@ const OpenDayPage = () =>{
                         <p className="text-2xl" >Waiting for POS data...</p>
                     }
                     <hr/><br/>
-                    <form onKeyDown={PreventKeyDown} onSubmit={Submit}>
+                    <form onKeyDown={PreventKeyDown} onSubmit={e => CurrentIsPastThreshold() == 0 ? Submit(e) : setShowConfirm(true)}>
                         <table>
                             <tbody>
                                 <tr>
@@ -782,6 +796,26 @@ const OpenDayPage = () =>{
                         {/*postSuccess == false && <p className="text-base font-bold text-red-500">{possSuccessTxt}</p>*/}
                     </div>
                 </div>
+                {showConfirm && 
+                    <div className="report-overlay">
+                        <div className="report-container">
+                            You are about to perform an openday with more than a ${colorChangeThreshold} variance. Are you sure?
+                            <br/><br/>
+                            <button 
+                                className="flex w-32 float-left justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                onClick={Submit}
+                            >
+                                Confirm
+                            </button>
+                            <button 
+                                className="flex w-32 float-right justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                onClick={() => setShowConfirm(false)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     )
