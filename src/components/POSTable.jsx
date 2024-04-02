@@ -180,7 +180,7 @@ function POSTable() {
               <td className="border px-4 py-2">
             
                 <button onClick={() => toggleActivity(pos)} className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
-                  {pos.enabled ? 'Disable' : 'Enable'}
+                  {pos.enabled ? 'Deactivate' : 'Activate'}
                 </button>
                    </td>
       
