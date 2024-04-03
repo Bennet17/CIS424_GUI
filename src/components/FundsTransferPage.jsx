@@ -67,25 +67,12 @@ const FundsTransferPage = () => {
                 .filter(register => register.opened)
                 .map(register => ({ id: register.regID, name: register.name }));
                 
-                // Add 'All' option to the register select
-                //newSources.unshift({id: -1, name: "BANK"});
-
+                // If there are registers open for transfer, update the source options
                 if (newSources.length > 0) {
                     // Update the source options
                     setArrSources(newSources);
-
-                    // Update the register ID to the first register in the array
-                    setFormData((prev) => ({
-                        ...prev,
-                        source: newSources[0].name,
-                    }));
                 }
                 else {
-                    setRegisterStatus("No registers are currently open for transfer.");
-                    setArrSources([]);
-                }
-
-                if (newSources.length === 0 || newSources.length === 1 || newSources.length === 2) {
                     setRegisterStatus("No registers are currently open for transfer.");
                     setArrSources([]);
                 }
@@ -256,76 +243,84 @@ const FundsTransferPage = () => {
     }
 
     // Const to handle form submission
-   const HandleSubmit = async (event) => {
-    event.preventDefault();
+    const HandleSubmit = async (event) => {
+        event.preventDefault();
 
-    if (CheckFields()) return;
+        // Check if any field is invalid
+        if (CheckFields()) return;
 
-    let {
-        user,
-        name,
-        store,
-        storeName,
-        source,
-        destination,
-        amount: fltAmount,
-        ...currencyFields
-    } = formData;
+        // Destructure the form data by extracting the fields from the form data object
+        let {
+            user,
+            name,
+            store,
+            storeName,
+            source,
+            destination,
+            amount: fltAmount,
+            ...currencyFields
+        } = formData;
 
-    fltAmount = parseFloat(formData.amount).toFixed(2);
-    let newCurrencyFields = FilterDenominations(currencyFields);
+        // Convert the amount to a float and format it to 2 decimal places
+        fltAmount = parseFloat(formData.amount).toFixed(2);
+        let newCurrencyFields = FilterDenominations(currencyFields);
 
-    if (fltAmount >= 1000.0) {
-        if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) 
-            return;
-    }
-
-    if (await SubmitTransfer(
-        event,
-        user,
-        source,
-        destination,
-        fltAmount,
-        currencyFields // Includes zeroes
-    )) {
-        setFormData({
-            user: user,
-            name: name,
-            store: store,
-            storeName: storeName,
-            source: "",
-            destination: "",
-            amount: "",
-            ...Object.keys(currencyFields).reduce((acc, key) => {
-                acc[key] = 0;
-                return acc;
-            }, {}),
-        });
-
-        if (arrSources.length > 0) {
-            const sourceRegisterID = arrSources.find((register) => register.name === source).id;
-            const destinationRegisterID = arrDestinations.find((register) => register.name === destination).id;
-
-            // Generate the report message
-            setReport(await GenerateReport(
-                source,
-                destination,
-                sourceRegisterID,
-                destinationRegisterID,
-                fltAmount,
-                newCurrencyFields
-            ));
-
-            // Show the report message
-            setShowReport(true);
-
-            // Remove error class from all fields
-            document.getElementById("source_select").classList.remove("select-input-error");
-            document.getElementById("destination_select").classList.remove("select-input-error");
-            document.getElementById("amount_input").classList.remove("amount-input-error");
+        // If the amount is greater than or equal to $1000, show a confirmation dialog
+        if (fltAmount >= 1000.0) {
+            if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) 
+                return;
         }
-    }
-};
+
+        // Submit the transfer
+        if (await SubmitTransfer(
+            event,
+            user,
+            source,
+            destination,
+            fltAmount,
+            currencyFields // Includes zeroes
+        )) {
+            // Resets the form fields
+            setFormData({
+                user: user,
+                name: name,
+                store: store,
+                storeName: storeName,
+                source: "",
+                destination: "",
+                amount: "",
+                ...Object.keys(currencyFields).reduce((acc, key) => {
+                    acc[key] = 0;
+                    return acc;
+                }, {}),
+            });
+
+            // Update the source and destination registers
+            if (arrSources.length > 0) {
+                const sourceRegisterID = arrSources.find((register) => register.name === source).id;
+                const destinationRegisterID = arrDestinations.find((register) => register.name === destination).id;
+
+                // Generate the report message
+                setReport(await GenerateReport(
+                    source,
+                    destination,
+                    sourceRegisterID,
+                    destinationRegisterID,
+                    fltAmount,
+                    newCurrencyFields
+                ));
+
+                // Show the report message
+                setShowReport(true);
+
+                // Remove error class from all fields
+                document.getElementById("source_select").classList.remove("select-input-error");
+                document.getElementById("destination_select").classList.remove("select-input-error");
+                document.getElementById("amount_input").classList.remove("amount-input-error");
+            }
+        }
+    };
+
     const HandleCancel = (event) => {
         // Reset the form fields
         setFormData({
@@ -391,9 +386,11 @@ const FundsTransferPage = () => {
                 storeID: formData.store,
                 origin: strSource,
                 destination: strDestination,
-                total: parseFloat(fltAmount).toFixed(2),
+                total: fltAmount,
                 ...currencyFields,
             };
+
+            console.log(request);
 
             // Submit the form data
             const response = await axios.post(FundTransferURL, request);
@@ -411,8 +408,6 @@ const FundsTransferPage = () => {
             toast.error("A server error occurred during submission. Please try again later.");
             return false;
         }
-
-
     }
 
     // Function to format negative values in parentheses
@@ -521,10 +516,8 @@ const FundsTransferPage = () => {
                         ) },
                         { field: `Expected amount in ${strSource} before transfer:`, value: `$${expectedSource}` },
                         { field: `Expected amount in ${strSource} after transfer:`, value: afterTransferSource },
-                        { field: `Actual amount in ${strSource} after transfer:`, value: 'blank' },
                         { field: `Expected amount in ${strDestination} before transfer:`, value: `$${expectedDestination}` },
-                        { field: `Expected amount in ${strDestination} after transfer:`, value: afterTransferDestination },
-                        { field: `Actual amount in ${strDestination} after transfer:`, value: 'blank' }
+                        { field: `Expected amount in ${strDestination} after transfer:`, value: afterTransferDestination }
                     ]}
                     size="small"
                     stripedRows
@@ -572,7 +565,6 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a source&gt;</option>
-                                                {/*<option value="BANK">BANK</option>*/}
                                                 {arrSources.map((register, index) => {
                                                     return (
                                                         <option key={register.id} value={register.name}>{register.name}</option>
@@ -586,9 +578,7 @@ const FundsTransferPage = () => {
                                     <td>
                                         <div className="label-above-select">
                                             <strong>
-                                                <label htmlFor="destination_select" className="">
-                                                Destination:{" "}
-                                                </label>
+                                                <label htmlFor="destination_select" className="">Destination:</label>
                                             </strong>
                                             <select
                                                 name="destination"
@@ -598,7 +588,7 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a destination&gt;</option>
-                                                {/*<option value="BANK">BANK</option>*/}
+                                                <option value="BANK">BANK</option>
                                                 {arrDestinations.map((register, index) => {
                                                     return (
                                                         <option key={register.id} value={register.name}>{register.name}</option>
@@ -1104,7 +1094,7 @@ const FundsTransferPage = () => {
                                             className="flex w-5/6 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                             onClick={() => setShowReport(!showReport)}
                                         >
-                                            View Last Report
+                                            View Last Transaction
                                         </button>
                                     )}
                                     </td>
