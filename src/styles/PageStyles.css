@@ -151,9 +151,7 @@
 /* Format for individual denominations in fund transfer */
 .denomination {
     margin-bottom: 1rem;
-    margin-left: 0;
-    margin-right: 0;
-    width: 25%;
+    width: 8rem;
     background-color: transparent;
     outline: none;
 }
