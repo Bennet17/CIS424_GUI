@@ -113,7 +113,7 @@ console.log(currentDate); // "17-6-2022"
     fetchEmployeeTable();
   }, []);
   
-    return (
+  return (
     <div>
       <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table ref={tableRef} className="min-w-full">
@@ -123,60 +123,60 @@ console.log(currentDate); // "17-6-2022"
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Position</th>
               <th className="px-4 py-2">Status</th>
-
             </tr>
           </thead>
           <tbody>
-          {employees
+            {employees
               .filter(employee => showAllEmployees || employee.enabled)
-              .map(employee=>(
-            <tr 
-              key={employee.ID} 
-              onClick={() => handleRowClick(employee)} 
-              className={`cursor-pointer hover:bg-gray-100 ${employee.enabled ? '' : 'bg-gray-300'}`}
-            >
-              <td className="border px-4 py-2">{employee.username}</td>
-              <td className="border px-4 py-2">{employee.name}</td>
-              <td className="border px-4 py-2">{employee.position}</td>
-              <td className="border px-4 py-2">{employee.enabled ? 'Active' : 'Inactive'}</td>
-            </tr>
-              ))
-          }
-
+              .map(employee => (
+                <tr
+                  key={employee.ID}
+                  onClick={() => handleRowClick(employee)}
+                  className={`cursor-pointer hover:bg-gray-100 ${employee.enabled ? '' : 'bg-gray-300'}`}
+                >
+                  <td className="border px-4 py-2">{employee.username}</td>
+                  <td className="border px-4 py-2">{employee.name}</td>
+                  <td className="border px-4 py-2">{employee.position}</td>
+                  <td className="border px-4 py-2">{employee.enabled ? 'Active' : 'Inactive'}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
-
-
-      <div style={{ position: 'relative', width: '100%' }}>
-        <div style={{ position: 'absolute', top: 50, right: 10 }}>
-          
-          <label className=" "style={{ position: 'relative', top: '10px', right: '10px' }}>
+  
+      {/* Checkbox for toggling showAllEmployees
+      <div style={{ position: 'relative', width: '100%', marginTop: '10px' }}>
+        <div style={{ position: 'absolute', top: 0, right: 10 }}>
+          <label className="">
             <input
               type="checkbox"
               onChange={() => setShowAllEmployees(!showAllEmployees)}
-            />{' '}
+              className="mr-2 "
+            />
             Show Disabled Employees
-          
-        </label>
+          </label>
         </div>
-      </div>
-
-      
-
-      <div className="flex flex-row-reverse mt-3">
-
-      <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+      </div> */}
+  
+      {/* Buttons for exporting and adding users */}
+      <div className="flex flex-row-reverse mt-2 ">
+      <label className="mt-2 ml-4">
+            <input
+              type="checkbox"
+              onChange={() => setShowAllEmployees(!showAllEmployees)}
+              className="mr-2 "
+            />
+            Show Disabled Employees
+          </label>
+        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
           <button onClick={onDownload}>Export to Excel</button>
         </div>
-        
-        <div><AddUserForm > </AddUserForm></div>
-        <div>        {showEditForm && <EditUser user={selectedUser}  />}  </div>
-
-           </div>   
-
+        <div><AddUserForm></AddUserForm></div>
+        <div>{showEditForm && <EditUser user={selectedUser} />}</div>
+      </div>
     </div>
   );
+  
 }
 
 export default EmployeeTable;

@@ -28,7 +28,7 @@ const EditUser = (user) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [result, setResult] = useState("");
 
-
+ 
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
   const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
 
@@ -45,18 +45,34 @@ const EditUser = (user) => {
   const [selectedStores, setSelectedStores] = useState([]);
 
 
-  const handleCheckboxChange = (e) => {
-    const storeID = e.target.value;
-    if (e.target.checked) {
-      setSelectedStores([...selectedStores, storeID]);
+  const handleCheckboxChange = (e, id) => {
+    const isChecked = e.target.checked;
   
-    } else {
-      setSelectedStores(selectedStores.filter(id => id !== storeID));
+    // Get all checkbox elements
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  
+    let count = 0;
+  
+    // Iterate through checkboxes
+    checkboxes.forEach((checkbox) => {
+      // Check if the checkbox is checked
+      if (checkbox.checked) {
+        count++;
+      }
+    });
+  
+    // Ensure at least one checkbox is checked
+    if (!isChecked && count < 1) {
+      // Display an error message or prevent the action
+      alert("At least one store must be selected.");
+         // Check the current checkbox again
+       e.target.checked = true;
+
     }
-
-    
-
+  
   };
+  
+  
 
   function getCSV() {
     let temp = "";
@@ -88,13 +104,15 @@ const EditUser = (user) => {
     setUsername(user.user.username);
     setPosition(user.user.position);
 
+
     const name = user.user.name;
     const nameArray = name.split(", ");
      setLastName(nameArray[0]);
    setFirstName(nameArray[1]);
-   
-    
-    
+
+
+  
+
 
   };
 
@@ -104,7 +122,7 @@ const EditUser = (user) => {
     setFirstName('');
     setUsername('');
     setPosition('');
-    setSelectedStores([]);
+    //setSelectedStores([]);
     setStoreID('');
     setErrorMessage('');
     setPosition('');
