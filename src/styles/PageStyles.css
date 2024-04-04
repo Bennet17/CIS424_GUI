@@ -114,7 +114,7 @@
     user-select: text;
 }
 
-/* Format for denomination inputs in fund transfer */
+/* Format for denomination inputs */
 .denomination-input {
     box-sizing: border-box;
     text-align: center;
@@ -131,6 +131,7 @@
     background-color: #F3F4F6;
 }
 
+/* Default style for expected denominations - used in Safe Audit page */
 .denomination-expected {
     box-sizing: border-box;
     text-align: center;
@@ -140,8 +141,26 @@
     float: right; 
     border: 2px solid rgb(57, 70, 83); 
     border-radius: 5px;
-    background-color: #D1D5DB;
+    background-color: #dbdbdb;
     user-select: text;
+}
+
+/* Style for expected denominations > 0 */
+.denomination-expected-valid {
+    box-sizing: border-box;
+    text-align: center;
+    margin-left: 1rem;
+    margin-right: 1rem; 
+    width: 5rem;
+    float: right; 
+    border: 2px solid rgb(57, 70, 83); 
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    user-select: text;
+}
+
+.denomination-expected-valid:hover {
+    background-color: #F3F4F6;
 }
 
 .showextra {

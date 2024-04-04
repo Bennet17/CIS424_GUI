@@ -13,6 +13,8 @@ import { Button } from "primereact/button";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const FundsTransferPage = () => {
     // Authentication context
@@ -449,6 +451,12 @@ const FundsTransferPage = () => {
         }
     };
 
+    function GeneratePDF() {
+        const doc = new jsPDF();
+        autoTable(doc, { html: "#report" });
+        doc.save("fund_transfer_report.pdf");
+    }
+
     // Generate the report message
     const GenerateReport = async (
         strSource,
@@ -496,6 +504,7 @@ const FundsTransferPage = () => {
         return (
             <div>
                 <DataTable 
+                    id="report"
                     value={[
                         { field: 'Store:', value: formData.storeName },
                         { field: 'User:', value: `${formData.user} (${formData.name})` },
@@ -1089,12 +1098,6 @@ const FundsTransferPage = () => {
                                 className="p-button-secondary"
                                 style={{ width: '200px', marginRight: '1rem' }}
                             />
-                            {/* <button
-                                type="reset"
-                                className="flex w-5/6  justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            >
-                                Cancel
-                            </button> */}
                             <Button
                                 type="submit"
                                 label="Submit"
@@ -1104,12 +1107,6 @@ const FundsTransferPage = () => {
                                 rounded
                                 style={{ width: '200px', marginRight: '1rem' }}
                             />
-                            {/* <button
-                                type="submit"
-                                className="flex w-5/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            >
-                                Submit
-                            </button> */}
                         </div>
                         <br />
                         <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
@@ -1132,14 +1129,6 @@ const FundsTransferPage = () => {
                                 className="p-button-primary"
                                 style={{ width: '245px', marginLeft: '1rem', position: 'absolute', left: '155px'}}
                             />
-                            {/* // <button
-                            //     type="button"
-                            //     className="flex w-5/6 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            //     onClick={() => setShowReport(!showReport)}
-                            // >
-                            //     View Last Transaction
-                            // </button> */}
-                            
                         </div> 
                     </form>
 
@@ -1157,12 +1146,14 @@ const FundsTransferPage = () => {
                                     onClick={() => setShowReport(false)}
                                     className="p-button-secondary"
                                 />
-                                {/* <button 
-                                    className="flex w-4/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    onClick={() => setShowReport(false)}
-                                >
-                                    Close Report
-                                </button> */}
+                                <Button
+                                    label="Download PDF"
+                                    size="small"
+                                    icon="pi pi-download"
+                                    rounded
+                                    onClick={() => GeneratePDF(report.props.value)}
+                                    className="p-button-primary"
+                                />
                             </div>
                         </div>
                     )}

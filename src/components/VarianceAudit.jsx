@@ -17,6 +17,8 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
 import { classNames } from "primereact/utils";
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const VarianceAuditPage = () =>{
     const auth = useAuth();
@@ -297,6 +299,21 @@ const VarianceAuditPage = () =>{
         toast.success("Table exported successfully.");
     };
 
+    // Function to export the table as a PDF file
+    const exportPDF = () => {
+        // Create a new jsPDF instance
+        const doc = new jsPDF();
+
+        // Add the table to the PDF
+        doc.autoTable({ html: '#variance-table' });
+
+        // Save the PDF file
+        doc.save(`${GetFileName()}.pdf`);
+
+        // Show a success message
+        toast.success("Table exported successfully.");
+    };
+
     // Function to get the file name for the exported CSV file
     function GetFileName() {
         // Get the start date and end date from the form data
@@ -510,6 +527,15 @@ const VarianceAuditPage = () =>{
                 onClick={() => exportCSV(false)} 
                 data-pr-tooltip="CSV" 
                 label="Export to CSV"
+            />
+            <Button
+                type="button"
+                icon="pi pi-file-pdf"
+                rounded
+                size="small"
+                onClick={exportPDF}
+                data-pr-tooltip="PDF"
+                label="Export to PDF"
             />
         </div>
     )
