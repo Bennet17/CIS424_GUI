@@ -382,8 +382,8 @@ const handleChange = (e) => {
     <button
       type="submit"
       disabled={validPassword === false} 
-      className={`py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-        validPassword ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-gray-400 cursor-not-allowed text-gray-600'
+       className={`py-2 px-4 font-bold rounded focus:outline-none focus:shadow-outline ${
+        validPassword ? 'bg-indigo-600 hover:bg-indigo-700 text-white font-bold ' : 'bg-gray-400 cursor-not-allowed text-gray-600'
       }`}
     >
       Add User
