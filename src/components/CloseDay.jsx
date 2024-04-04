@@ -516,7 +516,7 @@ const CloseDayPage = () =>{
         <div className="flex min-h-screen bg-custom-accent">
             <Toaster 
                 richColors 
-                position="bottom-right"
+                position="top-center"
                 expand={true}
                 duration={5000}
                 pauseWhenPageIsHidden={true}
@@ -557,7 +557,7 @@ const CloseDayPage = () =>{
                     }
                     <br/><hr/><br/>
                     <form onKeyDown={PreventKeyDown} onSubmit={e => CurrentIsPastThreshold() == 0 ? Submit(e) : setShowConfirm(true)}>
-                        <table>
+                    <table>
                             <tbody>
                                 <tr>
                                     <td className="text-2xl">Bills</td>
@@ -588,6 +588,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={1}
                                         />
                                     </td>
                                     <td>
@@ -610,6 +611,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={7}
                                         />
                                     </td>
                                 </tr>
@@ -634,6 +636,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={2}
                                         />
                                     </td>
                                     <td>
@@ -656,6 +659,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={8}
                                         />
                                     </td>
                                 </tr>
@@ -680,6 +684,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={3}
                                         />
                                     </td>
                                     <td>
@@ -702,6 +707,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={9}
                                         />
                                     </td>
                                 </tr>
@@ -726,6 +732,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={4}
                                         />
                                     </td>
                                     <td>
@@ -748,6 +755,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={10}
                                         />
                                     </td>
                                 </tr>
@@ -772,6 +780,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={5}
                                         />
                                     </td>
                                     <td>
@@ -794,6 +803,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={11}
                                         />
                                     </td>
                                 </tr>
@@ -818,6 +828,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={6}
                                         />
                                     </td>
                                     <td>
@@ -840,6 +851,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={12}
                                         />
                                     </td>
                                 </tr>
@@ -869,6 +881,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={13}
                                         />
                                     </td>
                                 </tr>
@@ -894,6 +907,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={15}
                                         />
                                     </td>
                                 </> : <><td></td><td></td><td></td></>}
@@ -917,6 +931,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={14}
                                         />
                                     </td>
                                 </tr>
@@ -941,6 +956,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={16}
                                         />
                                     </td>
                                 </tr>}
@@ -965,6 +981,7 @@ const CloseDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={17}
                                         />
                                     </td>
                                 </tr>}
@@ -1002,7 +1019,8 @@ const CloseDayPage = () =>{
                                 onChange={e => setExpectedAmount(clamp(e.target.value.toString().substring(1)))} 
                                 disabled={currentPosIndex === 0}
                                 className={`box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 ${currentPosIndex === 0 ? "bg-nav-bg" : "bg-white"} `} 
-                                type="text" 
+                                type="text"
+                                tabIndex={18}
                             />
                         </label>
                     </div>
@@ -1014,7 +1032,8 @@ const CloseDayPage = () =>{
                                         value={"$" + creditActual} 
                                         onChange={e => setCreditActual(clamp(e.target.value.toString().substring(1)))}  
                                         className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
-                                        type="text" 
+                                        type="text"
+                                        tabIndex={19}
                                     />
                                 </label>
                             </div>
@@ -1025,7 +1044,8 @@ const CloseDayPage = () =>{
                                         value={"$" + creditExpected} 
                                         onChange={e => setCreditExpected(clamp(e.target.value.toString().substring(1)))} 
                                         className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
-                                        type="text" 
+                                        type="text"
+                                        tabIndex={20}
                                     />
                                 </label>
                             </div>
@@ -1043,12 +1063,14 @@ const CloseDayPage = () =>{
                             <button 
                                 className="flex w-32 float-left justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 onClick={Submit}
+                                tabIndex={21}
                             >
                                 Confirm
                             </button>
                             <button 
                                 className="flex w-32 float-right justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 onClick={() => setShowConfirm(false)}
+                                tabIndex={22}
                             >
                                 Cancel
                             </button>

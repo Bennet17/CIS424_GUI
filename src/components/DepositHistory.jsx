@@ -209,7 +209,7 @@ const DepositHistory = () => {
         <div className="flex min-h-screen bg-custom-accent">
             <Toaster 
                 richColors 
-                position="bottom-right"
+                position="top-center"
                 expand={true}
                 duration={5000}
                 pauseWhenPageIsHidden={true}

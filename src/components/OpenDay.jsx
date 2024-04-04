@@ -286,7 +286,7 @@ const OpenDayPage = () =>{
         <div className="flex min-h-screen bg-custom-accent">
             <Toaster 
                 richColors 
-                position="bottom-right"
+                position="top-center"
                 expand={true}
                 duration={5000}
                 pauseWhenPageIsHidden={true}
@@ -358,6 +358,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={1}
                                         />
                                     </td>
                                     <td>
@@ -380,6 +381,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={7}
                                         />
                                     </td>
                                 </tr>
@@ -404,6 +406,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={2}
                                         />
                                     </td>
                                     <td>
@@ -426,6 +429,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={8}
                                         />
                                     </td>
                                 </tr>
@@ -450,6 +454,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={3}
                                         />
                                     </td>
                                     <td>
@@ -472,6 +477,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={9}
                                         />
                                     </td>
                                 </tr>
@@ -496,6 +502,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={4}
                                         />
                                     </td>
                                     <td>
@@ -518,6 +525,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={10}
                                         />
                                     </td>
                                 </tr>
@@ -542,6 +550,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={5}
                                         />
                                     </td>
                                     <td>
@@ -564,6 +573,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={11}
                                         />
                                     </td>
                                 </tr>
@@ -588,6 +598,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={6}
                                         />
                                     </td>
                                     <td>
@@ -610,6 +621,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={12}
                                         />
                                     </td>
                                 </tr>
@@ -639,6 +651,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={13}
                                         />
                                     </td>
                                 </tr>
@@ -664,6 +677,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={15}
                                         />
                                     </td>
                                 </> : <><td></td><td></td><td></td></>}
@@ -687,6 +701,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={14}
                                         />
                                     </td>
                                 </tr>
@@ -711,6 +726,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={16}
                                         />
                                     </td>
                                 </tr>}
@@ -735,6 +751,7 @@ const OpenDayPage = () =>{
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
+                                            tabIndex={17}
                                         />
                                     </td>
                                 </tr>}
@@ -743,10 +760,10 @@ const OpenDayPage = () =>{
                                 </tr>
                                 <tr>
                                     <td>
-                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Open</button>
+                                        <button tabIndex={18} type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Open</button>
                                     </td>
                                     <td>
-                                        <button onClick={ClearAllFields} type="button" value="button" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Clear all fields</button>
+                                        <button onClick={ClearAllFields} tabIndex={19} type="button" value="button" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Clear all fields</button>
                                     </td>
                                 </tr>
                             </tbody>
