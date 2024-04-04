@@ -7,9 +7,8 @@ import React, { useState, useLayoutEffect, useEffect } from "react";
 import SideBar from "./SideBar.jsx";
 import HorizotalNav from "./HorizontalNav";
 import EmployeeTable from "./EmployeeTable.js";
-import AddUserForm from "./AddUserForm.jsx"
-import {useAuth} from '../AuthProvider.js';
-import {useNavigate} from 'react-router-dom';
+import { useAuth } from '../AuthProvider.js';
+import { useNavigate } from 'react-router-dom';
 import routes from '../routes.js';
 
 
@@ -19,22 +18,20 @@ const UserManagementPage = () => {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  //console.log(auth.cookie.user.storeID);
 
-  
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
- const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
+  const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
 
-  
+
   //useState variables for the current store name and for an array of stores to be saved
-  const[storeArray,setStoreArray] = useState([]);
+  const [storeArray, setStoreArray] = useState([]);
 
   //check the permissions of the logged in user on page load, passing in
   //the required permissions
-    useLayoutEffect(() => {
-      if (!auth.CheckAuthorization(["Manager", "District Manager", "Owner"])){
-          navigate(routes.home);
-      }
+  useLayoutEffect(() => {
+    if (!auth.CheckAuthorization(["Manager", "District Manager", "Owner"])) {
+      navigate(routes.home);
+    }
   })
 
   //UseEffect is a method that fires as soon as the component is loaded
@@ -46,22 +43,22 @@ const UserManagementPage = () => {
       axios.get(url)
         .then((response) => {
 
-// Create an array to store the updated store array
-let updatedStoreArray = [];
+          // Create an array to store the updated store array
+          let updatedStoreArray = [];
 
-// Iterate over the response data to extract store information
-response.data.forEach(function(item) {
-  // Store each store ID and location in local storage
-  localStorage.setItem(item.ID, item.location);
-  
-  // Push each store object to the updated store array
-  updatedStoreArray.push({
-    ID: item.ID,
-    location: item.location
-  });
-});
+          // Iterate over the response data to extract store information
+          response.data.forEach(function (item) {
+            // Store each store ID and location in local storage
+            localStorage.setItem(item.ID, item.location);
 
-setStoreArray(updatedStoreArray);
+            // Push each store object to the updated store array
+            updatedStoreArray.push({
+              ID: item.ID,
+              location: item.location
+            });
+          });
+
+          setStoreArray(updatedStoreArray);
 
         })
         .catch((error) => {
@@ -70,14 +67,13 @@ setStoreArray(updatedStoreArray);
         });
     }
 
-
     // Call the function to initiate the GET request with specific details
     fetchStores();
   }, [curStoreID]); // Include curStoreID in the dependency array so that useEffect runs whenever it changes
 
 
-            //store the Array of stores to local storage to be used in 
-            localStorage.setItem('stores', JSON.stringify(storeArray)); 
+  //store the Array of stores to local storage to be used in 
+  localStorage.setItem('stores', JSON.stringify(storeArray));
 
   //return the pages child components
   return (
@@ -85,12 +81,10 @@ setStoreArray(updatedStoreArray);
       <SideBar currentPage={7} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
-          <div class="flex flex-col mt-4 px-6">
-          <h2 className="text-lg font-bold mt-4 px-10 ">Users at Plato's Closet: {curStoreName}</h2>
-
-              <div> <EmployeeTable storeArray={storeArray}></EmployeeTable></div>
-
-           </div>
+        <div class="flex flex-col mt-4 px-6">
+          <h2 className="text-lg font-bold mt-4 px-10 ">Users at Plato's Closet: {curStoreName}</h2>        
+          <div> <EmployeeTable storeArray={storeArray}></EmployeeTable></div>
+        </div>
       </div>
     </div>
   );
