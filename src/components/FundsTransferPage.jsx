@@ -9,10 +9,10 @@ import { Toaster, toast } from 'sonner';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { ToggleButton } from 'primereact/togglebutton';
+import { Button } from "primereact/button";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
-import { Button } from "primereact/button";
 
 const FundsTransferPage = () => {
     // Authentication context
@@ -430,14 +430,8 @@ const FundsTransferPage = () => {
     }
 
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
-    //(also change arrow text thing)
     function ToggleExtraChange() {
         setShowExtraChange(!showExtraChange);
-
-        if (!showExtraChange)
-            setShowExtraChangeTxt("▲ Hide extras");
-        else
-            setShowExtraChangeTxt("▼ Show extras");
     }
 
     // Function to get the expected amount in the source register before transfer with register ID from arrSources
@@ -1118,7 +1112,7 @@ const FundsTransferPage = () => {
                             </button> */}
                         </div>
                         <br />
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                             <ToggleButton
                                 checked={showExtraChange}
                                 onChange={ToggleExtraChange}
@@ -1136,7 +1130,7 @@ const FundsTransferPage = () => {
                                 disabled={report === ""}
                                 onClick={() => setShowReport(!showReport)}
                                 className="p-button-primary"
-                                style={{ width: '245px', marginLeft: '1rem' }}
+                                style={{ width: '245px', marginLeft: '1rem', position: 'absolute', left: '155px'}}
                             />
                             {/* // <button
                             //     type="button"
