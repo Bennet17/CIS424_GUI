@@ -106,7 +106,8 @@ const AddStoreForm = () => {
                     required
                     id="hundredRegisterMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setHundredRegisterMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -117,6 +118,8 @@ const AddStoreForm = () => {
                     required
                     id="fiftyRegisterMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setFiftyRegisterMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -127,7 +130,8 @@ const AddStoreForm = () => {
                     required
                     id="twentyRegisterMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setTwentyRegisterMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -145,7 +149,8 @@ const AddStoreForm = () => {
                     required
                     id="hundredMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setHundredMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -156,7 +161,8 @@ const AddStoreForm = () => {
                     required
                     id="fiftyMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setFiftyMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -167,7 +173,8 @@ const AddStoreForm = () => {
                     required
                     id="twentyMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setTwentyMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -178,7 +185,8 @@ const AddStoreForm = () => {
                     required
                     id="tenMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setTenMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -189,6 +197,8 @@ const AddStoreForm = () => {
                     required
                     id="fiveMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setFiveMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -199,7 +209,8 @@ const AddStoreForm = () => {
                     required
                     id="twoMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setTwoMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -210,7 +221,8 @@ const AddStoreForm = () => {
                     required
                     id="oneMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setOneMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -221,7 +233,8 @@ const AddStoreForm = () => {
                     required
                     id="quarterRollMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setQuarterRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -231,9 +244,9 @@ const AddStoreForm = () => {
                   <input
                     required
                     id="nickelRollMax"
-
+                    min="0" 
+                    step="1" 
                     type="number"
-
                     onChange={(e) => setNickelRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -244,8 +257,8 @@ const AddStoreForm = () => {
                     required
                     id="dimeRollMax"
                     type="number"
-
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setDimeRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -256,7 +269,8 @@ const AddStoreForm = () => {
                     required
                     id="pennyRollMax"
                     type="number"
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setPennyRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -272,7 +286,6 @@ const AddStoreForm = () => {
                 </button>
                 <button
                   type="submit"
-                  onClick={handleSubmit}
                   className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                   Add Store

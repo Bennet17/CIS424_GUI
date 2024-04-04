@@ -193,7 +193,7 @@ const EditStore = (store) => {
             <h2 className="text-2xl font-bold mb-2">Edit Store Information: {store.store.location} </h2>
             <h2 className="text-lg font-bold mb-2">{result}</h2>
 
-            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-2">
+            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-2">
               <div className="grid grid-cols-3 gap-4">
                 <div className="mb-2 col-span-1">
                   <label htmlFor="location" className="block text-gray-700 font-bold mb-2">Store Name:</label>
@@ -216,7 +216,8 @@ const EditStore = (store) => {
                     id="hundredRegisterMax"
                     type="number"
                     defaultValue={store.store.hundredRegisterMax}
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setHundredRegisterMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -227,6 +228,8 @@ const EditStore = (store) => {
                     required
                     id="fiftyRegisterMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     defaultValue={store.store.fiftyRegisterMax}
                     onChange={(e) => setFiftyRegisterMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
@@ -238,6 +241,8 @@ const EditStore = (store) => {
                     required
                     id="twentyRegisterMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     defaultValue={store.store.twentyRegisterMax}
 
                     onChange={(e) => setTwentyRegisterMax(e.target.value)}
@@ -257,8 +262,9 @@ const EditStore = (store) => {
                     required
                     id="hundredMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     defaultValue={store.store.hundredMax}
-
                     onChange={(e) => setHundredMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -269,8 +275,9 @@ const EditStore = (store) => {
                     required
                     id="fiftyMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     defaultValue={store.store.fiftyMax}
-
                     onChange={(e) => setFiftyMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -281,8 +288,9 @@ const EditStore = (store) => {
                     required
                     id="twentyMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     defaultValue={store.store.twentyMax}
-
                     onChange={(e) => setTwentyMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -294,7 +302,8 @@ const EditStore = (store) => {
                     id="tenMax"
                     type="number"
                     defaultValue={store.store.tenMax}
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setTenMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -305,6 +314,8 @@ const EditStore = (store) => {
                     required
                     id="fiveMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     defaultValue={store.store.fiveMax}
                     onChange={(e) => setFiveMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
@@ -317,7 +328,8 @@ const EditStore = (store) => {
                     id="twoMax"
                     type="number"
                     defaultValue={store.store.twoMax}
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setTwoMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -329,7 +341,8 @@ const EditStore = (store) => {
                     id="oneMax"
                     type="number"
                     defaultValue={store.store.oneMax}
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setOneMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -341,8 +354,8 @@ const EditStore = (store) => {
                     id="quarterRollMax"
                     type="number"
                     defaultValue={store.store.quarterRollMax}
-
-
+                    min="0" 
+                    step="1" 
                     onChange={(e) => setQuarterRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -353,9 +366,9 @@ const EditStore = (store) => {
                     required
                     id="nickelRollMax"
                     defaultValue={store.store.nickelRollMax}
-
+                    min="0" 
+                    step="1" 
                     type="number"
-
                     onChange={(e) => setNickelRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -366,9 +379,9 @@ const EditStore = (store) => {
                     required
                     id="dimeRollMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     defaultValue={store.store.dimeRollMax}
-
-
                     onChange={(e) => setDimeRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -379,8 +392,9 @@ const EditStore = (store) => {
                     required
                     id="pennyRollMax"
                     type="number"
+                    min="0" 
+                    step="1" 
                     defaultValue={store.store.pennyRollMax}
-
                     onChange={(e) => setPennyRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -396,7 +410,6 @@ const EditStore = (store) => {
                 </button>
                 <button
                   type="submit"
-                  onClick={handleSubmit}
                   className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
                 >
                   Save
