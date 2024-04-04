@@ -228,7 +228,7 @@ const DepositHistory = () => {
                             type="date"
                         />
                     </label>
-                    <br/>
+                    <br/><br/>
                     <label>End Date:
                         <input 
                             value={dateEnd} 
