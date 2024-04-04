@@ -607,7 +607,7 @@ const VarianceAuditPage = () =>{
                             className="cursor-pointer rounded-md bg-indigo-600 px-10 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         />
                     </div>
-                    <div>
+                    <div style={{ overFlowX: 'auto' }}>
                         <DataTable 
                             ref={tableRef}
                             value={[...arrVariances, ...emptyRows]} 
@@ -636,7 +636,7 @@ const VarianceAuditPage = () =>{
                                     key={column.field}
                                     field={column.field} 
                                     header={column.header} 
-                                    style={{ minWidth: "10em" }}
+                                    style={{ minWidth: "6em" }}
                                     sortable 
                                     body={(rowData) => {
                                         // Check if the column is a currency column
