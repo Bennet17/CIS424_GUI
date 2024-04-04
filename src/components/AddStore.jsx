@@ -1,7 +1,11 @@
+//This component is an input form that allows a new store entity to be created
+//Written By Brianna Kline
 import axios from "axios";
 import { useState } from "react";
 
 const AddStoreForm = () => {
+  //DECLARE VARIABLES
+  //most of these are settings for denominations
   const [location, setLocation] = useState('');
   const [hundredRegisterMax, setHundredRegisterMax] = useState('');
   const [twentyRegisterMax, setTwentyRegisterMax] = useState('');
@@ -19,47 +23,47 @@ const AddStoreForm = () => {
   const [pennyRollMax, setPennyRollMax] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
+  //this function handles when the add form is open on the screen
   const openModal = () => {
     setIsOpen(true);
   };
 
+  //this function handles closing the form when a submit doesnt happen and the user presses cancel
   const closeModal = () => {
     setIsOpen(false);
   };
 
+  //this function handles when the store is added and sends the post request
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault(); //prevent default refresh until after request is done
 
-        
     axios
-      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateStore", 
+      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateStore",
         {
-            "location": location,
-            "hundredRegisterMax": hundredRegisterMax,
-            "fiftyRegisterMax": fiftyRegisterMax,
-            "twentyRegisterMax": twentyRegisterMax,
-            "hundredMax": hundredMax,
-            "fiftyMax": fiftyMax,
-            "twentyMax": twentyMax,
-            "tenMax": tenMax,
-            "fiveMax": fiveMax,
-            "twoMax": twoMax,
-            "oneMax": oneMax,
-            "quarterRollMax": quarterRollMax,
-            "dimeRollMax": dimeRollMax,
-            "nickelRollMax": nickelRollMax,
-            "pennyRollMax": pennyRollMax
+          "location": location,
+          "hundredRegisterMax": hundredRegisterMax,
+          "fiftyRegisterMax": fiftyRegisterMax,
+          "twentyRegisterMax": twentyRegisterMax,
+          "hundredMax": hundredMax,
+          "fiftyMax": fiftyMax,
+          "twentyMax": twentyMax,
+          "tenMax": tenMax,
+          "fiveMax": fiveMax,
+          "twoMax": twoMax,
+          "oneMax": oneMax,
+          "quarterRollMax": quarterRollMax,
+          "dimeRollMax": dimeRollMax,
+          "nickelRollMax": nickelRollMax,
+          "pennyRollMax": pennyRollMax
         })
       .then((response) => {
-        console.log(response.data.response);
+        //successful post
         window.location.reload(); // This will refresh the page
-  
       })
       .catch((error) => {
         console.error("API request failed:", error);
-     
       });
-    
+
   };
 
   return (
@@ -82,8 +86,8 @@ const AddStoreForm = () => {
             </span>
             <h2 className="text-2xl font-bold mb-2">Add a New Store </h2>
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-2">
-            <div className="grid grid-cols-3 gap-4">
-              <div className="mb-2 col-span-1">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="location" className="block text-gray-700 font-bold mb-3">Store Name:</label>
                   <input
                     required
@@ -93,8 +97,8 @@ const AddStoreForm = () => {
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-                </div>
-            <p className='text font-bold mb-3'>Maximum Denominations in Registers:</p>
+              </div>
+              <p className='text font-bold mb-3'>Maximum Denominations in Registers:</p>
               <div className="grid grid-cols-3 gap-4">
                 <div className="mb-2 col-span-1">
                   <label htmlFor="hundredRegisterMax" className="block text-gray-700 font-bold mb-2">Hundred:</label>
@@ -130,12 +134,12 @@ const AddStoreForm = () => {
                 </div>
 
                 <div className="mb-2 col-span-3">
-                    <p className="text font-bold ">Maximum Denominations in Safe:</p>
+                  <p className="text font-bold ">Maximum Denominations in Safe:</p>
                 </div>
-               
+
 
                 <div className="mb-2 col-span-1">
-    
+
                   <label htmlFor="hundredMax" className="block text-gray-700 font-bold mb-2">Hundred:</label>
                   <input
                     required
@@ -217,7 +221,7 @@ const AddStoreForm = () => {
                     required
                     id="quarterRollMax"
                     type="number"
-                  
+
                     onChange={(e) => setQuarterRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -229,7 +233,7 @@ const AddStoreForm = () => {
                     id="nickelRollMax"
 
                     type="number"
-                   
+
                     onChange={(e) => setNickelRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -241,7 +245,7 @@ const AddStoreForm = () => {
                     id="dimeRollMax"
                     type="number"
 
-                   
+
                     onChange={(e) => setDimeRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -252,7 +256,7 @@ const AddStoreForm = () => {
                     required
                     id="pennyRollMax"
                     type="number"
-               
+
                     onChange={(e) => setPennyRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />

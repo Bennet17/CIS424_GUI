@@ -1,14 +1,12 @@
+//This is the parent component for the Store Management Page; its children are storeTable component
+//Written by Brianna Kline
 import "../styles/PageStyles.css";
 import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar";
 import HorizotalNav from "./HorizontalNav";
-import AddPOS from "./AddPOS.jsx";
-import POSTable from "./POSTable.jsx";
-import axios from "axios";
 import StoreTable from "./StoreTable.jsx";
 
 const StoreManagementPage = () => {
-
 
   return (
 

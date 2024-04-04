@@ -1,40 +1,30 @@
+//this component provides a form interface for editing store name and money settings
 import React, { useState } from 'react';
 import axios from 'axios';
-import {useAuth} from '../AuthProvider.js';
 
 const EditStore = (store) => {
 
-    //console.log(store.store.location);
-
-
-    const [storeID, setStoreID] = useState(store.store.ID);
-    const [location, setLocation] = useState(store.store.location);
-    const [hundredRegisterMax, setHundredRegisterMax] = useState('');
-    const [twentyRegisterMax, setTwentyRegisterMax] = useState('');
-    const [fiftyRegisterMax, setFiftyRegisterMax] = useState('');
-    const [hundredMax, setHundredMax] = useState('');
-    const [fiftyMax, setFiftyMax] = useState('');
-    const [twentyMax, setTwentyMax] = useState('');
-    const [tenMax, setTenMax] = useState('');
-    const [fiveMax, setFiveMax] = useState('');
-    const [twoMax, setTwoMax] = useState('');
-    const [oneMax, setOneMax] = useState('');
-    const [quarterRollMax, setQuarterRollMax] = useState('');
-    const [nickelRollMax, setNickelRollMax] = useState('');
-    const [dimeRollMax, setDimeRollMax] = useState('');
-    const [pennyRollMax, setPennyRollMax] = useState('');
-    const [result, setResult] = useState("");
-
-    
-    
-    
-    
-
-
-
+  //declare variables
+  const [storeID, setStoreID] = useState(store.store.ID);
+  const [location, setLocation] = useState(store.store.location);
+  const [hundredRegisterMax, setHundredRegisterMax] = useState('');
+  const [twentyRegisterMax, setTwentyRegisterMax] = useState('');
+  const [fiftyRegisterMax, setFiftyRegisterMax] = useState('');
+  const [hundredMax, setHundredMax] = useState('');
+  const [fiftyMax, setFiftyMax] = useState('');
+  const [twentyMax, setTwentyMax] = useState('');
+  const [tenMax, setTenMax] = useState('');
+  const [fiveMax, setFiveMax] = useState('');
+  const [twoMax, setTwoMax] = useState('');
+  const [oneMax, setOneMax] = useState('');
+  const [quarterRollMax, setQuarterRollMax] = useState('');
+  const [nickelRollMax, setNickelRollMax] = useState('');
+  const [dimeRollMax, setDimeRollMax] = useState('');
+  const [pennyRollMax, setPennyRollMax] = useState('');
+  const [result, setResult] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-
+  //this form handles pre-populating the the variables / input boxes with the stores current settings that are passed in by StoreTable selection
   const openModal = () => {
     setIsOpen(true);
     setLocation(store.store.location);
@@ -52,11 +42,10 @@ const EditStore = (store) => {
     setNickelRollMax(store.store.nickelRollMax);
     setDimeRollMax(store.store.dimeRollMax);
     setPennyRollMax(store.store.pennyRollMax);
-    
-
-
   };
 
+  //this method handles closing the edit form when a user wants to cancel or does not submit
+  //it resets all state variables for the next time the modal is opened
   const closeModal = () => {
     setIsOpen(false);
     setLocation('');
@@ -79,125 +68,108 @@ const EditStore = (store) => {
     setResult('');
 
   };
+  //this method handles the enable/disable functionality for a store
+  const toggleAbility = (event) => {
+    event.preventDefault(); //prevent the default refresh 
 
-  const toggleAbility = (event) =>{
-    event.preventDefault();
-          //this pos is currently enabled. lets disable it
-          if(store.store.enabled == true ){
-            if(store.store.opened == true){
-              setResult("You cannot disable an open store. Please close day and try again.");
-            }
-            else{
-            //create a disable POS request
-            axios
-            .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableStore", 
-              {
-                "ID": store.store.ID,
-              })
-            .then((response) => {
-      
-              console.log(response.data.response);
-      
-              if (response.data.response == "Disabled") {
-                  console.log("Store successfully disabled");
-                  window.location.reload(); // This will refresh the page
-    
-              } else {
-                console.error("Failed to disable store");
-              }
-      
-      
+    //this store is currently enabled. lets disable it
+    if (store.store.enabled == true) {
+      //first check if the store has been opened for the day
+      if (store.store.opened == true) {
+        setResult("You cannot disable an open store. Please close day and try again."); //alert user
+      }
+      else {
+        //store is closed; create a disable POS request
+        axios
+          .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableStore",
+            {
+              "ID": store.store.ID,
             })
-            .catch((error) => {
-              console.error("API request failed:", error);
-             // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
-             //setResult("Request Failed. Try again.")
-            });
+          .then((response) => {
+            if (response.data.response == "Disabled") {
+              setResult("Store successfully disabled");
+              window.location.reload(); // This will refresh the page
+            } 
+            else {
+              setResult("Failed to disable store");
+            }
+          })
+          .catch((error) => {
+            console.error("API request failed:", error);
+            setResult("Request Failed. Try again.")
+          });
+      }
+    }
+    if (store.store.enabled == false) {
+      //create a enable POS request if the store is disabled; pass the store ID to the DB
+      axios
+        .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EnableStore",
+          {
+            "ID": store.store.ID,
+          })
+        .then((response) => {
+          if (response.data.response == "Enabled") {
+            setResult("Store enabled");
+            window.location.reload(); // This will refresh the page
+          } else {
+            setResult("Failed to enable user");
           }
-        }
-        if(store.store.enabled == false){
-                  //create a disable POS request
-                  axios
-                  .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EnableStore", 
-                    {
-                      "ID": store.store.ID,
-                    })
-                  .then((response) => {
-            
-                    console.log(response.data.response);
-            
-                    if (response.data.response == "Enabled") {
-                      console.log("Store enabled");
-                      window.location.reload(); // This will refresh the page
-    
-          
-                    } else {
-                      console.error("Failed to enable user");
-            
-                    }
-            
-            
-                  })
-                  .catch((error) => {
-                    console.error("API request failed:", error);
-                   // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
-                  // setResult("Request Failed. Try again.")
-                  });
-        }
-    
+
+
+        })
+        .catch((error) => {
+          console.error("API request failed:", error);
+           setResult("Request Failed. Try again.")
+        });
+    }
   }
 
-
-
+  //this method handled the store edit updates
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault(); //prevent auto refresh
 
-      //create an axios POST request to create a new user with inputs from the form
-      axios
-      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateMaximums", 
+    //create an axios POST request to edit the store settings, also pass the ID
+    axios
+      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateMaximums",
         {
-         "StoreId": store.store.ID,
-         "location": location,
-         "Enabled": store.store.enabled,
-         "Opened": store.store.opened,
-         "Hundred_Register": parseInt(hundredRegisterMax),
-         "Fifty_Register": parseInt(fiftyRegisterMax),
-         "Twenty_Register": parseInt(twentyRegisterMax),
-         "Hundred": parseInt(hundredMax),
-         "Fifty": parseInt(fiftyMax),
-         "Twenty": parseInt(twentyMax),
-         "Ten": parseInt(tenMax),
-         "Five": parseInt(fiveMax),
-         "Two": parseInt(twoMax),
-         "One": parseInt(oneMax),
-         "QuarterRoll": parseInt(quarterRollMax),
-         "DimeRoll": parseInt(dimeRollMax),
-         "NickelRoll": parseInt(nickelRollMax),
-         "PennyRoll": parseInt(pennyRollMax)
+          "StoreId": store.store.ID,
+          "location": location,
+          "Enabled": store.store.enabled,
+          "Opened": store.store.opened,
+          "Hundred_Register": parseInt(hundredRegisterMax),
+          "Fifty_Register": parseInt(fiftyRegisterMax),
+          "Twenty_Register": parseInt(twentyRegisterMax),
+          "Hundred": parseInt(hundredMax),
+          "Fifty": parseInt(fiftyMax),
+          "Twenty": parseInt(twentyMax),
+          "Ten": parseInt(tenMax),
+          "Five": parseInt(fiveMax),
+          "Two": parseInt(twoMax),
+          "One": parseInt(oneMax),
+          "QuarterRoll": parseInt(quarterRollMax),
+          "DimeRoll": parseInt(dimeRollMax),
+          "NickelRoll": parseInt(nickelRollMax),
+          "PennyRoll": parseInt(pennyRollMax)
 
-   
+
         })
       .then((response) => {
-        console.log(response.data.Message);
+       
         if (response.data.Message === "Store and Totals updated successfully.") {
-           closeModal();
-            window.location.reload(); // This will refresh the page
+          //successful edit
+          closeModal();
+          window.location.reload(); // This will refresh the page
         } else {
-          //a valid API request but user was not created because there was already a user with that username
-          console.error("Failed to update store");
+          //a valid API request but some error
           setResult("Failed to Update Store")
         }
       })
       //error if the API request failed
       .catch((error) => {
         console.error("API request failed:", error);
-      // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
         setResult("Request Failed. Try again.")
       });
-   
-   
   };
-
 
 
   return (
@@ -221,9 +193,9 @@ const EditStore = (store) => {
             <h2 className="text-2xl font-bold mb-2">Edit Store Information: {store.store.location} </h2>
             <h2 className="text-lg font-bold mb-2">{result}</h2>
 
-            <form  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-2">
-            <div className="grid grid-cols-3 gap-4">
-            <div className="mb-2 col-span-1">
+            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-2">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="mb-2 col-span-1">
                   <label htmlFor="location" className="block text-gray-700 font-bold mb-2">Store Name:</label>
                   <input
                     required
@@ -234,8 +206,8 @@ const EditStore = (store) => {
                     className="box-border text-center py-1 px-1 mb-4 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
                 </div>
-          </div>
-            <p className='text font-bold mb-3'>Maximum Denominations in Registers:</p>
+              </div>
+              <p className='text font-bold mb-3'>Maximum Denominations in Registers:</p>
               <div className="grid grid-cols-3 gap-4">
                 <div className="mb-2 col-span-1">
                   <label htmlFor="hundredRegisterMax" className="block text-gray-700 font-bold mb-2">Hundred:</label>
@@ -255,7 +227,7 @@ const EditStore = (store) => {
                     required
                     id="fiftyRegisterMax"
                     type="number"
-                   defaultValue={store.store.fiftyRegisterMax}
+                    defaultValue={store.store.fiftyRegisterMax}
                     onChange={(e) => setFiftyRegisterMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -274,12 +246,12 @@ const EditStore = (store) => {
                 </div>
 
                 <div className="mb-2 col-span-3">
-                    <p className="text font-bold ">Maximum Denominations in Safe:</p>
+                  <p className="text font-bold ">Maximum Denominations in Safe:</p>
                 </div>
-               
+
 
                 <div className="mb-2 col-span-1">
-    
+
                   <label htmlFor="hundredMax" className="block text-gray-700 font-bold mb-2">Hundred:</label>
                   <input
                     required
@@ -370,7 +342,7 @@ const EditStore = (store) => {
                     type="number"
                     defaultValue={store.store.quarterRollMax}
 
-                  
+
                     onChange={(e) => setQuarterRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -383,7 +355,7 @@ const EditStore = (store) => {
                     defaultValue={store.store.nickelRollMax}
 
                     type="number"
-                   
+
                     onChange={(e) => setNickelRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -396,7 +368,7 @@ const EditStore = (store) => {
                     type="number"
                     defaultValue={store.store.dimeRollMax}
 
-                   
+
                     onChange={(e) => setDimeRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -408,7 +380,7 @@ const EditStore = (store) => {
                     id="pennyRollMax"
                     type="number"
                     defaultValue={store.store.pennyRollMax}
-               
+
                     onChange={(e) => setPennyRollMax(e.target.value)}
                     className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
                   />
@@ -416,27 +388,27 @@ const EditStore = (store) => {
               </div>
               <div className="flex justify-between">
                 <button
-                    onClick={closeModal}
-                    type="button"
-                    className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+                  onClick={closeModal}
+                  type="button"
+                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
                 >
-                    Cancel
+                  Cancel
                 </button>
                 <button
-                    type="submit"
-                    onClick={handleSubmit}
-                    className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+                  type="submit"
+                  onClick={handleSubmit}
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
                 >
-                    Save
+                  Save
                 </button>
                 <button
-                    onClick={toggleAbility}
-                    className="flex-1 bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  onClick={toggleAbility}
+                  className="flex-1 bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                    {store.store.enabled ? 'Deactivate Store' : 'Activate Store'}
+                  {store.store.enabled ? 'Deactivate Store' : 'Activate Store'}
 
                 </button>
-                </div>
+              </div>
 
             </form>
           </div>
