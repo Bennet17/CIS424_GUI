@@ -998,7 +998,7 @@ const CloseDayPage = () =>{
                                 onChange={e => setExpectedAmount(clamp(e.target.value))} 
                                 disabled={currentPosIndex === 0}
                                 className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
-                                type="text" 
+                                type="number" 
                             />
                         </label>
                     </div>
