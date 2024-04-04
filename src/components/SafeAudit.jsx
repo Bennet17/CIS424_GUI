@@ -504,6 +504,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.hundred}
 												onChange={HandleChange}
+												tabIndex={1}
 											/>
 										</td>
 										{/* Actual Hundred Total Column */}
@@ -544,6 +545,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.quarterRoll}
 												onChange={HandleChange}
+												tabIndex={7}
 											/>
 										</td>
 										{/* Actual Quarter Rolled Total Column */}
@@ -584,6 +586,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.quarter}
 												onChange={HandleChange}
+												tabIndex={13}
 											/>
 										</td>
 										{/* Actual Quarter Total Column */}
@@ -627,6 +630,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.fifty}
 												onChange={HandleChange}
+												tabIndex={2}
 											/>
 										</td>
 										{/* Actual Fifty Total Column */}
@@ -667,6 +671,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.dimeRoll}
 												onChange={HandleChange}
+												tabIndex={8}
 											/>
 										</td>
 										{/* Actual Dime Rolled Total Column */}
@@ -707,6 +712,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.dime}
 												onChange={HandleChange}
+												tabIndex={14}
 											/>
 										</td>
 										{/* Actual Dime Total Column */}
@@ -750,6 +756,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.twenty}
 												onChange={HandleChange}
+												tabIndex={3}
 											/>
 										</td>
 										{/* Actual Twenty Total Column */}
@@ -790,6 +797,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.nickelRoll}
 												onChange={HandleChange}
+												tabIndex={9}
 											/>
 										</td>
 										{/* Actual Nickel Rolled Total Column */}
@@ -830,6 +838,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.nickel}
 												onChange={HandleChange}
+												tabIndex={15}
 											/>
 										</td>
 										{/* Actual Nickel Total Column */}
@@ -873,6 +882,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.ten}
 												onChange={HandleChange}
+												tabIndex={4}
 											/>
 										</td>
 										{/* Actual Ten Total Column */}
@@ -913,6 +923,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.pennyRoll}
 												onChange={HandleChange}
+												tabIndex={10}
 											/>
 										</td>
 										{/* Actual Penny Rolled Total Column */}
@@ -953,6 +964,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.penny}
 												onChange={HandleChange}
+												tabIndex={16}
 											/>
 										</td>
 										{/* Actual Penny Total Column */}
@@ -996,6 +1008,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.five}
 												onChange={HandleChange}
+												tabIndex={5}
 											/>
 										</td>
 										{/* Actual Five Total Column */}
@@ -1037,6 +1050,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.dollarCoin}
 												onChange={HandleChange} 
+												tabIndex={11}
 											/>
 										</td>
 										{/* Actual Dollar Coin Total Column */}
@@ -1077,6 +1091,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.two}
 												onChange={HandleChange} 
+												tabIndex={17}
 											/>
 										</td>
 										{/* Actual Two Total Column */}
@@ -1121,6 +1136,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.one}
 												onChange={HandleChange}
+												tabIndex={6}
 											/>
 										</td>
 										{/* Actual One Total Column */}
@@ -1161,7 +1177,9 @@ const SafeAuditPage = () => {
 												min={0}
 												className="denomination-input"
 												value={formData.halfDollar}
-												onChange={HandleChange} />
+												onChange={HandleChange} 
+												tabIndex={12}
+											/>
 										</td>
 										{/* Actual Half Dollar Total Column */}
 										<td>

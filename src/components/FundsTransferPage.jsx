@@ -1,6 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CurrencyInput from "react-currency-input-field";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
@@ -59,7 +59,8 @@ const FundsTransferPage = () => {
     const [showReport, setShowReport] = useState(false); // Boolean to show/hide the report message
 
     const [showExtraChange, setShowExtraChange] = useState(false);
-    const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
+
+    const tableRef = useRef(null); // Reference to the table element 
 
     // Loads the source options from the store
     useEffect(() => {
@@ -270,6 +271,12 @@ const FundsTransferPage = () => {
         fltAmount = parseFloat(formData.amount);
         let newCurrencyFields = FilterDenominations(currencyFields);
 
+        // If the destination is BANK, show a confirmation dialog
+        if (destination === "BANK") {
+            if (!window.confirm(`You are about to transfer $${fltAmount} to BANK. Are you sure?`))
+                return;
+        }
+
         // If the amount is greater than or equal to $1000, show a confirmation dialog
         if (fltAmount >= 1000.0) {
             if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) 
@@ -451,10 +458,19 @@ const FundsTransferPage = () => {
         }
     };
 
+    // Function to generate the PDF report
     function GeneratePDF() {
+        // Create a new jsPDF instance
         const doc = new jsPDF();
-        autoTable(doc, { html: "#report" });
-        doc.save("fund_transfer_report.pdf");
+
+        // Get the table element (Required since by itself the table is not rendered in the DOM)
+        const tableRef = document.getElementById('report').getElementsByTagName('table')[0];
+
+        // Generate the PDF report
+        doc.autoTable({ html: tableRef });
+
+        // Save the PDF report with the store name and current date
+        doc.save(`${formData.storeName}_${new Date().toLocaleDateString()}_FundTransfer.pdf`);
     }
 
     // Generate the report message
@@ -505,6 +521,7 @@ const FundsTransferPage = () => {
             <div>
                 <DataTable 
                     id="report"
+                    ref={tableRef}
                     value={[
                         { field: 'Store:', value: formData.storeName },
                         { field: 'User:', value: `${formData.user} (${formData.name})` },
@@ -596,6 +613,7 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a destination&gt;</option>
+                                                <option value="BANK">BANK</option>
                                                 {arrDestinations.map((register, index) => {
                                                     return (
                                                         <option key={register.id} value={register.name}>{register.name}</option>
@@ -667,6 +685,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.hundred}
                                             onChange={HandleChange}
+                                            tabIndex={1}
                                         />
                                     </td>
                                     <td>
@@ -692,6 +711,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.quarterRoll}
                                             onChange={HandleChange}
+                                            tabIndex={7}
                                         />
                                     </td>
                                     <td>
@@ -717,6 +737,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.quarter}
                                             onChange={HandleChange}
+                                            tabIndex={13}
                                         />
                                     </td>
                                     <td>
@@ -744,6 +765,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.fifty}
                                             onChange={HandleChange}
+                                            tabIndex={2}
                                         />
                                     </td>
                                     <td>
@@ -769,6 +791,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.dimeRoll}
                                             onChange={HandleChange}
+                                            tabIndex={8}
                                         />
                                     </td>
                                     <td>
@@ -794,6 +817,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.dime}
                                             onChange={HandleChange}
+                                            tabIndex={14}
                                         />
                                     </td>
                                     <td>
@@ -821,6 +845,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.twenty}
                                             onChange={HandleChange}
+                                            tabIndex={3}
                                         />
                                     </td>
                                     <td>
@@ -846,6 +871,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.nickelRoll}
                                             onChange={HandleChange}
+                                            tabIndex={9}
                                         />
                                     </td>
                                     <td>
@@ -871,6 +897,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.nickel}
                                             onChange={HandleChange}
+                                            tabIndex={15}
                                         />
                                     </td>
                                     <td>
@@ -898,6 +925,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.ten}
                                             onChange={HandleChange}
+                                            tabIndex={4}
                                         />
                                     </td>
                                     <td>
@@ -923,6 +951,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.pennyRoll}
                                             onChange={HandleChange}
+                                            tabIndex={10}
                                         />
                                     </td>
                                     <td>
@@ -948,6 +977,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.penny}
                                             onChange={HandleChange}
+                                            tabIndex={16}
                                         />
                                     </td>
                                     <td>
@@ -975,6 +1005,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.five}
                                             onChange={HandleChange}
+                                            tabIndex={5}
                                         />
                                     </td>
                                     <td>
@@ -1000,7 +1031,9 @@ const FundsTransferPage = () => {
                                                 min={0}
                                                 className="denomination-input"
                                                 value={formData.dollarCoin}
-                                                onChange={HandleChange} />
+                                                onChange={HandleChange} 
+                                                tabIndex={11}
+                                            />
                                         </td><td>
                                                 <CurrencyInput
                                                     prefix="$"
@@ -1020,7 +1053,9 @@ const FundsTransferPage = () => {
                                                     min={0}
                                                     className="denomination-input"
                                                     value={formData.two}
-                                                    onChange={HandleChange} />
+                                                    onChange={HandleChange} 
+                                                    tabIndex={17}
+                                                />
                                             </td><td>
                                                 <CurrencyInput
                                                     prefix="$"
@@ -1046,6 +1081,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.one}
                                             onChange={HandleChange}
+                                            tabIndex={6}
                                         />
                                     </td>
                                     <td>
@@ -1071,7 +1107,9 @@ const FundsTransferPage = () => {
                                             min={0}
                                             className="denomination-input"
                                             value={formData.halfDollar}
-                                            onChange={HandleChange} />
+                                            onChange={HandleChange} 
+                                            tabIndex={12}
+                                        />
                                     </td>
                                     <td>
                                         <CurrencyInput
@@ -1153,6 +1191,7 @@ const FundsTransferPage = () => {
                                     rounded
                                     onClick={() => GeneratePDF(report.props.value)}
                                     className="p-button-primary"
+                                    style={{ marginLeft: '1rem' }}
                                 />
                             </div>
                         </div>
