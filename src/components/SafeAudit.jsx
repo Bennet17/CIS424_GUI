@@ -69,6 +69,31 @@ const SafeAuditPage = () => {
     const [showExtraChange, setShowExtraChange] = useState(false);
     const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
 
+	function SetExpectedDenominations(data) {
+		// Set the expected denominations in the form data
+		setFormData((prevFormData) => ({
+			...prevFormData,
+			expectedAmount: data.total,
+			expectedHundred: data.hundred,
+			expectedFifty: data.fifty,
+			expectedTwenty: data.twenty,
+			expectedTen: data.ten,
+			expectedFive: data.five,
+			expectedTwo: data.two,
+			expectedOne: data.one,
+			expectedDollarCoin: data.dollarCoin,
+			expectedHalfDollar: data.halfDollar,
+			expectedQuarter: data.quarter,
+			expectedDime: data.dime,
+			expectedNickel: data.nickel,
+			expectedPenny: data.penny,
+			expectedQuarterRoll: data.quarterRoll,
+			expectedDimeRoll: data.dimeRoll,
+			expectedNickelRoll: data.nickelRoll,
+			expectedPennyRoll: data.pennyRoll
+		}));
+	}
+
 	// Loads expected count on page load
 	useEffect(() => {
 		function GetExpectedSafeCount() {
@@ -78,18 +103,22 @@ const SafeAuditPage = () => {
 			.then((response) => {
 				// Get the safe ID from the response based on the name property
 				const safeObject = response.data.find((obj) => obj.name === "SAFE");
+
+				// Check if the safe object exists
 				if (safeObject) {
+					// Set the safe status based on the opened property
 					setSafeStatus(safeObject.opened)
-					if (safeObject.opened === true) {
+
+					// If the safe is open, get the expected amount
+					if (safeObject.opened) {
 						axios.get(
 							`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${formData.store}`
 						)
 						.then((response) => {
-							// Update the expected amount in the form data
-							setFormData((prevFormData) => ({
-								...prevFormData,
-								expectedAmount: response.data,
-							}));
+							const data = response.data;
+
+							// Set the expected denominations in the form data
+							SetExpectedDenominations(data);
 						})
 						.catch((error) => {
 							console.log(error);
@@ -460,7 +489,7 @@ const SafeAuditPage = () => {
 												name="expectedHundred"
 												id="expectedHundred_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedHundred) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedHundred}
 											/>
 										</td>
@@ -475,6 +504,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.hundred}
 												onChange={HandleChange}
+												tabIndex={1}
 											/>
 										</td>
 										{/* Actual Hundred Total Column */}
@@ -500,7 +530,7 @@ const SafeAuditPage = () => {
 												name="expectedQuarterRoll"
 												id="expectedQuarterRoll_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedQuarterRoll) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedQuarterRoll}
 											/>
 										</td>
@@ -515,6 +545,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.quarterRoll}
 												onChange={HandleChange}
+												tabIndex={7}
 											/>
 										</td>
 										{/* Actual Quarter Rolled Total Column */}
@@ -540,7 +571,7 @@ const SafeAuditPage = () => {
 												name="expectedQuarter"
 												id="expectedQuarter_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedQuarter) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedQuarter}
 											/>
 										</td>
@@ -555,6 +586,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.quarter}
 												onChange={HandleChange}
+												tabIndex={13}
 											/>
 										</td>
 										{/* Actual Quarter Total Column */}
@@ -583,7 +615,7 @@ const SafeAuditPage = () => {
 												name="expectedFifty"
 												id="expectedFifty_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedFifty) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedFifty}
 											/>
 										</td>
@@ -598,6 +630,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.fifty}
 												onChange={HandleChange}
+												tabIndex={2}
 											/>
 										</td>
 										{/* Actual Fifty Total Column */}
@@ -623,7 +656,7 @@ const SafeAuditPage = () => {
 												name="expectedDimeRoll"
 												id="expectedDimeRoll_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedDimeRoll) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedDimeRoll}
 											/>
 										</td>
@@ -638,6 +671,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.dimeRoll}
 												onChange={HandleChange}
+												tabIndex={8}
 											/>
 										</td>
 										{/* Actual Dime Rolled Total Column */}
@@ -663,7 +697,7 @@ const SafeAuditPage = () => {
 												name="expectedDime"
 												id="expectedDime_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedDime) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedDime}
 											/>
 										</td>
@@ -678,6 +712,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.dime}
 												onChange={HandleChange}
+												tabIndex={14}
 											/>
 										</td>
 										{/* Actual Dime Total Column */}
@@ -706,7 +741,7 @@ const SafeAuditPage = () => {
 												name="expectedTwenty"
 												id="expectedTwenty_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedTwenty) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedTwenty}
 											/>
 										</td>
@@ -721,6 +756,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.twenty}
 												onChange={HandleChange}
+												tabIndex={3}
 											/>
 										</td>
 										{/* Actual Twenty Total Column */}
@@ -746,7 +782,7 @@ const SafeAuditPage = () => {
 												name="expectedNickelRoll"
 												id="expectedNickelRoll_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedNickelRoll) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedNickelRoll}
 											/>
 										</td>
@@ -761,6 +797,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.nickelRoll}
 												onChange={HandleChange}
+												tabIndex={9}
 											/>
 										</td>
 										{/* Actual Nickel Rolled Total Column */}
@@ -786,7 +823,7 @@ const SafeAuditPage = () => {
 												name="expectedNickel"
 												id="expectedNickel_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedNickel) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedNickel}
 											/>
 										</td>
@@ -801,6 +838,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.nickel}
 												onChange={HandleChange}
+												tabIndex={15}
 											/>
 										</td>
 										{/* Actual Nickel Total Column */}
@@ -829,7 +867,7 @@ const SafeAuditPage = () => {
 												name="expectedTen"
 												id="expectedTen_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedTen) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedTen}
 											/>
 										</td>
@@ -844,6 +882,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.ten}
 												onChange={HandleChange}
+												tabIndex={4}
 											/>
 										</td>
 										{/* Actual Ten Total Column */}
@@ -869,7 +908,7 @@ const SafeAuditPage = () => {
 												name="expectedPennyRoll"
 												id="expectedPennyRoll_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedPennyRoll) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedPennyRoll}
 											/>
 										</td>
@@ -884,6 +923,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.pennyRoll}
 												onChange={HandleChange}
+												tabIndex={10}
 											/>
 										</td>
 										{/* Actual Penny Rolled Total Column */}
@@ -909,7 +949,7 @@ const SafeAuditPage = () => {
 												name="expectedPenny"
 												id="expectedPenny_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedPenny) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedPenny}
 											/>
 										</td>
@@ -924,6 +964,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.penny}
 												onChange={HandleChange}
+												tabIndex={16}
 											/>
 										</td>
 										{/* Actual Penny Total Column */}
@@ -952,7 +993,7 @@ const SafeAuditPage = () => {
 												name="expectedFive"
 												id="expectedFive_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedFive) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedFive}
 											/>
 										</td>
@@ -967,6 +1008,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.five}
 												onChange={HandleChange}
+												tabIndex={5}
 											/>
 										</td>
 										{/* Actual Five Total Column */}
@@ -993,7 +1035,7 @@ const SafeAuditPage = () => {
 												name="expectedDollarCoin"
 												id="expectedDollarCoin_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedDollarCoin) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedDollarCoin}
 											/>
 										</td>
@@ -1008,6 +1050,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.dollarCoin}
 												onChange={HandleChange} 
+												tabIndex={11}
 											/>
 										</td>
 										{/* Actual Dollar Coin Total Column */}
@@ -1033,7 +1076,7 @@ const SafeAuditPage = () => {
 												name="expectedTwo"
 												id="expectedTwo_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedTwo) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedTwo}
 											/>
 										</td>
@@ -1048,6 +1091,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.two}
 												onChange={HandleChange} 
+												tabIndex={17}
 											/>
 										</td>
 										{/* Actual Two Total Column */}
@@ -1077,7 +1121,7 @@ const SafeAuditPage = () => {
 												name="expectedOne"
 												id="expectedOne_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedOne) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedOne}
 											/>
 										</td>
@@ -1092,6 +1136,7 @@ const SafeAuditPage = () => {
 												className="denomination-input"
 												value={formData.one}
 												onChange={HandleChange}
+												tabIndex={6}
 											/>
 										</td>
 										{/* Actual One Total Column */}
@@ -1118,7 +1163,7 @@ const SafeAuditPage = () => {
 												name="expectedHalfDollar"
 												id="expectedHalfDollar_input"
 												readOnly={true}
-												className="denomination-expected"
+												className={`denomination-expected ${parseInt(formData.expectedHalfDollar) > 0 ? 'denomination-expected-valid' : ''}`}
 												value={formData.expectedHalfDollar}
 											/>
 										</td>
@@ -1132,7 +1177,9 @@ const SafeAuditPage = () => {
 												min={0}
 												className="denomination-input"
 												value={formData.halfDollar}
-												onChange={HandleChange} />
+												onChange={HandleChange} 
+												tabIndex={12}
+											/>
 										</td>
 										{/* Actual Half Dollar Total Column */}
 										<td>

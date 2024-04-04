@@ -17,6 +17,8 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
 import { classNames } from "primereact/utils";
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const VarianceAuditPage = () =>{
     const auth = useAuth();
@@ -42,6 +44,7 @@ const VarianceAuditPage = () =>{
     const tableRef = useRef(null); // Reference to the table element 
     const [loading, setLoading] = useState(true); // Loading state for the table
 
+    // Columns for the variance table
     const varianceColumns = [
         { field: "POSName", header: "POS Name", order: 1 },
         { field: "OpenerName", header: "Opener Name", order: 2 },
@@ -297,6 +300,41 @@ const VarianceAuditPage = () =>{
         toast.success("Table exported successfully.");
     };
 
+    // Function to export the table as a PDF file
+    const exportPDF = () => {
+        // Create a new jsPDF instance
+        const doc = new jsPDF({
+            orientation: 'landscape',
+        });
+
+        // Add title to the PDF report
+        const title = `Variance Audit\n${formData.storeName}\n${registerName}\n${FormatDate(formData.startDate)} - ${FormatDate(formData.endDate)}`;
+        const titleX = 5;
+        const titleY = 5;
+        doc.setFontSize(8);
+        doc.text(titleX, titleY, title);
+
+        // Generate the PDF report with the data from arrVariances
+        doc.autoTable({
+            styles: { halign: 'center', cellPadding: .8, fontSize: 8 },
+            startY: titleY + 15,
+            head: [varianceColumns.map(column => column.header)], // Header row containing column headers
+            body: arrVariances.map(variance => varianceColumns.map(column => {
+                // Apply formatting functions to each value
+                if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
+                    return variance[column.field] == null ? '-' : FormatCurrency(variance[column.field]); // Currency formatting
+                } else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
+                    return variance[column.field] == null ? '-' : VariancePositiveNegative(variance[column.field], true); // Variance formatting
+                } else {
+                    return variance[column.field]; // No formatting for other columns
+                }
+            }))
+        });
+
+        // Save the PDF report with the store name and current date
+        doc.save(`${GetFileName()}.pdf`);
+    };
+
     // Function to get the file name for the exported CSV file
     function GetFileName() {
         // Get the start date and end date from the form data
@@ -326,7 +364,7 @@ const VarianceAuditPage = () =>{
     }
 
     // Function to change class based on positive/negative variances
-    const VariancePositiveNegative = (variance) => {
+    const VariancePositiveNegative = (variance, isPDF) => {
         // If the variance is null, return null
         if (variance === null) {
             return null;
@@ -338,12 +376,16 @@ const VarianceAuditPage = () =>{
             'text-green-500': variance > 0
         });
 
-        // Return the variance in the correct class
-        return (
-            <span className={varianceClass}>
-                {variance !== null ? FormatCurrency(variance) : ''}
-            </span>
-        );
+        // Return the formatted variance
+        if (isPDF) 
+            return FormatCurrency(variance);
+        else {
+            return (
+                <span className={varianceClass}>
+                    {variance !== null ? FormatCurrency(variance) : ''}
+                </span>
+            );
+        }
     };
 
     // Handles the change of the input fields
@@ -502,6 +544,15 @@ const VarianceAuditPage = () =>{
                 style={{width: '40em', fontSize: '.9rem', marginRight: '1em'}}
                 display="chip" 
             />
+            <Button
+                type="button"
+                icon="pi pi-file-pdf"
+                rounded
+                size="small"
+                onClick={exportPDF}
+                data-pr-tooltip="PDF"
+                label="Export to PDF"
+            />
             <Button 
                 type="button" 
                 icon="pi pi-file" 
@@ -610,6 +661,7 @@ const VarianceAuditPage = () =>{
                     <div style={{ overFlowX: 'auto' }}>
                         <DataTable 
                             ref={tableRef}
+                            id="varianceTable"
                             value={[...arrVariances, ...emptyRows]} 
                             rows={rowCount}
                             rowsPerPageOptions={[5, 10, 15]}
@@ -653,7 +705,7 @@ const VarianceAuditPage = () =>{
                                             if (rowData[column.field] == null) {
                                                 return <span className="invisible-row">-</span>; // Display '-' for null or undefined values
                                             } else {
-                                                return <span>{VariancePositiveNegative(rowData[column.field])}</span>; // Format the variance value
+                                                return <span>{VariancePositiveNegative(rowData[column.field], false)}</span>; // Format the variance value
                                             }
                                         }
                                         // For other columns, display value as is
