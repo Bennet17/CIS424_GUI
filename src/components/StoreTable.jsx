@@ -9,11 +9,20 @@ import AddUserForm from './AddUserForm';
 import {useAuth} from '../AuthProvider.js';
 import AddStore from './AddStore';
 import EditStore from './EditStore';
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 
 function StoreTable() {
 
   const auth = useAuth();
+
+  function downloadPDF(){
+    const storeTablePDF = new jsPDF()
+    autoTable(storeTablePDF, { html: '#storeTable' })
+    //autoTable.default(employeeTablePDF, { html: '#empTable' })
+    storeTablePDF.save("Plato's_Closet_Stores_"+currentDate+".pdf")
+  }
 
 
   //useState variables for employees array
@@ -97,7 +106,7 @@ function StoreTable() {
   return (
     <div className='min-w-full'> 
       <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-        <table ref={tableRef} className="min-w-full">
+        <table id='storeTable' ref={tableRef} className="min-w-full text-center">
           <thead>
             <tr>
               <th className="px-4 py-2">Location</th>
@@ -114,7 +123,7 @@ function StoreTable() {
               onClick={() => handleRowClick(store)} 
               className={`cursor-pointer hover:bg-gray-100 ${store.enabled ? '' : 'bg-gray-300'}`}
             >
-              <td className="border px-4 py-2">{store.location}</td>
+              <td className="border px-4 py-2 text-left">{store.location}</td>
               <td className="border px-4 py-2">{store.opened ? 'Open' : 'Closed'}</td>
               <td className="border px-4 py-2">{store.enabled ? 'Active' : 'Inactive'}</td>
             </tr>
@@ -127,6 +136,9 @@ function StoreTable() {
         
       <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
           <button onClick={onDownload}>Export to Excel</button>
+        </div>
+        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+          <button onClick={downloadPDF}>Export to PDF</button>
         </div>
         <div><AddStore> </AddStore></div>
         <div>        {showEditForm && <EditStore store={selectedStore}  />}  </div>

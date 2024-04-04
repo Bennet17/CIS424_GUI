@@ -1,14 +1,34 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { getValue } from '@testing-library/user-event/dist/utils';
 import {useAuth} from '../AuthProvider.js';
+import { useDownloadExcel } from 'react-export-table-to-excel';
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 function POSTable() {
 
+  const tableRef = useRef(null);
+
+
+
+
+
+  
+  const date = new Date();
+
+let day = date.getDate();
+let month = date.getMonth() + 1;
+let year = date.getFullYear();
+
+// This arrangement can be altered based on how we want the date's format to appear.
+let currentDate = `${month}-${day}-${year}`;
+console.log(currentDate); // "17-6-2022"
+
   const auth = useAuth();
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
-  const workingStore = auth.cookie.user.workingStoreID
+  const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
 
 
       //do a get request to get all the POS's for the current store
@@ -16,6 +36,13 @@ function POSTable() {
   const [result, setResult] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [nickname, setNickname] = useState(null);
+
+  function downloadPDF(){
+    const POSTablePDF = new jsPDF()
+    autoTable(POSTablePDF, { html: '#posTable' })
+    //autoTable.default(employeeTablePDF, { html: '#empTable' })
+    POSTablePDF.save(curStoreName+"_POS_Systems_"+currentDate+".pdf")
+  }
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -25,6 +52,12 @@ function POSTable() {
   const handleOpenForm = () =>{
       setShowModal(true);
   }
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: curStoreName+"_POS_Systems_"+currentDate,
+    sheet: "POS Registers"
+  });
 
 
   function handleSubmit(event) {
@@ -210,7 +243,7 @@ function POSTable() {
      
       <h2 className="text-lg text-red-500 font-bold mb-2">{result}</h2>
       <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-      <table className="min-w-full text-center">
+      <table id='posTable' ref={tableRef} className="min-w-full text-center">
         <thead>
           <tr>
             <th className="px-4 py-2">POS Name</th>
@@ -231,7 +264,7 @@ function POSTable() {
               <td className="border px-4 py-2">{pos.opened ? 'Open' : 'Closed'}</td>
               <td className="border px-4 py-2">
             
-                <button onClick={() => toggleActivity(pos)} className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
+                <button onClick={() => toggleActivity(pos)} className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-32'>
                   {pos.enabled ? 'Deactivate' : 'Activate'}
                 </button>
                    </td>
@@ -243,13 +276,21 @@ function POSTable() {
         </tbody>
       </table>
       </div>
-      <button
-  
+      <div className='flex flex-row-reverse mt-4 '> 
+      <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+          <button onClick={onDownload}>Export to Excel</button>
+        </div>
+      <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+          <button onClick={downloadPDF}>Export to PDF</button>
+        </div>
+        <button
             onClick={handleOpenForm}
-            className="bg-indigo-600 hover:bg-indigo-700 mt-5 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
           >
             Add POS Register
           </button>
+
+          </div>
         
     </div>
   );
