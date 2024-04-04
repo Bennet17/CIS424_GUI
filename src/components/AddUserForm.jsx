@@ -71,6 +71,8 @@ const AddUserForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   //const [selectedStores, setSelectedStores] = useState([])
   const[validPassword, setValidPassword] = useState(false);
+  const[securityQuestion, setSecurityQuestion] = useState("");
+  const[securityAnswer, setSecurityAnswer] = useState("");
 
   //this method is called as a helper for when a user enters a password.
   //it calls setPassword, which changes the password variable
@@ -115,21 +117,31 @@ const handleChange = (e) => {
 
 
 
-  const handleCheckboxChange = (e) => {
-    const storeID = e.target.value;
-    if (e.target.checked) {
-      console.log("Store ID Selected" + storeID)
-
-      setSelectedStores([...selectedStores, storeID]);
-    } else {
-      console.log("Store ID Unselected" + storeID)
-      setSelectedStores(selectedStores.filter(id => id !== storeID));
-    }
-
-
+  const handleCheckboxChange = (e, id) => {
+    const isChecked = e.target.checked;
   
-    
+    // Get all checkbox elements
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  
+    let count = 0;
+  
+    // Iterate through checkboxes
+    checkboxes.forEach((checkbox) => {
+      // Check if the checkbox is checked
+      if (checkbox.checked) {
+        count++;
+      }
+    });
+  
+    // Ensure at least one checkbox is checked
+    if (!isChecked && count < 1) {
+      // Display an error message or prevent the action
+      alert("At least one store must be selected.");
+         // Check the current checkbox again
+       e.target.checked = true;
 
+    }
+  
   };
   function getCSV() {
     let temp = "";
@@ -173,7 +185,9 @@ const handleChange = (e) => {
             "name": name,
             "password": password,
             "position": position,
-            "storeCSV": getCSV()
+            "storeCSV": getCSV(),
+            "question": securityQuestion,
+            "answer": securityAnswer
 
           })
         .then((response) => {
@@ -220,145 +234,163 @@ const handleChange = (e) => {
           <span onClick={closeModal} className="absolute top-0 right-0 cursor-pointer text-gray-700 hover:text-gray-900">&times;</span>
             <h2 className="text-2xl font-bold mb-4">Add User Information</h2>
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                    <h2 className="text-lg font-bold mb-4">{result}</h2>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="mb-4">
-                        <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">First Name:</label>
-                        <input
-                          required
-                          id="firstName"
-                          type="text"
-                          //value={firstname}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <label htmlFor="lastName" className="block text-gray-700 font-bold mb-2">Last Name:</label>
-                        <input
-                     
-                          id="lastName"
-                          type="text"
-                          required
-                         // value={lastname}
-                          onChange={(e) => setLastName(e.target.value)}
-                          className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <label htmlFor="username" className="block text-gray-700 font-bold mb-2">Username:</label>
-                        <input
-                          id="username"
-                          type="text"
-                          required
-                          onChange={(e) => setUsername(e.target.value)}
-                          className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                        />
-                      </div>
-                    </div>
+  <h2 className="text-lg font-bold mb-4">{result}</h2>
+  
+  <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className="mb-4">
+      <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">First Name:</label>
+      <input
+        required
+        id="firstName"
+        type="text"
+        onChange={(e) => setFirstName(e.target.value)}
+        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+      />
+    </div>
+    <div className="mb-4">
+      <label htmlFor="lastName" className="block text-gray-700 font-bold mb-2">Last Name:</label>
+      <input
+        id="lastName"
+        type="text"
+        required
+        onChange={(e) => setLastName(e.target.value)}
+        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+      />
+    </div>
+  </div>
 
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="mb-4">
-                        <label htmlFor="password" className="block text-gray-700 font-bold mb-2">Password:</label>
-                        <div>
-                        <input
-                        required
-                          type="password"
-                                                  
-                          onChange={(e) => handleChange(e)} // Pass the entire event object 'e'
-                          className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                        />
-                        {errorMessage && <div className="text-red-500 text-sm mt-1 ">{errorMessage}</div>}
-                      </div>
-                      </div>
-                      <div className="mb-4">
-                    <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
-                    <div className="flex flex-col">
-                        <div className="flex items-center">
-                          <input
-                         
-                            type="radio"
-                            id="employee"
-                            name="role"
-                            value="Employee"
-                            required
-                            defaultChecked={"Employee"} // Assuming position is the state variable for the selected role
-                            onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
-                          />
-                          <label htmlFor="employee" className="mr-4">Employee</label>
-                        </div>
-                        {auth.cookie.user.position === "Owner" && (
-                          <div>
-                        <div className="flex items-center">
-                          <input
-                            type="radio"
-                            id="manager"
-                            name="role"
-                            required
-                            value="Manager"
-                            onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
-                          />
-                          <label htmlFor="manager">Manager</label>
-                        </div>
-                        
-                          <div className="flex items-center">
-                            <input
-                              type="radio"
-                              id="owner"
-                              name="role"
-                              value="Owner"
-                              required
-                              onChange={(e) => setPosition(e.target.value)}
-                              className="mr-2"
-                            />
-                            <label htmlFor="owner">Owner</label>
-                          </div>
-                          </div>
-                        )}
-                      </div>
+  <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className="mb-4">
+      <label htmlFor="username" className="block text-gray-700 font-bold mb-2">Username:</label>
+      <input
+        id="username"
+        type="text"
+        required
+        onChange={(e) => setUsername(e.target.value)}
+        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+      />
+    </div>
+    <div className="mb-4">
+      <label htmlFor="password" className="block text-gray-700 font-bold mb-2">Password:</label>
+      <input
+        required
+        type="password"
+        onChange={(e) => handleChange(e)}
+        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+      />
+      {errorMessage && <div className="text-red-500 text-sm mt-1">{errorMessage}</div>}
+    </div>
+  </div>
 
-                      </div>
-                  <div className="mb-4">
-                    <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
-                    {storeArray.map(item => (
-                     
-                      <div key={item.ID} className="mb-2">
-                        <input
-                          type="checkbox"
-                          id={`store${item.ID}`}
-                          name="store"
-                          value={item.ID}
-                          defaultChecked={item.ID === curStoreID}
-                          onChange={(e) => handleCheckboxChange(e, item.ID)}
-                          className="mr-2"
-                        />
-                        <label htmlFor={`store${item.ID}`}>{item.location}</label>
-                      </div>
-                    ))}
-                  </div>
-                    </div>
-                    <div className="flex justify-between">
-                      <button
-                      onClick={closeModal}
-                        type="button"
-                        className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                    type="submit"
-                    disabled={validPassword === false} 
-                    className={`py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-                      validPassword ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-gray-400 cursor-not-allowed text-gray-600'
-                    }`}
-                    >
-                    Add User
-                    </button>
-                    </div>
-                    
-                  </form>
+  <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className="mb-4">
+      <label htmlFor="securityQuestion" className="block text-gray-700 font-bold mb-2">Security Question:</label>
+      <input
+        required
+        id="securityQuestion"
+        type="text"
+        onChange={(e) => setSecurityQuestion(e.target.value)}
+        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+      />
+    </div>
+    <div className="mb-4">
+      <label htmlFor="securityAnswer" className="block text-gray-700 font-bold mb-2">Security Answer:</label>
+      <input
+        required
+        id="securityAnswer"
+        type="text"
+        onChange={(e) => setSecurityAnswer(e.target.value)}
+        className="box-border text-center py-1 px-1 w-full border border-border-color border-2 hover:bg-nav-bg bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+      />
+    </div>
+  </div>
+  
+  <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className="mb-4">
+      <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
+      <div className="flex flex-col">
+        <div className="flex items-center">
+          <input
+            type="radio"
+            id="employee"
+            name="role"
+            value="Employee"
+            required
+            defaultChecked={"Employee"}
+            onChange={(e) => setPosition(e.target.value)}
+            className="mr-2"
+          />
+          <label htmlFor="employee" className="mr-4">Employee</label>
+        </div>
+        {auth.cookie.user.position === "Owner" && (
+          <div>
+            <div className="flex items-center">
+              <input
+                type="radio"
+                id="manager"
+                name="role"
+                required
+                value="Manager"
+                onChange={(e) => setPosition(e.target.value)}
+                className="mr-2"
+              />
+              <label htmlFor="manager">Manager</label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="radio"
+                id="owner"
+                name="role"
+                value="Owner"
+                required
+                onChange={(e) => setPosition(e.target.value)}
+                className="mr-2"
+              />
+              <label htmlFor="owner">Owner</label>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+    <div className="mb-4">
+      <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
+      {storeArray.map(item => (
+        <div key={item.ID} className="mb-2">
+          <input
+            type="checkbox"
+            id={`store${item.ID}`}
+            name="store"
+            value={item.ID}
+            defaultChecked={item.ID === curStoreID}
+            onChange={(e) => handleCheckboxChange(e, item.ID)}
+            className="mr-2"
+          />
+          <label htmlFor={`store${item.ID}`}>{item.location}</label>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div className="flex justify-between">
+    <button
+      onClick={closeModal}
+      type="button"
+      className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      disabled={validPassword === false} 
+       className={`py-2 px-4 font-bold rounded focus:outline-none focus:shadow-outline ${
+        validPassword ? 'bg-indigo-600 hover:bg-indigo-700 text-white font-bold ' : 'bg-gray-400 cursor-not-allowed text-gray-600'
+      }`}
+    >
+      Add User
+    </button>
+  </div>
+</form>
+
             </div>
         </div>
       )}

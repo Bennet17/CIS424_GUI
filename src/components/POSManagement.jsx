@@ -28,18 +28,16 @@ const POSManagementPage = () => {
       <SideBar currentPage={8} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
-        <div className="flex flex-col mt-8 px-6">
-          <div>
-            <h2 className="text-lg font-bold mt-4 px-10 ">POS Registers at Plato's Closet: {curStoreName}</h2>
-            <div className="flex mt-8 px-6"> 
-              <div className="w-1/2 mr-4"> 
-                <POSTable />
-              </div>
-
-            </div>
-
-          </div>
+        <h2 className="text-lg font-bold mt-6 px-10 ">POS Registers at Plato's Closet: {curStoreName}</h2>
+        <div className="flex flex-col items-center justify-center mt-8 px-6"> {/* Added items-center justify-center */}
+        <div className="w-full max-w-screen-lg"> {/* Limiting width to maintain responsiveness */}
+        <div className="flex mt-2 px-6 justify-center"> {/* Centering horizontally */}
+        <div style={{ width: '90%'}}>
+        <POSTable />
         </div>
+        </div>
+      </div>
+    </div>
       </div>
     </div>
   );
