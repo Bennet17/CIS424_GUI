@@ -99,7 +99,6 @@ const CloseDayPage = () =>{
     const [postSuccess, setPostSuccess] = useState(null);
     const [possSuccessTxt, setPosSuccessTxt] = useState("");
     
-
     //Stores the general styling for the actual/current total denominations text field.
     //here, we simply change the text & bg color based on if we're over, under, or at expected value
     //with a 2 dollar margin
@@ -136,13 +135,14 @@ const CloseDayPage = () =>{
         }
     }
 
+    //keep values clamped between a minimum and maxium value
     function clamp(value, min = 0, max = 100000){
-        if (value < min){
+        if (Number(value) < min){
             return min;
-        }else if (value > max){
+        }else if (Number(value) > max){
             return max;
         }
-        return value;
+        return Number(value);
     }
 
     //call on component load AND when the currently-selected pos has refreshed
@@ -983,9 +983,9 @@ const CloseDayPage = () =>{
                     <div>
                         <label> Current Total:
                             <input 
-                                value={totalAmount} 
+                                value={"$" + totalAmount} 
                                 className={actualAmountStyle} 
-                                type="number" 
+                                type="text" 
                                 disabled={true}
                             />
                         </label>
@@ -994,10 +994,10 @@ const CloseDayPage = () =>{
                     <div>
                         <label> Expected Total:
                             <input 
-                                value={expectedAmount} 
-                                onChange={e => setExpectedAmount(clamp(e.target.value))} 
+                                value={"$" + expectedAmount} 
+                                onChange={e => setExpectedAmount(clamp(e.target.value.toString().substring(1)))} 
                                 disabled={currentPosIndex === 0}
-                                className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
+                                className={`box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 ${currentPosIndex === 0 ? "bg-nav-bg" : "bg-white"} `} 
                                 type="text" 
                             />
                         </label>
@@ -1007,10 +1007,10 @@ const CloseDayPage = () =>{
                             <div>
                                 <label> Credit Actual:
                                     <input
-                                        value={creditActual} 
-                                        onChange={e => setCreditActual(clamp(e.target.value))}  
+                                        value={"$" + creditActual} 
+                                        onChange={e => setCreditActual(clamp(e.target.value.toString().substring(1)))}  
                                         className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
-                                        type="number" 
+                                        type="text" 
                                     />
                                 </label>
                             </div>
@@ -1018,10 +1018,10 @@ const CloseDayPage = () =>{
                             <div>
                                 <label> Credit Expected:
                                     <input 
-                                        value={creditExpected} 
-                                        onChange={e => setCreditExpected(clamp(e.target.value))} 
+                                        value={"$" + creditExpected} 
+                                        onChange={e => setCreditExpected(clamp(e.target.value.toString().substring(1)))} 
                                         className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-white" 
-                                        type="number" 
+                                        type="text" 
                                     />
                                 </label>
                             </div>

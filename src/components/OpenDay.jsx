@@ -126,12 +126,12 @@ const OpenDayPage = () =>{
 
     //keep values clamped between a minimum and maxium value
     function clamp(value, min = 0, max = 100000){
-        if (value < min){
+        if (Number(value) < min){
             return min;
-        }else if (value > max){
+        }else if (Number(value) > max){
             return max;
         }
-        return value;
+        return Number(value);
     }
 
     //call on component load AND when the currently-selected pos has refreshed
