@@ -333,6 +333,9 @@ const OpenDayPage = () =>{
                                     <td className="text-2xl">Bills</td>
                                     <td className="text-2xl">Expected</td>
                                     <td className="text-2xl">Actual</td>
+                                    <td className="text-2xl">Coins</td>
+                                    <td className="text-2xl">Expected</td>
+                                    <td className="text-2xl">Actual</td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -352,6 +355,28 @@ const OpenDayPage = () =>{
                                         <input 
                                             value={elm100Dollar} 
                                             onChange={e => setElm100Dollar(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                            type="number"
+                                        />
+                                    </td>
+                                    <td>
+                                        <label>Quarters (rolled)</label>
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmQuartersRolledExpected}
+                                            //onChange={e => setElmQuartersRolledExpected(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
+                                            type="number"
+                                            disabled={true}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmQuartersRolled} 
+                                            onChange={e => setElmQuartersRolled(clamp(e.target.value))} 
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
@@ -381,6 +406,28 @@ const OpenDayPage = () =>{
                                             type="number"
                                         />
                                     </td>
+                                    <td>
+                                        <label>Dimes (rolled)</label>
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmDimesRolledExpected}
+                                            //onChange={e => setElmDimesRolledExpected(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
+                                            type="number"
+                                            disabled={true}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmDimesRolled} 
+                                            onChange={e => setElmDimesRolled(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                            type="number"
+                                        />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -400,6 +447,28 @@ const OpenDayPage = () =>{
                                         <input 
                                             value={elm20Dollar} 
                                             onChange={e => setElm20Dollar(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                            type="number"
+                                        />
+                                    </td>
+                                    <td>
+                                        <label>Nickles (rolled)</label>
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmNicklesRolledExpected}
+                                            //onChange={e => setElmNicklesRolledExpected(clamp(e.target.value))}
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
+                                            type="number"
+                                            disabled={true}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmNicklesRolled} 
+                                            onChange={e => setElmNicklesRolled(clamp(e.target.value))} 
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
@@ -429,6 +498,28 @@ const OpenDayPage = () =>{
                                             type="number"
                                         />
                                     </td>
+                                    <td>
+                                        <label>Pennies (rolled)</label>
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmPenniesRolledExpected}
+                                            //onChange={e => setElmPenniesRolledExpected(clamp(e.target.value))}  
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
+                                            type="number"
+                                            disabled={true}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmPenniesRolled} 
+                                            onChange={e => setElmPenniesRolled(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                            type="number"
+                                        />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -448,6 +539,28 @@ const OpenDayPage = () =>{
                                         <input 
                                             value={elm5Dollar} 
                                             onChange={e => setElm5Dollar(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                            type="number"
+                                        />
+                                    </td>
+                                    <td>
+                                        <label>Quarters</label>
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmQuartersExpected}
+                                            //onChange={e => setElmQuartersExpected(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
+                                            type="number"
+                                            disabled={true}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elmQuarters} 
+                                            onChange={e => setElmQuarters(clamp(e.target.value))} 
                                             min="0" 
                                             className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
                                             type="number"
@@ -477,134 +590,6 @@ const OpenDayPage = () =>{
                                             type="number"
                                         />
                                     </td>
-                                </tr>
-                                <br/>
-                                <tr>
-                                    <td className="text-2xl">Coins</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Quarters (rolled)</label>
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmQuartersRolledExpected}
-                                            //onChange={e => setElmQuartersRolledExpected(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
-                                            type="number"
-                                            disabled={true}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmQuartersRolled} 
-                                            onChange={e => setElmQuartersRolled(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                            type="number"
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Dimes (rolled)</label>
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmDimesRolledExpected}
-                                            //onChange={e => setElmDimesRolledExpected(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
-                                            type="number"
-                                            disabled={true}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmDimesRolled} 
-                                            onChange={e => setElmDimesRolled(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                            type="number"
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Nickles (rolled)</label>
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmNicklesRolledExpected}
-                                            //onChange={e => setElmNicklesRolledExpected(clamp(e.target.value))}
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
-                                            type="number"
-                                            disabled={true}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmNicklesRolled} 
-                                            onChange={e => setElmNicklesRolled(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                            type="number"
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Pennies (rolled)</label>
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmPenniesRolledExpected}
-                                            //onChange={e => setElmPenniesRolledExpected(clamp(e.target.value))}  
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
-                                            type="number"
-                                            disabled={true}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmPenniesRolled} 
-                                            onChange={e => setElmPenniesRolled(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                            type="number"
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Quarters</label>
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmQuartersExpected}
-                                            //onChange={e => setElmQuartersExpected(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
-                                            type="number"
-                                            disabled={true}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elmQuarters} 
-                                            onChange={e => setElmQuarters(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                            type="number"
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
                                     <td>
                                         <label>Dimes</label>
                                     </td>
@@ -629,6 +614,11 @@ const OpenDayPage = () =>{
                                     </td>
                                 </tr>
                                 <tr>
+                                    {showExtraChange == true ? <>
+                                        <td className="text-2xl">Other</td>
+                                        <td></td>
+                                        <td></td>
+                                    </> : <><td></td><td></td><td></td></>}
                                     <td>
                                         <label>Nickles</label>
                                     </td>
@@ -653,6 +643,30 @@ const OpenDayPage = () =>{
                                     </td>
                                 </tr>
                                 <tr>
+                                    {showExtraChange == true ? <>
+                                    <td>
+                                        <label>$1 coin</label>
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elm1DollarCoinExpected}
+                                            //onChange={e => setElm1DollarCoinExpected(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
+                                            type="number"
+                                            disabled={true}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input 
+                                            value={elm1DollarCoin} 
+                                            onChange={e => setElm1DollarCoin(clamp(e.target.value))} 
+                                            min="0" 
+                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                            type="number"
+                                        />
+                                    </td>
+                                </> : <><td></td><td></td><td></td></>}
                                     <td>
                                         <label>Pennies</label>
                                     </td>
@@ -676,36 +690,6 @@ const OpenDayPage = () =>{
                                         />
                                     </td>
                                 </tr>
-                                <br/>
-                                {showExtraChange == true && <tr>
-                                    <td className="text-2xl">Other</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>}
-                                {showExtraChange == true && <tr>
-                                    <td>
-                                        <label>$1 coin</label>
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elm1DollarCoinExpected}
-                                            //onChange={e => setElm1DollarCoinExpected(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300" 
-                                            type="number"
-                                            disabled={true}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input 
-                                            value={elm1DollarCoin} 
-                                            onChange={e => setElm1DollarCoin(clamp(e.target.value))} 
-                                            min="0" 
-                                            className="box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                                            type="number"
-                                        />
-                                    </td>
-                                </tr>}
                                 {showExtraChange == true && <tr>
                                     <td>
                                         <label>$2's</label>
