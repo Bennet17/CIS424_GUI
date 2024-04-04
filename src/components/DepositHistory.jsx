@@ -1,6 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, {useState, useLayoutEffect, useEffect} from 'react';
+import React, {useState, useLayoutEffect, useEffect, useRef} from 'react';
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import classNames from 'classnames';
@@ -8,6 +8,9 @@ import {useNavigate} from 'react-router-dom';
 import routes from '../routes.js';
 import {useAuth} from '../AuthProvider.js';
 import { Toaster, toast } from 'sonner';
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+import { useDownloadExcel } from 'react-export-table-to-excel';
 import {
     Square,
     Check,
@@ -17,14 +20,29 @@ const DepositHistory = () => {
 
     const [dateStart, setDateStart] = useState(GetTodaysDate());
     const [dateEnd, setDateEnd] = useState(GetTodaysDate());
+    const [showConfirm, setShowConfirm] = useState(false);
 
     const [records, setRecords] = useState([]);
     const [hasRecords, setHasRecords] = useState(false);
     const [selectedRow, SetSelectedRow] = useState(null);
     const [postSuccess, setPostSuccess] = useState(false);
 
+    const tableRef = useRef(null);
+
     const auth = useAuth();
     const navigate = useNavigate();
+
+    function downloadPDF(){
+        const pdf = new jsPDF();
+        autoTable(pdf, { html: '#depositHistoryTable' });
+        pdf.save(auth.cookie.user.viewingStoreLocation + "_DepositHistory_" + GetTodaysDate() + ".pdf")
+    }
+
+    const { onDownload } = useDownloadExcel({
+        currentTableRef: tableRef.current,
+        filename: auth.cookie.user.viewingStoreLocation + "_DepositHistory_" + GetTodaysDate(),
+        sheet: auth.cookie.user.viewingStoreLocation + "DepositHistory"
+    });
 
     //build todays date as a string that our input field will accept because i hate js why doesn't it have this built-in what the fuck
     function GetTodaysDate(){
@@ -124,6 +142,10 @@ const DepositHistory = () => {
 
         Initialize();
     }, [dateStart, dateEnd, postSuccess]);
+
+    function ShowConfirmPopup(){
+
+    }
     
     function Submit(event){
         //prevents default behavior of sending data to current URL And refreshing page
@@ -132,11 +154,10 @@ const DepositHistory = () => {
         //don't let the user try and submit closed/aborted records or when no records are selected
         if (selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED"){
             toast.error("Cannot change status of closed or aborted deposit!");
-        }else if (auth.cookie.user.viewingStoreID !== auth.cookie.user.workingStoreID){
-            toast.error("Cannot perform action when page is view-only");
         }else{
-            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateDepositStatus', {
-                "fID": records[selectedRow].fID
+            axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/VerifyDeposit', {
+                "fID": records[selectedRow].fID,
+                "vID": auth.cookie.user.ID
             })
             .then(response => {
                 console.log(response);
@@ -145,6 +166,7 @@ const DepositHistory = () => {
                 }
                 setPostSuccess(true);
                 SetSelectedRow(null);
+                setShowConfirm(false);
             })
             .catch(error => {
                 console.error(error);
@@ -195,7 +217,7 @@ const DepositHistory = () => {
             <SideBar currentPage={6} />
             <div className="w-full">
                 <HorizontalNav />
-                <div className="text-main-color w-72 text-2xl float-left ml-8 mt-32">
+                <div className="text-main-color w-72 text-2xl float-left ml-8 mt-16">
                     <p>Select an open deposit to mark as pending or closed</p>
                     <br/>
                     <label>Start Date:
@@ -216,9 +238,9 @@ const DepositHistory = () => {
                         />
                     </label>
                 </div>
-                <div className="float-left ml-12">
+                <div className="float-left ml-12 mt-16">
                     <p className="text-main-color text-center text-3xl mt-4 mb-4">Deposit History Report</p>
-                    <table>
+                    <table id="depositHistoryTable" ref={tableRef}>
                         <tbody>
                             <tr>
                                 <td className="box-border border-border-color border-2 text-center w-28 h-12">Date</td>
@@ -234,22 +256,46 @@ const DepositHistory = () => {
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.date.split("T")[0]}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.name}</td>
                                         <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status == "OPEN" ? null : item.verifiedOn}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.status == "OPEN" ? <Square/> : <Check/>}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.verifiedBy}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.verifiedOn == null ? null : item.verifiedOn.split("T")[0]}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 relative inset-0 w-32 h-8 pl-2`}>{item.status == "OPEN" ? "" : "Verified"}</td>
+                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-32 h-8 pl-2`}>{item.verifiedBy}</td>
                                     </tr>
                                 ))
                             }
                             <tr>
-                                <td colSpan="5">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={Submit}>Verify</button>
+                                <td colSpan="4">
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={e => setShowConfirm(true)}>Verify</button>
                                 </td>
                                 <td>
-
+                                    <button className="flex w-full justify-center rounded-md hover:bg-indigo-500 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={onDownload}>Export to Excel</button>
+                                </td>
+                                <td>
+                                    <button className="flex w-full justify-center rounded-md hover:bg-indigo-500 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={downloadPDF}>Export to PDF</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+
+                    {showConfirm && 
+                        <div className="report-overlay">
+                            <div className="report-container">
+                                Are you sure you want to Verify this deposit?
+                                <br/><br/>
+                                <button 
+                                    className="flex w-32 float-left justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={Submit}
+                                >
+                                    Confirm
+                                </button>
+                                <button 
+                                    className="flex w-32 float-right justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={() => setShowConfirm(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
