@@ -28,7 +28,7 @@ const POSManagementPage = () => {
 
   return (
     <div className="flex min-h-screen bg-custom-accent">
-      <SideBar currentPage={8} />
+      <SideBar currentPage={9} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
         <h2 className="text-lg font-bold mt-6 px-10 ">POS Registers at Plato's Closet: {curStoreName}</h2>

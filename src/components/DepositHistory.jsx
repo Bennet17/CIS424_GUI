@@ -214,7 +214,7 @@ const DepositHistory = () => {
                 duration={5000}
                 pauseWhenPageIsHidden={true}
             />
-            <SideBar currentPage={6} />
+            <SideBar currentPage={7} />
             <div className="w-full">
                 <HorizontalNav />
                 <div className="text-main-color w-72 text-2xl float-left ml-8 mt-16">
