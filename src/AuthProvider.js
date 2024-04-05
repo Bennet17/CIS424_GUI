@@ -27,8 +27,7 @@ const AuthProvider = ({ children }) => {
             //setCookie("user", response.data.user, { path: "/" });
             //localStorage.setItem("site", cookie);
             //console.log(response.data.user);
-            console.log("cookie user");
-            console.log(cookie.user);
+            
 
             if (response.data.user.storeID_CSV.length === 1) {
               setCookie(
@@ -48,6 +47,9 @@ const AuthProvider = ({ children }) => {
               localStorage.setItem("site", cookie);
               navigate(routes.selectstore);
             }
+
+            console.log("cookie user");
+              console.log(cookie.user);
 
             resolve(response.data);
           } else {

@@ -1,56 +1,56 @@
 //this component displays a table of employees that work at the current store
 //written by Brianna Kline
+//this is a parent to AddStore and EditStore componenets
 import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { useDownloadExcel } from 'react-export-table-to-excel';
-import {Trash2, Pencil, Pen} from "lucide-react";
-import EditUser from './EditUser'; 
+import { Trash2, Pencil, Pen } from "lucide-react";
+import EditUser from './EditUser';
 import AddUserForm from './AddUserForm';
-import {useAuth} from '../AuthProvider.js';
+import { useAuth } from '../AuthProvider.js';
 import AddStore from './AddStore';
 import EditStore from './EditStore';
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 
 function StoreTable() {
 
+  //DECLARE VARIABLES
   const auth = useAuth();
 
-
-  //useState variables for employees array
   const [stores, setStores] = useState([]);
-
-
   const [selectedStore, setSelectedStore] = useState(null); // State variable to store selected user data
   const [showEditForm, setShowEditForm] = useState(false); // State variable to manage form visibility
   const [showAddForm, setShowAddForm] = useState(false); // State variable to manage form visibility
-
   const tableRef = useRef(null);
-
-
-
+  //date variables
   const date = new Date();
-
   let day = date.getDate();
   let month = date.getMonth() + 1;
   let year = date.getFullYear();
-  
-  // This arrangement can be altered based on how we want the date's format to appear.
   let currentDate = `${month}-${day}-${year}`;
-  console.log(currentDate); // "17-6-2022"
 
   //this method handles downloads to a excel file
   const { onDownload } = useDownloadExcel({
     currentTableRef: tableRef.current,
-    filename: "Plato's_Closet_Stores_"+currentDate,
+    filename: "Plato's_Closet_Stores_" + currentDate,
     sheet: 'Store Locations'
   });
 
-    //this table handles grabbing the corresponding employee object from a row click
-    const handleRowClick = (store) => {
-      setSelectedStore(store); // Set the selected user data
-      //console.log(employee);
-      setShowEditForm(true); // Show the edit form button
-    };
+  //this function havdles table download to PDF
+  function downloadPDF() {
+    const storeTablePDF = new jsPDF()
+    autoTable(storeTablePDF, { html: '#storeTable' })
+    storeTablePDF.save("Plato's_Closet_Stores_" + currentDate + ".pdf")
+  }
+
+
+  //this table handles grabbing the corresponding employee object from a row click
+  const handleRowClick = (store) => {
+    setSelectedStore(store); // Set the selected user data
+    setShowEditForm(true); // Show the edit form button
+  };
 
   //useEffect will launch as soon as the component is loaded
   useEffect(() => {
@@ -60,7 +60,6 @@ function StoreTable() {
       const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStores`;
       axios.get(url)
         .then((response) => {
-          console.log(response);
           //map the response of employee data onto an array of employees
           setStores(response.data.map(store => ({
             ID: store.ID,
@@ -81,8 +80,6 @@ function StoreTable() {
             dimeRollMax: store.dimeRollMax,
             nickelRollMax: store.nickelRollMax,
             pennyRollMax: store.pennyRollMax
-            
-
           })));
         })
         .catch((error) => {
@@ -90,49 +87,45 @@ function StoreTable() {
           console.error('Error fetching data:', error);
         });
     }
-
     fetchStoreTable();
   }, []);
 
   return (
-    <div className='min-w-full'> 
+    <div className='min-w-full'>
       <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-        <table ref={tableRef} className="min-w-full">
+        <table id='storeTable' ref={tableRef} className="min-w-full text-center">
           <thead>
             <tr>
               <th className="px-4 py-2">Location</th>
               <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">In Business</th>
-              {/* <th className="px-4 py-2">Enabled</th> */}
-
             </tr>
           </thead>
           <tbody>
-          {stores.map((store) => (
-            <tr 
-              key={store.ID} 
-              onClick={() => handleRowClick(store)} 
-              className={`cursor-pointer hover:bg-gray-100 ${store.enabled ? '' : 'bg-gray-300'}`}
-            >
-              <td className="border px-4 py-2">{store.location}</td>
-              <td className="border px-4 py-2">{store.opened ? 'Open' : 'Closed'}</td>
-              <td className="border px-4 py-2">{store.enabled ? 'Active' : 'Inactive'}</td>
-            </tr>
-          ))}
-
+            {stores.map((store) => (
+              <tr
+                key={store.ID}
+                onClick={() => handleRowClick(store)}
+                className={`cursor-pointer hover:bg-gray-100 ${store.enabled ? '' : 'bg-gray-300'}`}
+              >
+                <td className="border px-4 py-2 text-left">{store.location}</td>
+                <td className="border px-4 py-2">{store.opened ? 'Open' : 'Closed'}</td>
+                <td className="border px-4 py-2">{store.enabled ? 'Active' : 'Inactive'}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
       <div className="flex flex-row-reverse mt-3">
-        
-      <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
           <button onClick={onDownload}>Export to Excel</button>
         </div>
+        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+          <button onClick={downloadPDF}>Export to PDF</button>
+        </div>
         <div><AddStore> </AddStore></div>
-        <div>        {showEditForm && <EditStore store={selectedStore}  />}  </div>
-
-          </div>   
-
+        <div>  {showEditForm && <EditStore store={selectedStore} />}  </div>
+      </div>
     </div>
   );
 }

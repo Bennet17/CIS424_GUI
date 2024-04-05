@@ -79,11 +79,9 @@ function SelectStore() {
           alt="Plato's Closet Logo"
         />
         <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Choose Your Shift
+          Choose Location
         </h2>
-        <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Location
-        </h2>
+        
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

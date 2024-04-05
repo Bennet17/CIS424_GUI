@@ -3,41 +3,34 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { useDownloadExcel } from 'react-export-table-to-excel';
-import {Trash2, Pencil, Pen} from "lucide-react";
 import EditUser from './EditUser'; 
 import AddUserForm from './AddUserForm';
 import {useAuth} from '../AuthProvider.js';
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 
 function EmployeeTable() {
 
-  const [showAllEmployees, setShowAllEmployees] = useState(false);
+  //DECLARE VARIABLES
 
   const auth = useAuth();
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
   const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
 
-
-  //useState variables for employees array
   const [employees, setEmployees] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null); // State variable to store selected user data
   const [showEditForm, setShowEditForm] = useState(false); // State variable to manage form visibility
   const [showAddForm, setShowAddForm] = useState(false); // State variable to manage form visibility
+  const [showAllEmployees, setShowAllEmployees] = useState(false);
   const tableRef = useRef(null);
 
-
-
-
+  //create date string
   const date = new Date();
-
-let day = date.getDate();
-let month = date.getMonth() + 1;
-let year = date.getFullYear();
-
-// This arrangement can be altered based on how we want the date's format to appear.
-let currentDate = `${month}-${day}-${year}`;
-console.log(currentDate); // "17-6-2022"
-
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  let currentDate = `${month}-${day}-${year}`;
 
 
   //this method handles downloads to a excel file
@@ -47,21 +40,26 @@ console.log(currentDate); // "17-6-2022"
     sheet: curStoreName+"Employees"
   });
 
-    //this table handles grabbing the corresponding employee object from a row click
-    const handleRowClick = (employee) => {
+  //this method handled the employee table download to PDF
+  function downloadPDF(){
+    const employeeTablePDF = new jsPDF()
+    autoTable(employeeTablePDF, { html: '#empTable' })
+    employeeTablePDF.save(curStoreName+"_Employees_"+currentDate+".pdf")
+  }
 
-      //console.log(employee.position);
-      
+    //this function handles grabbing the corresponding employee object from a row click
+    //we want to prevent non owners from editing the owner's information
+    const handleRowClick = (employee) => {    
 
-
-
+      //if the selected user in the table is an owner, by default prevent users from editing
       if(employee.position != "Owner"){
-      setSelectedUser(employee); // Set the selected user data
-      setShowEditForm(true); // Show the edit form button
+      setSelectedUser(employee); 
+      setShowEditForm(true); 
       }
+
+      //if the user is an owner, allow editing on all users
       else if(auth.cookie.user.position === "Owner"){
-        setSelectedUser(employee); // Set the selected user data
-        console.log(employee);
+        setSelectedUser(employee); //pass the selected owner
         setShowEditForm(true); // Show the edit form button
       }
 
@@ -88,21 +86,17 @@ console.log(currentDate); // "17-6-2022"
 
           })));
 
-          let numActiveOwners = 0;
-           // console.log(response.data);
+          //this counts how many active owners there are to prevent disabling all owners
+            let numActiveOwners = 0;
+            //iterate through person data and count number of active owners
             response.data.forEach(person => {
-              console.log(person.position);
-              console.log(person.enabled);
               if(person.position ==="Owner" && person.enabled == true){
                 numActiveOwners++;
-                console.log("YES");
               }
 
           });
+          //save the number of active owners in local storage
           localStorage.setItem("numberOfActiveOwners", numActiveOwners);
-          console.log(numActiveOwners + "Hello");
-
-
         })
         .catch((error) => {
           //if the API request errored
@@ -113,70 +107,59 @@ console.log(currentDate); // "17-6-2022"
     fetchEmployeeTable();
   }, []);
   
-    return (
+  return (
     <div>
       <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-        <table ref={tableRef} className="min-w-full">
+        <table id='empTable' ref={tableRef} className="min-w-full text-center mt-6">
           <thead>
             <tr>
               <th className="px-4 py-2">Username</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Position</th>
               <th className="px-4 py-2">Status</th>
-
             </tr>
           </thead>
           <tbody>
-          {employees
+            {employees
               .filter(employee => showAllEmployees || employee.enabled)
-              .map(employee=>(
-            <tr 
-              key={employee.ID} 
-              onClick={() => handleRowClick(employee)} 
-              className={`cursor-pointer hover:bg-gray-100 ${employee.enabled ? '' : 'bg-gray-300'}`}
-            >
-              <td className="border px-4 py-2">{employee.username}</td>
-              <td className="border px-4 py-2">{employee.name}</td>
-              <td className="border px-4 py-2">{employee.position}</td>
-              <td className="border px-4 py-2">{employee.enabled ? 'Active' : 'Inactive'}</td>
-            </tr>
-              ))
-          }
-
+              .map(employee => (
+                <tr
+                  key={employee.ID}
+                  onClick={() => handleRowClick(employee)}
+                  className={`cursor-pointer hover:bg-gray-100 ${employee.enabled ? '' : 'bg-gray-300'}`}
+                >
+                  <td className="border px-4 py-2 text-left">{employee.username}</td>
+                  <td className="border px-4 py-2 text-left">{employee.name}</td>
+                  <td className="border px-4 py-2">{employee.position}</td>
+                  <td className="border px-4 py-2">{employee.enabled ? 'Active' : 'Inactive'}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
-
-
-      <div style={{ position: 'relative', width: '100%' }}>
-        <div style={{ position: 'absolute', top: 50, right: 10 }}>
-          
-          <label className=" "style={{ position: 'relative', top: '10px', right: '10px' }}>
+    
+      {/* Buttons for exporting and adding users */}
+      <div className="flex flex-row-reverse mt-2 ">
+      <label className="mt-2 ml-4">
             <input
               type="checkbox"
               onChange={() => setShowAllEmployees(!showAllEmployees)}
-            />{' '}
+              className="mr-2 "
+            />
             Show Disabled Employees
-          
-        </label>
-        </div>
-      </div>
-
-      
-
-      <div className="flex flex-row-reverse mt-3">
-
-      <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+          </label>
+        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
           <button onClick={onDownload}>Export to Excel</button>
         </div>
-        
-        <div><AddUserForm > </AddUserForm></div>
-        <div>        {showEditForm && <EditUser user={selectedUser}  />}  </div>
-
-           </div>   
-
+        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+          <button onClick={downloadPDF}>Export to PDF</button>
+        </div>
+        <div><AddUserForm></AddUserForm></div>
+        <div>{showEditForm && <EditUser user={selectedUser} />}</div>
+      </div>
     </div>
   );
+  
 }
 
 export default EmployeeTable;

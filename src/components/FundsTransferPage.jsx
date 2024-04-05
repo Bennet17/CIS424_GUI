@@ -1,6 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CurrencyInput from "react-currency-input-field";
 import SideBar from "./SideBar";
 import HorizontalNav from "./HorizontalNav";
@@ -8,9 +8,13 @@ import { useAuth } from "../AuthProvider.js";
 import { Toaster, toast } from 'sonner';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { ToggleButton } from 'primereact/togglebutton';
+import { Button } from "primereact/button";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const FundsTransferPage = () => {
     // Authentication context
@@ -55,7 +59,8 @@ const FundsTransferPage = () => {
     const [showReport, setShowReport] = useState(false); // Boolean to show/hide the report message
 
     const [showExtraChange, setShowExtraChange] = useState(false);
-    const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
+
+    const tableRef = useRef(null); // Reference to the table element 
 
     // Loads the source options from the store
     useEffect(() => {
@@ -67,25 +72,12 @@ const FundsTransferPage = () => {
                 .filter(register => register.opened)
                 .map(register => ({ id: register.regID, name: register.name }));
                 
-                // Add 'All' option to the register select
-                //newSources.unshift({id: -1, name: "BANK"});
-
+                // If there are registers open for transfer, update the source options
                 if (newSources.length > 0) {
                     // Update the source options
                     setArrSources(newSources);
-
-                    // Update the register ID to the first register in the array
-                    setFormData((prev) => ({
-                        ...prev,
-                        source: newSources[0].name,
-                    }));
                 }
                 else {
-                    setRegisterStatus("No registers are currently open for transfer.");
-                    setArrSources([]);
-                }
-
-                if (newSources.length === 0 || newSources.length === 1 || newSources.length === 2) {
                     setRegisterStatus("No registers are currently open for transfer.");
                     setArrSources([]);
                 }
@@ -221,7 +213,8 @@ const FundsTransferPage = () => {
         // Check if any field is empty
         if (formData.source === "" ||
             formData.destination === "" ||
-            formData.amount === "0.00") {
+            formData.amount === "0.00" ||
+            formData.amount === "") {
             // Set the status message
             blnError = true;
             toast.warning("Please fill in all fields correctly.");
@@ -233,7 +226,7 @@ const FundsTransferPage = () => {
             if (formData.destination === "") 
                 document.getElementById("destination_select").classList.add("select-input-error");
             
-            if (formData.amount === "0.00") 
+            if (formData.amount === "0.00" || formData.amount === "") 
                 document.getElementById("amount_input").classList.add("amount-input-error");
         }
 
@@ -256,62 +249,85 @@ const FundsTransferPage = () => {
     }
 
     // Const to handle form submission
-   const HandleSubmit = async (event) => {
-    event.preventDefault();
+    const HandleSubmit = async (event) => {
+        event.preventDefault();
 
-    if (CheckFields()) return;
+        // Check if any field is invalid
+        if (CheckFields()) return;
 
-    let {
-        user,
-        name,
-        store,
-        storeName,
-        source,
-        destination,
-        amount: fltAmount,
-        ...currencyFields
-    } = formData;
+        // Destructure the form data by extracting the fields from the form data object
+        let {
+            user,
+            name,
+            store,
+            storeName,
+            source,
+            destination,
+            amount: fltAmount,
+            ...currencyFields
+        } = formData;
 
-    fltAmount = parseFloat(formData.amount).toFixed(2);
-    let newCurrencyFields = FilterDenominations(currencyFields);
+        // Convert the amount to a float and format it to 2 decimal places
+        fltAmount = parseFloat(formData.amount);
+        let newCurrencyFields = FilterDenominations(currencyFields);
 
-    if (fltAmount >= 1000.0) {
-        if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) 
-            return;
-    }
+        // If the destination is BANK, show a confirmation dialog
+        if (destination === "BANK") {
+            if (!window.confirm(`You are about to transfer $${fltAmount} to BANK. Are you sure?`))
+                return;
+        }
 
-    if (await SubmitTransfer(
-        event,
-        user,
-        source,
-        destination,
-        fltAmount,
-        currencyFields // Includes zeroes
-    )) {
-        setFormData({
-            user: user,
-            name: name,
-            store: store,
-            storeName: storeName,
-            source: "",
-            destination: "",
-            amount: "",
-            ...Object.keys(currencyFields).reduce((acc, key) => {
-                acc[key] = 0;
-                return acc;
-            }, {}),
-        });
+        // If the amount is greater than or equal to $1000, show a confirmation dialog
+        if (fltAmount >= 1000.0) {
+            if (!window.confirm(`You are about transfer $${fltAmount} or more from ${source} to ${destination}. Are you sure?`)) 
+                return;
+        }
 
-        if (arrSources.length > 0) {
-            const sourceRegisterID = arrSources.find((register) => register.name === source).id;
-            const destinationRegisterID = arrDestinations.find((register) => register.name === destination).id;
+        // Get the source and destination register IDs
+        const sourceRegisterID = arrSources.find((register) => register.name === source).id;
+        const destinationRegisterID = arrDestinations.find((register) => register.name === destination).id;
+
+        // Calls GetExpectedAmount to get the expected amount in the source and destination registers before transfer
+        let expectedSource, expectedDestination;
+        expectedSource = parseFloat(await GetExpectedAmount(sourceRegisterID)).toFixed(2);
+        expectedDestination = parseFloat(await GetExpectedAmount(destinationRegisterID)).toFixed(2);
+
+        // Format the expected amount in the source and destination registers before transfer
+        const afterTransferSource = NegativeValueParantheses(parseFloat(expectedSource) - parseFloat(fltAmount));
+        const afterTransferDestination = NegativeValueParantheses(parseFloat(expectedDestination) + parseFloat(fltAmount));
+
+        // Submit the transfer
+        if (await SubmitTransfer(
+            event,
+            user,
+            source,
+            destination,
+            fltAmount,
+            currencyFields // Includes zeroes
+        )) {
+            // Resets the form fields
+            setFormData({
+                user: user,
+                name: name,
+                store: store,
+                storeName: storeName,
+                source: "",
+                destination: "",
+                amount: "",
+                ...Object.keys(currencyFields).reduce((acc, key) => {
+                    acc[key] = 0;
+                    return acc;
+                }, {}),
+            });
 
             // Generate the report message
             setReport(await GenerateReport(
                 source,
                 destination,
-                sourceRegisterID,
-                destinationRegisterID,
+                expectedSource,
+                expectedDestination,
+                afterTransferSource,
+                afterTransferDestination,
                 fltAmount,
                 newCurrencyFields
             ));
@@ -323,9 +339,53 @@ const FundsTransferPage = () => {
             document.getElementById("source_select").classList.remove("select-input-error");
             document.getElementById("destination_select").classList.remove("select-input-error");
             document.getElementById("amount_input").classList.remove("amount-input-error");
+        
+        }
+    };
+
+    // Axios post request to submit the transfer
+    async function SubmitTransfer(
+        event,
+        user,
+        strSource,
+        strDestination,
+        fltAmount,
+        currencyFields
+    ) {
+        event.preventDefault();
+
+        try {
+            // Request object
+            const request = {
+                usrID: user,
+                storeID: formData.store,
+                origin: strSource,
+                destination: strDestination,
+                total: fltAmount,
+                ...currencyFields,
+            };
+
+            console.log(request);
+
+            // Submit the form data
+            const response = await axios.post(FundTransferURL, request);
+
+            // Check if the transfer was successful
+            if (response.data.response === "Fund Transfer created successfully.") {
+                toast.success("Successfully submitted transfer!");
+                return true;
+            } else if (response.data.response === "Error in updating safe total: Error: Negative value detected in one or more fields.") {
+                toast.error("Failed to submit transfer. Source has insufficient funds.");
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("A server error occurred during submission. Please try again later.");
+            return false;
         }
     }
-};
+
+    // Function to handle form reset
     const HandleCancel = (event) => {
         // Reset the form fields
         setFormData({
@@ -359,9 +419,6 @@ const FundsTransferPage = () => {
         if (formData.source !== "" || formData.destination !== "" || formData.amount !== "")
             toast.info("Fields have been reset.");
 
-        // Reset the report message
-        setReport("");
-
         // Remove error class from all fields
         document.getElementById("source_select").classList.remove("select-input-error");
         document.getElementById("destination_select").classList.remove("select-input-error");
@@ -373,65 +430,17 @@ const FundsTransferPage = () => {
         document.getElementById("amount_input").classList.add("amount-input");
     };
 
-    // Axios post request to submit the transfer
-    async function SubmitTransfer(
-        event,
-        user,
-        strSource,
-        strDestination,
-        fltAmount,
-        currencyFields
-    ) {
-        event.preventDefault();
-
-        try {
-            // Request object
-            const request = {
-                usrID: user,
-                storeID: formData.store,
-                origin: strSource,
-                destination: strDestination,
-                total: parseFloat(fltAmount).toFixed(2),
-                ...currencyFields,
-            };
-
-            // Submit the form data
-            const response = await axios.post(FundTransferURL, request);
-
-            // Check if the transfer was successful
-            if (response.data.response === "Fund Transfer created successfully.") {
-                toast.success("Successfully submitted transfer!");
-                return true;
-            } else if (response.data.response === "Error in updating safe total: Error: Negative value detected in one or more fields.") {
-                toast.error("Failed to submit transfer. Source has insufficient funds.");
-                return false;
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error("A server error occurred during submission. Please try again later.");
-            return false;
-        }
-
-
-    }
-
     // Function to format negative values in parentheses
     function NegativeValueParantheses(transferValue) {
         if (transferValue < 0) 
-            return `($${Math.abs(transferValue).toFixed(2)})`;
+            return `($${Math.abs(transferValue)})`;
         else 
-            return `$${transferValue.toFixed(2)}`;
+            return `$${transferValue}`;
     }
 
     //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
-    //(also change arrow text thing)
     function ToggleExtraChange() {
         setShowExtraChange(!showExtraChange);
-
-        if (!showExtraChange)
-            setShowExtraChangeTxt("▲ Hide extras");
-        else
-            setShowExtraChangeTxt("▼ Show extras");
     }
 
     // Function to get the expected amount in the source register before transfer with register ID from arrSources
@@ -449,12 +458,29 @@ const FundsTransferPage = () => {
         }
     };
 
+    // Function to generate the PDF report
+    function GeneratePDF() {
+        // Create a new jsPDF instance
+        const doc = new jsPDF();
+
+        // Get the table element (Required since by itself the table is not rendered in the DOM)
+        const tableRef = document.getElementById('report').getElementsByTagName('table')[0];
+
+        // Generate the PDF report
+        doc.autoTable({ html: tableRef });
+
+        // Save the PDF report with the store name and current date
+        doc.save(`${formData.storeName}_${new Date().toLocaleDateString()}_FundTransfer.pdf`);
+    }
+
     // Generate the report message
     const GenerateReport = async (
         strSource,
         strDestination,
-        sourceID,
-        destinationID,
+        expectedSource,
+        expectedDestination,
+        afterTransferSource,
+        afterTransferDestination,
         fltAmount,
         newCurrencyFields
     ) => {
@@ -490,19 +516,12 @@ const FundsTransferPage = () => {
             }
         }
 
-        // Calls GetExpectedAmount to get the expected amount in the source and destination registers before transfer
-        let expectedSource, expectedDestination;
-        expectedSource = parseFloat(await GetExpectedAmount(sourceID)).toFixed(2);
-        expectedDestination = parseFloat(await GetExpectedAmount(destinationID)).toFixed(2);
-
-        // Format the expected amount in the source and destination registers before transfer
-        const afterTransferSource = NegativeValueParantheses(parseFloat(expectedSource) - parseFloat(fltAmount));
-        const afterTransferDestination = NegativeValueParantheses(parseFloat(expectedDestination) + parseFloat(fltAmount));
-
         // Report details
         return (
             <div>
                 <DataTable 
+                    id="report"
+                    ref={tableRef}
                     value={[
                         { field: 'Store:', value: formData.storeName },
                         { field: 'User:', value: `${formData.user} (${formData.name})` },
@@ -521,10 +540,8 @@ const FundsTransferPage = () => {
                         ) },
                         { field: `Expected amount in ${strSource} before transfer:`, value: `$${expectedSource}` },
                         { field: `Expected amount in ${strSource} after transfer:`, value: afterTransferSource },
-                        { field: `Actual amount in ${strSource} after transfer:`, value: 'blank' },
                         { field: `Expected amount in ${strDestination} before transfer:`, value: `$${expectedDestination}` },
-                        { field: `Expected amount in ${strDestination} after transfer:`, value: afterTransferDestination },
-                        { field: `Actual amount in ${strDestination} after transfer:`, value: 'blank' }
+                        { field: `Expected amount in ${strDestination} after transfer:`, value: afterTransferDestination }
                     ]}
                     size="small"
                     stripedRows
@@ -543,7 +560,7 @@ const FundsTransferPage = () => {
         <div className="flex min-h-screen bg-custom-accent">
             <Toaster 
                 richColors 
-                position="bottom-right"
+                position="top-center"
                 expand={true}
                 duration={5000}
                 pauseWhenPageIsHidden={true}
@@ -572,7 +589,7 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a source&gt;</option>
-                                                {/*<option value="BANK">BANK</option>*/}
+                                                <option value="BANK">BANK</option>
                                                 {arrSources.map((register, index) => {
                                                     return (
                                                         <option key={register.id} value={register.name}>{register.name}</option>
@@ -586,9 +603,7 @@ const FundsTransferPage = () => {
                                     <td>
                                         <div className="label-above-select">
                                             <strong>
-                                                <label htmlFor="destination_select" className="">
-                                                Destination:{" "}
-                                                </label>
+                                                <label htmlFor="destination_select" className="">Destination:</label>
                                             </strong>
                                             <select
                                                 name="destination"
@@ -598,7 +613,7 @@ const FundsTransferPage = () => {
                                                 onChange={HandleChange}
                                             >
                                                 <option value="">&lt;Please select a destination&gt;</option>
-                                                {/*<option value="BANK">BANK</option>*/}
+                                                <option value="BANK">BANK</option>
                                                 {arrDestinations.map((register, index) => {
                                                     return (
                                                         <option key={register.id} value={register.name}>{register.name}</option>
@@ -643,285 +658,22 @@ const FundsTransferPage = () => {
 
                         {/* Denominations */}
                         <strong>
-                            <label>Denominations:</label>
+                            <h2 style={{fontSize: '1.1rem'}}>Denominations:</h2>
                         </strong>
                         <table>
+                            <thead style={{textAlign: 'left'}}>
+                                <tr>
+                                    <th>Bills</th>
+                                    <th></th>
+                                    <th>Coins</th>
+                                    <th></th>
+                                    <th>Loose</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <label htmlFor="penny_input">Pennies</label>
-                                        <input
-                                            type="number"
-                                            name="penny"
-                                            id="penny_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.penny}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.penny * 0.01).toFixed(2)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <label htmlFor="one_input">$1's</label>
-                                        <input
-                                            type="number"
-                                            name="one"
-                                            id="one_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.one}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.one * 1).toFixed(2)}
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label htmlFor="nickel_input">Nickels</label>
-                                        <input
-                                            type="number"
-                                            name="nickel"
-                                            id="nickel_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.nickel}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.nickel * 0.05).toFixed(2)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <label htmlFor="five_input">$5's</label>
-                                        <input
-                                            type="number"
-                                            name="five"
-                                            id="five_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.five}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.five * 5).toFixed(2)}
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label htmlFor="dime_input">Dimes</label>
-                                        <input
-                                            type="number"
-                                            name="dime"
-                                            id="dime_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.dime}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.dime * 0.1).toFixed(2)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <label htmlFor="ten_input">$10's</label>
-                                        <input
-                                            type="number"
-                                            name="ten"
-                                            id="ten_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.ten}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.ten * 10).toFixed(2)}
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label htmlFor="quarter_input">Quarters</label>
-                                        <input
-                                            type="number"
-                                            name="quarter"
-                                            id="quarter_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.quarter}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.quarter * 0.25).toFixed(2)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <label htmlFor="twenty_input">$20's</label>
-                                        <input
-                                            type="number"
-                                            name="twenty"
-                                            id="twenty_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.twenty}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.twenty * 20).toFixed(2)}
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label htmlFor="pennyRoll_input">Pennies (rolled)</label>
-                                        <input
-                                            type="number"
-                                            name="pennyRoll"
-                                            id="pennyRoll_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.pennyRoll}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.pennyRoll * 0.5).toFixed(2)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <label htmlFor="fifty_input">$50's</label>
-                                        <input
-                                            type="number"
-                                            name="fifty"
-                                            id="fifty_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.fifty}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.fifty * 50).toFixed(2)}
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label htmlFor="nickelRoll_input">Nickels (rolled)</label>
-                                        <input
-                                            type="number"
-                                            name="nickelRoll"
-                                            id="nickelRoll_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.nickelRoll}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.nickelRoll * 2).toFixed(2)}
-                                        />
-                                    </td>
+                                    {/* Bills Column */}
                                     <td>
                                         <label htmlFor="hundred_input">$100's</label>
                                         <input
@@ -933,6 +685,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.hundred}
                                             onChange={HandleChange}
+                                            tabIndex={1}
                                         />
                                     </td>
                                     <td>
@@ -946,32 +699,7 @@ const FundsTransferPage = () => {
                                             value={(formData.hundred * 100).toFixed(2)}
                                         />
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label htmlFor="dimeRoll_input">Dimes (rolled)</label>
-                                        <input
-                                            type="number"
-                                            name="dimeRoll"
-                                            id="dimeRoll_input"
-                                            step={1}
-                                            min={0}
-                                            className="denomination-input"
-                                            value={formData.dimeRoll}
-                                            onChange={HandleChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <CurrencyInput
-                                            prefix="$"
-                                            decimalSeparator="."
-                                            groupSeparator=","
-                                            placeholder="0.00"
-                                            readOnly={true}
-                                            className="denomination"
-                                            value={(formData.dimeRoll * 5).toFixed(2)}
-                                        />
-                                    </td>
+                                    {/* Coins column */}
                                     <td>
                                         <label htmlFor="quarterRoll_input">Quarters (rolled)</label>
                                         <input
@@ -983,6 +711,7 @@ const FundsTransferPage = () => {
                                             className="denomination-input"
                                             value={formData.quarterRoll}
                                             onChange={HandleChange}
+                                            tabIndex={7}
                                         />
                                     </td>
                                     <td>
@@ -996,129 +725,449 @@ const FundsTransferPage = () => {
                                             value={(formData.quarterRoll * 10).toFixed(2)}
                                         />
                                     </td>
-                                </tr>
-                                {/* Extra denominations */}
-                                {showExtraChange == true && (
-                                <tr>
+                                    {/* Loose column */}
                                     <td>
-                                    <label htmlFor="oneCoin_input">$1 coin</label>
-                                    <input
-                                        type="number"
-                                        name="dollarCoin"
-                                        id="oneCoin_input"
-                                        step={1}
-                                        min={0}
-                                        className="denomination-input"
-                                        value={formData.dollarCoin}
-                                        onChange={HandleChange}
-                                    />
+                                        <label htmlFor="quarter_input">Quarters</label>
+                                        <input
+                                            type="number"
+                                            name="quarter"
+                                            id="quarter_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.quarter}
+                                            onChange={HandleChange}
+                                            tabIndex={13}
+                                        />
                                     </td>
                                     <td>
-                                    <CurrencyInput
-                                        prefix="$"
-                                        decimalSeparator="."
-                                        groupSeparator=","
-                                        placeholder="0.00"
-                                        readOnly={true}
-                                        className="denomination"
-                                        value={(formData.dollarCoin * 1).toFixed(2)}
-                                    />
-                                    </td>
-                                    <td>
-                                    <label htmlFor="">$2's</label>
-                                    <input
-                                        type="number"
-                                        name="two"
-                                        id="two_input"
-                                        step={1}
-                                        min={0}
-                                        className="denomination-input"
-                                        value={formData.two}
-                                        onChange={HandleChange}
-                                    />
-                                    </td>
-                                    <td>
-                                    <CurrencyInput
-                                        prefix="$"
-                                        decimalSeparator="."
-                                        groupSeparator=","
-                                        placeholder="0.00"
-                                        readOnly={true}
-                                        className="denomination"
-                                        value={(formData.two * 2).toFixed(2)}
-                                    />
-                                    </td>
-                                </tr>
-                                )}
-                                {showExtraChange == true && (
-                                <tr>
-                                    <td>
-                                    <label htmlFor="halfDollar_input">$1/2 coin</label>
-                                    <input
-                                        type="number"
-                                        name="halfDollar"
-                                        id="halfDollar_input"
-                                        step={1}
-                                        min={0}
-                                        className="denomination-input"
-                                        value={formData.halfDollar}
-                                        onChange={HandleChange}
-                                    />
-                                    </td>
-                                    <td>
-                                    <CurrencyInput
-                                        prefix="$"
-                                        decimalSeparator="."
-                                        groupSeparator=","
-                                        placeholder="0.00"
-                                        readOnly={true}
-                                        className="denomination"
-                                        value={(formData.halfDollar * 0.5).toFixed(2)}
-                                    />
-                                    </td>
-                                </tr>
-                                )}
-                                <tr>
-                                    <td colSpan="3">
-                                        <p
-                                            className="showextra"
-                                            onClick={ToggleExtraChange}
-                                        >
-                                            {showExtraChangeTxt}
-                                        </p>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.quarter * 0.25).toFixed(2)}
+                                        />
                                     </td>
                                 </tr>
                                 <tr>
+                                    {/* Bills Column */}
                                     <td>
-                                        <button
-                                            type="reset"
-                                            className="flex w-5/6  justify-center rounded-md bg-gray-300 px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                        >
-                                            Cancel
-                                        </button>
+                                        <label htmlFor="fifty_input">$50's</label>
+                                        <input
+                                            type="number"
+                                            name="fifty"
+                                            id="fifty_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.fifty}
+                                            onChange={HandleChange}
+                                            tabIndex={2}
+                                        />
                                     </td>
                                     <td>
-                                    {report && (
-                                        <button
-                                            type="button"
-                                            className="flex w-5/6 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                            onClick={() => setShowReport(!showReport)}
-                                        >
-                                            View Last Report
-                                        </button>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.fifty * 50).toFixed(2)}
+                                        />
+                                    </td>
+                                    {/* Coins column */}
+                                    <td>
+                                        <label htmlFor="dimeRoll_input">Dimes (rolled)</label>
+                                        <input
+                                            type="number"
+                                            name="dimeRoll"
+                                            id="dimeRoll_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.dimeRoll}
+                                            onChange={HandleChange}
+                                            tabIndex={8}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.dimeRoll * 5).toFixed(2)}
+                                        />
+                                    </td>
+                                    {/* Loose Column */}
+                                    <td>
+                                        <label htmlFor="dime_input">Dimes</label>
+                                        <input
+                                            type="number"
+                                            name="dime"
+                                            id="dime_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.dime}
+                                            onChange={HandleChange}
+                                            tabIndex={14}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.dime * 0.1).toFixed(2)}
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    {/* Bills Column */}
+                                    <td>
+                                        <label htmlFor="twenty_input">$20's</label>
+                                        <input
+                                            type="number"
+                                            name="twenty"
+                                            id="twenty_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.twenty}
+                                            onChange={HandleChange}
+                                            tabIndex={3}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.twenty * 20).toFixed(2)}
+                                        />
+                                    </td>
+                                    {/* Coins Column */}
+                                    <td>
+                                        <label htmlFor="nickelRoll_input">Nickels (rolled)</label>
+                                        <input
+                                            type="number"
+                                            name="nickelRoll"
+                                            id="nickelRoll_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.nickelRoll}
+                                            onChange={HandleChange}
+                                            tabIndex={9}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.nickelRoll * 2).toFixed(2)}
+                                        />
+                                    </td>
+                                    {/* Loose Column */}
+                                    <td>
+                                        <label htmlFor="nickel_input">Nickels</label>
+                                        <input
+                                            type="number"
+                                            name="nickel"
+                                            id="nickel_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.nickel}
+                                            onChange={HandleChange}
+                                            tabIndex={15}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.nickel * 0.05).toFixed(2)}
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    {/* Bills Column */}
+                                    <td>
+                                        <label htmlFor="ten_input">$10's</label>
+                                        <input
+                                            type="number"
+                                            name="ten"
+                                            id="ten_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.ten}
+                                            onChange={HandleChange}
+                                            tabIndex={4}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.ten * 10).toFixed(2)}
+                                        />
+                                    </td>
+                                    {/* Coins Column */}
+                                    <td>
+                                        <label htmlFor="pennyRoll_input">Pennies (rolled)</label>
+                                        <input
+                                            type="number"
+                                            name="pennyRoll"
+                                            id="pennyRoll_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.pennyRoll}
+                                            onChange={HandleChange}
+                                            tabIndex={10}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.pennyRoll * 0.5).toFixed(2)}
+                                        />
+                                    </td>
+                                    {/* Loose Column */}
+                                    <td>
+                                        <label htmlFor="penny_input">Pennies</label>
+                                        <input
+                                            type="number"
+                                            name="penny"
+                                            id="penny_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.penny}
+                                            onChange={HandleChange}
+                                            tabIndex={16}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.penny * 0.01).toFixed(2)}
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    {/* Bills Column */}
+                                    <td>
+                                        <label htmlFor="five_input">$5's</label>
+                                        <input
+                                            type="number"
+                                            name="five"
+                                            id="five_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.five}
+                                            onChange={HandleChange}
+                                            tabIndex={5}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.five * 5).toFixed(2)}
+                                        />
+                                    </td>
+                                    {/* Extras Column */}
+                                    {showExtraChange == true && (
+                                    <><td>
+                                            <label htmlFor="oneCoin_input">$1 coin</label>
+                                            <input
+                                                type="number"
+                                                name="dollarCoin"
+                                                id="oneCoin_input"
+                                                step={1}
+                                                min={0}
+                                                className="denomination-input"
+                                                value={formData.dollarCoin}
+                                                onChange={HandleChange} 
+                                                tabIndex={11}
+                                            />
+                                        </td><td>
+                                                <CurrencyInput
+                                                    prefix="$"
+                                                    decimalSeparator="."
+                                                    groupSeparator=","
+                                                    placeholder="0.00"
+                                                    readOnly={true}
+                                                    className="denomination"
+                                                    value={(formData.dollarCoin * 1).toFixed(2)} />
+                                            </td><td>
+                                                <label htmlFor="">$2's</label>
+                                                <input
+                                                    type="number"
+                                                    name="two"
+                                                    id="two_input"
+                                                    step={1}
+                                                    min={0}
+                                                    className="denomination-input"
+                                                    value={formData.two}
+                                                    onChange={HandleChange} 
+                                                    tabIndex={17}
+                                                />
+                                            </td><td>
+                                                <CurrencyInput
+                                                    prefix="$"
+                                                    decimalSeparator="."
+                                                    groupSeparator=","
+                                                    placeholder="0.00"
+                                                    readOnly={true}
+                                                    className="denomination"
+                                                    value={(formData.two * 2).toFixed(2)} />
+                                            </td></>
                                     )}
+                                </tr>
+                                <tr>
+                                    {/* Bills Column */}
+                                    <td>
+                                        <label htmlFor="one_input">$1's</label>
+                                        <input
+                                            type="number"
+                                            name="one"
+                                            id="one_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.one}
+                                            onChange={HandleChange}
+                                            tabIndex={6}
+                                        />
                                     </td>
                                     <td>
-                                        <button
-                                            type="submit"
-                                            className="flex w-5/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                        >
-                                            Submit
-                                        </button>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.one * 1).toFixed(2)}
+                                        />
                                     </td>
+                                    {/* Extras Column */}
+                                    {showExtraChange == true && (
+                                    <><td>
+                                        <label htmlFor="halfDollar_input">$1/2 coin</label>
+                                        <input
+                                            type="number"
+                                            name="halfDollar"
+                                            id="halfDollar_input"
+                                            step={1}
+                                            min={0}
+                                            className="denomination-input"
+                                            value={formData.halfDollar}
+                                            onChange={HandleChange} 
+                                            tabIndex={12}
+                                        />
+                                    </td>
+                                    <td>
+                                        <CurrencyInput
+                                            prefix="$"
+                                            decimalSeparator="."
+                                            groupSeparator=","
+                                            placeholder="0.00"
+                                            readOnly={true}
+                                            className="denomination"
+                                            value={(formData.halfDollar * 0.5).toFixed(2)} />
+                                    </td></>
+                                    )}
                                 </tr>
                             </tbody>
                         </table>
+                        <br />
+                        <div>
+                            <Button
+                                type="reset"
+                                label="Cancel"
+                                size="small"
+                                icon="pi pi-times"
+                                rounded
+                                className="p-button-secondary"
+                                style={{ width: '200px', marginRight: '1rem' }}
+                            />
+                            <Button
+                                type="submit"
+                                label="Submit"
+                                className="p-button-primary"
+                                size="small"
+                                icon="pi pi-check"
+                                rounded
+                                style={{ width: '200px', marginRight: '1rem' }}
+                            />
+                        </div>
+                        <br />
+                        <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                            <ToggleButton
+                                checked={showExtraChange}
+                                onChange={ToggleExtraChange}
+                                onIcon="pi pi-eye"
+                                offIcon="pi pi-eye-slash"
+                                onLabel="Hide extras"
+                                offLabel="Show extras"
+                            />
+                            <Button
+                                type="button"
+                                label="View Last Transaction"
+                                size="small"
+                                icon="pi pi-file"
+                                rounded
+                                disabled={report === ""}
+                                onClick={() => setShowReport(!showReport)}
+                                className="p-button-primary"
+                                style={{ width: '245px', marginLeft: '1rem', position: 'absolute', left: '155px'}}
+                            />
+                        </div> 
                     </form>
 
                     {/* Shows report with successful submissions */}
@@ -1127,12 +1176,23 @@ const FundsTransferPage = () => {
                             <div className="report-container">
                                 {report}
                                 <br />
-                                <button 
-                                    className="flex w-4/6  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                <Button
+                                    label="Close Report"
+                                    size="small"
+                                    icon="pi pi-times"
+                                    rounded
                                     onClick={() => setShowReport(false)}
-                                >
-                                    Close Report
-                                </button>
+                                    className="p-button-secondary"
+                                />
+                                <Button
+                                    label="Download PDF"
+                                    size="small"
+                                    icon="pi pi-download"
+                                    rounded
+                                    onClick={() => GeneratePDF(report.props.value)}
+                                    className="p-button-primary"
+                                    style={{ marginLeft: '1rem' }}
+                                />
                             </div>
                         </div>
                     )}
