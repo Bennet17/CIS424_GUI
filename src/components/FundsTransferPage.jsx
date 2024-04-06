@@ -27,6 +27,7 @@ import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
 import CoinOne from "../usd_icons/coins/CoinOne.svg";
 import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
+import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
 import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
 import CoinDime from "../usd_icons/coins/CoinDime.svg";
 import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
@@ -1317,7 +1318,7 @@ const FundsTransferPage = () => {
                       <td className="flex items-center">
                         <label htmlFor="halfDollar_input">
                           <img
-                            src={CoinHalf}
+                            src={CoinHalfDollar}
                             className="inline-block align-middle w-12 h-12"
                           />
                         </label>
