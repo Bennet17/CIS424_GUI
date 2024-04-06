@@ -24,6 +24,12 @@ module.exports = {
         "custom-secondary-light": "#949494",
         "custom-accent": "#ACD4E0",
         "custom-accent-light": "#CCE4EB",
+        "navy-gray": "#607d97",
+        "button-gray": "#565f72",
+        "button-gray-light": "#707888",
+        "button-blue": "#5e81ac",
+        "button-blue-light": "#81a1c1",
+        "button-text": "#fffcff",
       },
       backgroundColor: {
         "blue-350": "#79C0F1",

@@ -690,7 +690,7 @@ const FundsTransferPage = () => {
         <HorizontalNav />
         <div className="text-main-color float-left ml-8 mt-6">
           <h1 className="text-3xl font-bold">
-            Transfer funds for {formData.storeName}
+            Transfer Funds for {formData.storeName}
           </h1>
           <br />
           <form onSubmit={HandleSubmit} onReset={HandleCancel}>
@@ -795,9 +795,9 @@ const FundsTransferPage = () => {
                 <tr>
                   <th>Bills</th>
                   <th></th>
-                  <th>Coins</th>
+                  <th>Rolled Coins</th>
                   <th></th>
-                  <th>Loose</th>
+                  <th>Loose Coins</th>
                   <th></th>
                 </tr>
               </thead>
@@ -1318,7 +1318,7 @@ const FundsTransferPage = () => {
                       <td className="flex items-center">
                         <label htmlFor="halfDollar_input">
                           <img
-                            src={CoinHalfDollar}
+                            src={CoinHalf}
                             className="inline-block align-middle w-12 h-12"
                           />
                         </label>
