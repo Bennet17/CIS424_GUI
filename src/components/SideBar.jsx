@@ -16,7 +16,8 @@ import {
   Vault,
   AlignHorizontalDistributeCenter,
   DollarSign,
-  LandMark,
+  Landmark,
+  Table,
   Lock,
   CreditCard,
   UserRound,
@@ -232,6 +233,7 @@ const SideBar = (props) => {
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
               >
+                <Table />
                 <span className="ml-3">Variance Table</span>
               </li>
             )}

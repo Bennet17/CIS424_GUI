@@ -277,6 +277,7 @@ const VarianceAuditPage = () =>{
         setTotal(0);
     };
 
+    // Function to style the variance fields based on the value
     const VarianceStyling = (value) => {
         // If the value contains parentheses, make the number negative
         if (value.includes("(")) {
