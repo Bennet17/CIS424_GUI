@@ -17,6 +17,7 @@ import StoreManagementPage from "./components/StoreManagement.jsx";
 import SafeAudit from "./components/SafeAudit";
 import POSManagementPage from "./components/POSManagement.jsx";
 import VarianceAudit from "./components/VarianceAudit.jsx";
+import VarianceTable from "./components/VarianceTable.jsx";
 import NotFound from "./components/NotFound";
 import PrivateRoute from "./PrivateRoute.js";
 import DepositHistory from "./components/DepositHistory.jsx";
@@ -61,6 +62,7 @@ function App() {
             <Route path={routes.cashmanager}>
               <Route path={routes.safeaudit} element={<SafeAudit />} />
               <Route path={routes.varianceaudit} element={<VarianceAudit />} />
+              <Route path={routes.variancetable} element={<VarianceTable />} />
               <Route
                 path={routes.deposithistory}
                 element={<DepositHistory />}

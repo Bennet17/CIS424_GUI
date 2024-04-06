@@ -285,6 +285,36 @@
     font-weight: bold;
 }
 
+/* Format for variance inputs */
+.variance-input {
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: .3rem;
+    margin-left: 1rem;
+    margin-right: 1rem; 
+    width: 8rem;
+    height: 1.75rem;
+    font-size: inherit;
+    font-family: inherit;
+    color: inherit;
+    float: right; 
+    border: 2px solid rgb(57, 70, 83); 
+    border-radius: 5px;
+    background-color: #FFFFFF; 
+}
+
+.variance-input:hover {
+    background-color: #F3F4F6;
+}
+
+.positive {
+    color: green;
+}
+
+.negative {
+    color: red;
+}
+
 /* Invisible row for data table */
 .invisible-row {
     color: transparent;
