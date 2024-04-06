@@ -6,7 +6,7 @@ import HorizontalNav from "./HorizontalNav";
 import { useAuth } from "../AuthProvider.js";
 import { Toaster, toast } from 'sonner';
 import classNames from 'classnames';
-import {Vault, CreditCard} from "lucide-react";
+import {Vault, CreditCard, Package, PackageOpen} from "lucide-react";
 
 // USD Icon imports
 import BillHundred from "../usd_icons/bills/BillHundred.svg";
@@ -317,7 +317,7 @@ const OpenDayPage = () =>{
             <SideBar currentPage={1} />
             <div className="w-full">
                 <HorizontalNav />
-                <div className="text-main-color float-left ml-8 mt-12">
+                <div className="text-main-color float-left ml-8 mt-4">
                     <p className="text-2xl w-44 mb-2">Select a POS or Safe to Open</p>
                     {posHasLoaded ? 
                         <>
@@ -334,17 +334,17 @@ const OpenDayPage = () =>{
                                             value={item.name} 
                                             className="h-4 w-4 my-2"
                                         />
-                                        {item.name === "SAFE" ? <Vault className="h-6 w-6"/> : <CreditCard className="h-6 w-6"/> }<div>{item.name} - {item.opened ? "Open" : "Closed"}</div>
+                                        {item.name === "SAFE" ? <Vault className="h-6 w-6"/> : <CreditCard className="h-6 w-6"/> }<div className="flex flex-row">{item.name} - {item.opened ? <div className="pl-1 flex flex-row items-center">Open<PackageOpen className="ml-1 h-5 w-5"/></div> : <div className="pl-1 flex flex-row items-center">Closed<Package className="ml-1 h-5 w-5 text-button-blue-light"/></div>}</div>
                                     </label>
                                 </>
                             ))}
                         </>
                     : <p>Loading...</p>}
                 </div>
-                <div className="text-main-color float-left ml-16 mt-12">
+                <div className="text-main-color float-left ml-16 mt-10">
                     {
                         posHasLoaded ? 
-                        <p className="text-2xl" >Enter denominations for {poss[currentPosIndex].name}</p>
+                        <p className="text-2xl" >Enter Denominations for {poss[currentPosIndex].name}</p>
                         :
                         <p className="text-2xl" >Waiting for POS data...</p>
                     }
@@ -817,10 +817,10 @@ const OpenDayPage = () =>{
                                 </tr>
                                 <tr>
                                     <td>
-                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-md bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-blue-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-blue">Open</button>
+                                        <button type="submit" value="submit" min="0" className="flex w-full justify-center rounded-full bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-blue-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-blue">Open</button>
                                     </td>
                                     <td>
-                                        <button onClick={ClearAllFields} type="button" value="button" className="flex w-full justify-center rounded-md bg-button-gray px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-gray-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-gray">Clear All Fields</button>
+                                        <button onClick={ClearAllFields} type="button" value="button" className="flex w-full justify-center rounded-full bg-button-gray px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-gray-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-gray">Clear All Fields</button>
                                     </td>
                                 </tr>
                             </tbody>
