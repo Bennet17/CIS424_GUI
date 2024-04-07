@@ -15,6 +15,7 @@ import {
   KeyRound,
   Vault,
   AlignHorizontalDistributeCenter,
+  BookMarked,
   DollarSign,
   Landmark,
   Table,
@@ -152,8 +153,8 @@ const SideBar = (props) => {
               <HandCoins />
               <span className="ml-3">Transfer Funds</span>
             </li>
-          )}
-          {auth.cookie.user.position !== "Employee" && (
+          
+          
             <li
               onClick={() => {
                 if (
@@ -214,7 +215,7 @@ const SideBar = (props) => {
                 <span className="ml-3">Variance Audit</span>
               </li>
             )}
-          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) &&
+          {
             cashManagerOn && (
               <li
                 onClick={toVarianceTable}
@@ -229,7 +230,7 @@ const SideBar = (props) => {
                 <span className="ml-3">Variance Table</span>
               </li>
             )}
-          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) &&
+          {
             cashManagerOn && (
               <li
                 onClick={toDepositHistory}

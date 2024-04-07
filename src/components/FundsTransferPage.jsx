@@ -1385,7 +1385,7 @@ const FundsTransferPage = () => {
                 onIcon="pi pi-eye"
                 offIcon="pi pi-eye-slash"
                 onLabel="Hide extras"
-                offLabel="Show extras"
+                offLabel="Show Extras"
               />
               <Button
                 type="button"
