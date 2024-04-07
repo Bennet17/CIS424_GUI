@@ -54,7 +54,7 @@ function LoginPage() {
           src={Logo}
           alt="Plato's Closet Logo"
         />
-        <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-navy-gray">
           Sign In
         </h2>
       </div>
@@ -64,7 +64,7 @@ function LoginPage() {
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium leading-6 text-gray-900 text-left"
+              className="block text-sm font-medium leading-6 text-button-blue text-left"
             >
               Username
             </label>
@@ -75,7 +75,7 @@ function LoginPage() {
                 value={username}
                 required
                 autoFocus
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
+                className="block w-full rounded-md border-0 py-1.5 text-navy-gray shadow-sm ring-1 ring-inset ring-button-blue placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-button-blue sm:text-sm sm:leading-6 px-2"
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
@@ -85,14 +85,14 @@ function LoginPage() {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-sm font-medium leading-6 text-button-blue"
               >
                 Password
               </label>
               <div className="text-sm">
                 <a
                   onClick={toForgotPassword}
-                  className="font-semibold text-indigo-600 hover:text-indigo-500 "
+                  className="font-semibold text-button-gray hover:text-button-gray-light "
                 >
                   Forgot Password?
                 </a>
@@ -106,7 +106,7 @@ function LoginPage() {
                 autoComplete="current-password"
                 required
                 value={password}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
+                className="block w-full rounded-md border-0 py-1.5 text-navy-gray shadow-sm ring-1 ring-inset ring-button-blue placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-button-blue sm:text-sm sm:leading-6 px-2"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
@@ -116,7 +116,7 @@ function LoginPage() {
             <button
               type="submit"
               value="login"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full justify-center rounded-full bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-blue-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-blue"
             >
               Sign In
             </button>

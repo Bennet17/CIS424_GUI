@@ -12,6 +12,28 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
 
+// USD Icon imports
+import BillHundred from "../usd_icons/bills/BillHundred.svg";
+import BillFifty from "../usd_icons/bills/BillFifty.svg";
+import BillTwenty from "../usd_icons/bills/BillTwenty.svg";
+import BillTen from "../usd_icons/bills/BillTen.svg";
+import BillFive from "../usd_icons/bills/BillFive.svg";
+import BillOne from "../usd_icons/bills/BillOne.svg";
+import BillTwo from "../usd_icons/bills/BillTwo.svg";
+
+import CoinOne from "../usd_icons/coins/CoinOne.svg";
+import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
+import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
+import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
+import CoinDime from "../usd_icons/coins/CoinDime.svg";
+import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
+import CoinPenny from "../usd_icons/coins/CoinPenny.svg";
+
+import RollQuarter from "../usd_icons/rolls/RollQuarter.svg";
+import RollDime from "../usd_icons/rolls/RollDime.svg";
+import RollNickel from "../usd_icons/rolls/RollNickel.svg";
+import RollPenny from "../usd_icons/rolls/RollPenny.svg";
+
 const SafeAuditPage = () => {
     // Authentication context
     const auth = useAuth();
@@ -67,7 +89,7 @@ const SafeAuditPage = () => {
 	const [safeStatus, setSafeStatus] = useState(false);
 
     const [showExtraChange, setShowExtraChange] = useState(false);
-    const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show extras");
+    const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show Extras");
 
 	function SetExpectedDenominations(data) {
 		// Set the expected denominations in the form data
@@ -392,10 +414,10 @@ const SafeAuditPage = () => {
 			<SideBar currentPage={4} />
 			<div className="flex flex-col w-full">
 				<HorizontalNav />
-				<div className="text-main-color float-left ml-8 mt-6">
+				<div className="text-main-color float-left ml-4 mt-6">
 					<h1 className="text-3xl font-bold">Safe Audit for {formData.storeName}</h1>
 					{/* Current Amount input */}
-					<div className="mt-5">
+					<div className="mt-3">
 						<table>
 							<tbody>
 								<tr>
@@ -462,15 +484,15 @@ const SafeAuditPage = () => {
 							<table>
 								<thead>
 									<tr>
-										<th>Bills</th>
+										<th className="pr-5">Bills</th>
 										<th>Expected</th>
 										<th>Actual</th>
 										<th></th>
-										<th>Coins</th>
+										<th className="pr-2">Coins</th>
 										<th>Expected</th>
 										<th>Actual</th>
 										<th></th>
-										<th>Loose</th>
+										<th className="pr-2">Loose</th>
 										<th>Expected</th>
 										<th>Actual</th>
 									</tr>
@@ -480,7 +502,10 @@ const SafeAuditPage = () => {
 									<tr>
 										{/* Bills Label Column */}
 										<td>
-											<label htmlFor="hundred_input">$100's</label>
+											<label htmlFor="hundred_input"><img
+                                            src={BillHundred}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Hundred Column */}
 										<td>
@@ -521,7 +546,10 @@ const SafeAuditPage = () => {
 										</td>
 										{/* Coins Label Column */}
 										<td>
-											<label htmlFor="quarterRoll_input">Quarters (rolled)</label>
+											<label htmlFor="quarterRoll_input"><img
+                                            src={RollQuarter}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Quarter Rolled Column */}
 										<td>
@@ -562,7 +590,10 @@ const SafeAuditPage = () => {
 										</td>
 										{/* Loose Label Column */}
 										<td>
-											<label htmlFor="quarter_input">Quarters</label>
+											<label htmlFor="quarter_input"><img
+                                            src={CoinQuarter}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Quarter Column */}
 										<td>
@@ -606,7 +637,10 @@ const SafeAuditPage = () => {
 									<tr>
 										{/* Bills Label Column */}
 										<td>
-											<label htmlFor="fifty_input">$50's</label>
+											<label htmlFor="fifty_input"><img
+                                            src={BillFifty}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Fifty Column */}
 										<td>
@@ -647,7 +681,10 @@ const SafeAuditPage = () => {
 										</td>
 										{/* Coins Label Column */}
 										<td>
-											<label htmlFor="dimeRoll_input">Dimes (rolled)</label>
+											<label htmlFor="dimeRoll_input"><img
+                                            src={RollDime}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Dime Rolled Column */}
 										<td>
@@ -688,7 +725,10 @@ const SafeAuditPage = () => {
 										</td>
 										{/* Loose Label Column */}
 										<td>
-											<label htmlFor="dime_input">Dimes</label>
+											<label htmlFor="dime_input"><img
+                                            src={CoinDime}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Dime Column */}
 										<td>
@@ -732,7 +772,10 @@ const SafeAuditPage = () => {
 									<tr>
 										{/* Bills Column */}
 										<td>
-											<label htmlFor="twenty_input">$20's</label>
+											<label htmlFor="twenty_input"><img
+                                            src={BillTwenty}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Twenty Column */}
 										<td>
@@ -773,7 +816,10 @@ const SafeAuditPage = () => {
 										</td>
 										{/* Coins Label Column */}
 										<td>
-											<label htmlFor="nickelRoll_input">Nickels (rolled)</label>
+											<label htmlFor="nickelRoll_input"><img
+                                            src={RollNickel}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Nickel Rolled Column */}
 										<td>
@@ -814,7 +860,10 @@ const SafeAuditPage = () => {
 										</td>
 										{/* Loose Label Column */}
 										<td>
-											<label htmlFor="nickel_input">Nickels</label>
+											<label htmlFor="nickel_input"><img
+                                            src={CoinNickel}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Nickel Column */}
 										<td>
@@ -858,7 +907,10 @@ const SafeAuditPage = () => {
 									<tr>
 										{/* Bills Label Column */}
 										<td>
-											<label htmlFor="ten_input">$10's</label>
+											<label htmlFor="ten_input"><img
+                                            src={BillTen}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Ten Column */}
 										<td>
@@ -899,7 +951,10 @@ const SafeAuditPage = () => {
 										</td>
 										{/* Coins Label Column */}
 										<td>
-											<label htmlFor="pennyRoll_input">Pennies (rolled)</label>
+											<label htmlFor="pennyRoll_input"><img
+                                            src={RollPenny}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Penny Rolled Column */}
 										<td>
@@ -940,7 +995,10 @@ const SafeAuditPage = () => {
 										</td>
 										{/* Loose Label Column */}
 										<td>
-											<label htmlFor="penny_input">Pennies</label>
+											<label htmlFor="penny_input"><img
+                                            src={CoinPenny}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Penny Column */}
 										<td>
@@ -984,7 +1042,10 @@ const SafeAuditPage = () => {
 									<tr>
 										{/* Bills Label Column */}
 										<td>
-											<label htmlFor="five_input">$5's</label>
+											<label htmlFor="five_input"><img
+                                            src={BillFive}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Five Column */}
 										<td>
@@ -1026,7 +1087,10 @@ const SafeAuditPage = () => {
 										{/* Extras Column */}
 										{showExtraChange == true && (
 										<><td>
-											<label htmlFor="oneCoin_input">$1 coin</label>
+											<label htmlFor="oneCoin_input"><img
+                                            src={CoinOne}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Dollar Coin Column */}
 										<td>
@@ -1067,7 +1131,10 @@ const SafeAuditPage = () => {
 										</td>
 										{/* 2s Label Column */}
 										<td>
-											<label htmlFor="">$2's</label>
+											<label htmlFor=""><img
+                                            src={BillTwo}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Two Column */}
 										<td>
@@ -1112,7 +1179,10 @@ const SafeAuditPage = () => {
 									<tr>
 										{/* Bills Label Column */}
 										<td>
-											<label htmlFor="one_input">$1's</label>
+											<label htmlFor="one_input"><img
+                                            src={BillOne}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected One Column */}
 										<td>
@@ -1154,7 +1224,10 @@ const SafeAuditPage = () => {
 										{/* Extras Column */}
 										{showExtraChange == true && (
 										<><td>
-											<label htmlFor="halfDollar_input">$1/2 coin</label>
+											<label htmlFor="halfDollar_input"><img
+                                            src={CoinHalf}
+                                            className="inline-block align-middle w-12 h-12"
+                                        /></label>
 										</td>
 										{/* Expected Half Dollar Column */}
 										<td>
@@ -1196,8 +1269,8 @@ const SafeAuditPage = () => {
 									</tr>
 								</tbody>
 							</table>
-							<div>
-								<br />
+							<div className="mt-2 flex flex-row items-center">
+								
 								{/* Submit and Cancel Buttons */}
 								<Button
 									type="reset"
@@ -1217,21 +1290,22 @@ const SafeAuditPage = () => {
 									rounded
 									style={{ width: '200px', marginRight: '1rem' }}
 								/>
+								{/* Extra Change Button */}
+								<ToggleButton
+									checked={showExtraChange}
+									onChange={ToggleExtraChange}
+									onIcon="pi pi-eye"
+									offIcon="pi pi-eye-slash"
+									onLabel="Hide Extras"
+									offLabel="Show Extras"
+								/>
 							</div>
 						</form>
 					</div>
 					
 					<br />
 					<div>
-						{/* Extra Change Button */}
-						<ToggleButton
-							checked={showExtraChange}
-							onChange={ToggleExtraChange}
-							onIcon="pi pi-eye"
-							offIcon="pi pi-eye-slash"
-							onLabel="Hide extras"
-							offLabel="Show extras"
-						/>
+						{/* Change button was here but I moved it to avoid scroll*/}
 					</div>
 				</div>
 			</div>
