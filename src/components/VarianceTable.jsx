@@ -87,8 +87,18 @@ const VarianceTable = () => {
     // Function to update the input dates to the correct format
     const UpdateInputDates = useCallback(() => {
         // Set the start and end date to the correct format
-        document.getElementById("startDate").value = new Date(formData.startDate).toISOString().split('T')[0];
-        document.getElementById("endDate").value = new Date(formData.endDate).toISOString().split('T')[0];
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+
+        if (startDateInput && endDateInput) {
+            // Create Date objects with the timezone offset
+            const startDate = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
+            const endDate = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
+
+            // Set the input values
+            startDateInput.valueAsDate = startDate;
+            endDateInput.valueAsDate = endDate;
+        }
     }, [formData.startDate, formData.endDate]);
 
     // GET request to return registers for the selected store

@@ -73,8 +73,13 @@ const VarianceAuditPage = () =>{
         const endDateInput = document.getElementById("endDate");
 
         if (startDateInput && endDateInput) {
-            startDateInput.value = new Date(formData.startDate).toISOString().split('T')[0];
-            endDateInput.value = new Date(formData.endDate).toISOString().split('T')[0];
+            // Create Date objects with the timezone offset
+            const startDate = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
+            const endDate = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
+
+            // Set the input values
+            startDateInput.valueAsDate = startDate;
+            endDateInput.valueAsDate = endDate;
         }
     }, [formData.startDate, formData.endDate]);
 
@@ -338,7 +343,6 @@ const VarianceAuditPage = () =>{
                                                 value={cashOverShort}
                                                 readOnly={true}
                                                 placeholder="$0.00"
-                                                // style={VarianceStyling(cashOverShort)}
                                             />
                                         </div>
                                     </td>
@@ -356,7 +360,6 @@ const VarianceAuditPage = () =>{
                                                 value={ccOverShort}
                                                 readOnly={true}
                                                 placeholder="$0.00"
-                                                // style={VarianceStyling(ccOverShort)}
                                             />
                                         </div>
                                     </td>
@@ -374,7 +377,6 @@ const VarianceAuditPage = () =>{
                                                 value={totalOverShort}
                                                 readOnly={true}
                                                 placeholder="$0.00"
-                                                // style={VarianceStyling(totalOverShort)}
                                             />
                                         </div>
                                     </td>
@@ -383,62 +385,62 @@ const VarianceAuditPage = () =>{
                         </table>
                     </div>
                     <div>
+                        <div className="flex items-center space-x-4">
+                            {/* Left arrow button */}
+                            <Button
+                                onClick={HandlePreviousDay}
+                                icon="pi pi-arrow-left"
+                                iconPos="left"
+                                size="small"
+                                text
+                                rounded
+                                aria-label="Previous Day"
+                                style={{ marginTop: "6px", boxShadow: "none" }}
+                            />
+                            {/* Start date */}
+                            <div className="label-above-select">
+                                <strong>
+                                    <label htmlFor="startDate">Start Date:</label>
+                                </strong>
+                                <input 
+                                    type="date" 
+                                    id="startDate" 
+                                    name="startDate"
+                                    className="variance-date"
+                                    date={formData.startDate}
+                                    onChange={HandleChange}
+                                />
+                            </div>
+                            {/* End date */}
+                            <div className="label-above-select">
+                                <strong>
+                                    <label htmlFor="endDate">End Date:</label>
+                                </strong>
+                                <input 
+                                    type="date" 
+                                    id="endDate" 
+                                    name="endDate" 
+                                    className="variance-date"
+                                    date={formData.endDate}
+                                    onChange={HandleChange}
+                                />
+                            </div>
+                            {/* Right arrow button */}
+                            <Button
+                                onClick={HandleNextDay}
+                                icon="pi pi-arrow-right"
+                                iconPos="right"
+                                size="small"
+                                rounded
+                                text
+                                aria-label="Next Day"
+                                style={{ marginTop: "6px", boxShadow: "none", marginRight: "2.5rem"}}
+                            />
+                        </div>
                         <form action onSubmit={HandleSubmit} onReset={HandleCancel}>
                             <strong>
                                 <h2 style={{ fontSize: '1.1rem' }}>Variance Audit</h2>
                             </strong>
-                            <div className="flex items-center space-x-4">
-                                {/* Left arrow button */}
-                                <Button
-                                    onClick={HandlePreviousDay}
-                                    icon="pi pi-arrow-left"
-                                    iconPos="left"
-                                    size="small"
-                                    text
-                                    rounded
-                                    aria-label="Previous Day"
-                                    style={{ marginTop: "6px", boxShadow: "none" }}
-                                />
-                                {/* Start date */}
-                                <div className="label-above-select">
-                                    <strong>
-                                        <label htmlFor="startDate">Start Date:</label>
-                                    </strong>
-                                    <input 
-                                        type="date" 
-                                        id="startDate" 
-                                        name="startDate"
-                                        className="variance-date"
-                                        date={formData.startDate}
-                                        onChange={HandleChange}
-                                    />
-                                </div>
-                                {/* End date */}
-                                <div className="label-above-select">
-                                    <strong>
-                                        <label htmlFor="endDate">End Date:</label>
-                                    </strong>
-                                    <input 
-                                        type="date" 
-                                        id="endDate" 
-                                        name="endDate" 
-                                        className="variance-date"
-                                        date={formData.endDate}
-                                        onChange={HandleChange}
-                                    />
-                                </div>
-                                {/* Right arrow button */}
-                                <Button
-                                    onClick={HandleNextDay}
-                                    icon="pi pi-arrow-right"
-                                    iconPos="right"
-                                    size="small"
-                                    rounded
-                                    text
-                                    aria-label="Next Day"
-                                    style={{ marginTop: "6px", boxShadow: "none", marginRight: "2.5rem"}}
-                                />
-                            </div>
                             <div>
                                 <table>
                                     <tbody>
