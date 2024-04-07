@@ -266,15 +266,6 @@ const VarianceTable = () => {
         return date;
     };
 
-    // Function to export the table as a CSV file with timestamps
-    const exportCSV = (selectionOnly) => {
-        // Export the table as a CSV file
-        tableRef.current.exportCSV({ selectionOnly });
-
-        // Show a success message
-        toast.success("Table exported successfully.");
-    };
-
     // Function to export the table as a PDF file
     const exportPDF = () => {
         // Create a new jsPDF instance
@@ -289,26 +280,104 @@ const VarianceTable = () => {
         doc.setFontSize(8);
         doc.text(titleX, titleY, title);
 
-        // Generate the PDF report with the data from arrVariances
-        doc.autoTable({
-            styles: { halign: 'center', cellPadding: .8, fontSize: 8 },
-            startY: titleY + 15,
-            head: [varianceColumns.map(column => column.header)], // Header row containing column headers
-            body: arrVariances.map(variance => varianceColumns.map(column => {
-                // Apply formatting functions to each value
-                if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
-                    return variance[column.field] == null ? '-' : FormatCurrency(variance[column.field]); // Currency formatting
-                } else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
-                    return variance[column.field] == null ? '-' : VariancePositiveNegative(variance[column.field], true); // Variance formatting
-                } else {
-                    return variance[column.field]; // No formatting for other columns
+        // Initialize variables
+        const tableData = [];
+        let currentDate = null;
+        let totalRow = {};
+        let isTotalRow = false; // Flag to track if the current row is a totals row
+
+        // Iterate over arrVariances to calculate totals and insert rows
+        arrVariances.forEach(variance => {
+            // If the date changes, insert the total row for the previous date
+            if (variance.Date !== currentDate) {
+                if (totalRow && Object.keys(totalRow).length > 0 && !isTotalRow) {
+                    // Push total row to tableData with "Totals" label
+                    const formattedTotalRow = ['Totals', ...Object.values(totalRow).map(value => {
+                        return isNaN(value) ? value : FormatCurrency(value);
+                    })];
+                    tableData.push(formattedTotalRow);
+                    tableData.push([]); // Add an empty row after the totals row
+                    totalRow = {}; // Reset total row object
                 }
-            }))
+                tableData.push([FormatDate(variance.Date)]); // Insert date row
+                currentDate = variance.Date; // Update current date
+                isTotalRow = false; // Reset isTotalRow flag
+            }
+
+            // Calculate totals for each column
+            varianceColumns.forEach(column => {
+                if (!totalRow[column.field]) {
+                    // Initialize total to an empty string for excluded columns
+                    totalRow[column.field] = ["POSName", "OpenerName", "CloserName"].includes(column.field) ? "" : 0;
+                }
+                if (!isNaN(variance[column.field])) {
+                    if (!["POSName", "OpenerName", "CloserName"].includes(column.field)) {
+                        totalRow[column.field] += variance[column.field];
+                    }
+                } else {
+                    // Reset the total to an empty string for excluded columns
+                    if (["POSName", "OpenerName", "CloserName"].includes(column.field)) {
+                        totalRow[column.field] = "";
+                    }
+                }
+            });
+
+            // Push current variance data to tableData
+            const rowData = [
+                FormatDate(variance.Date), // Include the date column
+                ...varianceColumns.map(column => {
+                    
+                    // Apply formatting functions to other columns
+                    if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
+                        return variance[column.field] == null ? '-' : FormatCurrency(variance[column.field]); // Currency formatting
+                    } else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
+                        return variance[column.field] == null ? '-' : VariancePositiveNegative(variance[column.field], true); // Variance formatting
+                    } else {
+                        return variance[column.field]; // No formatting for other columns
+                    }
+                })
+            ];
+            tableData.push(rowData); // Insert row data
+            
+            // Check if the current row is a totals row
+            if (rowData[0] === 'Totals') {
+                isTotalRow = true;
+            }
         });
 
+        // Calculate and push the total row for the last date group
+        if (totalRow && Object.keys(totalRow).length > 0 && !isTotalRow) {
+            // Ensure that all columns are present in the total row
+            varianceColumns.forEach(column => {
+                if (!totalRow[column.field]) {
+                    totalRow[column.field] = ["POSName", "OpenerName", "CloserName"].includes(column.field) ? "" : 0;
+                }
+            });
+
+            // Format the total row and push it
+            const formattedTotalRow = ['Totals', ...Object.values(totalRow).map(value => {
+                return isNaN(value) ? value : FormatCurrency(value);
+            })];
+
+            tableData.push(formattedTotalRow);
+            tableData.push([]); // Add an empty row after the totals row
+        }
+
+
+        // Include the date column header in the head array
+        const head = ["Date", ...varianceColumns.map(column => column.header)];
+
         // Save the PDF report with the store name and current date
+        doc.autoTable({
+            head: [head], // Header row containing column headers
+            body: tableData, // Data rows
+            styles: { halign: 'center', cellPadding: .8, fontSize: 8 },
+            startY: titleY + 15
+        });
+
         doc.save(`${GetFileName()}.pdf`);
     };
+
 
     // Function to get the file name for the exported CSV file
     function GetFileName() {
@@ -331,12 +400,17 @@ const VarianceTable = () => {
 
     // Function to format negative values in parentheses as currency
     const FormatCurrency = (value) => {
+        // Return an empty string if the value is empty or not a number
+        if (value === "" || isNaN(value)) {
+            return "";
+        }
+
         // Format the value as currency
         const formattedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Math.abs(value));
 
         // Return the formatted value in parentheses if it's negative
         return value < 0 ? `(${formattedValue})` : formattedValue;
-    }
+    };
 
     // Function to change class based on positive/negative variances
     const VariancePositiveNegative = (variance, isPDF) => {
@@ -435,15 +509,6 @@ const VarianceTable = () => {
                 onClick={exportPDF}
                 data-pr-tooltip="PDF"
                 label="Export to PDF"
-            />
-            <Button 
-                type="button" 
-                icon="pi pi-file" 
-                rounded 
-                size="small" 
-                onClick={() => exportCSV(false)} 
-                data-pr-tooltip="CSV" 
-                label="Export to CSV"
             />
         </div>
     )
