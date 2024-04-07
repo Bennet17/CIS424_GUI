@@ -16,7 +16,8 @@ import {
   Vault,
   AlignHorizontalDistributeCenter,
   DollarSign,
-  BookMarked,
+  Landmark,
+  Table,
   Lock,
   CreditCard,
   UserRound,
@@ -38,13 +39,15 @@ const SideBar = (props) => {
   const TRANSFER_FUNDS_PAGE_NAME = 3;
   const SAFE_AUDIT_PAGE_NAME = 4;
   const VARIANCE_AUDIT_PAGE_NAME = 5;
-  const DEPOSIT_HISTORY_PAGE_NAME = 6;
-  const USER_MANAGEMENT_PAGE_NAME = 7;
-  const POS_MANAGEMENT_PAGE_NAME = 8;
+  const VARIANCE_TABLE_PAGE_NAME = 6;
+  const DEPOSIT_HISTORY_PAGE_NAME = 7;
+  const USER_MANAGEMENT_PAGE_NAME = 8;
+  const POS_MANAGEMENT_PAGE_NAME = 9;
 
   const [cashManagerOn, setCashManager] = useState(
     props.currentPage === SAFE_AUDIT_PAGE_NAME ||
       props.currentPage === VARIANCE_AUDIT_PAGE_NAME ||
+      props.currentPage === VARIANCE_TABLE_PAGE_NAME ||
       props.currentPage === DEPOSIT_HISTORY_PAGE_NAME
   );
 
@@ -71,6 +74,9 @@ const SideBar = (props) => {
   }
   function toVarianceAudit() {
     navigate(routes.varianceaudit);
+  }
+  function toVarianceTable() {
+    navigate(routes.variancetable);
   }
   function toDepositHistory() {
     navigate(routes.deposithistory);
@@ -142,25 +148,28 @@ const SideBar = (props) => {
                      ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                      : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
                  }`}
-          >
-            <HandCoins />
-            <span className="ml-3">Transfer Funds</span>
-          </li>
-
-          <li
-            onClick={() => {
-              if (
-                props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
-                props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
-                props.currentPage != DEPOSIT_HISTORY_PAGE_NAME
-              ) {
-                setCashManager(!cashManagerOn);
-              }
-            }}
-            className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+            >
+              <HandCoins />
+              <span className="ml-3">Transfer Funds</span>
+            </li>
+          )}
+          {auth.cookie.user.position !== "Employee" && (
+            <li
+              onClick={() => {
+                if (
+                  props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
+                  props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
+                  props.cuurrentPage != VARIANCE_TABLE_PAGE_NAME &&
+                  props.currentPage != DEPOSIT_HISTORY_PAGE_NAME
+                ) {
+                  setCashManager(!cashManagerOn);
+                }
+              }}
+              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors text-gray-600 ${
               props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
               props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
+              props.cuurrentPage != VARIANCE_TABLE_PAGE_NAME &&
               props.currentPage != DEPOSIT_HISTORY_PAGE_NAME
                 ? "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800"
                 : ""
@@ -200,15 +209,31 @@ const SideBar = (props) => {
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
                 : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
             }`}
-            >
-              <AlignHorizontalDistributeCenter />
-              <span className="ml-3">Variance Audit</span>
-            </li>
-          )}
-          {cashManagerOn && (
-            <li
-              onClick={toDepositHistory}
-              className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+              >
+                <AlignHorizontalDistributeCenter />
+                <span className="ml-3">Variance Audit</span>
+              </li>
+            )}
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) &&
+            cashManagerOn && (
+              <li
+                onClick={toVarianceTable}
+                className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
+            transition-colors ${
+              props.currentPage === VARIANCE_TABLE_PAGE_NAME
+                ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
+                : "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800 text-gray-600"
+            }`}
+              >
+                <Table />
+                <span className="ml-3">Variance Table</span>
+              </li>
+            )}
+          {auth.CheckAuthorization(["Manager", "District Manager", "Owner"]) &&
+            cashManagerOn && (
+              <li
+                onClick={toDepositHistory}
+                className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors ${
               props.currentPage === DEPOSIT_HISTORY_PAGE_NAME
                 ? "bg-gradient-to-tr from-custom-accent to-custom-accent-light text-gray-800"
