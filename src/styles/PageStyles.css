@@ -307,14 +307,6 @@
     background-color: #F3F4F6;
 }
 
-.positive {
-    color: green;
-}
-
-.negative {
-    color: red;
-}
-
 /* Invisible row for data table */
 .invisible-row {
     color: transparent;

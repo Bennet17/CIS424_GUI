@@ -61,20 +61,9 @@ const VarianceTable = () => {
         { field: "TotalVariance", header: "Total Variance", order: 15 }
     ]
 
+    
     // State to store the visible columns in the table
-    const [visibleColumns, setVisibleColumns] = useState(varianceColumns.filter(col => [
-        "POSName", 
-        "OpenerName", 
-        "OpenExpected", 
-        "OpenActual", 
-        "OpenVariance", 
-        "CloserName", 
-        "CloseExpected", 
-        "CloseActual",
-        "CloseVariance", 
-        "TotalVariance"]
-        .includes(col.field))
-    );
+    const [visibleColumns, setVisibleColumns] = useState(varianceColumns);
 
     // Form data for the table
     const [formData, setFormData] = useState({
@@ -415,18 +404,18 @@ const VarianceTable = () => {
     }
 
     // Table header
-    const header = (
+    const tableHeader = (
         <div className="flex justify-between align-items-center">
             <h1 className="variance-header">Variances for {registerName}</h1>
             <MultiSelect 
                 value={visibleColumns} 
-                options={varianceColumns} 
+                options={varianceColumns}
                 optionLabel="header" 
                 filter
                 placeholder="Select columns to display"
                 onChange={HandleColumnToggle} 
                 style={{width: '40em', fontSize: '.9rem', marginRight: '1em'}}
-                display="chip" 
+                display="chip"
             />
             <Button
                 type="button"
@@ -449,6 +438,67 @@ const VarianceTable = () => {
         </div>
     )
 
+    // Row group header based on the date
+    const rowHeader = (data) => {
+        if (data.Date === null) {
+            return (
+                <div className="flex align-items-center gap-2">
+                    <span className="font-bold"></span>
+                </div>
+            )
+        }
+        else {
+            return (
+                <div className="flex align-items-center gap-2">
+                    <span className="font-bold">{FormatDate(data.Date)}</span>
+                </div>
+            )
+        }
+    }
+
+    // Calculates the sum total for the column
+    const CalculateTotal = (columnName, date) => {
+        // Filter rows with the specified date
+        const filteredRows = arrVariances.filter(row => row.Date === date);
+
+        // Sum up values for the specified column
+        return filteredRows.reduce((total, row) => total + row[columnName], 0);
+    };
+
+    // Row group footer that adds the amounts from each row
+    const rowFooter = (data) => {
+        if (!data || data.Date === null)
+            return null;
+        else {
+            const date = data.Date;
+            return (
+                <>
+                    {visibleColumns.map(column => (
+                        <td key={column.field}>
+                            <strong>
+                                {column.field === "POSName" && "Total:"}
+                                {column.field === "OpenerName" && ""}
+                                {column.field === "OpenExpected" && FormatCurrency(CalculateTotal("OpenExpected", date))}
+                                {column.field === "OpenActual" && FormatCurrency(CalculateTotal("OpenActual", date))}
+                                {column.field === "OpenVariance" && VariancePositiveNegative(CalculateTotal("OpenVariance", date), false)}
+                                {column.field === "CloserName" && ""}
+                                {column.field === "CloseExpected" && FormatCurrency(CalculateTotal("CloseExpected", date))}
+                                {column.field === "CloseActual" && FormatCurrency(CalculateTotal("CloseActual", date))}
+                                {column.field === "CloseVariance" && VariancePositiveNegative(CalculateTotal("CloseVariance", date), false)}
+                                {column.field === "CashToSafe" && FormatCurrency(CalculateTotal("CashToSafe", date))}
+                                {column.field === "CloseCreditActual" && FormatCurrency(CalculateTotal("CloseCreditActual", date))}
+                                {column.field === "CloseCreditExpected" && FormatCurrency(CalculateTotal("CloseCreditExpected", date))}
+                                {column.field === "CreditVariance" && VariancePositiveNegative(CalculateTotal("CreditVariance", date), false)}
+                                {column.field === "TotalCashVariance" && VariancePositiveNegative(CalculateTotal("TotalCashVariance", date), false)}
+                                {column.field === "TotalVariance" && VariancePositiveNegative(CalculateTotal("TotalVariance", date), false)}
+                            </strong>
+                        </td>
+                    ))}
+                </>
+            )
+        }
+    }
+
     return (
         <div className="flex min-h-screen bg-custom-accent variance-table-page">
         <Toaster 
@@ -462,7 +512,7 @@ const VarianceTable = () => {
             <div className="flex flex-col w-full">
                 <HorizontalNav />
                 <div className="text-main-color float-left ml-8 mt-6">
-                <h1 className="text-3xl font-bold">Variance Table for {formData.storeName}</h1>
+                <h1 className="text-3xl font-bold">Variance Report for {formData.storeName}</h1>
 					<br />
                     <div className="flex items-center space-x-4">
                         {/* Register Variance Select */}
@@ -535,7 +585,7 @@ const VarianceTable = () => {
                             style={{ marginTop: "6px", boxShadow: "none"}}
                         />
                     </div>
-                    <div style={{ overFlowX: 'auto' }}>
+                    <div>
                         <DataTable 
                             ref={tableRef}
                             id="varianceTable"
@@ -547,25 +597,28 @@ const VarianceTable = () => {
                             size="small"
                             paginator={true}
                             loading={loading}
-                            showGridlines
                             stripedRows
                             removableSort
-                            header={header}
+                            header={tableHeader}
                             scrollable
-                            scrollHeight="40vh"
+                            scrollHeight="50vh"
+                            rowGroupMode="subheader"
+                            groupRowsBy="Date"
+                            rowGroupHeaderTemplate={rowHeader}
+                            rowGroupFooterTemplate={rowFooter}
                             emptyMessage="No variances found for the selected register."
-                            style={{ width: "80%", fontSize: ".9rem", backgroundColor: "white" }}
+                            style={{ width: "75vw", fontSize: ".9rem", backgroundColor: "white" }}
                             exportFilename={GetFileName()}
                         >
-                            <Column field="Date" header="Date" sortable body={(rowData) => (
+                            {/* <Column field="Date" header="Date" sortable body={(rowData) => (
                                 <span className={rowData.Date === null ? "invisible-row" : ""}>{FormatDate(rowData.Date)}</span>
-                            )}></Column>
+                            )}></Column> */}
                             {visibleColumns.map(column => (
                                 <Column 
                                     key={column.field}
                                     field={column.field} 
                                     header={column.header} 
-                                    style={{ minWidth: "6em" }}
+                                    style={{ minWidth: "9em" }}
                                     sortable 
                                     body={(rowData) => {
                                         // Check if the column is a currency column

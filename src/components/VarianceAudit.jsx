@@ -287,12 +287,13 @@ const VarianceAuditPage = () =>{
         }
 
         // Return the color based on the value
+        // green: text-green-500, red: text-red-500
         if (value < 0) 
-            return { color: "red" };
+            return "text-red-500";
         else if (value > 0) 
-            return { color: "green" };
+            return "text-green-500";
         else 
-            return {}
+            return "";
     };
 
     const InputNumberProps = {
@@ -333,11 +334,11 @@ const VarianceAuditPage = () =>{
                                                 type="text" 
                                                 id="cashOverShort" 
                                                 name="cashOverShort_input"
-                                                className="text-2xl safe-amount-input"
+                                                className={`text-2xl safe-amount-input ${VarianceStyling(cashOverShort)}`}
                                                 value={cashOverShort}
                                                 readOnly={true}
                                                 placeholder="$0.00"
-                                                style={VarianceStyling(cashOverShort)}
+                                                // style={VarianceStyling(cashOverShort)}
                                             />
                                         </div>
                                     </td>
@@ -351,11 +352,11 @@ const VarianceAuditPage = () =>{
                                                 type="text"
                                                 id="ccOverShort"
                                                 name="ccOverShort_input"
-                                                className="text-2xl safe-amount-input"
+                                                className={`text-2xl safe-amount-input ${VarianceStyling(ccOverShort)}`}
                                                 value={ccOverShort}
                                                 readOnly={true}
                                                 placeholder="$0.00"
-                                                style={VarianceStyling(ccOverShort)}
+                                                // style={VarianceStyling(ccOverShort)}
                                             />
                                         </div>
                                     </td>
@@ -369,11 +370,11 @@ const VarianceAuditPage = () =>{
                                                 type="text"
                                                 id="totalOverShort"
                                                 name="totalOverShort_input"
-                                                className="text-2xl safe-amount-input"
+                                                className={`text-2xl safe-amount-input ${VarianceStyling(totalOverShort)}`}
                                                 value={totalOverShort}
                                                 readOnly={true}
                                                 placeholder="$0.00"
-                                                style={VarianceStyling(totalOverShort)}
+                                                // style={VarianceStyling(totalOverShort)}
                                             />
                                         </div>
                                     </td>
