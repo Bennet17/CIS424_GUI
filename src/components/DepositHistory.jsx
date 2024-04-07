@@ -217,28 +217,33 @@ const DepositHistory = () => {
             <SideBar currentPage={7} />
             <div className="w-full">
                 <HorizontalNav />
-                <div className="text-main-color w-72 text-2xl float-left ml-8 mt-16">
+                <div className="text-main-color w-72 text-2xl float-left ml-8 mt-8">
                     <p>Select an open deposit to mark as pending or closed</p>
                     <br/>
-                    <label>Start Date:
+                    <div className="flex flex-row justify-around">
+                        <label className="text-lg">Start Date:
+                            
+                        </label>
                         <input 
-                            value={dateStart} 
-                            onChange={e => setDateStart(e.target.value)}  
-                            className="box-border text-center text-base mb-4 ml-6 mr-12 w-32 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                            type="date"
-                        />
-                    </label>
-                    <br/>
-                    <label>End Date:
+                                value={dateStart} 
+                                onChange={e => setDateStart(e.target.value)}  
+                                className="box-border rounded-md text-center text-base mb-4 ml-6  w-32 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                type="date"
+                            />
+                    </div>
+                    <div className="flex flex-grow justify-around">
+                        <label className="text-lg">End Date:
+                            
+                        </label>
                         <input 
-                            value={dateEnd} 
-                            onChange={e => setDateEnd(e.target.value)}  
-                            className="box-border text-center text-base mb-4 ml-6 mr-12 w-32 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
-                            type="date"
-                        />
-                    </label>
+                                value={dateEnd} 
+                                onChange={e => setDateEnd(e.target.value)}  
+                                className="box-border rounded-md text-center text-base mb-4 ml-6 w-32 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                type="date"
+                            />
+                        </div>
                 </div>
-                <div className="float-left ml-12 mt-16">
+                <div className="float-left ml-12 mt-4">
                     <p className="text-main-color text-center text-3xl mt-4 mb-4">Deposit History Report</p>
                     <table id="depositHistoryTable" ref={tableRef}>
                         <tbody>
@@ -262,17 +267,24 @@ const DepositHistory = () => {
                                     </tr>
                                 ))
                             }
-                            <tr>
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
+                            <tr >
                                 <td colSpan="4">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-md ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-gray-400" : "bg-indigo-600"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`} onClick={e => setShowConfirm(true)}>Verify</button>
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-full ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-button-gray" : "bg-button-gray-light"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} border-2 border-button-gray`} onClick={e => setShowConfirm(true)}>Verify</button>
                                 </td>
                                 <td>
-                                    <button className="flex w-full justify-center rounded-md hover:bg-indigo-500 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={onDownload}>Export to Excel</button>
+                                    <button className="flex w-full justify-center rounded-full hover:bg-button-blue-light bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm text-white border-2 border-button-blue" onClick={onDownload}>Export to Excel</button>
                                 </td>
                                 <td>
-                                    <button className="flex w-full justify-center rounded-md hover:bg-indigo-500 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={downloadPDF}>Export to PDF</button>
+                                    <button className="flex w-full justify-center rounded-full hover:bg-button-blue-light bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm text-white border-2 border-button-blue" onClick={downloadPDF}>Export to PDF</button>
                                 </td>
                             </tr>
+                            
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
                         </tbody>
                     </table>
 

@@ -159,9 +159,9 @@ const SideBar = (props) => {
               onClick={() => {
                 if (
                   props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
-                  props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
-                  props.cuurrentPage != VARIANCE_TABLE_PAGE_NAME &&
-                  props.currentPage != DEPOSIT_HISTORY_PAGE_NAME
+                  props.currentPage !== VARIANCE_AUDIT_PAGE_NAME &&
+                  props.currentPage !== VARIANCE_TABLE_PAGE_NAME &&
+                  props.currentPage !== DEPOSIT_HISTORY_PAGE_NAME
                 ) {
                   setCashManager(!cashManagerOn);
                 }
@@ -169,9 +169,9 @@ const SideBar = (props) => {
               className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
             transition-colors text-gray-600 ${
               props.currentPage !== SAFE_AUDIT_PAGE_NAME &&
-              props.currentPage != VARIANCE_AUDIT_PAGE_NAME &&
-              props.cuurrentPage != VARIANCE_TABLE_PAGE_NAME &&
-              props.currentPage != DEPOSIT_HISTORY_PAGE_NAME
+              props.currentPage !== VARIANCE_AUDIT_PAGE_NAME &&
+              props.currentPage !== VARIANCE_TABLE_PAGE_NAME &&
+              props.currentPage !== DEPOSIT_HISTORY_PAGE_NAME
                 ? "hover:bg-gradient-to-tr from-gray-300 to-gray-200 hover:text-gray-800"
                 : ""
             }`}
@@ -227,7 +227,7 @@ const SideBar = (props) => {
             }`}
               >
                 <Table />
-                <span className="ml-3">Variance Table</span>
+                <span className="ml-3">Variance Report</span>
               </li>
             )}
           {
