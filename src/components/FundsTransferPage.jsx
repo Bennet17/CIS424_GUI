@@ -1378,6 +1378,7 @@ const FundsTransferPage = () => {
                 alignItems: "center",
                 position: "relative",
               }}
+              className="mb-4"
             >
               <ToggleButton
                 checked={showExtraChange}

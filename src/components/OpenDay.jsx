@@ -959,13 +959,15 @@ const OpenDayPage = () => {
                       {showExtraChangeTxt}
                     </p>
                   </td>
+                </tr>
+                <tr>
                   <td></td>
                   <td>
                     <button
                       type="submit"
                       value="submit"
                       min="0"
-                      className="mb-4 mt-1 flex w-full justify-center rounded-full bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-blue-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-blue"
+                      className="mb-4 mt-1 flex w-full justify-center rounded-full bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-blue-light border-2 border-button-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-blue"
                     >
                       Open
                     </button>
@@ -975,7 +977,7 @@ const OpenDayPage = () => {
                       onClick={ClearAllFields}
                       type="button"
                       value="button"
-                      className="mb-4 mt-1 flex w-full justify-center rounded-full bg-button-gray px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-gray-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-gray"
+                      className="mb-4 mt-1 flex w-full justify-center rounded-full bg-button-gray px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-gray-light border-2 border-button-gray focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-gray"
                     >
                       Clear All Fields
                     </button>
