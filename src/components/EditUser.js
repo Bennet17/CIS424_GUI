@@ -279,14 +279,14 @@ const EditUser = (user) => {
                       <input
                         required
                         type="radio"
-                        id="employee"
+                        id="Team Leader"
                         name="role"
-                        value="Employee"
-                        defaultChecked={user.user.position === "Employee"}
+                        value="Team Leader"
+                        defaultChecked={user.user.position === "Team Leader"}
                         onChange={(e) => setPosition(e.target.value)}
                         className="mr-2"
                       />
-                      <label htmlFor="employee" className="mr-4">Employee</label>
+                      <label htmlFor="Team Leader" className="mr-4">Team Leader</label>
                     </div>
                     {auth.cookie.user.position == "Owner" && (
                       <div>
@@ -294,14 +294,14 @@ const EditUser = (user) => {
                           <input
                             required
                             type="radio"
-                            id="manager"
+                            id="Store Manager"
                             name="role"
-                            value="Manager"
-                            defaultChecked={user.user.position === "Manager"}
+                            value="Store Manager"
+                            defaultChecked={user.user.position === "Store Manager"}
                             onChange={(e) => setPosition(e.target.value)}
                             className="mr-2"
                           />
-                          <label htmlFor="manager">Manager</label>
+                          <label htmlFor="Store Manager">Store Manager</label>
                         </div>
                         <div className="flex items-center">
                           <input
