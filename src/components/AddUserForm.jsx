@@ -3,6 +3,8 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useAuth } from "../AuthProvider";
+import { Tooltip } from 'primereact/tooltip';
+        
 
 const AddUserForm = () => {
 
@@ -15,7 +17,7 @@ const AddUserForm = () => {
   const [lastname, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [position, setPosition] = useState("Employee");
+  const [position, setPosition] = useState("Team Leader");
   const [storeIDs, setStoreID] = useState(curStoreID);
   const [result, setResult] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,8 +33,8 @@ const AddUserForm = () => {
     if (!selectedStores.includes(curStoreID.toString())) {
       setSelectedStores([...selectedStores, curStoreID.toString()]);
     }
-    //create employee as the selected radio button default
-    setPosition("Employee");
+    //create Team Leader as the selected radio button default
+    setPosition("Team Leader");
   };
 
   //This method handles the closing of the modal when the user DOESNT submit an add.
@@ -271,37 +273,41 @@ const AddUserForm = () => {
                   />
                 </div>
               </div>
-
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="mb-4">
                   <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
                   <div className="flex flex-col">
+                  <Tooltip target=".Team LeaderRDB" content={"Team Leader: \n1. Open & Close Days \n2. Transfer Funds\n3. Auditing & Reporting"} />
+                  <Tooltip target=".Store ManagerRDB" content={"Store Manager:\n1. Add new Team Leaders \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting"} />
+                  <Tooltip target=".ownerRDB" content={"Owner:\n1. Add new/promote users to Store Manager & Owner \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting \n5. POS Register Management \n6. Store Management"} />
+
                     <div className="flex items-center">
                       <input
                         type="radio"
-                        id="employee"
+                        id="Team Leader"
                         name="role"
-                        value="Employee"
+                        value="Team Leader"
                         required
-                        defaultChecked={"Employee"}
+                        defaultChecked={"Team Leader"}
                         onChange={(e) => setPosition(e.target.value)}
-                        className="mr-2"
+                        className="Team LeaderRDB mr-2"
                       />
-                      <label htmlFor="employee" className="mr-4">Employee</label>
+                      <label htmlFor="Team Leader" className="mr-4">Team Leader</label>
                     </div>
                     {auth.cookie.user.position === "Owner" && (
                       <div>
                         <div className="flex items-center">
                           <input
                             type="radio"
-                            id="manager"
+                            id="Store Manager"
                             name="role"
                             required
-                            value="Manager"
+                            value="Store Manager"
+                    
                             onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
+                            className="Store ManagerRDB mr-2"
                           />
-                          <label htmlFor="manager">Manager</label>
+                          <label htmlFor="Store Manager">Store Manager</label>
                         </div>
                         <div className="flex items-center">
                           <input
@@ -311,7 +317,7 @@ const AddUserForm = () => {
                             value="Owner"
                             required
                             onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
+                            className="ownerRDB mr-2"
                           />
                           <label htmlFor="owner">Owner</label>
                         </div>
