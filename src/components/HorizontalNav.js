@@ -155,7 +155,7 @@ export default function HorizotalNav() {
                             <a
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "block rounded-md px-4 py-2 text-sm text-gray-700 flex justify-between mx-3 my-1"
+                                "block rounded-md px-4 py-2 text-sm text-gray-700 flex justify-between mx-3 my-1 cursor-pointer"
                               )}
                               onClick={() =>
                                 handleSwitchviewClick(store.ID, store.location)
@@ -179,7 +179,7 @@ export default function HorizotalNav() {
                             <a
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "block rounded-md px-4 py-2 text-sm text-gray-700 flex m-1"
+                                "block rounded-md px-4 py-2 text-sm text-gray-700 flex m-1 cursor-pointer"
                               )}
                               onClick={() => navigate(routes.storemanagement)}
                             >
