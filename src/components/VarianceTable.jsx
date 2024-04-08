@@ -12,7 +12,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { MultiSelect } from 'primereact/multiselect';
-import { format, set } from 'date-fns';
+import { format, max, set } from 'date-fns';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
@@ -61,7 +61,6 @@ const VarianceTable = () => {
         { field: "TotalVariance", header: "Total Variance", order: 15 }
     ]
 
-    
     // State to store the visible columns in the table
     const [visibleColumns, setVisibleColumns] = useState(varianceColumns);
 
@@ -79,10 +78,29 @@ const VarianceTable = () => {
     //check the permissions of the logged in user on page load, passing in
     //the required permissions
     useLayoutEffect(() => {
-        if (!auth.CheckAuthorization(["Manager", "District Manager", "Owner"])){
+        if (!auth.CheckAuthorization(["Team Leader", "Store Manager", "Owner"])) {
             navigate(routes.home);
         }
     });
+
+    // State to store the max and min date for the input fields
+    const [maxDate, setMaxDate] = useState('');
+    const [minDate, setMinDate] = useState('');
+    
+    // Update the input dates to the correct format when the form data changes
+    useEffect(() => {
+        console.log("I'm here brother!!");
+        // Set the max and min date for the input fields
+        if (formData.endDate instanceof Date) {
+            const maxDateValue = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+            setMaxDate(maxDateValue);
+        }
+    
+        if (formData.startDate instanceof Date) {
+            const minDateValue = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+            setMinDate(minDateValue);
+        }
+    }, [formData.startDate, formData.endDate]);
 
     // Function to update the input dates to the correct format
     const UpdateInputDates = useCallback(() => {
@@ -90,11 +108,12 @@ const VarianceTable = () => {
         const startDateInput = document.getElementById("startDate");
         const endDateInput = document.getElementById("endDate");
 
-        if (startDateInput && endDateInput) {
+        // Check if the input elements exist and the form data contains Date objects
+        if (startDateInput && endDateInput && formData.startDate instanceof Date && formData.endDate instanceof Date) {
             // Create Date objects with the timezone offset
             const startDate = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
             const endDate = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
-
+    
             // Set the input values
             startDateInput.valueAsDate = startDate;
             endDateInput.valueAsDate = endDate;
@@ -439,7 +458,7 @@ const VarianceTable = () => {
 
     // Handles the change of the input fields
     const HandleChange = (event) => {
-        const {name, value} = event.target;
+        const { name, value } = event.target;
 
         // If the input is the register select, update the register ID
         if (name === "posSelect") {
@@ -448,12 +467,32 @@ const VarianceTable = () => {
                 registerID: parseInt(value)
             }));
         }
-        // If the input is the date and value isn't empty, update the date
-        else if (value !== "") {
-            setFormData((prev) => ({
-                ...prev,
-                [name]: value
-            }));
+
+        // If the input is the date and the value isn't empty
+        else if ((name === "startDate" || name === "endDate") && value !== "") {
+            // Check if the start date is before or equal to the end date
+            if (name === "startDate" && new Date(value) <= new Date(formData.endDate)) {
+                // Converts value to date before updating form data
+                // const date = new Date(value);
+
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: value
+                }));
+            } else if (name === "endDate" && new Date(value) >= new Date(formData.startDate)) {
+                // Converts value to date before updating form data
+                const date = new Date(new Date(value.getTime()) - (new Date(value.getTimezoneOffset()) * 60000));
+                // const date = new Date(value).setDate(new Date(value).getDate() + 1);
+                console.log(date);
+
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: date
+                }));
+            } else {
+                // Invalid date range, do not update
+                toast.warning("Invalid date range. Please ensure the start date is before or equal to the end date.");
+            }
         }
     };
 
@@ -631,6 +670,7 @@ const VarianceTable = () => {
                                 name="startDate"
                                 className="variance-date"
                                 date={formData.startDate}
+                                max={maxDate}
                                 onChange={HandleChange}
                             />
                         </div>
@@ -645,6 +685,7 @@ const VarianceTable = () => {
                                 name="endDate" 
                                 className="variance-date"
                                 date={formData.endDate}
+                                min={minDate}
                                 onChange={HandleChange}
                             />
                         </div>
@@ -672,7 +713,6 @@ const VarianceTable = () => {
                             size="small"
                             paginator={true}
                             loading={loading}
-                            stripedRows
                             removableSort
                             header={tableHeader}
                             scrollable
