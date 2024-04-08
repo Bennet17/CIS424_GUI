@@ -75,16 +75,27 @@ function EmployeeTable() {
         .then((response) => {
           console.log(response);
           //map the response of employee data onto an array of employees
-          setEmployees(response.data.map(employee => ({
-            ID: employee.ID,
-            username: employee.username,
-            name: employee.name,
-           // password: employee.password,
-            position: employee.position,
-            storeID_CSV: employee.storeID_CSV, //get storename from local storage
-            enabled: employee.enabled
+          setEmployees(
+            response.data
+              .map(employee => ({
+                ID: employee.ID,
+                username: employee.username,
+                name: employee.name,
+                position: employee.position,
+                storeID_CSV: employee.storeID_CSV,
+                enabled: employee.enabled
+              }))
+              .sort((a, b) => {
+                // Sort by enabled status in descending order (true comes first)
+                return b.enabled.toString().localeCompare(a.enabled.toString());
+              })
+              .sort((a, b) => {
+                // Sort by position in ascending order
+                return a.position.localeCompare(b.position);
+              })
+          );
+          
 
-          })));
 
           //this counts how many active owners there are to prevent disabling all owners
             let numActiveOwners = 0;

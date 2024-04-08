@@ -277,8 +277,8 @@ const AddUserForm = () => {
                 <div className="mb-4">
                   <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
                   <div className="flex flex-col">
-                  <Tooltip target=".Team LeaderRDB" content={"Team Leader: \n1. Open & Close Days \n2. Transfer Funds\n3. Auditing & Reporting"} />
-                  <Tooltip target=".Store ManagerRDB" content={"Store Manager:\n1. Add new Team Leaders \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting"} />
+                  <Tooltip target=".TeamLeaderRDB" content={"Team Leader: \n1. Open & Close Days \n2. Transfer Funds\n3. Auditing & Reporting"} />
+                  <Tooltip target=".StoreManagerRDB" content={"Store Manager:\n1. Add new Team Leaders \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting"} />
                   <Tooltip target=".ownerRDB" content={"Owner:\n1. Add new/promote users to Store Manager & Owner \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting \n5. POS Register Management \n6. Store Management"} />
 
                     <div className="flex items-center">
@@ -290,7 +290,7 @@ const AddUserForm = () => {
                         required
                         defaultChecked={"Team Leader"}
                         onChange={(e) => setPosition(e.target.value)}
-                        className="Team LeaderRDB mr-2"
+                        className="TeamLeaderRDB mr-2"
                       />
                       <label htmlFor="Team Leader" className="mr-4">Team Leader</label>
                     </div>
@@ -307,7 +307,7 @@ const AddUserForm = () => {
                             onChange={(e) => setPosition(e.target.value)}
                             className="Store ManagerRDB mr-2"
                           />
-                          <label htmlFor="Store Manager">Store Manager</label>
+                          <label htmlFor="StoreManager">Store Manager</label>
                         </div>
                         <div className="flex items-center">
                           <input
