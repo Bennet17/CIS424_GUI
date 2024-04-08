@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/CIS424_GUI/static/css/main.f492b0de.css",
-    "main.js": "/CIS424_GUI/static/js/main.797dbc79.js",
+    "main.css": "/CIS424_GUI/static/css/main.c20d9989.css",
+    "main.js": "/CIS424_GUI/static/js/main.2c0a2f25.js",
     "static/js/498.c0ed5838.chunk.js": "/CIS424_GUI/static/js/498.c0ed5838.chunk.js",
     "static/js/703.c7562ad2.chunk.js": "/CIS424_GUI/static/js/703.c7562ad2.chunk.js",
     "static/js/379.47ac7823.chunk.js": "/CIS424_GUI/static/js/379.47ac7823.chunk.js",
@@ -18,15 +18,33 @@
     "static/media/primeicons.woff": "/CIS424_GUI/static/media/primeicons.10d3152104f2208ac82a.woff",
     "static/media/primeicons.ttf": "/CIS424_GUI/static/media/primeicons.ea5358601d0a3fd6670b.ttf",
     "static/media/primeicons.woff2": "/CIS424_GUI/static/media/primeicons.78172950b335ccdb94e2.woff2",
+    "static/media/BillHundred.svg": "/CIS424_GUI/static/media/BillHundred.5eb67863b625d2ece6b05d201c38ddaf.svg",
+    "static/media/RollQuarter.svg": "/CIS424_GUI/static/media/RollQuarter.5313d1a95cb7c885fd160c7e7cc9d587.svg",
+    "static/media/CoinHalf_Dollar.svg": "/CIS424_GUI/static/media/CoinHalf_Dollar.cfc867a02efc05aa6f391f72996979a7.svg",
+    "static/media/CoinHalf.svg": "/CIS424_GUI/static/media/CoinHalf.f7fa0cd51a8d0308a0d8ff228f9881d3.svg",
+    "static/media/CoinQuarter.svg": "/CIS424_GUI/static/media/CoinQuarter.3d21ae71ad5f23e13818a9cda7e5fb55.svg",
+    "static/media/BillTwenty.svg": "/CIS424_GUI/static/media/BillTwenty.7438cf2cb5aab8936522818a0841a185.svg",
+    "static/media/BillFifty.svg": "/CIS424_GUI/static/media/BillFifty.9a92231bcd0adf58fbf1c61f762abebf.svg",
+    "static/media/RollDime.svg": "/CIS424_GUI/static/media/RollDime.90777f2d78bcf2dd197029dc79c17fcc.svg",
+    "static/media/CoinDime.svg": "/CIS424_GUI/static/media/CoinDime.ad38fae22e0f772e6b1e1a79cdad4f5f.svg",
+    "static/media/BillTen.svg": "/CIS424_GUI/static/media/BillTen.002c157a3e2a074fa0f51694772966e7.svg",
+    "static/media/RollNickel.svg": "/CIS424_GUI/static/media/RollNickel.40a399d955168a805ae44f953448659e.svg",
+    "static/media/CoinNickel.svg": "/CIS424_GUI/static/media/CoinNickel.f82b666121e58ecdc04466784c678342.svg",
+    "static/media/CoinOne.svg": "/CIS424_GUI/static/media/CoinOne.17a6b788a37a194c18c93c9ab214add3.svg",
+    "static/media/BillTwo.svg": "/CIS424_GUI/static/media/BillTwo.80143cad44fcb82fe3b1ac9a55576f6a.svg",
+    "static/media/BillFive.svg": "/CIS424_GUI/static/media/BillFive.3231e60c0af751bbfeae736d831cd44a.svg",
+    "static/media/RollPenny.svg": "/CIS424_GUI/static/media/RollPenny.b88ef9defca63e2c62b3d346a59e05e4.svg",
+    "static/media/CoinPenny.svg": "/CIS424_GUI/static/media/CoinPenny.a58eb5bae46c8310de869e9ef37f6029.svg",
+    "static/media/BillOne.svg": "/CIS424_GUI/static/media/BillOne.a650a717afe9268797f4e40f4a57bcad.svg",
     "index.html": "/CIS424_GUI/index.html",
-    "main.f492b0de.css.map": "/CIS424_GUI/static/css/main.f492b0de.css.map",
-    "main.797dbc79.js.map": "/CIS424_GUI/static/js/main.797dbc79.js.map",
+    "main.c20d9989.css.map": "/CIS424_GUI/static/css/main.c20d9989.css.map",
+    "main.2c0a2f25.js.map": "/CIS424_GUI/static/js/main.2c0a2f25.js.map",
     "498.c0ed5838.chunk.js.map": "/CIS424_GUI/static/js/498.c0ed5838.chunk.js.map",
     "703.c7562ad2.chunk.js.map": "/CIS424_GUI/static/js/703.c7562ad2.chunk.js.map",
     "379.47ac7823.chunk.js.map": "/CIS424_GUI/static/js/379.47ac7823.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f492b0de.css",
-    "static/js/main.797dbc79.js"
+    "static/css/main.c20d9989.css",
+    "static/js/main.2c0a2f25.js"
   ]
 }
