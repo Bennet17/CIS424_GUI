@@ -1358,13 +1358,13 @@ const FundsTransferPage = () => {
                 size="small"
                 icon="pi pi-times"
                 rounded
-                className="p-button-secondary"
+                className="p-button-secondary p-button-raised "
                 style={{ width: "200px", marginRight: "1rem" }}
               />
               <Button
                 type="submit"
                 label="Submit"
-                className="p-button-primary"
+                className="p-button-primary p-button-raised "
                 size="small"
                 icon="pi pi-check"
                 rounded

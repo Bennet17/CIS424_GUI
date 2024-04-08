@@ -265,8 +265,6 @@ const VarianceAuditPage = () =>{
             other: other
         };
 
-		console.log(request);
-
         // Submit the audit
         if (await SubmitAudit(request)) {
             // Reset the form data
