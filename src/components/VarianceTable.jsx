@@ -660,7 +660,7 @@ const VarianceTable = () => {
                             style={{ marginTop: "6px", boxShadow: "none"}}
                         />
                     </div>
-                    <div>
+                    <div className="mb-4">
                         <DataTable 
                             ref={tableRef}
                             id="varianceTable"

@@ -78,7 +78,7 @@ function SelectStore() {
           src={Logo}
           alt="Plato's Closet Logo"
         />
-        <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-navy-gray">
           Choose Location
         </h2>
         
@@ -102,7 +102,7 @@ function SelectStore() {
                       }
                       className="mr-2"
                     />
-                    <label htmlFor={store.ID} className="text-sm text-gray-900">
+                    <label htmlFor={store.ID} className="text-sm text-navy-gray">
                       {store.location}
                     </label>
                   </div>
@@ -113,7 +113,7 @@ function SelectStore() {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-3/4 mt-6 bg-indigo-600 py-2 text-sm font-semibold text-white rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-600"
+              className="w-3/4 mt-6 bg-button-blue py-2 text-sm font-semibold text-white rounded-full shadow-sm hover:bg-button-blue-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-button-blue"
             >
               Continue
             </button>

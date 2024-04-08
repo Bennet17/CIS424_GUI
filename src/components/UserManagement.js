@@ -82,7 +82,7 @@ const UserManagementPage = () => {
       <div className="flex flex-col w-full">
         <HorizotalNav />
         <div class="flex flex-col mt-4 px-6">
-          <h2 className="text-lg font-bold mt-4 px-10 ">Users at Plato's Closet: {curStoreName}</h2>        
+          <h2 className="text-xl text-navy-gray font-bold mt-4 mb-2 ">Users at Plato's Closet: {curStoreName}</h2>        
           <div> <EmployeeTable storeArray={storeArray}></EmployeeTable></div>
         </div>
       </div>

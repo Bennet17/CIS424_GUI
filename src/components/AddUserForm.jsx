@@ -195,7 +195,7 @@ const AddUserForm = () => {
     <div className="relative ml-5 ">
       <button
         onClick={openModal}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-button-blue hover:bg-button-blue-light text-white font-bold py-2 px-4 rounded-full border-2 border-button-blue"
       > Add User</button>
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">

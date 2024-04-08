@@ -109,8 +109,8 @@ function EmployeeTable() {
   
   return (
     <div>
-      <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-        <table id='empTable' ref={tableRef} className="min-w-full text-center mt-6">
+      <div style={{ maxHeight: '380px', overflowY: 'auto' }}>
+        <table id='empTable' ref={tableRef} className="min-w-full text-center text-navy-gray">
           <thead>
             <tr>
               <th className="px-4 py-2">Username</th>
@@ -139,19 +139,19 @@ function EmployeeTable() {
       </div>
     
       {/* Buttons for exporting and adding users */}
-      <div className="flex flex-row-reverse mt-2 ">
+      <div className="flex flex-row-reverse my-4 text-navy-gray">
       <label className="mt-2 ml-4">
             <input
               type="checkbox"
               onChange={() => setShowAllEmployees(!showAllEmployees)}
-              className="mr-2 "
+              className="mr-2 text-lg"
             />
             Show Disabled Employees
           </label>
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+        <div className="bg-button-gray hover:bg-button-gray-light text-white font-bold py-2 px-4 ml-5 rounded-full border-2 border-button-gray ">
           <button onClick={onDownload}>Export to Excel</button>
         </div>
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
+        <div className="bg-button-gray hover:bg-button-gray-light text-white font-bold py-2 px-4 ml-5 rounded-full border-2 border-button-gray ">
           <button onClick={downloadPDF}>Export to PDF</button>
         </div>
         <div><AddUserForm></AddUserForm></div>
