@@ -227,7 +227,7 @@ const DepositHistory = () => {
                         <input 
                                 value={dateStart} 
                                 onChange={e => setDateStart(e.target.value)}  
-                                className="box-border rounded-md text-center text-base mb-4 ml-6  w-32 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                className="box-border rounded-md text-center text-base mb-4 ml-6  w-32 float-right border-button-gray border-2 hover:bg-nav-bg bg-white" 
                                 type="date"
                             />
                     </div>
@@ -238,32 +238,32 @@ const DepositHistory = () => {
                         <input 
                                 value={dateEnd} 
                                 onChange={e => setDateEnd(e.target.value)}  
-                                className="box-border rounded-md text-center text-base mb-4 ml-6 w-32 float-right border-border-color border-2 hover:bg-nav-bg bg-white" 
+                                className="box-border rounded-md text-center text-base mb-4 ml-6 w-32 float-right border-button-gray border-2 hover:bg-nav-bg bg-white" 
                                 type="date"
                             />
                         </div>
                 </div>
                 <div className="float-left ml-12 mt-4">
                     <p className="text-main-color text-center text-3xl mt-4 mb-4">Deposit History Report</p>
-                    <table id="depositHistoryTable" ref={tableRef}>
+                    <table className="text-navy-gray " id="depositHistoryTable" ref={tableRef}>
                         <tbody>
                             <tr>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Date</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Opened By</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Deposit Amount</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Verified Date</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Verified Status</td>
-                                <td className="box-border border-border-color border-2 text-center w-28 h-12">Verified By</td>
+                                <td className=" text-center w-28 h-12">Date</td>
+                                <td className=" text-center w-28 h-12">Opened By</td>
+                                <td className=" text-center w-28 h-12">Deposit Amount</td>
+                                <td className=" text-center w-28 h-12">Verified Date</td>
+                                <td className=" text-center w-28 h-12">Verified Status</td>
+                                <td className=" text-center w-28 h-12">Verified By</td>
                             </tr>
                             {hasRecords === true &&
                                 records.map((item, index) => (
                                     <tr onClick={() => (selectedRow == index) ? SetSelectedRow(null) : SetSelectedRow(index)} className={`${selectedRow == index && "bg-amber-200"}`} >
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.date.split("T")[0]}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-48 h-8 pl-2`}>{item.name}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-28 h-8 pl-2`}>{item.verifiedOn == null ? null : item.verifiedOn.split("T")[0]}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 relative inset-0 w-32 h-8 pl-2`}>{item.status == "OPEN" ? "" : "Verified"}</td>
-                                        <td className={`${selectedRow == index ? "bg-amber-200" : "bg-nav-bg"} box-border border-border-color border-2 text-left w-32 h-8 pl-2`}>{item.verifiedBy}</td>
+                                        <td className={`${selectedRow == index ? "bg-gray-100" : "bg-custom-accent"} border border-gray-100  text-left w-48 h-8 pl-2`}>{item.date.split("T")[0]}</td>
+                                        <td className={`${selectedRow == index ? "bg-gray-100" : "bg-custom-accent"} border border-gray-100  text-left w-48 h-8 pl-2`}>{item.name}</td>
+                                        <td className={`${selectedRow == index ? "bg-gray-100" : "bg-custom-accent"} border border-gray-100  text-left w-28 h-8 pl-2`}>{"$" + item.total}</td>
+                                        <td className={`${selectedRow == index ? "bg-gray-100" : "bg-custom-accent"} border border-gray-100  text-left w-28 h-8 pl-2`}>{item.verifiedOn == null ? null : item.verifiedOn.split("T")[0]}</td>
+                                        <td className={`${selectedRow == index ? "bg-gray-100" : "bg-custom-accent"} border border-gray-100  relative inset-0 w-32 h-8 pl-2`}>{item.status == "OPEN" ? "" : "Verified"}</td>
+                                        <td className={`${selectedRow == index ? "bg-gray-100" : "bg-custom-accent"} border border-gray-100  text-left w-32 h-8 pl-2`}>{item.verifiedBy}</td>
                                     </tr>
                                 ))
                             }
@@ -272,7 +272,7 @@ const DepositHistory = () => {
                             <tr><td></td></tr>
                             <tr >
                                 <td colSpan="4">
-                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-full ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-indigo-500"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-button-gray" : "bg-button-gray-light"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-black" : "text-white"} border-2 border-button-gray`} onClick={e => setShowConfirm(true)}>Verify</button>
+                                    <button type="submit" value="submit" className={`flex w-full justify-center rounded-full ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "" : "hover:bg-button-gray-light"} ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "bg-button-gray" : "bg-button-gray"} px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${(selectedRow == null || records[selectedRow].status == "CLOSED" || records[selectedRow].status == "ABORTED") ? "text-button-gray-light" : "text-white"} border-2 border-button-gray`} onClick={e => setShowConfirm(true)}>Verify</button>
                                 </td>
                                 <td>
                                     <button className="flex w-full justify-center rounded-full hover:bg-button-blue-light bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm text-white border-2 border-button-blue" onClick={onDownload}>Export to Excel</button>
