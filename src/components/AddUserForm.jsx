@@ -8,7 +8,7 @@ import { Button } from "primereact/button";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
-        
+
 const AddUserForm = () => {
 
   const auth = useAuth();
@@ -284,9 +284,9 @@ const AddUserForm = () => {
                 <div className="mb-4">
                   <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
                   <div className="flex flex-col">
-                  <Tooltip target=".TeamLeaderRDB" content={"Team Leader: \n1. Open & Close Days \n2. Transfer Funds\n3. Auditing & Reporting"} />
-                  <Tooltip target=".StoreManagerRDB" content={"Store Manager:\n1. Add new Team Leaders \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting"} />
-                  <Tooltip target=".ownerRDB" content={"Owner:\n1. Add new/promote users to Store Manager & Owner \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting \n5. POS Register Management \n6. Store Management"} />
+                    <Tooltip target=".TeamLeaderRDB" content={"Team Leader: \n1. Open & Close Days \n2. Transfer Funds\n3. Auditing & Reporting"} />
+                    <Tooltip target=".StoreManagerRDB" content={"Store Manager:\n1. Add new Team Leaders \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting"} />
+                    <Tooltip target=".ownerRDB" content={"Owner:\n1. Add new/promote users to Store Manager & Owner \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting \n5. POS Register Management \n6. Store Management"} />
 
                     <div className="flex items-center">
                       <input
@@ -310,9 +310,9 @@ const AddUserForm = () => {
                             name="role"
                             required
                             value="Store Manager"
-                    
+
                             onChange={(e) => setPosition(e.target.value)}
-                            className="Store ManagerRDB mr-2"
+                            className="StoreManagerRDB mr-2"
                           />
                           <label htmlFor="StoreManager">Store Manager</label>
                         </div>
@@ -332,7 +332,7 @@ const AddUserForm = () => {
                     )}
                   </div>
                 </div>
-                <div className="mb-4">
+                <div className="mb-4" style={{ maxHeight: '150px', overflowY: 'auto' }}>
                   <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
                   {storeArray.map(item => (
                     <div key={item.ID} className="mb-2">
@@ -349,6 +349,7 @@ const AddUserForm = () => {
                     </div>
                   ))}
                 </div>
+
               </div>
 
               <div className="flex justify-between">

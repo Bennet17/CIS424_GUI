@@ -8,6 +8,8 @@ import { Button } from "primereact/button";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
+import { Tooltip } from 'primereact/tooltip';
+
 
 const EditUser = (user) => {
   const auth = useAuth();
@@ -272,6 +274,9 @@ const EditUser = (user) => {
                   />
                 </div>
               </div>
+              <Tooltip target=".TeamLeaderRDB" content={"Team Leader: \n1. Open & Close Days \n2. Transfer Funds\n3. Auditing & Reporting"} />
+              <Tooltip target=".StoreManagerRDB" content={"Store Manager:\n1. Add new Team Leaders \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting"} />
+              <Tooltip target=".ownerRDB" content={"Owner:\n1. Add new/promote users to Store Manager & Owner \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting \n5. POS Register Management \n6. Store Management"} />
 
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div>
@@ -286,7 +291,7 @@ const EditUser = (user) => {
                         value="Team Leader"
                         defaultChecked={user.user.position === "Team Leader"}
                         onChange={(e) => setPosition(e.target.value)}
-                        className="mr-2"
+                        className="TeamLeaderRDB mr-2"
                       />
                       <label htmlFor="Team Leader" className="mr-4">Team Leader</label>
                     </div>
@@ -301,7 +306,7 @@ const EditUser = (user) => {
                             value="Store Manager"
                             defaultChecked={user.user.position === "Store Manager"}
                             onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
+                            className="StoreManagerRDB mr-2"
                           />
                           <label htmlFor="Store Manager">Store Manager</label>
                         </div>
@@ -314,28 +319,25 @@ const EditUser = (user) => {
                             value="Owner"
                             defaultChecked={user.user.position === "Owner"}
                             onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
+                            className="ownerRDB mr-2"
                           />
                           <label htmlFor="owner">Owner</label>
                         </div>
                       </div>
                     )}
                   </div>
-
-
                 </div>
-
-                <div>
-                  <legend className="block text-gray-700 font-bold mb-2 ">Store:</legend>
+                <div className="mb-4" style={{ maxHeight: '150px', overflowY: 'auto' }}>
+                  <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
                   {storeArray.map(item => (
-                    <div key={item.ID} className="mb-2 flex items-center">
+                    <div key={item.ID} className="mb-2">
                       <input
                         type="checkbox"
                         id={`store${item.ID}`}
                         name="store"
                         value={item.ID}
-                        defaultChecked={user.user.storeID_CSV.includes(item.ID.toString())}
-                        onChange={handleCheckboxChange}
+                        defaultChecked={item.ID === curStoreID}
+                        onChange={(e) => handleCheckboxChange(e, item.ID)}
                         className="mr-2"
                       />
                       <label htmlFor={`store${item.ID}`}>{item.location}</label>
