@@ -8,7 +8,10 @@ import AddUserForm from './AddUserForm';
 import {useAuth} from '../AuthProvider.js';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 function EmployeeTable() {
 
@@ -120,8 +123,8 @@ function EmployeeTable() {
   
   return (
     <div>
-      <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-        <table id='empTable' ref={tableRef} className="min-w-full text-center mt-6">
+      <div style={{ maxHeight: '380px', overflowY: 'auto' }}>
+        <table id='empTable' ref={tableRef} className="min-w-full text-center text-navy-gray">
           <thead>
             <tr>
               <th className="px-4 py-2">Username</th>
@@ -149,22 +152,34 @@ function EmployeeTable() {
         </table>
       </div>
     
-      {/* Buttons for exporting and adding users */}
-      <div className="flex flex-row-reverse mt-2 ">
-      <label className="mt-2 ml-4">
-            <input
-              type="checkbox"
-              onChange={() => setShowAllEmployees(!showAllEmployees)}
-              className="mr-2 "
-            />
-            Show Disabled Employees
-          </label>
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
-          <button onClick={onDownload}>Export to Excel</button>
-        </div>
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
-          <button onClick={downloadPDF}>Export to PDF</button>
-        </div>
+        {/* Buttons for exporting and adding users */}
+        <div className="flex flex-row-reverse my-4 text-navy-gray">
+        <label className="mt-2 ml-4">
+          <input
+            type="checkbox"
+            onChange={() => setShowAllEmployees(!showAllEmployees)}
+            className="mr-2 text-lg"
+          />
+          Show Disabled Employees
+        </label>
+        <Button
+          label="Export to Excel"
+          rounded
+          icon="pi pi-file-excel"
+          size="small"
+          onClick={onDownload}
+          className="p-button-secondary p-button-raised"
+          style={{ marginRight: '1rem' }}
+        />
+        <Button
+          label="Export to PDF"
+          rounded
+          icon="pi pi-file-pdf"
+          size="small"
+          onClick={downloadPDF}
+          className="p-button-secondary p-button-raised"
+          style={{ marginLeft: '1rem', marginRight: '1rem' }}
+        />
         <div><AddUserForm></AddUserForm></div>
         <div>{showEditForm && <EditUser user={selectedUser} />}</div>
       </div>

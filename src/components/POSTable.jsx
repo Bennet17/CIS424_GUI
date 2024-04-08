@@ -6,9 +6,12 @@ import { useAuth } from '../AuthProvider.js';
 import { useDownloadExcel } from 'react-export-table-to-excel';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 function POSTable() {
-
   //DECLARE VARIABLES
   const tableRef = useRef(null);
   const auth = useAuth();
@@ -201,20 +204,23 @@ function POSTable() {
                 </div>
               </div>
               <div className="bg-gray-50 text-bold px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button
-                  type="submit"
+                <Button
                   onClick={handleSubmit}
-                  className="w-full inline-flex justify-center  rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-bold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-                >
-                  Confirm New POS
-                </button>
-                <button
+                  label="Confirm New POS"
+                  className="p-button-primary p-button-raised"
+                  size="small"
+                  rounded
+                  icon="pi pi-check"
+                />
+                <Button
                   onClick={handleCloseModal}
-                  type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-300 text-base font-bold text-gray-800 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                >
-                  Cancel
-                </button>
+                  label="Cancel"
+                  className="p-button-secondary p-button-raised"
+                  size="small"
+                  rounded
+                  icon="pi pi-times"
+                  style={{ marginRight: '1rem' }}
+                />
               </div>
             </div>
           </div>
@@ -223,8 +229,8 @@ function POSTable() {
 
 
       <h2 className="text-lg text-red-500 font-bold mb-2">{result}</h2>
-      <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-        <table id='posTable' ref={tableRef} className="min-w-full text-center">
+      <div style={{ maxHeight: '380px', overflowY: 'auto' }}>
+        <table id='posTable' ref={tableRef} className="min-w-full text-center text-navy-gray">
           <thead>
             <tr>
               <th className="px-4 py-2">POS Name</th>
@@ -245,32 +251,48 @@ function POSTable() {
                 <td className="border px-4 py-2">{pos.opened ? 'Open' : 'Closed'}</td>
                 <td className="border px-4 py-2">
 
-                  <button onClick={() => toggleActivity(pos)} className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-32'>
-                    {pos.enabled ? 'Deactivate' : 'Activate'}
-                  </button>
+                  <Button
+                    onClick={() => toggleActivity(pos)}
+                    label={pos.enabled ? 'Deactivate' : 'Activate'}
+                    className={pos.enabled ? 'p-button-danger p-button-raised' : 'p-button-success p-button-raised'}
+                    size="small"
+                    rounded
+                    icon={pos.enabled ? 'pi pi-times' : 'pi pi-check'}
+                    style={{ width: '125px' }}
+                  />
                 </td>
-
               </tr>
             ))}
-
-
           </tbody>
         </table>
       </div>
       <div className='flex flex-row-reverse mt-4 '>
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
-          <button onClick={onDownload}>Export to Excel</button>
-        </div>
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
-          <button onClick={downloadPDF}>Export to PDF</button>
-        </div>
-        <button
+        <Button
+          onClick={onDownload}
+          label="Export to Excel"
+          className="p-button-secondary p-button-raised"
+          size="small"
+          rounded
+          icon="pi pi-file-excel"
+        />
+        <Button
+          onClick={downloadPDF}
+          label="Export to PDF"
+          className="p-button-secondary p-button-raised"
+          size="small"
+          rounded
+          icon="pi pi-file-pdf"
+          style={{ marginRight: '1rem' }}
+        />
+        <Button
           onClick={handleOpenForm}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
-        >
-          Add POS Register
-        </button>
-
+          label="Add POS Register"
+          className="p-button-primary p-button-raised"
+          size="small"
+          rounded
+          icon="pi pi-plus"
+          style={{ marginRight: '1rem' }}
+        />
       </div>
 
     </div>
