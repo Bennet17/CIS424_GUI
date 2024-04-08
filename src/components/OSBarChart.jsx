@@ -272,7 +272,7 @@ const OSBarChart = () => {
               Toggle Month-to-Date
             </p>
             <ToggleRight
-              className="h-8 w-8 mr-4 text-gray-500"
+              className="h-8 w-8 mr-4 text-gray-500 cursor-pointer"
               onClick={() => setChartVersion(1)}
             />
           </div>
@@ -283,7 +283,7 @@ const OSBarChart = () => {
               Toggle Bi-Week
             </p>
             <ToggleLeft
-              className="h-8 w-8 mr-4 text-gray-500"
+              className="h-8 w-8 mr-4 text-gray-500 cursor-pointer"
               onClick={() => setChartVersion(0)}
             />
           </div>

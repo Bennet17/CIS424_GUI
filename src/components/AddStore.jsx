@@ -2,6 +2,10 @@
 //Written By Brianna Kline
 import axios from "axios";
 import { useState } from "react";
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 const AddStoreForm = () => {
   //DECLARE VARIABLES
@@ -68,12 +72,15 @@ const AddStoreForm = () => {
 
   return (
     <div className="relative ml-5">
-      <button
+      <Button
         onClick={openModal}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Add Store
-      </button>
+        label="Add Store"
+        rounded
+        size="small"
+        icon="pi pi-plus"
+        className="p-button-primary p-button-raised"
+        style={{ marginRight: '1rem' }}
+      />
 
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 w-30 bg-opacity-50 z-50">
@@ -277,19 +284,21 @@ const AddStoreForm = () => {
                 </div>
               </div>
               <div className="flex justify-end">
-                <button
+                <Button
+                  label="Cancel"
                   onClick={closeModal}
-                  type="button"
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-                >
-                  Cancel
-                </button>
-                <button
+                  className="p-button-secondary p-button-raised"
+                  rounded
+                  icon="pi pi-times"
+                  style={{ marginRight: '1rem' }}
+                />
+                <Button
+                  label="Add Store"
                   type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Add Store
-                </button>
+                  className="p-button-primary p-button-raised"
+                  icon="pi pi-check"
+                  rounded
+                />
               </div>
             </form>
           </div>

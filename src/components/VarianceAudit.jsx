@@ -9,7 +9,7 @@ import routes from '../routes.js';
 import {useAuth} from '../AuthProvider.js';
 import { Toaster, toast } from 'sonner';
 import { Button } from 'primereact/button';
-import { format, set } from 'date-fns';
+import { format, max, set } from 'date-fns';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
@@ -61,10 +61,32 @@ const VarianceAuditPage = () =>{
     //check the permissions of the logged in user on page load, passing in
     //the required permissions
     useLayoutEffect(() => {
-        if (!auth.CheckAuthorization(["Manager", "District Manager", "Owner"])){
+        if (!auth.CheckAuthorization(["Team Leader", "Store Manager", "Owner"])) {
             navigate(routes.home);
         }
     });
+
+	// State to store the max and min date for the input fields
+    const [maxDate, setMaxDate] = useState('');
+    const [minDate, setMinDate] = useState('');
+    
+    // Update the input dates to the correct format when the form data changes
+    useEffect(() => {
+        // Set the max and min date for the input fields
+        if (formData.endDate instanceof Date) {
+            // Adjust the endDate for timezone offset and subtract one day
+            const maxDateValue = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
+            maxDateValue.setDate(maxDateValue.getDate() - 1);
+            setMaxDate(maxDateValue.toISOString().split('T')[0]);
+        }
+
+        if (formData.startDate instanceof Date) {
+            // Adjust the startDate for timezone offset and add one day
+            const minDateValue = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
+            minDateValue.setDate(minDateValue.getDate() + 1);
+            setMinDate(minDateValue.toISOString().split('T')[0]);
+        }
+    }, [formData.startDate, formData.endDate]);
 
     // Function to update the input dates to the correct format
     const UpdateInputDates = useCallback(() => {
@@ -72,11 +94,12 @@ const VarianceAuditPage = () =>{
         const startDateInput = document.getElementById("startDate");
         const endDateInput = document.getElementById("endDate");
 
-        if (startDateInput && endDateInput) {
+        // Check if the input elements exist and the form data contains Date objects
+        if (startDateInput && endDateInput && formData.startDate instanceof Date && formData.endDate instanceof Date) {
             // Create Date objects with the timezone offset
             const startDate = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
             const endDate = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
-
+    
             // Set the input values
             startDateInput.valueAsDate = startDate;
             endDateInput.valueAsDate = endDate;
@@ -166,13 +189,27 @@ const VarianceAuditPage = () =>{
         // Get the name and value of the input field
         const { name, value } = event.target;
 
-        if (value !== "") {
+        if (value !== "" && name !== "startDate" && name !== "endDate") {
             // Update the form data
             setFormData((prev) => ({
                 ...prev,
                 [name]: value,
             }));
         }
+		// If date input, update the date
+		else if (name === "startDate" || name === "endDate") {
+			// Parse the string and extract year, month, and day values
+            const [year, month, day] = value.split("-").map(Number);
+
+            // Create a new UTC Date object with the extracted values
+            const date = new Date(Date.UTC(year, month - 1, day + 1));
+
+            // Update the form data with the new value
+            setFormData((prev) => ({
+                ...prev,
+                [name]: date
+            }));
+		}
     };
 
     async function SubmitAudit(request) {
@@ -285,11 +322,10 @@ const VarianceAuditPage = () =>{
     // Function to style the variance fields based on the value
     const VarianceStyling = (value) => {
         // If the value contains parentheses, make the number negative
-        if (value.includes("(")) {
+        if (value.includes("(")) 
             value = parseFloat(value.replace(/[^0-9.-]+/g,"")) * -1;
-        } else {
+        else 
             value = parseFloat(value.replace(/[^0-9.-]+/g,""));
-        }
 
         // Return the color based on the value
         // green: text-green-500, red: text-red-500
@@ -408,6 +444,7 @@ const VarianceAuditPage = () =>{
                                     name="startDate"
                                     className="variance-date"
                                     date={formData.startDate}
+									max={maxDate}
                                     onChange={HandleChange}
                                 />
                             </div>
@@ -422,6 +459,7 @@ const VarianceAuditPage = () =>{
                                     name="endDate" 
                                     className="variance-date"
                                     date={formData.endDate}
+									min={minDate}
                                     onChange={HandleChange}
                                 />
                             </div>
@@ -593,7 +631,7 @@ const VarianceAuditPage = () =>{
                                     icon="pi pi-times"
                                     size="small"
                                     rounded
-                                    className="p-button-secondary"
+                                    className="p-button-secondary p-button-raised"
                                     style={{ width: '200px', marginRight: '1rem' }}
                                 />
                                 <Button
@@ -602,7 +640,7 @@ const VarianceAuditPage = () =>{
                                     icon="pi pi-check"
                                     size="small"
                                     rounded
-                                    className="p-button-primary"
+                                    className="p-button-primary p-button-raised"
                                     style={{ width: '200px', marginRight: '1rem' }}
                                 />
                             </div>

@@ -1,7 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useRef, useState, useEffect, useLayoutEffect, useCallback} from 'react';
-import CurrencyInput from "react-currency-input-field";
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import {useNavigate} from 'react-router-dom';
@@ -12,7 +11,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { MultiSelect } from 'primereact/multiselect';
-import { format, set } from 'date-fns';
+import { format } from 'date-fns';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
@@ -61,7 +60,6 @@ const VarianceTable = () => {
         { field: "TotalVariance", header: "Total Variance", order: 15 }
     ]
 
-    
     // State to store the visible columns in the table
     const [visibleColumns, setVisibleColumns] = useState(varianceColumns);
 
@@ -79,10 +77,32 @@ const VarianceTable = () => {
     //check the permissions of the logged in user on page load, passing in
     //the required permissions
     useLayoutEffect(() => {
-        if (!auth.CheckAuthorization(["Manager", "District Manager", "Owner"])){
+        if (!auth.CheckAuthorization(["Team Leader", "Store Manager", "Owner"])) {
             navigate(routes.home);
         }
     });
+
+    // State to store the max and min date for the input fields
+    const [maxDate, setMaxDate] = useState('');
+    const [minDate, setMinDate] = useState('');
+    
+    // Update the input dates to the correct format when the form data changes
+    useEffect(() => {
+        // Set the max and min date for the input fields
+        if (formData.endDate instanceof Date) {
+            // Adjust the endDate for timezone offset and subtract one day
+            const maxDateValue = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
+            maxDateValue.setDate(maxDateValue.getDate() - 1);
+            setMaxDate(maxDateValue.toISOString().split('T')[0]);
+        }
+
+        if (formData.startDate instanceof Date) {
+            // Adjust the startDate for timezone offset and add one day
+            const minDateValue = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
+            minDateValue.setDate(minDateValue.getDate() + 1);
+            setMinDate(minDateValue.toISOString().split('T')[0]);
+        }
+    }, [formData.startDate, formData.endDate]);
 
     // Function to update the input dates to the correct format
     const UpdateInputDates = useCallback(() => {
@@ -90,11 +110,12 @@ const VarianceTable = () => {
         const startDateInput = document.getElementById("startDate");
         const endDateInput = document.getElementById("endDate");
 
-        if (startDateInput && endDateInput) {
+        // Check if the input elements exist and the form data contains Date objects
+        if (startDateInput && endDateInput && formData.startDate instanceof Date && formData.endDate instanceof Date) {
             // Create Date objects with the timezone offset
             const startDate = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
             const endDate = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
-
+    
             // Set the input values
             startDateInput.valueAsDate = startDate;
             endDateInput.valueAsDate = endDate;
@@ -211,7 +232,6 @@ const VarianceTable = () => {
         
     }, [formData.registerID, formData.startDate, formData.endDate, UpdateInputDates, arrRegisters, rowCount]);
 
-
     // Event handler for decrementing the date by one day when the left arrow button is clicked
     const HandlePreviousDay = (event) => {
         event.preventDefault();
@@ -264,6 +284,32 @@ const VarianceTable = () => {
         date.setDate(date.getDate() - 1);
 
         return date;
+    };
+
+    // Handles the change of the input fields
+    const HandleChange = (event) => {
+        const { name, value } = event.target;
+
+        // If the input is the register select, update the register ID
+        if (name === "posSelect") {
+            setFormData((prev) => ({
+                ...prev,
+                registerID: parseInt(value)
+            }));
+        }
+        else {
+            // Parse the string and extract year, month, and day values
+            const [year, month, day] = value.split("-").map(Number);
+
+            // Create a new UTC Date object with the extracted values
+            const date = new Date(Date.UTC(year, month - 1, day + 1));
+
+            // Update the form data with the new value
+            setFormData((prev) => ({
+                ...prev,
+                [name]: date
+            }));
+        }
     };
 
     // Function to export the table as a PDF file
@@ -436,36 +482,7 @@ const VarianceTable = () => {
             );
         }
     };
-
-    // Handles the change of the input fields
-    const HandleChange = (event) => {
-        const {name, value} = event.target;
-
-        // If the input is the register select, update the register ID
-        if (name === "posSelect") {
-            setFormData((prev) => ({
-                ...prev,
-                registerID: parseInt(value)
-            }));
-        }
-        // If the input is the date and value isn't empty, update the date
-        else if (value !== "") {
-            setFormData((prev) => ({
-                ...prev,
-                [name]: value
-            }));
-        }
-    };
-
-    const HandleCurrencyChange = useCallback((name) => {
-        return (value) => {
-            console.log(name, value);
-            setFormData((prev) => ({
-                ...prev,
-                [name]: value
-            }));
-    }, []});
-
+    
     // Function to handle the change of the row count
     const OnRowChange = (event) => {
         // Update the row count with the selected value
@@ -507,6 +524,7 @@ const VarianceTable = () => {
                 rounded
                 size="small"
                 onClick={exportPDF}
+                className="p-button-primary p-button-raised"
                 data-pr-tooltip="PDF"
                 label="Export to PDF"
             />
@@ -631,6 +649,7 @@ const VarianceTable = () => {
                                 name="startDate"
                                 className="variance-date"
                                 date={formData.startDate}
+                                max={maxDate}
                                 onChange={HandleChange}
                             />
                         </div>
@@ -645,6 +664,7 @@ const VarianceTable = () => {
                                 name="endDate" 
                                 className="variance-date"
                                 date={formData.endDate}
+                                min={minDate}
                                 onChange={HandleChange}
                             />
                         </div>
@@ -660,7 +680,7 @@ const VarianceTable = () => {
                             style={{ marginTop: "6px", boxShadow: "none"}}
                         />
                     </div>
-                    <div>
+                    <div className="mb-4">
                         <DataTable 
                             ref={tableRef}
                             id="varianceTable"
@@ -672,7 +692,6 @@ const VarianceTable = () => {
                             size="small"
                             paginator={true}
                             loading={loading}
-                            stripedRows
                             removableSort
                             header={tableHeader}
                             scrollable

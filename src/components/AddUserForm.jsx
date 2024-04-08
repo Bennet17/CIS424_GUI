@@ -4,8 +4,11 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useAuth } from "../AuthProvider";
 import { Tooltip } from 'primereact/tooltip';
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
         
-
 const AddUserForm = () => {
 
   const auth = useAuth();
@@ -193,10 +196,14 @@ const AddUserForm = () => {
   return (
 
     <div className="relative ml-5 ">
-      <button
+      <Button
         onClick={openModal}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      > Add User</button>
+        label="Add User"
+        className="p-button-primary p-button-raised"
+        size="small"
+        rounded
+        icon="pi pi-plus"
+      />
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
           <div className="bg-white p-8 rounded shadow-md w-auto">
@@ -345,21 +352,23 @@ const AddUserForm = () => {
               </div>
 
               <div className="flex justify-between">
-                <button
+                <Button
+                  label="Cancel"
+                  className="p-button-secondary p-button-raised"
+                  rounded
+                  size="small"
+                  icon="pi pi-times"
                   onClick={closeModal}
-                  type="button"
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Cancel
-                </button>
-                <button
+                />
+                <Button
+                  label="Add User"
+                  className="p-button-primary p-button-raised"
+                  rounded
+                  size="small"
+                  icon="pi pi-check"
                   type="submit"
                   disabled={validPassword === false}
-                  className={`py-2 px-4 font-bold rounded focus:outline-none focus:shadow-outline ${validPassword ? 'bg-indigo-600 hover:bg-indigo-700 text-white font-bold ' : 'bg-gray-400 cursor-not-allowed text-gray-600'
-                    }`}
-                >
-                  Add User
-                </button>
+                />
               </div>
             </form>
 
