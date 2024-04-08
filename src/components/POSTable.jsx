@@ -260,9 +260,6 @@ function POSTable() {
                     icon={pos.enabled ? 'pi pi-times' : 'pi pi-check'}
                     style={{ width: '125px' }}
                   />
-                  {/* <button onClick={() => toggleActivity(pos)} className='bg-button-blue hover:bg-button-blue-light text-white font-bold py-2 px-4 rounded-full w-32'>
-                    {pos.enabled ? 'Deactivate' : 'Activate'}
-                  </button> */}
                 </td>
               </tr>
             ))}
