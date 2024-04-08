@@ -1,7 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {useRef, useState, useEffect, useLayoutEffect, useCallback} from 'react';
-import CurrencyInput from "react-currency-input-field";
 import SideBar from './SideBar';
 import HorizontalNav from "./HorizontalNav";
 import {useNavigate} from 'react-router-dom';
@@ -12,7 +11,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { MultiSelect } from 'primereact/multiselect';
-import { format, max, set } from 'date-fns';
+import { format } from 'date-fns';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
@@ -89,16 +88,19 @@ const VarianceTable = () => {
     
     // Update the input dates to the correct format when the form data changes
     useEffect(() => {
-        console.log("I'm here brother!!");
         // Set the max and min date for the input fields
         if (formData.endDate instanceof Date) {
-            const maxDateValue = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-            setMaxDate(maxDateValue);
+            // Adjust the endDate for timezone offset and subtract one day
+            const maxDateValue = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
+            maxDateValue.setDate(maxDateValue.getDate() - 1);
+            setMaxDate(maxDateValue.toISOString().split('T')[0]);
         }
-    
+
         if (formData.startDate instanceof Date) {
-            const minDateValue = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-            setMinDate(minDateValue);
+            // Adjust the startDate for timezone offset and add one day
+            const minDateValue = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
+            minDateValue.setDate(minDateValue.getDate() + 1);
+            setMinDate(minDateValue.toISOString().split('T')[0]);
         }
     }, [formData.startDate, formData.endDate]);
 
@@ -230,7 +232,6 @@ const VarianceTable = () => {
         
     }, [formData.registerID, formData.startDate, formData.endDate, UpdateInputDates, arrRegisters, rowCount]);
 
-
     // Event handler for decrementing the date by one day when the left arrow button is clicked
     const HandlePreviousDay = (event) => {
         event.preventDefault();
@@ -283,6 +284,32 @@ const VarianceTable = () => {
         date.setDate(date.getDate() - 1);
 
         return date;
+    };
+
+    // Handles the change of the input fields
+    const HandleChange = (event) => {
+        const { name, value } = event.target;
+
+        // If the input is the register select, update the register ID
+        if (name === "posSelect") {
+            setFormData((prev) => ({
+                ...prev,
+                registerID: parseInt(value)
+            }));
+        }
+        else {
+            // Parse the string and extract year, month, and day values
+            const [year, month, day] = value.split("-").map(Number);
+
+            // Create a new UTC Date object with the extracted values
+            const date = new Date(Date.UTC(year, month - 1, day + 1));
+
+            // Update the form data with the new value
+            setFormData((prev) => ({
+                ...prev,
+                [name]: date
+            }));
+        }
     };
 
     // Function to export the table as a PDF file
@@ -455,56 +482,7 @@ const VarianceTable = () => {
             );
         }
     };
-
-    // Handles the change of the input fields
-    const HandleChange = (event) => {
-        const { name, value } = event.target;
-
-        // If the input is the register select, update the register ID
-        if (name === "posSelect") {
-            setFormData((prev) => ({
-                ...prev,
-                registerID: parseInt(value)
-            }));
-        }
-
-        // If the input is the date and the value isn't empty
-        else if ((name === "startDate" || name === "endDate") && value !== "") {
-            // Check if the start date is before or equal to the end date
-            if (name === "startDate" && new Date(value) <= new Date(formData.endDate)) {
-                // Converts value to date before updating form data
-                // const date = new Date(value);
-
-                setFormData((prev) => ({
-                    ...prev,
-                    [name]: value
-                }));
-            } else if (name === "endDate" && new Date(value) >= new Date(formData.startDate)) {
-                // Converts value to date before updating form data
-                const date = new Date(new Date(value.getTime()) - (new Date(value.getTimezoneOffset()) * 60000));
-                // const date = new Date(value).setDate(new Date(value).getDate() + 1);
-                console.log(date);
-
-                setFormData((prev) => ({
-                    ...prev,
-                    [name]: date
-                }));
-            } else {
-                // Invalid date range, do not update
-                toast.warning("Invalid date range. Please ensure the start date is before or equal to the end date.");
-            }
-        }
-    };
-
-    const HandleCurrencyChange = useCallback((name) => {
-        return (value) => {
-            console.log(name, value);
-            setFormData((prev) => ({
-                ...prev,
-                [name]: value
-            }));
-    }, []});
-
+    
     // Function to handle the change of the row count
     const OnRowChange = (event) => {
         // Update the row count with the selected value
