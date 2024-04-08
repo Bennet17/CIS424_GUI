@@ -9,6 +9,8 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
 import { Tooltip } from 'primereact/tooltip';
+import { Toaster, toast } from "sonner";
+
 
 
 const EditUser = (user) => {
@@ -36,13 +38,11 @@ const EditUser = (user) => {
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
   const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
 
-
   // Retrieve the serialized string from local storage
   const storedArrayString = localStorage.getItem('stores');
 
   // Parse the string back into an array
   const storeArray = JSON.parse(storedArrayString);
-
 
 
   //this method is used to make at least one checkbox checked
@@ -65,7 +65,7 @@ const EditUser = (user) => {
     // Ensure at least one checkbox is checked
     if (!isChecked && count < 1) {
       // Display an error message or prevent the action
-      alert("At least one store must be selected.");
+      toast.error("At least one store must be selected");
       // Check the current checkbox again
       e.target.checked = true;
 
@@ -225,6 +225,13 @@ const EditUser = (user) => {
 
   return (
     <div className="relative ">
+         <Toaster
+        richColors
+        position="top-center"
+        expand={true}
+        duration={5000}
+        pauseWhenPageIsHidden={true}
+      />
       <Button
         onClick={openModal}
         className="p-button-primary p-button-raised"
@@ -330,14 +337,14 @@ const EditUser = (user) => {
                 <div className="mb-4" style={{ maxHeight: '150px', overflowY: 'auto' }}>
                   <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
                   {storeArray.map(item => (
-                    <div key={item.ID} className="mb-2">
+                    <div key={item.ID} className="mb-2 flex items-center">
                       <input
                         type="checkbox"
                         id={`store${item.ID}`}
                         name="store"
                         value={item.ID}
-                        defaultChecked={item.ID === curStoreID}
-                        onChange={(e) => handleCheckboxChange(e, item.ID)}
+                        defaultChecked={user.user.storeID_CSV.includes(item.ID.toString())}
+                        onChange={handleCheckboxChange}
                         className="mr-2"
                       />
                       <label htmlFor={`store${item.ID}`}>{item.location}</label>

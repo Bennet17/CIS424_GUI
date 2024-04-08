@@ -76,7 +76,7 @@ function EmployeeTable() {
       const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewUsersByStoreID?storeID=${curStoreID}`;
       axios.get(url)
         .then((response) => {
-          console.log(response);
+          //console.log(response);
           //map the response of employee data onto an array of employees
           setEmployees(
             response.data
@@ -123,7 +123,7 @@ function EmployeeTable() {
   
   return (
     <div>
-      <div style={{ maxHeight: '380px', overflowY: 'auto' }}>
+      <div style={{ maxHeight: '450px', overflowY: 'auto' }}>
         <table id='empTable' ref={tableRef} className="min-w-full text-center text-navy-gray">
           <thead>
             <tr>
