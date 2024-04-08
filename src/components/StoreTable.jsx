@@ -95,7 +95,7 @@ function StoreTable() {
 
   return (
     <div className='min-w-full'>
-      <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+      <div style={{ maxHeight: '450px', overflowY: 'auto' }}>
         <table id='storeTable' ref={tableRef} className="min-w-full text-center">
           <thead>
             <tr>

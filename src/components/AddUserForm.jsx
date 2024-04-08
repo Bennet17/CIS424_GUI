@@ -8,6 +8,8 @@ import { Button } from "primereact/button";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
+import { Toaster, toast } from "sonner";
+
 
 const AddUserForm = () => {
 
@@ -50,6 +52,7 @@ const AddUserForm = () => {
     setPosition("")
     setPassword("")
     setStoreID("")
+    setResult('');
     setErrorMessage("")
     setValidPassword(false);
     setSelectedStores([]); //dump selected stored, the default will be added in OPENMODAL()
@@ -122,7 +125,7 @@ const AddUserForm = () => {
     // Ensure at least one checkbox is checked
     if (!isChecked && count < 1) {
       // Display an error message or prevent the action
-      alert("At least one store must be selected.");
+      toast.error("At least one store must be selected");
       // Check the current checkbox again
       e.target.checked = true;
 
@@ -195,7 +198,15 @@ const AddUserForm = () => {
 
   return (
 
+
     <div className="relative ml-5 ">
+            <Toaster
+        richColors
+        position="top-center"
+        expand={true}
+        duration={5000}
+        pauseWhenPageIsHidden={true}
+      />
       <Button
         onClick={openModal}
         label="Add User"

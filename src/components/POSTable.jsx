@@ -229,7 +229,7 @@ function POSTable() {
 
 
       <h2 className="text-lg text-red-500 font-bold mb-2">{result}</h2>
-      <div style={{ maxHeight: '380px', overflowY: 'auto' }}>
+      <div style={{ maxHeight: '450px', overflowY: 'auto' }}>
         <table id='posTable' ref={tableRef} className="min-w-full text-center text-navy-gray">
           <thead>
             <tr>
