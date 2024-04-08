@@ -27,26 +27,26 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
 const VarianceTable = () => {
-  const auth = useAuth();
-  const navigate = useNavigate();
+    const auth = useAuth();
+    const navigate = useNavigate();
 
-  // Set the start date to 30 days ago and the end date to today
-  const today = new Date();
-  const monthAgo = new Date(today);
-  monthAgo.setDate(monthAgo.getDate() - 30);
+    // Set the start date to 30 days ago and the end date to today
+    const today = new Date();
+    const monthAgo = new Date(today);
+    monthAgo.setDate(monthAgo.getDate() - 30);
 
-  const [rowCount, setRowCount] = useState(10); // Number of rows to display per page
+    const [rowCount, setRowCount] = useState(10); // Number of rows to display per page
 
-  const [arrRegisters, setArrRegisters] = useState([{ id: -1, name: "All" }]); // Array of a store's registers and its information
-  const [arrVariances, setArrVariances] = useState([]); // Array of variances and its information
-  const [emptyRows, setEmptyRows] = useState([]); // Empty rows to fill the last page of the table
+    const [arrRegisters, setArrRegisters] = useState([{ id: -1, name: "All" }]); // Array of a store's registers and its information
+    const [arrVariances, setArrVariances] = useState([]); // Array of variances and its information
+    const [emptyRows, setEmptyRows] = useState([]); // Empty rows to fill the last page of the table
 
-  const [registerName, setRegisterName] = useState(""); // Register name
+    const [registerName, setRegisterName] = useState(""); // Register name
 
-  const [currentPage, setCurrentPage] = useState(0); // Initialize currentPage with default value of 0
+    const [currentPage, setCurrentPage] = useState(0); // Initialize currentPage with default value of 0
 
-  const tableRef = useRef(null); // Reference to the table element
-  const [loading, setLoading] = useState(true); // Loading state for the table
+    const tableRef = useRef(null); // Reference to the table element
+    const [loading, setLoading] = useState(true); // Loading state for the table
 
     // Columns for the variance table
     const varianceColumns = [
@@ -70,16 +70,16 @@ const VarianceTable = () => {
     // State to store the visible columns in the table
     const [visibleColumns, setVisibleColumns] = useState(varianceColumns);
 
-  // Form data for the table
-  const [formData, setFormData] = useState({
-    user: auth.cookie.user.ID,
-    name: auth.cookie.user.name,
-    store: auth.cookie.user.viewingStoreID,
-    storeName: auth.cookie.user.viewingStoreLocation,
-    registerID: -1,
-    startDate: monthAgo,
-    endDate: today,
-  });
+    // Form data for the table
+    const [formData, setFormData] = useState({
+        user: auth.cookie.user.ID,
+        name: auth.cookie.user.name,
+        store: auth.cookie.user.viewingStoreID,
+        storeName: auth.cookie.user.viewingStoreLocation,
+        registerID: -1,
+        startDate: monthAgo,
+        endDate: today,
+    });
 
     //check the permissions of the logged in user on page load, passing in
     //the required permissions
@@ -108,358 +108,354 @@ const VarianceTable = () => {
         }
     }, [formData.startDate, formData.endDate]);
 
-  // Function to update the input dates to the correct format
-  const UpdateInputDates = useCallback(() => {
-    // Set the start and end date to the correct format
-    const startDateInput = document.getElementById("startDate");
-    const endDateInput = document.getElementById("endDate");
+    // Function to update the input dates to the correct format
+    const UpdateInputDates = useCallback(() => {
+        // Set the start and end date to the correct format
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
 
         // Check if the input elements exist and the form data contains Date objects
         if (startDateInput && endDateInput && formData.startDate instanceof Date && formData.endDate instanceof Date) {
             // Create Date objects with the timezone offset
             const startDate = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
             const endDate = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
-    
+
             // Set the input values
             startDateInput.valueAsDate = startDate;
             endDateInput.valueAsDate = endDate;
         }
     }, [formData.startDate, formData.endDate]);
 
-  // GET request to return registers for the selected store
-  useEffect(() => {
-    // Set the start and end date to the correct format
-    UpdateInputDates();
+    // GET request to return registers for the selected store
+    useEffect(() => {
+        // Set the start and end date to the correct format
+        UpdateInputDates();
 
-    function GetRegisters() {
-      axios
-        .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`
-        )
-        .then((response) => {
-          // Extract register names and ID from the response and filter out closed registers
-          const newRegisters = response.data
-            //.filter(register => register.opened)
-            .map((register) => ({
-              id: register.regID,
-              name: register.name,
-              open: register.opened,
-            }));
+        function GetRegisters() {
+            axios
+            .get(
+                `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`
+            )
+            .then((response) => {
+                // Extract register names and ID from the response and filter out closed registers
+                const newRegisters = response.data
+                //.filter(register => register.opened)
+                .map((register) => ({
+                    id: register.regID,
+                    name: register.name,
+                    open: register.opened,
+                }));
 
-          // Add 'All' option to the register select
-          newRegisters.unshift({ id: -1, name: "All", open: true });
+                // Add 'All' option to the register select
+                newRegisters.unshift({ id: -1, name: "All", open: true });
 
-          if (newRegisters.length === 1) {
-            // Set toast message if no registers are open
-            toast.warning(
-              `No registers are currently open for ${formData.storeName}.`
-            );
-          } else {
-            // Update arrSources using functional form of setState to avoid duplicates
-            setArrRegisters(newRegisters);
+                if (newRegisters.length === 1) {
+                // Set toast message if no registers are open
+                toast.warning(
+                    `No registers are currently open for ${formData.storeName}.`
+                );
+                } else {
+                // Update arrSources using functional form of setState to avoid duplicates
+                setArrRegisters(newRegisters);
 
-            // Update the register ID to the first register in the array
-            setFormData((prev) => ({
-              ...prev,
-              registerID: newRegisters[0].id,
-            }));
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          toast.error(
-            "A server error occurred while loading registers. Please try again later."
-          );
-        });
-    }
+                // Update the register ID to the first register in the array
+                setFormData((prev) => ({
+                    ...prev,
+                    registerID: newRegisters[0].id,
+                }));
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                toast.error(
+                "A server error occurred while loading registers. Please try again later."
+                );
+            });
+        }
 
-    GetRegisters();
-  }, [formData.store, UpdateInputDates]);
+        GetRegisters(); 
+    }, [formData.store, UpdateInputDates]);
 
-  // Load the register variances when the form data changes
-  useEffect(() => {
-    // Set the start and end date to the correct format
-    UpdateInputDates();
+    // Load the register variances when the form data changes
+    useEffect(() => {
+        // Set the start and end date to the correct format
+        UpdateInputDates();
 
-    // GET request to the Register Variance API
-    function GetRegisterVariance() {
-      // Get the register ID, start date, and end date from the form data
-      const registerID = formData.registerID;
-      const storeID = formData.store;
-      const startDate = new Date(formData.startDate)
-        .toISOString()
-        .split("T")[0];
-      const endDate = new Date(formData.endDate).toISOString().split("T")[0];
+        // GET request to the Register Variance API
+        function GetRegisterVariance() {
+        // Get the register ID, start date, and end date from the form data
+        const registerID = formData.registerID;
+        const storeID = formData.store;
+        const startDate = new Date(formData.startDate)
+            .toISOString()
+            .split("T")[0];
+        const endDate = new Date(formData.endDate).toISOString().split("T")[0];
 
-      // GET request to the Register Variance API
-      axios
-        .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`
-        )
-        .then((response) => {
-          // If the response contains data, set the array of variances to the response data
-          if (response.data && response.data.length > 0) {
-            // Set the array of variances after sorting by date
-            setArrVariances(
-              response.data.sort((a, b) => new Date(a.Date) - new Date(b.Date))
-            );
+        // GET request to the Register Variance API
+        axios
+            .get(
+            `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`
+            )
+            .then((response) => {
+            // If the response contains data, set the array of variances to the response data
+            if (response.data && response.data.length > 0) {
+                // Set the array of variances after sorting by date
+                setArrVariances(
+                response.data.sort((a, b) => new Date(a.Date) - new Date(b.Date))
+                );
 
-            // Calculate the number of empty rows to fill the last page of the table
-            // Prime react datatable doesn't lock the number of rows to the page size so
-            // the paginator jumps up and down when the number of variances changes.
-            // This fixes that by adding empty rows to the last page since there's no
-            // way to lock the number of rows :(.
-            const remainingEmptyRows =
-              rowCount - (response.data.length % rowCount);
+                // Calculate the number of empty rows to fill the last page of the table
+                // Prime react datatable doesn't lock the number of rows to the page size so
+                // the paginator jumps up and down when the number of variances changes.
+                // This fixes that by adding empty rows to the last page since there's no
+                // way to lock the number of rows :(.
+                const remainingEmptyRows =
+                rowCount - (response.data.length % rowCount);
 
-            // Create an array of empty rows to fill the last page of the table
-            let emptyRows = [];
+                // Create an array of empty rows to fill the last page of the table
+                let emptyRows = [];
 
-            // Check if there are remaining empty rows to fill, and if the number of data rows is not a multiple of rowCount
-            if (
-              remainingEmptyRows > 0 &&
-              response.data.length % rowCount !== 0
-            ) {
-              emptyRows = Array.from({ length: remainingEmptyRows }, () => ({
-                Date: null,
-                amountExpected: null,
-                total: null,
-                Variance: null,
-              }));
+                // Check if there are remaining empty rows to fill, and if the number of data rows is not a multiple of rowCount
+                if (
+                remainingEmptyRows > 0 &&
+                response.data.length % rowCount !== 0
+                ) {
+                emptyRows = Array.from({ length: remainingEmptyRows }, () => ({
+                    Date: null,
+                    amountExpected: null,
+                    total: null,
+                    Variance: null,
+                }));
+                }
+
+                // Set the empty rows
+                setEmptyRows(emptyRows);
+
+                // Set the register name
+                setRegisterName(
+                arrRegisters.find((register) => register.id === registerID).name
+                );
+
+                // Set the loading state to false
+                setLoading(false);
+            } else {
+                setArrVariances([]);
+                setEmptyRows([]);
+                setRegisterName(
+                arrRegisters.find((register) => register.id === registerID).name
+                );
+                setLoading(false);
             }
-
-            // Set the empty rows
-            setEmptyRows(emptyRows);
-
-            // Set the register name
-            setRegisterName(
-              arrRegisters.find((register) => register.id === registerID).name
-            );
-
-            // Set the loading state to false
-            setLoading(false);
-          } else {
+            })
+            .catch((error) => {
+            //console.log(error);
             setArrVariances([]);
             setEmptyRows([]);
             setRegisterName(
-              arrRegisters.find((register) => register.id === registerID).name
+                arrRegisters.find((register) => register.id === registerID).name
             );
             setLoading(false);
-          }
-        })
-        .catch((error) => {
-          //console.log(error);
-          setArrVariances([]);
-          setEmptyRows([]);
-          setRegisterName(
-            arrRegisters.find((register) => register.id === registerID).name
-          );
-          setLoading(false);
+            });
+        }
+
+    GetRegisterVariance();}, [
+        formData.registerID,
+        formData.startDate,
+        formData.endDate,
+        UpdateInputDates,
+        arrRegisters,
+        rowCount,
+    ]);
+
+    // Event handler for decrementing the date by one day when the left arrow button is clicked
+    const HandlePreviousDay = (event) => {
+        event.preventDefault();
+
+        // Decrement the start and end date by one day
+        const newStartDate = DecrementDate(formData.startDate);
+        const newEndDate = DecrementDate(formData.endDate);
+
+        // Update the date
+        setFormData((prev) => ({
+            ...prev,
+            startDate: newStartDate,
+            endDate: newEndDate,
+        }));
+    };
+
+    // Event handler for incrementing the date by one day when the right arrow button is clicked
+    const HandleNextDay = (event) => {
+        event.preventDefault();
+
+        // Increment the start and end date by one day
+        const newStartDate = IncrementDate(formData.startDate);
+        const newEndDate = IncrementDate(formData.endDate);
+
+        // Update the date
+        setFormData((prev) => ({
+            ...prev,
+            startDate: newStartDate,
+            endDate: newEndDate,
+        }));
+    };
+
+    // Function to increment the date by one day
+    const IncrementDate = (dateString) => {
+        // Convert the date string to a Date object
+        const date = new Date(dateString);
+
+        // Increment the date by one day
+        date.setDate(date.getDate() + 1);
+
+        return date;
+    };
+
+    // Function to decrement the date by one day
+    const DecrementDate = (dateString) => {
+        // Convert the date string to a Date object
+        const date = new Date(dateString);
+
+        // Decrement the date by one day
+        date.setDate(date.getDate() - 1);
+
+        return date;
+    };
+
+    // Function to export the table as a PDF file
+    const exportPDF = () => {
+        // Create a new jsPDF instance
+        const doc = new jsPDF({
+            orientation: "landscape",
         });
-    }
 
-    GetRegisterVariance();
-  }, [
-    formData.registerID,
-    formData.startDate,
-    formData.endDate,
-    UpdateInputDates,
-    arrRegisters,
-    rowCount,
-  ]);
+        // Add title to the PDF report
+        const title = `Variance Table\n${formData.storeName}\n
+                        ${registerName}\n${FormatDate(formData.startDate)} - ${FormatDate(formData.endDate)}`;
+        const titleX = 5;
+        const titleY = 5;
+        doc.setFontSize(8);
+        doc.text(titleX, titleY, title);
 
-  // Event handler for decrementing the date by one day when the left arrow button is clicked
-  const HandlePreviousDay = (event) => {
-    event.preventDefault();
+        // Initialize variables
+        const tableData = [];
+        let currentDate = null;
+        let totalRow = {};
+        let isTotalRow = false; // Flag to track if the current row is a totals row
 
-    // Decrement the start and end date by one day
-    const newStartDate = DecrementDate(formData.startDate);
-    const newEndDate = DecrementDate(formData.endDate);
+        // Iterate over arrVariances to calculate totals and insert rows
+        arrVariances.forEach((variance) => {
+            // If the date changes, insert the total row for the previous date
+            if (variance.Date !== currentDate) {
+            if (totalRow && Object.keys(totalRow).length > 0 && !isTotalRow) {
+                // Push total row to tableData with "Totals" label
+                const formattedTotalRow = [
+                "Totals",
+                ...Object.values(totalRow).map((value) => {
+                    return isNaN(value) ? value : FormatCurrency(value);
+                }),
+                ];
+                tableData.push(formattedTotalRow);
+                tableData.push([]); // Add an empty row after the totals row
+                totalRow = {}; // Reset total row object
+            }
+            tableData.push([FormatDate(variance.Date)]); // Insert date row
+            currentDate = variance.Date; // Update current date
+            isTotalRow = false; // Reset isTotalRow flag
+            }
 
-    // Update the date
-    setFormData((prev) => ({
-      ...prev,
-      startDate: newStartDate,
-      endDate: newEndDate,
-    }));
-  };
+            // Calculate totals for each column
+            varianceColumns.forEach((column) => {
+            if (!totalRow[column.field]) {
+                // Initialize total to an empty string for excluded columns
+                totalRow[column.field] = [
+                "POSName",
+                "OpenerName",
+                "CloserName",
+                ].includes(column.field)
+                ? ""
+                : 0;
+            }
+            if (!isNaN(variance[column.field])) {
+                if (!["POSName", "OpenerName", "CloserName"].includes(column.field)) {
+                totalRow[column.field] += variance[column.field];
+                }
+            } else {
+                // Reset the total to an empty string for excluded columns
+                if (["POSName", "OpenerName", "CloserName"].includes(column.field)) {
+                totalRow[column.field] = "";
+                }
+            }
+            });
 
-  // Event handler for incrementing the date by one day when the right arrow button is clicked
-  const HandleNextDay = (event) => {
-    event.preventDefault();
-
-    // Increment the start and end date by one day
-    const newStartDate = IncrementDate(formData.startDate);
-    const newEndDate = IncrementDate(formData.endDate);
-
-    // Update the date
-    setFormData((prev) => ({
-      ...prev,
-      startDate: newStartDate,
-      endDate: newEndDate,
-    }));
-  };
-
-  // Function to increment the date by one day
-  const IncrementDate = (dateString) => {
-    // Convert the date string to a Date object
-    const date = new Date(dateString);
-
-    // Increment the date by one day
-    date.setDate(date.getDate() + 1);
-
-    return date;
-  };
-
-  // Function to decrement the date by one day
-  const DecrementDate = (dateString) => {
-    // Convert the date string to a Date object
-    const date = new Date(dateString);
-
-    // Decrement the date by one day
-    date.setDate(date.getDate() - 1);
-
-    return date;
-  };
-
-  // Function to export the table as a PDF file
-  const exportPDF = () => {
-    // Create a new jsPDF instance
-    const doc = new jsPDF({
-      orientation: "landscape",
-    });
-
-    // Add title to the PDF report
-    const title = `Variance Table\n${
-      formData.storeName
-    }\n${registerName}\n${FormatDate(formData.startDate)} - ${FormatDate(
-      formData.endDate
-    )}`;
-    const titleX = 5;
-    const titleY = 5;
-    doc.setFontSize(8);
-    doc.text(titleX, titleY, title);
-
-    // Initialize variables
-    const tableData = [];
-    let currentDate = null;
-    let totalRow = {};
-    let isTotalRow = false; // Flag to track if the current row is a totals row
-
-    // Iterate over arrVariances to calculate totals and insert rows
-    arrVariances.forEach((variance) => {
-      // If the date changes, insert the total row for the previous date
-      if (variance.Date !== currentDate) {
-        if (totalRow && Object.keys(totalRow).length > 0 && !isTotalRow) {
-          // Push total row to tableData with "Totals" label
-          const formattedTotalRow = [
-            "Totals",
-            ...Object.values(totalRow).map((value) => {
-              return isNaN(value) ? value : FormatCurrency(value);
+            // Push current variance data to tableData
+            const rowData = [
+            FormatDate(variance.Date), // Include the date column
+            ...varianceColumns.map((column) => {
+                // Apply formatting functions to other columns
+                if (
+                [
+                    "OpenExpected",
+                    "OpenActual",
+                    "CloseExpected",
+                    "CloseActual",
+                    "CashToSafe",
+                    "CloseCreditActual",
+                    "CloseCreditExpected",
+                ].includes(column.field)
+                ) {
+                return variance[column.field] == null
+                    ? "-"
+                    : FormatCurrency(variance[column.field]); // Currency formatting
+                } else if (
+                [
+                    "OpenVariance",
+                    "CloseVariance",
+                    "TotalCashVariance",
+                    "CreditVariance",
+                    "TotalVariance",
+                ].includes(column.field)
+                ) {
+                return variance[column.field] == null
+                    ? "-"
+                    : VariancePositiveNegative(variance[column.field], true); // Variance formatting
+                } else {
+                return variance[column.field]; // No formatting for other columns
+                }
             }),
-          ];
-          tableData.push(formattedTotalRow);
-          tableData.push([]); // Add an empty row after the totals row
-          totalRow = {}; // Reset total row object
-        }
-        tableData.push([FormatDate(variance.Date)]); // Insert date row
-        currentDate = variance.Date; // Update current date
-        isTotalRow = false; // Reset isTotalRow flag
-      }
+            ];
+            tableData.push(rowData); // Insert row data
 
-      // Calculate totals for each column
-      varianceColumns.forEach((column) => {
-        if (!totalRow[column.field]) {
-          // Initialize total to an empty string for excluded columns
-          totalRow[column.field] = [
-            "POSName",
-            "OpenerName",
-            "CloserName",
-          ].includes(column.field)
-            ? ""
-            : 0;
-        }
-        if (!isNaN(variance[column.field])) {
-          if (!["POSName", "OpenerName", "CloserName"].includes(column.field)) {
-            totalRow[column.field] += variance[column.field];
-          }
-        } else {
-          // Reset the total to an empty string for excluded columns
-          if (["POSName", "OpenerName", "CloserName"].includes(column.field)) {
-            totalRow[column.field] = "";
-          }
-        }
-      });
-
-      // Push current variance data to tableData
-      const rowData = [
-        FormatDate(variance.Date), // Include the date column
-        ...varianceColumns.map((column) => {
-          // Apply formatting functions to other columns
-          if (
-            [
-              "OpenExpected",
-              "OpenActual",
-              "CloseExpected",
-              "CloseActual",
-              "CashToSafe",
-              "CloseCreditActual",
-              "CloseCreditExpected",
-            ].includes(column.field)
-          ) {
-            return variance[column.field] == null
-              ? "-"
-              : FormatCurrency(variance[column.field]); // Currency formatting
-          } else if (
-            [
-              "OpenVariance",
-              "CloseVariance",
-              "TotalCashVariance",
-              "CreditVariance",
-              "TotalVariance",
-            ].includes(column.field)
-          ) {
-            return variance[column.field] == null
-              ? "-"
-              : VariancePositiveNegative(variance[column.field], true); // Variance formatting
-          } else {
-            return variance[column.field]; // No formatting for other columns
-          }
-        }),
-      ];
-      tableData.push(rowData); // Insert row data
-
-      // Check if the current row is a totals row
-      if (rowData[0] === "Totals") {
-        isTotalRow = true;
-      }
-    });
+            // Check if the current row is a totals row
+            if (rowData[0] === "Totals") {
+            isTotalRow = true;
+            }
+        });
 
     // Calculate and push the total row for the last date group
     if (totalRow && Object.keys(totalRow).length > 0 && !isTotalRow) {
-      // Ensure that all columns are present in the total row
-      varianceColumns.forEach((column) => {
+        // Ensure that all columns are present in the total row
+        varianceColumns.forEach((column) => {
         if (!totalRow[column.field]) {
-          totalRow[column.field] = [
+            totalRow[column.field] = [
             "POSName",
             "OpenerName",
             "CloserName",
-          ].includes(column.field)
+            ].includes(column.field)
             ? ""
             : 0;
         }
-      });
+        });
 
-      // Format the total row and push it
-      const formattedTotalRow = [
+        // Format the total row and push it
+        const formattedTotalRow = [
         "Totals",
         ...Object.values(totalRow).map((value) => {
-          return isNaN(value) ? value : FormatCurrency(value);
+            return isNaN(value) ? value : FormatCurrency(value);
         }),
-      ];
+        ];
 
-      tableData.push(formattedTotalRow);
-      tableData.push([]); // Add an empty row after the totals row
+        tableData.push(formattedTotalRow);
+        tableData.push([]); // Add an empty row after the totals row
     }
 
     // Include the date column header in the head array
@@ -467,14 +463,14 @@ const VarianceTable = () => {
 
     // Save the PDF report with the store name and current date
     doc.autoTable({
-      head: [head], // Header row containing column headers
-      body: tableData, // Data rows
-      styles: { halign: "center", cellPadding: 0.8, fontSize: 8 },
-      startY: titleY + 15,
+        head: [head], // Header row containing column headers
+        body: tableData, // Data rows
+        styles: { halign: "center", cellPadding: 0.8, fontSize: 8 },
+        startY: titleY + 15,
     });
 
     doc.save(`${GetFileName()}.pdf`);
-  };
+    };
 
   // Function to get the file name for the exported CSV file
   function GetFileName() {
