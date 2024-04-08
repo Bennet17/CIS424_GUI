@@ -4,6 +4,10 @@ import routes from "../routes.js";
 import { useAuth } from "../AuthProvider.js";
 import Logo from "../newLogo.png";
 import axios from "axios";
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 function SelectStore() {
   const navigate = useNavigate();
@@ -111,12 +115,14 @@ function SelectStore() {
             ))}
           </div>
           <div className="flex justify-center">
-            <button
+            <Button
               type="submit"
-              className="w-3/4 mt-6 bg-button-blue py-2 text-sm font-semibold text-white rounded-full shadow-sm hover:bg-button-blue-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-button-blue"
-            >
-              Continue
-            </button>
+              label="Continue"
+              rounded
+              icon="pi pi-arrow-right"
+              size="small"
+              className="p-button-raised p-button-primary"
+            />
           </div>
         </form>
       </div>

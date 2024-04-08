@@ -524,6 +524,7 @@ const VarianceTable = () => {
                 rounded
                 size="small"
                 onClick={exportPDF}
+                className="p-button-primary p-button-outlined p-button-rounded p-button-text"
                 data-pr-tooltip="PDF"
                 label="Export to PDF"
             />

@@ -631,7 +631,7 @@ const VarianceAuditPage = () =>{
                                     icon="pi pi-times"
                                     size="small"
                                     rounded
-                                    className="p-button-secondary"
+                                    className="p-button-secondary p-button-raised"
                                     style={{ width: '200px', marginRight: '1rem' }}
                                 />
                                 <Button
@@ -640,7 +640,7 @@ const VarianceAuditPage = () =>{
                                     icon="pi pi-check"
                                     size="small"
                                     rounded
-                                    className="p-button-primary"
+                                    className="p-button-primary p-button-raised"
                                     style={{ width: '200px', marginRight: '1rem' }}
                                 />
                             </div>

@@ -8,6 +8,11 @@ import { useAuth } from "../AuthProvider.js";
 import { Toaster, toast } from "sonner";
 import classNames from "classnames";
 import { Vault, CreditCard, Package, PackageOpen } from "lucide-react";
+import { ToggleButton } from "primereact/togglebutton";
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 // USD Icon imports
 import BillHundred from "../usd_icons/bills/BillHundred.svg";
@@ -207,6 +212,8 @@ const CloseDayPage = () => {
     setElm1DollarCoin(0);
     setElm2Dollar(0);
     setElmHalfDollarCoin(0);
+
+    toast.info("Fields have been reset.");
   }
 
   //call on component load AND when poss state has refreshed
@@ -557,7 +564,7 @@ const CloseDayPage = () => {
     <div className="flex min-h-screen bg-custom-accent">
       <Toaster
         richColors
-        position="bottom-right"
+        position="top-center"
         expand={true}
         duration={5000}
         pauseWhenPageIsHidden={true}
@@ -1229,7 +1236,7 @@ const CloseDayPage = () => {
                     </td>
                   </tr>
                 )}
-                <tr>
+                {/* <tr>
                   <td colSpan="3">
                     <p
                       className="rounded mt-1 py-1 cursor-pointer w-full mb-4 text-center border-2 border-gray-300 hover:border-button-blue-light bg-white text-xl"
@@ -1261,9 +1268,39 @@ const CloseDayPage = () => {
                       Clear All Fields
                     </button>
                   </td>
-                </tr>
+                </tr> */}
               </tbody>
             </table>
+            <div>
+              <Button
+                type="button"
+                value="button"
+                label="Clear"
+                rounded
+                icon="pi pi-times"
+                size="small"
+                className="p-button-raised p-button-secondary"
+                onClick={ClearAllFields}
+              />
+              <Button
+                type="submit"
+                value="submit"
+                label="Close"
+                rounded
+                icon="pi pi-check"
+                size="small"
+                className="p-button-raised p-button-primary"
+                style={{ width: "125px", marginLeft: "1rem", marginRight: "1rem" }}
+              />
+              <ToggleButton
+                checked={showExtraChange}
+                onChange={ToggleExtraChange}
+                onIcon="pi pi-eye"
+                offIcon="pi pi-eye-slash"
+                onLabel="Hide extras"
+                offLabel="Show Extras"
+              />
+            </div>
           </form>
         </div>
         {false && (

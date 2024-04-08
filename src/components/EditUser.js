@@ -4,10 +4,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthProvider.js';
-
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 const EditUser = (user) => {
-
   const auth = useAuth();
 
   //DECLARE VARIABLES
@@ -221,13 +223,13 @@ const EditUser = (user) => {
 
   return (
     <div className="relative ">
-      <button
+      <Button
         onClick={openModal}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline"
-
-      >
-        Edit User: {user.user.name}
-      </button>
+        className="p-button-primary p-button-raised"
+        size="small"
+        rounded
+        label={`Edit User: ${user.user.name} `}
+      />
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-8 rounded shadow-md w-auto">
@@ -342,27 +344,30 @@ const EditUser = (user) => {
                 </div>
               </div>
               <div className="flex justify-between">
-                <button
-                  type="button"
+                <Button
                   onClick={closeModal}
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Cancel
-                </button>
-
-                <button
+                  label="Cancel"
+                  size="small"
+                  rounded
+                  icon="pi pi-times"
+                  className="p-button-secondary p-button-raised"
+                />
+                <Button
                   type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Save
-                </button>
-
-                <button
+                  label="Save"
+                  size="small"
+                  rounded
+                  icon="pi pi-check"
+                  className="p-button-primary p-button-raised"
+                />
+                <Button
                   onClick={toggleAbility}
-                  className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  {user.user.enabled ? 'Deactivate User' : 'Activate User'}
-                </button>
+                  label={user.user.enabled ? "Disable User" : "Enable User"}
+                  size="small"
+                  rounded
+                  icon={user.user.enabled ? "pi pi-ban" : "pi pi-check"}
+                  className={user.user.enabled ? "p-button-danger p-button-raised" : "p-button-success p-button-raised"}
+                />
               </div>
             </form>
 

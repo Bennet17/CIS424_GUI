@@ -128,13 +128,6 @@ function LoginPage() {
               size="small"
               className="p-button-raised p-button-primary flex w-full"
             />
-            {/* <button
-              type="submit"
-              value="login"
-              className="flex w-full justify-center rounded-full bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-blue-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-blue"
-            >
-              Sign In
-            </button> */}
           </div>
         </form>
         {invalidCredential && <p className="block text-sm font-medium leading-6 text-red-600">{invalidCredential}</p>}

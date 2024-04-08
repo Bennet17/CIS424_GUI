@@ -1396,7 +1396,7 @@ const FundsTransferPage = () => {
                 rounded
                 disabled={report === ""}
                 onClick={() => setShowReport(!showReport)}
-                className="p-button-primary"
+                className="p-button-primary p-button-raised"
                 style={{
                   width: "245px",
                   marginLeft: "1rem",
@@ -1419,7 +1419,7 @@ const FundsTransferPage = () => {
                   icon="pi pi-times"
                   rounded
                   onClick={() => setShowReport(false)}
-                  className="p-button-secondary"
+                  className="p-button-secondary p-button-raised"
                 />
                 <Button
                   label="Download PDF"
@@ -1427,7 +1427,7 @@ const FundsTransferPage = () => {
                   icon="pi pi-download"
                   rounded
                   onClick={() => GeneratePDF(report.props.value)}
-                  className="p-button-primary"
+                  className="p-button-primary p-button-raised"
                   style={{ marginLeft: "1rem" }}
                 />
               </div>
