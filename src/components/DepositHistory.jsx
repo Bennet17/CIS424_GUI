@@ -12,6 +12,10 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { Square, Check } from "lucide-react";
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 const DepositHistory = () => {
   const [dateStart, setDateStart] = useState(GetTodaysDate());
@@ -357,49 +361,14 @@ const DepositHistory = () => {
                 <td></td>
               </tr>
               <tr>
-                <td colSpan="4">
-                  <button
-                    type="submit"
-                    value="submit"
-                    className={`flex w-full justify-center rounded-full ${
-                      selectedRow == null ||
-                      records[selectedRow].status == "CLOSED" ||
-                      records[selectedRow].status == "ABORTED"
-                        ? ""
-                        : "hover:bg-button-gray-light"
-                    } ${
-                      selectedRow == null ||
-                      records[selectedRow].status == "CLOSED" ||
-                      records[selectedRow].status == "ABORTED"
-                        ? "bg-button-gray"
-                        : "bg-button-gray"
-                    } px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm ${
-                      selectedRow == null ||
-                      records[selectedRow].status == "CLOSED" ||
-                      records[selectedRow].status == "ABORTED"
-                        ? "text-button-gray-light"
-                        : "text-white"
-                    } border-2 border-button-gray`}
-                    onClick={(e) => setShowConfirm(true)}
-                  >
-                    Verify
-                  </button>
+                <td colSpan="3">
+                </td>
+                <td></td>
+                <td>
+                  
                 </td>
                 <td>
-                  <button
-                    className="flex w-full justify-center rounded-full hover:bg-button-blue-light bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm text-white border-2 border-button-blue"
-                    onClick={onDownload}
-                  >
-                    Export to Excel
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="flex w-full justify-center rounded-full hover:bg-button-blue-light bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm text-white border-2 border-button-blue"
-                    onClick={downloadPDF}
-                  >
-                    Export to PDF
-                  </button>
+                  
                 </td>
               </tr>
 
@@ -414,6 +383,41 @@ const DepositHistory = () => {
               </tr>
             </tbody>
           </table>
+          <div>
+            <Button
+              type="submit"
+              value="submit"
+              label="Verify Deposit"
+              rounded
+              size="small"
+              disabled={
+                selectedRow == null ||
+                records[selectedRow].status == "CLOSED" ||
+                records[selectedRow].status == "ABORTED"
+              }
+              className="p-button-primary p-button-raised"
+              onClick={(e) => setShowConfirm(true)}
+              style={{ width: "250px", marginRight: "1rem" }}
+            />
+            <Button
+              label="Export to Excel"
+              icon="pi pi-file-excel"
+              className="p-button-primary p-button-raised"
+              size="small"
+              rounded
+              onClick={onDownload}
+              style={{ marginRight: "1rem" }}
+            />
+            <Button
+              label="Export to PDF"
+              icon="pi pi-file-pdf"
+              className="p-button-primary p-button-raised"
+              size="small"
+              rounded
+              onClick={downloadPDF}
+              style={{ marginRight: "1rem" }}
+            />
+          </div>
 
           {showConfirm && (
             <div className="report-overlay">

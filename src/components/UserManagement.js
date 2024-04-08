@@ -5,7 +5,7 @@ import "../styles/PageStyles.css";
 import axios from "axios";
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import SideBar from "./SideBar.jsx";
-import HorizotalNav from "./HorizontalNav";
+import HorizontalNav from "./HorizontalNav";
 import EmployeeTable from "./EmployeeTable.js";
 import { useAuth } from "../AuthProvider.js";
 import { useNavigate } from "react-router-dom";
@@ -74,8 +74,8 @@ const UserManagementPage = () => {
     <div className="flex mi-h-screen bg-custom-accent">
       <SideBar currentPage={8} />
       <div className="flex flex-col w-full">
-        <HorizotalNav />
-        <div class="flex flex-col mt-4 px-6">
+        <HorizontalNav />
+        <div class="flex flex-col mt-4 px-6 ml-8">
           <h2 className="text-xl text-navy-gray font-bold mt-4 mb-2 ">
             Users at Plato's Closet: {curStoreName}
           </h2>

@@ -4,6 +4,10 @@ import { useState } from "react";
 import axios from "axios";
 import routes from "../routes.js";
 import { useNavigate } from "react-router-dom";
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 function ForgotPassword() {
 
@@ -141,12 +145,14 @@ function ForgotPassword() {
           <h2 className="text-xl font-semibold mb-4">Forgot Password</h2>
           <h2 className="text-red-500 font-semibold mb-4">{message}</h2>
           {passwordUpdated ? (
-            <button
+            <Button
               onClick={handleCancel}
-              className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Go To Login
-            </button>
+              label="Go To Login"
+              className="p-button-primary p-button-raised"
+              rounded
+              size="small"
+              icon="pi pi-confirm"
+            />
           ) : (
             <>
               {userValidated ? (
@@ -163,22 +169,22 @@ function ForgotPassword() {
 
                   </div>
                   <div className="flex items-center justify-between">
-                    <button
-                      type="button"
+                    <Button
                       onClick={handleCancel}
-                      className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={validPassword === false}
+                      label="Cancel"
+                      className="p-button-secondary p-button-raised"
+                      rounded
+                      size="small"
+                      icon="pi pi-times"
+                    />
+                    <Button
                       onClick={handleNewPasswordSubmit}
-                      className={`py-2 px-4 font-bold rounded focus:outline-none focus:shadow-outline ${validPassword ? 'bg-indigo-600 hover:bg-indigo-700 text-white font-bold' : 'bg-gray-400 cursor-not-allowed text-gray-600'
-                        }`}
-                    >
-                      Submit
-                    </button>
+                      label="Submit"
+                      className="p-button-primary p-button-raised"
+                      rounded
+                      size="small"
+                      icon="pi pi-check"
+                    />
                   </div>
                 </>
               ) : (
@@ -195,20 +201,22 @@ function ForgotPassword() {
                         />
                       </div>
                       <div className="flex items-center justify-between">
-                        <button
+                        <Button
                           onClick={handleCancel}
-                          type="button"
-                          className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        >
-                          Cancel
-                        </button>
-                        <button
+                          label="Cancel"
+                          className="p-button-secondary p-button-raised"
+                          rounded
+                          size="small"
+                          icon="pi pi-times"
+                        />
+                        <Button
                           onClick={handleUsernameSubmit}
-                          type="submit"
-                          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        >
-                          Submit
-                        </button>
+                          label="Submit"
+                          className="p-button-primary p-button-raised"
+                          rounded
+                          size="small"
+                          icon="pi pi-check"
+                        />
                       </div>
                     </>
                   ) : (
@@ -225,20 +233,22 @@ function ForgotPassword() {
                         />
                       </div>
                       <div className="flex items-center justify-between">
-                        <button
+                        <Button
                           onClick={handleCancel}
-                          type="button"
-                          className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        >
-                          Cancel
-                        </button>
-                        <button
+                          label="Cancel"
+                          className="p-button-secondary p-button-raised"
+                          rounded
+                          size="small"
+                          icon="pi pi-times"
+                        />
+                        <Button
                           onClick={handleAnswerSubmit}
-                          type="submit"
-                          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        >
-                          Submit
-                        </button>
+                          label="Submit"
+                          className="p-button-primary p-button-raised"
+                          rounded
+                          size="small"
+                          icon="pi pi-check"
+                        />
                       </div>
                     </>
                   )}

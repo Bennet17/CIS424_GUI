@@ -5,6 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider.js";
 import Logo from "../newLogo.png"; // Adjust the path accordingly
 import routes from "../routes.js";
+import { Button } from "primereact/button";
+import { Password } from 'primereact/password';
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 //creates a function that returns the login page area
 function LoginPage() {
@@ -92,34 +97,37 @@ function LoginPage() {
               <div className="text-sm">
                 <a
                   onClick={toForgotPassword}
-                  className="font-semibold text-button-gray hover:text-button-gray-light "
+                  className="font-semibold text-button-gray hover:text-button-gray-light cursor-pointer"
                 >
                   Forgot Password?
                 </a>
               </div>
             </div>
             <div className="mt-2">
-              <input
+              <Password
                 id="password"
                 name="password"
-                type="password"
-                autoComplete="current-password"
-                required
                 value={password}
-                className="block w-full rounded-md border-0 py-1.5 text-navy-gray shadow-sm ring-1 ring-inset ring-button-blue placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-button-blue sm:text-sm sm:leading-6 px-2"
+                required
+                feedback={false}
+                toggleMask
+                promptLabel="Enter a password"
+                inputClassName="block w-full rounded-md border-0 py-1.5 text-navy-gray shadow-sm ring-1 ring-inset ring-button-blue placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-button-blue sm:text-sm sm:leading-6 px-2"
+                style={{ width: "100%" }}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
 
           <div>
-            <button
+            <Button
               type="submit"
-              value="login"
-              className="flex w-full justify-center rounded-full bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-blue-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-blue"
-            >
-              Sign In
-            </button>
+              label="Sign In"
+              rounded
+              icon="pi pi-sign-in"
+              size="small"
+              className="p-button-raised p-button-primary flex w-full"
+            />
           </div>
         </form>
         {invalidCredential && <p className="block text-sm font-medium leading-6 text-red-600">{invalidCredential}</p>}
