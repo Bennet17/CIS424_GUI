@@ -75,7 +75,7 @@ const UserManagementPage = () => {
       <SideBar currentPage={8} />
       <div className="flex flex-col w-full">
         <HorizontalNav />
-        <div class="flex flex-col mt-4 px-6">
+        <div class="flex flex-col mt-4 px-6 ml-8">
           <h2 className="text-xl text-navy-gray font-bold mt-4 mb-2 ">
             Users at Plato's Closet: {curStoreName}
           </h2>

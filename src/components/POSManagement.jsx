@@ -31,7 +31,7 @@ const POSManagementPage = () => {
       <SideBar currentPage={9} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
-        <h2 className="text-xl font-bold text-navy-gray mt-8 px-6 ">
+        <h2 className="text-xl font-bold text-navy-gray mt-8 px-6 ml-8">
           POS Registers at Plato's Closet: {curStoreName}
         </h2>
         <div className="flex flex-col items-center justify-center px-6">
