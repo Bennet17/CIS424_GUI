@@ -240,7 +240,7 @@ const EditUser = (user) => {
         label={`Edit User: ${user.user.name} `}
       />
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="fixed z-50 inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-8 rounded shadow-md w-auto">
             <span onClick={closeModal} className="absolute top-0 right-0 cursor-pointer text-gray-700 hover:text-gray-900">&times;</span>
             <h2 className="text-2xl font-bold mb-4">Edit User Information</h2>

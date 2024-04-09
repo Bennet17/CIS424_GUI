@@ -10,6 +10,8 @@ import { Button } from "primereact/button";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
+import EditPOS from './EditPos.jsx';
+
 
 function POSTable() {
   //DECLARE VARIABLES
@@ -28,8 +30,9 @@ function POSTable() {
   const [pos, setPosRegisters] = useState([]);
   const [result, setResult] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [nickname, setNickname] = useState(null);
-
+  const [nickname, setNickname] = useState('');
+  const[selectedPOS, setSelectedPOS] = useState(null);
+  const[showEditForm, setShowEditForm] = useState(false);
 
   //this handles the close and clear of the POS create popup
   const handleCloseModal = () => {
@@ -55,6 +58,12 @@ function POSTable() {
     autoTable(POSTablePDF, { html: '#posTable' })
     POSTablePDF.save(curStoreName + "_POS_Systems_" + currentDate + ".pdf")
   }
+
+  const handleRowClick = (pos) => {    
+    setSelectedPOS(pos); 
+   // console.log(pos);
+    setShowEditForm(true); 
+  };
 
 
   //this funciton handles a create of a new register. 
@@ -169,7 +178,7 @@ function POSTable() {
   return (
     <div>
       {showModal && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
+        <div className="fixed z-50 inset-0 overflow-y-auto">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 transition-opacity" aria-hidden="true">
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -231,7 +240,7 @@ function POSTable() {
       <h2 className="text-lg text-red-500 font-bold mb-2">{result}</h2>
       <div style={{ maxHeight: '450px', overflowY: 'auto' }}>
         <table id='posTable' ref={tableRef} className="min-w-full text-center text-navy-gray">
-          <thead>
+          <thead className="sticky top-0 bg-white z-10">
             <tr>
               <th className="px-4 py-2">POS Name</th>
               <th className="px-4 py-2">POS Nickname</th>
@@ -244,6 +253,7 @@ function POSTable() {
             {pos.map((pos) => (
               <tr
                 key={pos.name}
+                onClick={() => handleRowClick(pos)}
                 className={`cursor-pointer hover:bg-gray-100 ${pos.enabled ? '' : 'bg-gray-300'}`}
               >
                 <td className="border px-4 py-2">{pos.name}</td>
@@ -293,6 +303,7 @@ function POSTable() {
           icon="pi pi-plus"
           style={{ marginRight: '1rem' }}
         />
+        <div>{showEditForm && <EditPOS pos={selectedPOS} />}</div>
       </div>
 
     </div>
