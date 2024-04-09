@@ -125,7 +125,7 @@ function EmployeeTable() {
     <div>
       <div style={{ maxHeight: '450px', overflowY: 'auto' }}>
         <table id='empTable' ref={tableRef} className="min-w-full text-center text-navy-gray">
-          <thead>
+          <thead className="sticky top-0 bg-white z-10">
             <tr>
               <th className="px-4 py-2">Username</th>
               <th className="px-4 py-2">Name</th>

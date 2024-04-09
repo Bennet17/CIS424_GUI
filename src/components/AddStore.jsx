@@ -83,7 +83,7 @@ const AddStoreForm = () => {
       />
 
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 w-30 bg-opacity-50 z-50">
+        <div className="fixed z-50 inset-0 flex items-center justify-center bg-gray-900 w-30 bg-opacity-50 z-50">
           <div className="bg-white p-8 rounded shadow-md w-auto">
             <span
               onClick={closeModal}
