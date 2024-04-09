@@ -254,7 +254,7 @@ function POSTable() {
                   <Button
                     onClick={() => toggleActivity(pos)}
                     label={pos.enabled ? 'Deactivate' : 'Activate'}
-                    className={pos.enabled ? 'p-button-danger p-button-raised' : 'p-button-success p-button-raised'}
+                    className={pos.enabled ? 'p-button-danger' : 'p-button-success'}
                     size="small"
                     rounded
                     icon={pos.enabled ? 'pi pi-times' : 'pi pi-check'}
