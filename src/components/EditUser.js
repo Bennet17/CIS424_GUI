@@ -129,7 +129,7 @@ const EditUser = (user) => {
     //this pos is currently enabled. lets disable it
     if (user.user.enabled == true) {
       if (user.user.position === "Owner" && numActiveOwners <= 1) {
-        setResult("Cannot disable the only active owner.");
+        setResult("Cannot deactivate the only active owner.");
       }
       else {
         //this post request sends the userID to be disabled in the DB
@@ -143,7 +143,7 @@ const EditUser = (user) => {
               window.location.reload(); // This will refresh the page
             }
             else {
-              console.error("Failed to disable user");
+              //console.error("Failed to disable user");
             }
           })
           .catch((error) => {
@@ -165,7 +165,7 @@ const EditUser = (user) => {
           console.log(response.data.response);
 
           if (response.data.response == "Enabled") {
-            console.log("User enabled");
+            //console.log("User enabled");
             window.location.reload(); // This will refresh the page
           } else {
             console.error("Failed to enable user");
@@ -371,7 +371,7 @@ const EditUser = (user) => {
                 />
                 <Button
                   onClick={toggleAbility}
-                  label={user.user.enabled ? "Disable User" : "Enable User"}
+                  label={user.user.enabled ? "Deactivate User" : "Activate User"}
                   size="small"
                   rounded
                   icon={user.user.enabled ? "pi pi-ban" : "pi pi-check"}

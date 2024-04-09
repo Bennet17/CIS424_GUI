@@ -33,6 +33,8 @@ function POSTable() {
   const [nickname, setNickname] = useState('');
   const[selectedPOS, setSelectedPOS] = useState(null);
   const[showEditForm, setShowEditForm] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+
 
   //this handles the close and clear of the POS create popup
   const handleCloseModal = () => {
@@ -63,6 +65,8 @@ function POSTable() {
     setSelectedPOS(pos); 
    // console.log(pos);
     setShowEditForm(true); 
+    setSelectedRow(pos.ID);
+
   };
 
 
@@ -254,7 +258,10 @@ function POSTable() {
               <tr
                 key={pos.name}
                 onClick={() => handleRowClick(pos)}
-                className={`cursor-pointer hover:bg-gray-100 ${pos.enabled ? '' : 'bg-gray-300'}`}
+               // className={`cursor-pointer hover:bg-gray-100 ${pos.enabled ? '' : 'bg-gray-300'}`}
+                className={`cursor-pointer ${
+                  selectedRow === pos.ID ? 'bg-gray-100' : (pos.enabled ? 'hover:bg-gray-100' : 'bg-gray-300')
+                }`}
               >
                 <td className="border px-4 py-2">{pos.name}</td>
                 <td className="border px-4 py-2">{pos.alias}</td>
