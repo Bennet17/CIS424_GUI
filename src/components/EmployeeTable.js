@@ -160,7 +160,7 @@ function EmployeeTable() {
             onChange={() => setShowAllEmployees(!showAllEmployees)}
             className="mr-2 text-lg"
           />
-          Show Disabled Employees
+          Show Inactive Employees
         </label>
         <Button
           label="Export to Excel"
