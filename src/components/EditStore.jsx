@@ -80,7 +80,7 @@ const EditStore = (store) => {
     if (store.store.enabled == true) {
       //first check if the store has been opened for the day
       if (store.store.opened == true) {
-        setResult("You cannot disable an open store. Please close day and try again."); //alert user
+        setResult("You cannot deactivate an open store. Please close day and try again."); //alert user
       }
       else {
         //store is closed; create a disable POS request
@@ -91,11 +91,11 @@ const EditStore = (store) => {
             })
           .then((response) => {
             if (response.data.response == "Disabled") {
-              setResult("Store successfully disabled");
+              setResult("Store successfully deactivated");
               window.location.reload(); // This will refresh the page
             } 
             else {
-              setResult("Failed to disable store");
+              setResult("Failed to deactivate store");
             }
           })
           .catch((error) => {
@@ -427,7 +427,7 @@ const EditStore = (store) => {
                 />
                 <Button
                   onClick={toggleAbility}
-                  label={store.store.enabled ? 'Disable Store' : 'Enable Store'}
+                  label={store.store.enabled ? 'Deactivate Store' : 'Activate Store'}
                   className={store.store.enabled ? "p-button-danger p-button-raised" : "p-button-success p-button-raised"}
                   rounded
                   size="medium"
