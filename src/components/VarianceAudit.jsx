@@ -444,6 +444,7 @@ const VarianceAuditPage = () =>{
                                     name="startDate"
                                     className="variance-date"
                                     date={formData.startDate}
+                                    min="1900-01-01"
 									max={maxDate}
                                     onChange={HandleChange}
                                 />
