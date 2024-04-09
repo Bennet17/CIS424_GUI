@@ -346,23 +346,6 @@ const FundsTransferPage = () => {
       (register) => register.name === destination
     ).id;
 
-    // Calls GetExpectedAmount to get the expected amount in the source and destination registers before transfer
-    let expectedSource, expectedDestination;
-    expectedSource = parseFloat(
-      await GetExpectedAmount(sourceRegisterID)
-    ).toFixed(2);
-    expectedDestination = parseFloat(
-      await GetExpectedAmount(destinationRegisterID)
-    ).toFixed(2);
-
-    // Format the expected amount in the source and destination registers before transfer
-    const afterTransferSource = NegativeValueParantheses(
-      parseFloat(expectedSource) - parseFloat(fltAmount)
-    );
-    const afterTransferDestination = NegativeValueParantheses(
-      parseFloat(expectedDestination) + parseFloat(fltAmount)
-    );
-
     // Submit the transfer
     if (
       await SubmitTransfer(
@@ -394,10 +377,6 @@ const FundsTransferPage = () => {
         await GenerateReport(
           source,
           destination,
-          expectedSource,
-          expectedDestination,
-          afterTransferSource,
-          afterTransferDestination,
           fltAmount,
           newCurrencyFields
         )
@@ -523,31 +502,10 @@ const FundsTransferPage = () => {
     document.getElementById("amount_input").classList.add("amount-input");
   };
 
-  // Function to format negative values in parentheses
-  function NegativeValueParantheses(transferValue) {
-    if (transferValue < 0) return `($${Math.abs(transferValue)})`;
-    else return `$${transferValue}`;
-  }
-
   //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
   function ToggleExtraChange() {
     setShowExtraChange(!showExtraChange);
   }
-
-  // Function to get the expected amount in the source register before transfer with register ID from arrSources
-  const GetExpectedAmount = async (registerID) => {
-    try {
-      // Get the expected amount in the source register before transfer
-      const response = await axios.get(
-        `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${formData.store}&registerID=${registerID}`
-      );
-
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      return 0;
-    }
-  };
 
   // Function to generate the PDF report
   function GeneratePDF() {
@@ -574,10 +532,6 @@ const FundsTransferPage = () => {
   const GenerateReport = async (
     strSource,
     strDestination,
-    expectedSource,
-    expectedDestination,
-    afterTransferSource,
-    afterTransferDestination,
     fltAmount,
     newCurrencyFields
   ) => {
@@ -641,23 +595,7 @@ const FundsTransferPage = () => {
                   </tbody>
                 </table>
               ),
-            },
-            {
-              field: `Expected amount in ${strSource} before transfer:`,
-              value: `$${expectedSource}`,
-            },
-            {
-              field: `Expected amount in ${strSource} after transfer:`,
-              value: afterTransferSource,
-            },
-            {
-              field: `Expected amount in ${strDestination} before transfer:`,
-              value: `$${expectedDestination}`,
-            },
-            {
-              field: `Expected amount in ${strDestination} after transfer:`,
-              value: afterTransferDestination,
-            },
+            }
           ]}
           size="small"
           stripedRows
@@ -668,9 +606,9 @@ const FundsTransferPage = () => {
           <Column
             field="field"
             header="Fund Transfer Report"
-            style={{ width: "70%" }}
+            style={{ width: "60%" }}
           />
-          <Column field="value" style={{ width: "30%" }} />
+          <Column field="value" style={{ width: "40%" }} />
         </DataTable>
       </div>
     );
