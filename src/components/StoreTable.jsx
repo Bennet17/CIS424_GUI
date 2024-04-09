@@ -12,7 +12,10 @@ import AddStore from './AddStore';
 import EditStore from './EditStore';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 function StoreTable() {
 
@@ -92,9 +95,9 @@ function StoreTable() {
 
   return (
     <div className='min-w-full'>
-      <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-        <table id='storeTable' ref={tableRef} className="min-w-full text-center">
-          <thead>
+      <div style={{ maxHeight: '450px', overflowY: 'auto' }}>
+        <table id='storeTable' ref={tableRef} className="min-w-full text-center text-navy-gray">
+        <thead className="sticky top-0 bg-white z-10">
             <tr>
               <th className="px-4 py-2">Location</th>
               <th className="px-4 py-2">Status</th>
@@ -117,12 +120,23 @@ function StoreTable() {
         </table>
       </div>
       <div className="flex flex-row-reverse mt-3">
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
-          <button onClick={onDownload}>Export to Excel</button>
-        </div>
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
-          <button onClick={downloadPDF}>Export to PDF</button>
-        </div>
+        <Button
+          label="Export to Excel"
+          className="p-button-secondary p-button-raised"
+          rounded
+          icon="pi pi-file-excel"
+          size="small"
+          onClick={onDownload}
+        />
+        <Button
+          label="Export to PDF"
+          className="p-button-secondary p-button-raised"
+          rounded
+          icon="pi pi-file-pdf"
+          size="small"
+          onClick={downloadPDF}
+          style={{ marginRight: '1rem' }}
+        />
         <div><AddStore> </AddStore></div>
         <div>  {showEditForm && <EditStore store={selectedStore} />}  </div>
       </div>

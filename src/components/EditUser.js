@@ -4,10 +4,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthProvider.js';
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
+import { Tooltip } from 'primereact/tooltip';
+import { Toaster, toast } from "sonner";
+
 
 
 const EditUser = (user) => {
-
   const auth = useAuth();
 
   //DECLARE VARIABLES
@@ -32,13 +38,11 @@ const EditUser = (user) => {
   const curStoreID = auth.cookie.user.viewingStoreID; //stores the current Store we are viewing
   const curStoreName = auth.cookie.user.viewingStoreLocation; //stores the current Store we are viewing
 
-
   // Retrieve the serialized string from local storage
   const storedArrayString = localStorage.getItem('stores');
 
   // Parse the string back into an array
   const storeArray = JSON.parse(storedArrayString);
-
 
 
   //this method is used to make at least one checkbox checked
@@ -61,7 +65,7 @@ const EditUser = (user) => {
     // Ensure at least one checkbox is checked
     if (!isChecked && count < 1) {
       // Display an error message or prevent the action
-      alert("At least one store must be selected.");
+      toast.error("At least one store must be selected");
       // Check the current checkbox again
       e.target.checked = true;
 
@@ -221,15 +225,22 @@ const EditUser = (user) => {
 
   return (
     <div className="relative ">
-      <button
+         <Toaster
+        richColors
+        position="top-center"
+        expand={true}
+        duration={5000}
+        pauseWhenPageIsHidden={true}
+      />
+      <Button
         onClick={openModal}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline"
-
-      >
-        Edit User: {user.user.name}
-      </button>
+        className="p-button-primary p-button-raised"
+        size="small"
+        rounded
+        label={`Edit User: ${user.user.name} `}
+      />
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="fixed z-50 inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-8 rounded shadow-md w-auto">
             <span onClick={closeModal} className="absolute top-0 right-0 cursor-pointer text-gray-700 hover:text-gray-900">&times;</span>
             <h2 className="text-2xl font-bold mb-4">Edit User Information</h2>
@@ -270,6 +281,9 @@ const EditUser = (user) => {
                   />
                 </div>
               </div>
+              <Tooltip target=".TeamLeaderRDB" content={"Team Leader: \n1. Open & Close Days \n2. Transfer Funds\n3. Auditing & Reporting"} />
+              <Tooltip target=".StoreManagerRDB" content={"Store Manager:\n1. Add new Team Leaders \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting"} />
+              <Tooltip target=".ownerRDB" content={"Owner:\n1. Add new/promote users to Store Manager & Owner \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting \n5. POS Register Management \n6. Store Management"} />
 
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div>
@@ -279,14 +293,14 @@ const EditUser = (user) => {
                       <input
                         required
                         type="radio"
-                        id="employee"
+                        id="Team Leader"
                         name="role"
-                        value="Employee"
-                        defaultChecked={user.user.position === "Employee"}
+                        value="Team Leader"
+                        defaultChecked={user.user.position === "Team Leader"}
                         onChange={(e) => setPosition(e.target.value)}
-                        className="mr-2"
+                        className="TeamLeaderRDB mr-2"
                       />
-                      <label htmlFor="employee" className="mr-4">Employee</label>
+                      <label htmlFor="Team Leader" className="mr-4">Team Leader</label>
                     </div>
                     {auth.cookie.user.position == "Owner" && (
                       <div>
@@ -294,14 +308,14 @@ const EditUser = (user) => {
                           <input
                             required
                             type="radio"
-                            id="manager"
+                            id="Store Manager"
                             name="role"
-                            value="Manager"
-                            defaultChecked={user.user.position === "Manager"}
+                            value="Store Manager"
+                            defaultChecked={user.user.position === "Store Manager"}
                             onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
+                            className="StoreManagerRDB mr-2"
                           />
-                          <label htmlFor="manager">Manager</label>
+                          <label htmlFor="Store Manager">Store Manager</label>
                         </div>
                         <div className="flex items-center">
                           <input
@@ -312,19 +326,16 @@ const EditUser = (user) => {
                             value="Owner"
                             defaultChecked={user.user.position === "Owner"}
                             onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
+                            className="ownerRDB mr-2"
                           />
                           <label htmlFor="owner">Owner</label>
                         </div>
                       </div>
                     )}
                   </div>
-
-
                 </div>
-
-                <div>
-                  <legend className="block text-gray-700 font-bold mb-2 ">Store:</legend>
+                <div className="mb-4" style={{ maxHeight: '150px', overflowY: 'auto' }}>
+                  <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
                   {storeArray.map(item => (
                     <div key={item.ID} className="mb-2 flex items-center">
                       <input
@@ -342,27 +353,30 @@ const EditUser = (user) => {
                 </div>
               </div>
               <div className="flex justify-between">
-                <button
-                  type="button"
+                <Button
                   onClick={closeModal}
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Cancel
-                </button>
-
-                <button
+                  label="Cancel"
+                  size="small"
+                  rounded
+                  icon="pi pi-times"
+                  className="p-button-secondary p-button-raised"
+                />
+                <Button
                   type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Save
-                </button>
-
-                <button
+                  label="Save"
+                  size="small"
+                  rounded
+                  icon="pi pi-check"
+                  className="p-button-primary p-button-raised"
+                />
+                <Button
                   onClick={toggleAbility}
-                  className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  {user.user.enabled ? 'Deactivate User' : 'Activate User'}
-                </button>
+                  label={user.user.enabled ? "Disable User" : "Enable User"}
+                  size="small"
+                  rounded
+                  icon={user.user.enabled ? "pi pi-ban" : "pi pi-check"}
+                  className={user.user.enabled ? "p-button-danger p-button-raised" : "p-button-success p-button-raised"}
+                />
               </div>
             </form>
 

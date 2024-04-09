@@ -3,6 +3,13 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useAuth } from "../AuthProvider";
+import { Tooltip } from 'primereact/tooltip';
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
+import { Toaster, toast } from "sonner";
+
 
 const AddUserForm = () => {
 
@@ -15,7 +22,7 @@ const AddUserForm = () => {
   const [lastname, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [position, setPosition] = useState("Employee");
+  const [position, setPosition] = useState("Team Leader");
   const [storeIDs, setStoreID] = useState(curStoreID);
   const [result, setResult] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,8 +38,8 @@ const AddUserForm = () => {
     if (!selectedStores.includes(curStoreID.toString())) {
       setSelectedStores([...selectedStores, curStoreID.toString()]);
     }
-    //create employee as the selected radio button default
-    setPosition("Employee");
+    //create Team Leader as the selected radio button default
+    setPosition("Team Leader");
   };
 
   //This method handles the closing of the modal when the user DOESNT submit an add.
@@ -45,6 +52,7 @@ const AddUserForm = () => {
     setPosition("")
     setPassword("")
     setStoreID("")
+    setResult('');
     setErrorMessage("")
     setValidPassword(false);
     setSelectedStores([]); //dump selected stored, the default will be added in OPENMODAL()
@@ -117,7 +125,7 @@ const AddUserForm = () => {
     // Ensure at least one checkbox is checked
     if (!isChecked && count < 1) {
       // Display an error message or prevent the action
-      alert("At least one store must be selected.");
+      toast.error("At least one store must be selected");
       // Check the current checkbox again
       e.target.checked = true;
 
@@ -190,11 +198,23 @@ const AddUserForm = () => {
 
   return (
 
+
     <div className="relative ml-5 ">
-      <button
+            <Toaster
+        richColors
+        position="top-center"
+        expand={true}
+        duration={5000}
+        pauseWhenPageIsHidden={true}
+      />
+      <Button
         onClick={openModal}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      > Add User</button>
+        label="Add User"
+        className="p-button-primary p-button-raised"
+        size="small"
+        rounded
+        icon="pi pi-plus"
+      />
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
           <div className="bg-white p-8 rounded shadow-md w-auto">
@@ -271,37 +291,41 @@ const AddUserForm = () => {
                   />
                 </div>
               </div>
-
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="mb-4">
                   <legend className="block text-gray-700 font-bold mb-2">Role:</legend>
                   <div className="flex flex-col">
+                    <Tooltip target=".TeamLeaderRDB" content={"Team Leader: \n1. Open & Close Days \n2. Transfer Funds\n3. Auditing & Reporting"} />
+                    <Tooltip target=".StoreManagerRDB" content={"Store Manager:\n1. Add new Team Leaders \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting"} />
+                    <Tooltip target=".ownerRDB" content={"Owner:\n1. Add new/promote users to Store Manager & Owner \n2. Open & Close Days \n3. Transfer Funds \n4. Auditing & Reporting \n5. POS Register Management \n6. Store Management"} />
+
                     <div className="flex items-center">
                       <input
                         type="radio"
-                        id="employee"
+                        id="Team Leader"
                         name="role"
-                        value="Employee"
+                        value="Team Leader"
                         required
-                        defaultChecked={"Employee"}
+                        defaultChecked={"Team Leader"}
                         onChange={(e) => setPosition(e.target.value)}
-                        className="mr-2"
+                        className="TeamLeaderRDB mr-2"
                       />
-                      <label htmlFor="employee" className="mr-4">Employee</label>
+                      <label htmlFor="Team Leader" className="mr-4">Team Leader</label>
                     </div>
                     {auth.cookie.user.position === "Owner" && (
                       <div>
                         <div className="flex items-center">
                           <input
                             type="radio"
-                            id="manager"
+                            id="Store Manager"
                             name="role"
                             required
-                            value="Manager"
+                            value="Store Manager"
+
                             onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
+                            className="StoreManagerRDB mr-2"
                           />
-                          <label htmlFor="manager">Manager</label>
+                          <label htmlFor="StoreManager">Store Manager</label>
                         </div>
                         <div className="flex items-center">
                           <input
@@ -311,7 +335,7 @@ const AddUserForm = () => {
                             value="Owner"
                             required
                             onChange={(e) => setPosition(e.target.value)}
-                            className="mr-2"
+                            className="ownerRDB mr-2"
                           />
                           <label htmlFor="owner">Owner</label>
                         </div>
@@ -319,7 +343,7 @@ const AddUserForm = () => {
                     )}
                   </div>
                 </div>
-                <div className="mb-4">
+                <div className="mb-4" style={{ maxHeight: '150px', overflowY: 'auto' }}>
                   <legend className="block text-gray-700 font-bold mb-2">Store:</legend>
                   {storeArray.map(item => (
                     <div key={item.ID} className="mb-2">
@@ -336,24 +360,27 @@ const AddUserForm = () => {
                     </div>
                   ))}
                 </div>
+
               </div>
 
               <div className="flex justify-between">
-                <button
+                <Button
+                  label="Cancel"
+                  className="p-button-secondary p-button-raised"
+                  rounded
+                  size="small"
+                  icon="pi pi-times"
                   onClick={closeModal}
-                  type="button"
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Cancel
-                </button>
-                <button
+                />
+                <Button
+                  label="Add User"
+                  className="p-button-primary p-button-raised"
+                  rounded
+                  size="small"
+                  icon="pi pi-check"
                   type="submit"
                   disabled={validPassword === false}
-                  className={`py-2 px-4 font-bold rounded focus:outline-none focus:shadow-outline ${validPassword ? 'bg-indigo-600 hover:bg-indigo-700 text-white font-bold ' : 'bg-gray-400 cursor-not-allowed text-gray-600'
-                    }`}
-                >
-                  Add User
-                </button>
+                />
               </div>
             </form>
 

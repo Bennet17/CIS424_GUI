@@ -1,6 +1,10 @@
 //this component provides a form interface for editing store name and money settings
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 const EditStore = (store) => {
 
@@ -174,15 +178,18 @@ const EditStore = (store) => {
 
   return (
     <div className="relative ml-5">
-      <button
+      <Button
         onClick={openModal}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Edit Store: {store.store.location}
-      </button>
+        label={`Edit ${store.store.location}`}
+        rounded
+        size="small"
+        icon="pi pi-plus"
+        className="p-button-primary p-button-raised"
+        style={{ marginRight: '0.15rem' }}
+      />
 
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+        <div className="fixed z-50 inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
           <div className="bg-white p-8 rounded shadow-md w-auto">
             <span
               onClick={closeModal}
@@ -401,26 +408,38 @@ const EditStore = (store) => {
                 </div>
               </div>
               <div className="flex justify-between">
-                <button
+                <Button
+                  label="Cancel"
                   onClick={closeModal}
-                  type="button"
-                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-                >
-                  Cancel
-                </button>
-                <button
+                  className="p-button-secondary p-button-raised"
+                  rounded
+                  size="medium"
+                  icon="pi pi-times"
+                />
+                <Button
+                  label="Submit"
                   type="submit"
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-                >
-                  Save
-                </button>
-                <button
+                  className="p-button-primary p-button-raised"
+                  rounded
+                  size="medium"
+                  icon="pi pi-check"
+                  style={{ width: '200px' }}
+                />
+                <Button
+                  onClick={toggleAbility}
+                  label={store.store.enabled ? 'Disable Store' : 'Enable Store'}
+                  className={store.store.enabled ? "p-button-danger p-button-raised" : "p-button-success p-button-raised"}
+                  rounded
+                  size="medium"
+                  icon={store.store.enabled ? "pi pi-times" : "pi pi-check"}
+                />
+                {/* <button
                   onClick={toggleAbility}
                   className="flex-1 bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                   {store.store.enabled ? 'Deactivate Store' : 'Activate Store'}
 
-                </button>
+                </button> */}
               </div>
 
             </form>

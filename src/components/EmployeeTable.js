@@ -8,7 +8,10 @@ import AddUserForm from './AddUserForm';
 import {useAuth} from '../AuthProvider.js';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 function EmployeeTable() {
 
@@ -73,18 +76,29 @@ function EmployeeTable() {
       const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewUsersByStoreID?storeID=${curStoreID}`;
       axios.get(url)
         .then((response) => {
-          console.log(response);
+          //console.log(response);
           //map the response of employee data onto an array of employees
-          setEmployees(response.data.map(employee => ({
-            ID: employee.ID,
-            username: employee.username,
-            name: employee.name,
-           // password: employee.password,
-            position: employee.position,
-            storeID_CSV: employee.storeID_CSV, //get storename from local storage
-            enabled: employee.enabled
+          setEmployees(
+            response.data
+              .map(employee => ({
+                ID: employee.ID,
+                username: employee.username,
+                name: employee.name,
+                position: employee.position,
+                storeID_CSV: employee.storeID_CSV,
+                enabled: employee.enabled
+              }))
+              .sort((a, b) => {
+                // Sort by enabled status in descending order (true comes first)
+                return b.enabled.toString().localeCompare(a.enabled.toString());
+              })
+              .sort((a, b) => {
+                // Sort by position in ascending order
+                return a.position.localeCompare(b.position);
+              })
+          );
+          
 
-          })));
 
           //this counts how many active owners there are to prevent disabling all owners
             let numActiveOwners = 0;
@@ -109,9 +123,9 @@ function EmployeeTable() {
   
   return (
     <div>
-      <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-        <table id='empTable' ref={tableRef} className="min-w-full text-center mt-6">
-          <thead>
+      <div style={{ maxHeight: '450px', overflowY: 'auto' }}>
+        <table id='empTable' ref={tableRef} className="min-w-full text-center text-navy-gray">
+          <thead className="sticky top-0 bg-white z-10">
             <tr>
               <th className="px-4 py-2">Username</th>
               <th className="px-4 py-2">Name</th>
@@ -138,22 +152,34 @@ function EmployeeTable() {
         </table>
       </div>
     
-      {/* Buttons for exporting and adding users */}
-      <div className="flex flex-row-reverse mt-2 ">
-      <label className="mt-2 ml-4">
-            <input
-              type="checkbox"
-              onChange={() => setShowAllEmployees(!showAllEmployees)}
-              className="mr-2 "
-            />
-            Show Disabled Employees
-          </label>
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
-          <button onClick={onDownload}>Export to Excel</button>
-        </div>
-        <div className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 ml-5 rounded focus:outline-none focus:shadow-outline">
-          <button onClick={downloadPDF}>Export to PDF</button>
-        </div>
+        {/* Buttons for exporting and adding users */}
+        <div className="flex flex-row-reverse my-4 text-navy-gray">
+        <label className="mt-2 ml-4">
+          <input
+            type="checkbox"
+            onChange={() => setShowAllEmployees(!showAllEmployees)}
+            className="mr-2 text-lg"
+          />
+          Show Inactive Employees
+        </label>
+        <Button
+          label="Export to Excel"
+          rounded
+          icon="pi pi-file-excel"
+          size="small"
+          onClick={onDownload}
+          className="p-button-secondary p-button-raised"
+          style={{ marginRight: '1rem' }}
+        />
+        <Button
+          label="Export to PDF"
+          rounded
+          icon="pi pi-file-pdf"
+          size="small"
+          onClick={downloadPDF}
+          className="p-button-secondary p-button-raised"
+          style={{ marginLeft: '1rem', marginRight: '1rem' }}
+        />
         <div><AddUserForm></AddUserForm></div>
         <div>{showEditForm && <EditUser user={selectedUser} />}</div>
       </div>

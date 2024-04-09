@@ -14,6 +14,7 @@ const routes = {
   cashmanager: "/CashManager",
   safeaudit: "/CashManager/SafeAudit",
   varianceaudit: "/CashManager/VarianceAudit",
+  variancetable: "/CashManager/VarianceTable",
   deposithistory: "/CashManager/DepositHistory",
   signout: "/",
   forgotpassword: "/forgotPassword",
