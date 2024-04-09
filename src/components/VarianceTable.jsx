@@ -593,7 +593,7 @@ const VarianceTable = () => {
     }
 
     return (
-        <div className="flex min-h-screen bg-custom-accent variance-table-page">
+        <div className="flex min-h-screen min-w-fit bg-custom-accent variance-table-page">
         <Toaster 
             richColors 
             position="top-center"
