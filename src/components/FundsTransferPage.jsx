@@ -641,7 +641,7 @@ const FundsTransferPage = () => {
                         onChange={HandleChange}
                       >
                         <option value="">&lt;Please select a source&gt;</option>
-                        <option value="BANK">BANK</option>
+                        {registerStatus === "" && <option value="BANK">BANK</option>}
                         {arrSources.map((register, index) => {
                           return (
                             <option key={register.id} value={register.name}>
@@ -671,7 +671,7 @@ const FundsTransferPage = () => {
                         <option value="">
                           &lt;Please select a destination&gt;
                         </option>
-                        <option value="BANK">BANK</option>
+                        {registerStatus === "" && <option value="BANK">BANK</option>}
                         {arrDestinations.map((register, index) => {
                           return (
                             <option key={register.id} value={register.name}>
