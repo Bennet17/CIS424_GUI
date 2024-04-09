@@ -14,13 +14,23 @@ const StoreManagementPage = () => {
   <SideBar currentPage={20} />
   <div className="flex flex-col w-full">
     <HorizotalNav />
-    <div className="flex flex-col items-center justify-center mt-8 px-6"> {/* Added items-center justify-center */}
-      <div className="w-full max-w-screen-lg"> {/* Limiting width to maintain responsiveness */}
-        <div className="flex mt-4 px-6 justify-center"> {/* Centering horizontally */}
-          <StoreTable />
+    <h2 className="text-xl font-bold text-navy-gray mt-8 px-6 ml-8">
+         Store Management</h2>
+        <div className="flex flex-col items-center justify-center px-6">
+          {" "}
+          {/* Added items-center justify-center */}
+          <div className="w-full max-w-screen-lg">
+            {" "}
+            {/* Limiting width to maintain responsiveness */}
+            <div className="flex justify-center mt-4">
+              {" "}
+              {/* Centering horizontally */}
+              <div style={{ width: "100%" }}>
+                <StoreTable />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
   </div>
 </div>
 

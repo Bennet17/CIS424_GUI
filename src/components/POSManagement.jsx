@@ -27,7 +27,7 @@ const POSManagementPage = () => {
   });
 
   return (
-    <div className="flex min-h-screen bg-custom-accent">
+    <div className="flex min-h-screen min-w-fit bg-custom-accent">
       <SideBar currentPage={9} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
@@ -40,10 +40,10 @@ const POSManagementPage = () => {
           <div className="w-full max-w-screen-lg">
             {" "}
             {/* Limiting width to maintain responsiveness */}
-            <div className="flex px-6 justify-center">
+            <div className="flex  justify-center">
               {" "}
               {/* Centering horizontally */}
-              <div style={{ width: "90%" }}>
+              <div style={{ width: "100%" }}>
                 <POSTable />
               </div>
             </div>
