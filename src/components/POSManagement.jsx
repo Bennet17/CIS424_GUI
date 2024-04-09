@@ -27,7 +27,7 @@ const POSManagementPage = () => {
   });
 
   return (
-    <div className="flex min-h-screen bg-custom-accent">
+    <div className="flex min-h-screen min-w-fit bg-custom-accent">
       <SideBar currentPage={9} />
       <div className="flex flex-col w-full">
         <HorizotalNav />

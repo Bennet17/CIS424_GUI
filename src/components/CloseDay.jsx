@@ -219,8 +219,12 @@ const CloseDayPage = () => {
   //call on component load AND when poss state has refreshed
   useEffect(() => {
     if (poss.length > 0) {
-      //update current pos
-      setCurrentPosIndex(0);
+      //update current pos. Initialize it to the first pos that is closed, otherwise, default to safe
+      let posIndex = FirstPosIndexEnabled();
+      if (posIndex < 0){
+        posIndex = 0;
+      }
+      setCurrentPosIndex(posIndex);
       setPosHasLoaded(true);
     }
   }, [poss]);
@@ -560,6 +564,18 @@ const CloseDayPage = () => {
     return disable;
   }
 
+    // gets the first pos index in the poss array that should be selectable
+    // skip the safe since otherwise it will always be selected instead of the other
+    //poss despite the poss being the ones we want to select
+    function FirstPosIndexEnabled(){
+        for (let i = 1; i < poss.length; i ++){
+          if (poss[i].opened){
+            return i;
+          }
+        }
+        return -1;
+      }
+
   return (
     <div className="flex min-h-screen min-w-fit bg-custom-accent">
       <Toaster
@@ -581,7 +597,7 @@ const CloseDayPage = () => {
                   <label className="flex items-center space-x-2 my-0">
                     <input
                       key={item.name}
-                      defaultChecked={index === 0}
+                      defaultChecked={FirstPosIndexEnabled() >= 0 ? FirstPosIndexEnabled() === index : index === 0}
                       onChange={(e) => setCurrentPosIndex(index)}
                       disabled={
                         !item.opened || IfAllOtherPOSsAreDisabled(index === 0)
