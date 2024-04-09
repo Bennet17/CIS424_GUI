@@ -338,14 +338,6 @@ const FundsTransferPage = () => {
         return;
     }
 
-    // Get the source and destination register IDs
-    const sourceRegisterID = arrSources.find(
-      (register) => register.name === source
-    ).id;
-    const destinationRegisterID = arrDestinations.find(
-      (register) => register.name === destination
-    ).id;
-
     // Submit the transfer
     if (
       await SubmitTransfer(
