@@ -21,7 +21,7 @@ function StoreTable() {
 
   //DECLARE VARIABLES
   const auth = useAuth();
-
+  const [selectedRow, setSelectedRow] = useState(null);
   const [stores, setStores] = useState([]);
   const [selectedStore, setSelectedStore] = useState(null); // State variable to store selected user data
   const [showEditForm, setShowEditForm] = useState(false); // State variable to manage form visibility
@@ -53,6 +53,7 @@ function StoreTable() {
   const handleRowClick = (store) => {
     setSelectedStore(store); // Set the selected user data
     setShowEditForm(true); // Show the edit form button
+    setSelectedRow(store.ID)
   };
 
   //useEffect will launch as soon as the component is loaded
@@ -109,7 +110,10 @@ function StoreTable() {
               <tr
                 key={store.ID}
                 onClick={() => handleRowClick(store)}
-                className={`cursor-pointer hover:bg-gray-100 ${store.enabled ? '' : 'bg-gray-300'}`}
+                //className={`cursor-pointer hover:bg-gray-100 ${store.enabled ? '' : 'bg-gray-300'}`}
+                className={`cursor-pointer ${
+                  selectedRow === store.ID ? 'bg-gray-100' : (store.enabled ? 'hover:bg-gray-100' : 'bg-gray-300')
+                }`}
               >
                 <td className="border px-4 py-2 text-left">{store.location}</td>
                 <td className="border px-4 py-2">{store.opened ? 'Open' : 'Closed'}</td>

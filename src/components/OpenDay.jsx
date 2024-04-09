@@ -40,6 +40,7 @@ const OpenDayPage = () => {
 
   //pos-related data
   const [posHasLoaded, SetPosHasLoaded] = useState(false);
+  const [IsFirstPos, SetIsFistPos] = useState(false);
   const [poss, setPoss] = useState([]);
   const [currentPosIndex, SetCurrentPosIndex] = useState(-1);
   const [showExtraChange, setShowExtraChange] = useState(false);
@@ -257,7 +258,25 @@ const OpenDayPage = () => {
               ", see below"
           );
           console.log(response);
-          setExpectedAmount(response.data);
+          setExpectedAmount(response.data.total);
+          setElm100DollarExpected(response.data.hundred);
+          setElm50DollarExpected(response.data.fifty);
+          setElm20DollarExpected(response.data.twenty);
+          setElm10DollarExpected(response.data.ten);
+          setElm5DollarExpected(response.data.five);
+          setElm1DollarExpected(response.data.one);
+          setElmQuartersRolledExpected(response.data.quarterRoll);
+          setElmDimesRolledExpected(response.data.dimeRoll);
+          setElmNicklesRolledExpected(response.data.nickelRoll);
+          setElmPenniesRolledExpected(response.data.pennyRoll);
+          setElmQuartersExpected(response.data.quarter);
+          setElmDimesExpected(response.data.dime);
+          setElmNicklesExpected(response.data.nickel);
+          setElmPenniesExpected(response.data.penny);
+          setElm1DollarCoinExpected(response.data.dollarCoin);
+          setElm2DollarExpected(response.data.two);
+          setElmHalfDollarCoinExpected(response.data.halfDollar);
+          SetIsFistPos(response.data.first);
         })
         .catch((error) => {
           console.error(error);
@@ -364,7 +383,7 @@ const OpenDayPage = () => {
                     <input
                       key={item.name}
                       defaultChecked={FirstPosIndexEnabled() >= 0 ? FirstPosIndexEnabled() === index : index === 0}
-                      onChange={(e) => SetCurrentPosIndex(index)}
+                      onChange={(e) => {SetCurrentPosIndex(index); ClearAllFields();}}
                       disabled={
                         item.opened ||
                         ((poss[0].opened ? false : true) && index > 0)
@@ -481,6 +500,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                   <td>
@@ -510,6 +530,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
@@ -539,6 +560,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                   <td>
@@ -566,6 +588,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
@@ -595,6 +618,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                   <td>
@@ -624,6 +648,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
@@ -653,6 +678,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                   <td>
@@ -682,6 +708,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
@@ -711,6 +738,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                   <td>
@@ -738,6 +766,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
@@ -767,6 +796,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                   <td>
@@ -794,6 +824,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
@@ -836,6 +867,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
@@ -869,6 +901,7 @@ const OpenDayPage = () => {
                           min="0"
                           className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                           type="number"
+                          disabled={IsFirstPos}
                         />
                       </td>
                     </>
@@ -904,6 +937,7 @@ const OpenDayPage = () => {
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                       type="number"
+                      disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
@@ -934,6 +968,7 @@ const OpenDayPage = () => {
                         min="0"
                         className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                         type="number"
+                        disabled={IsFirstPos}
                       />
                     </td>
                   </tr>
@@ -967,6 +1002,7 @@ const OpenDayPage = () => {
                         min="0"
                         className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
                         type="number"
+                        disabled={IsFirstPos}
                       />
                     </td>
                   </tr>
