@@ -71,7 +71,7 @@ const UserManagementPage = () => {
 
   //return the pages child components
   return (
-    <div className="flex mi-h-screen bg-custom-accent">
+    <div className="flex mi-h-screen min-w-fit bg-custom-accent">
       <SideBar currentPage={8} />
       <div className="flex flex-col w-full">
         <HorizontalNav />

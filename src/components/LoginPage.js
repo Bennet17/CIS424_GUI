@@ -52,7 +52,7 @@ function LoginPage() {
   }  
 
   return (
-    <div className="flex bg-custom-accent min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex bg-custom-accent min-h-screen min-w-fit flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           className="mx-auto mb-12 h-30 w-auto"

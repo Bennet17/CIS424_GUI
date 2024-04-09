@@ -347,7 +347,7 @@ const VarianceAuditPage = () =>{
     };
 
     return (
-        <div className="flex min-h-screen bg-custom-accent variance-audit-page">
+        <div className="flex min-h-screen min-w-fit bg-custom-accent variance-audit-page">
         <Toaster 
             richColors 
             position="top-center"
