@@ -168,6 +168,12 @@ const CloseDayPage = () => {
 
   //keep values clamped between a minimum and maxium value
   function clamp(value, min = 0, max = 100000) {
+    //first check if value is a number
+    if (isNaN(Number(value))){
+        return min;
+    }
+
+    //if all is ok, do regular clamping
     if (Number(value) < min) {
       return min;
     } else if (Number(value) > max) {
@@ -535,6 +541,7 @@ const CloseDayPage = () => {
           if (response.status === 200) {
             //close POS
             setPostSuccess(true);
+            setPosHasLoaded(false);
             toast.success(poss[currentPosIndex].name + " closed successfully!");
           } else {
             setPostSuccess(false);
