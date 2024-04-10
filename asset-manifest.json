@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/CIS424_GUI/static/css/main.f53991a6.css",
-    "main.js": "/CIS424_GUI/static/js/main.97ae96cf.js",
+    "main.css": "/CIS424_GUI/static/css/main.78f23606.css",
+    "main.js": "/CIS424_GUI/static/js/main.bb3b368f.js",
     "static/js/498.c0ed5838.chunk.js": "/CIS424_GUI/static/js/498.c0ed5838.chunk.js",
     "static/js/703.c7562ad2.chunk.js": "/CIS424_GUI/static/js/703.c7562ad2.chunk.js",
     "static/js/379.47ac7823.chunk.js": "/CIS424_GUI/static/js/379.47ac7823.chunk.js",
@@ -37,14 +37,14 @@
     "static/media/CoinPenny.svg": "/CIS424_GUI/static/media/CoinPenny.a58eb5bae46c8310de869e9ef37f6029.svg",
     "static/media/BillOne.svg": "/CIS424_GUI/static/media/BillOne.a650a717afe9268797f4e40f4a57bcad.svg",
     "index.html": "/CIS424_GUI/index.html",
-    "main.f53991a6.css.map": "/CIS424_GUI/static/css/main.f53991a6.css.map",
-    "main.97ae96cf.js.map": "/CIS424_GUI/static/js/main.97ae96cf.js.map",
+    "main.78f23606.css.map": "/CIS424_GUI/static/css/main.78f23606.css.map",
+    "main.bb3b368f.js.map": "/CIS424_GUI/static/js/main.bb3b368f.js.map",
     "498.c0ed5838.chunk.js.map": "/CIS424_GUI/static/js/498.c0ed5838.chunk.js.map",
     "703.c7562ad2.chunk.js.map": "/CIS424_GUI/static/js/703.c7562ad2.chunk.js.map",
     "379.47ac7823.chunk.js.map": "/CIS424_GUI/static/js/379.47ac7823.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f53991a6.css",
-    "static/js/main.97ae96cf.js"
+    "static/css/main.78f23606.css",
+    "static/js/main.bb3b368f.js"
   ]
 }
