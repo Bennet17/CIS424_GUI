@@ -32,8 +32,8 @@ function SelectStore() {
         // This is being done for render formatting
         if (filteredStores.length > 5) {
           // Declare emtpy two-dimensional array for user's stores
-          const storeRows = Math.ceil(filteredStores.length / 5);
-          let segmentedStores = new Array(storeRows);
+          const storeCols = Math.ceil(filteredStores.length / 5);
+          let segmentedStores = new Array(storeCols);
           for (let i = 0; i < segmentedStores.length; i++) {
             segmentedStores[i] = new Array(5);
           }
@@ -85,10 +85,9 @@ function SelectStore() {
         <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-navy-gray">
           Choose Location
         </h2>
-        
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <div className="mt-10 flex flex-wrap justify-center">
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="flex justify-center">
             {stores.map((col, colIndex) => (
@@ -106,7 +105,10 @@ function SelectStore() {
                       }
                       className="mr-2"
                     />
-                    <label htmlFor={store.ID} className="text-sm text-navy-gray">
+                    <label
+                      htmlFor={store.ID}
+                      className="text-sm text-navy-gray"
+                    >
                       {store.location}
                     </label>
                   </div>
