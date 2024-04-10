@@ -445,8 +445,9 @@ const SafeAuditPage = () => {
           <h1 className="text-3xl font-bold">
             Safe Audit for {formData.storeName}
           </h1>
+          <br />
           {/* Current Amount input */}
-          <div className="mt-3">
+          <div className="">
             <table>
               <tbody>
                 <tr>
