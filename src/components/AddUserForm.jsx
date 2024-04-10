@@ -179,13 +179,13 @@ const AddUserForm = () => {
         //the following line indicates a successful entry
         if (response.data.response == "User created successfully.") {
           //successful creation
-          setResult("User Successfully Created.")
+          toast.success("User Successfully Created.")
           closeModal();
           window.location.reload(); // This will refresh the page
 
         } else {
           //a valid API request but user was not created because there was already a user with that username
-          setResult("Username already taken. Try again");
+          toast.error("Username already taken. Try again");
         }
       })
       //error if the API request failed
