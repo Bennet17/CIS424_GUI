@@ -27,24 +27,24 @@ const POSManagementPage = () => {
   });
 
   return (
-    <div className="flex min-h-screen bg-custom-accent">
+    <div className="flex min-h-screen min-w-fit bg-custom-accent">
       <SideBar currentPage={9} />
       <div className="flex flex-col w-full">
         <HorizotalNav />
-        <h2 className="text-xl font-bold text-navy-gray mt-8 px-6 ml-8">
-          POS Registers at Plato's Closet: {curStoreName}
-        </h2>
-        <div className="flex flex-col items-center justify-center px-6">
-          {" "}
-          {/* Added items-center justify-center */}
-          <div className="w-full max-w-screen-lg">
-            {" "}
-            {/* Limiting width to maintain responsiveness */}
-            <div className="flex  justify-center">
-              {" "}
-              {/* Centering horizontally */}
-              <div style={{ width: "100%" }}>
-                <POSTable />
+        <div className="flex flex-col mx-8 mt-6">
+          <h1 className="text-3xl font-bold text-navy-gray ">
+            POS Registers at {curStoreName}
+          </h1>
+          <br />
+          <div className="">
+            {/* Added items-center justify-center */}
+            <div className="w-full max-w-screen-lg">
+              {/* Limiting width to maintain responsiveness */}
+              <div className="flex  justify-center">
+                {/* Centering horizontally */}
+                <div style={{ width: "100%" }}>
+                  <POSTable />
+                </div>
               </div>
             </div>
           </div>

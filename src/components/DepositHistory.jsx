@@ -232,10 +232,10 @@ const DepositHistory = () => {
     }*/
 
   return (
-    <div className="flex min-h-screen bg-custom-accent">
+    <div className="flex min-h-screen min-w-fit bg-custom-accent">
       <Toaster
         richColors
-        position="bottom-right"
+        position="top-center"
         expand={true}
         duration={5000}
         pauseWhenPageIsHidden={true}
@@ -243,203 +243,206 @@ const DepositHistory = () => {
       <SideBar currentPage={7} />
       <div className="w-full">
         <HorizontalNav />
-        <div className="text-main-color w-72 text-2xl float-left ml-8 mt-8">
-          <p>Select an open deposit to mark as pending or closed</p>
+        <div className="text-main-color ml-8 mt-6">
+          <h1 className="text-3xl font-bold">
+            Deposit History for {auth.cookie.user.viewingStoreLocation}
+          </h1>
           <br />
-          <div className="flex flex-row justify-around">
-            <label className="text-lg">Start Date:</label>
-            <input
-              value={dateStart}
-              onChange={(e) => setDateStart(e.target.value)}
-              className="box-border rounded-md text-center text-base mb-4 ml-6  w-32 float-right border-button-gray border-2 hover:bg-nav-bg bg-white"
-              type="date"
-            />
-          </div>
-          <div className="flex flex-grow justify-around">
-            <label className="text-lg">End Date:</label>
-            <input
-              value={dateEnd}
-              onChange={(e) => setDateEnd(e.target.value)}
-              className="box-border rounded-md text-center text-base mb-4 ml-6 w-32 float-right border-button-gray border-2 hover:bg-nav-bg bg-white"
-              type="date"
-            />
-          </div>
-        </div>
-        <div className="float-left ml-12 mt-4">
-          <p className="text-main-color text-center text-3xl mt-4 mb-4">
-            Deposit History Report
-          </p>
-          <table
-            className="text-navy-gray "
-            id="depositHistoryTable"
-            ref={tableRef}
-          >
-            <tbody>
-              <tr>
-                <td className=" text-center w-28 h-12">Date</td>
-                <td className=" text-center w-28 h-12">Opened By</td>
-                <td className=" text-center w-28 h-12">Deposit Amount</td>
-                <td className=" text-center w-28 h-12">Verified Date</td>
-                <td className=" text-center w-28 h-12">Verified Status</td>
-                <td className=" text-center w-28 h-12">Verified By</td>
-              </tr>
-              {hasRecords === true &&
-                records.map((item, index) => (
-                  <tr
-                    onClick={() =>
-                      selectedRow == index
-                        ? SetSelectedRow(null)
-                        : SetSelectedRow(index)
-                    }
-                    className={`${selectedRow == index && "bg-amber-200"}`}
-                  >
-                    <td
-                      className={`${
-                        selectedRow == index
-                          ? "bg-gray-100"
-                          : "bg-custom-accent"
-                      } border border-gray-100  text-left w-48 h-8 pl-2`}
-                    >
-                      {item.date.split("T")[0]}
-                    </td>
-                    <td
-                      className={`${
-                        selectedRow == index
-                          ? "bg-gray-100"
-                          : "bg-custom-accent"
-                      } border border-gray-100  text-left w-48 h-8 pl-2`}
-                    >
-                      {item.name}
-                    </td>
-                    <td
-                      className={`${
-                        selectedRow == index
-                          ? "bg-gray-100"
-                          : "bg-custom-accent"
-                      } border border-gray-100  text-left w-28 h-8 pl-2`}
-                    >
-                      {"$" + item.total}
-                    </td>
-                    <td
-                      className={`${
-                        selectedRow == index
-                          ? "bg-gray-100"
-                          : "bg-custom-accent"
-                      } border border-gray-100  text-left w-28 h-8 pl-2`}
-                    >
-                      {item.verifiedOn == null
-                        ? null
-                        : item.verifiedOn.split("T")[0]}
-                    </td>
-                    <td
-                      className={`${
-                        selectedRow == index
-                          ? "bg-gray-100"
-                          : "bg-custom-accent"
-                      } border border-gray-100  relative inset-0 w-32 h-8 pl-2`}
-                    >
-                      {item.status == "OPEN" ? "" : "Verified"}
-                    </td>
-                    <td
-                      className={`${
-                        selectedRow == index
-                          ? "bg-gray-100"
-                          : "bg-custom-accent"
-                      } border border-gray-100  text-left w-32 h-8 pl-2`}
-                    >
-                      {item.verifiedBy}
-                    </td>
-                  </tr>
-                ))}
-              <tr>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan="3">
-                </td>
-                <td></td>
-                <td>
-                  
-                </td>
-                <td>
-                  
-                </td>
-              </tr>
-
-              <tr>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <div>
-            <Button
-              type="submit"
-              value="submit"
-              label="Verify Deposit"
-              rounded
-              size="small"
-              disabled={
-                selectedRow == null ||
-                records[selectedRow].status == "CLOSED" ||
-                records[selectedRow].status == "ABORTED"
-              }
-              className="p-button-primary p-button-raised"
-              onClick={(e) => setShowConfirm(true)}
-              style={{ width: "250px", marginRight: "1rem" }}
-            />
-            <Button
-              label="Export to Excel"
-              icon="pi pi-file-excel"
-              className="p-button-primary p-button-raised"
-              size="small"
-              rounded
-              onClick={onDownload}
-              style={{ marginRight: "1rem" }}
-            />
-            <Button
-              label="Export to PDF"
-              icon="pi pi-file-pdf"
-              className="p-button-primary p-button-raised"
-              size="small"
-              rounded
-              onClick={downloadPDF}
-              style={{ marginRight: "1rem" }}
-            />
-          </div>
-
-          {showConfirm && (
-            <div className="report-overlay">
-              <div className="report-container">
-                Are you sure you want to Verify this deposit?
-                <br />
-                <br />
-                <button
-                  className="flex w-32 float-left justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  onClick={Submit}
-                >
-                  Confirm
-                </button>
-                <button
-                  className="flex w-32 float-right justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  onClick={() => setShowConfirm(false)}
-                >
-                  Cancel
-                </button>
+          <div className="flex flex-wrap ml-8">
+            <div className="text-main-color w-72 text-2xl float-left">
+              <p>Select an open deposit to mark as pending or closed</p>
+              <br />
+              <div className="flex flex-row justify-around">
+                <label className="text-lg">Start Date:</label>
+                <input
+                  value={dateStart}
+                  onChange={(e) => setDateStart(e.target.value)}
+                  className="box-border rounded-md text-center text-base mb-4 ml-6  w-32 float-right border-button-gray border-2 hover:bg-nav-bg bg-white"
+                  type="date"
+                />
+              </div>
+              <div className="flex flex-grow justify-around">
+                <label className="text-lg">End Date:</label>
+                <input
+                  value={dateEnd}
+                  onChange={(e) => setDateEnd(e.target.value)}
+                  className="box-border rounded-md text-center text-base mb-4 ml-6 w-32 float-right border-button-gray border-2 hover:bg-nav-bg bg-white"
+                  type="date"
+                />
               </div>
             </div>
-          )}
+            <div className="float-left ml-8">
+              <p className="text-main-color text-center text-3xl mb-4">
+                Deposit History Report
+              </p>
+              <table
+                className="text-navy-gray "
+                id="depositHistoryTable"
+                ref={tableRef}
+              >
+                <tbody>
+                  <tr>
+                    <td className=" text-center w-28 h-12">Date</td>
+                    <td className=" text-center w-28 h-12">Opened By</td>
+                    <td className=" text-center w-28 h-12">Deposit Amount</td>
+                    <td className=" text-center w-28 h-12">Verified Date</td>
+                    <td className=" text-center w-28 h-12">Verified Status</td>
+                    <td className=" text-center w-28 h-12">Verified By</td>
+                  </tr>
+                  {hasRecords === true &&
+                    records.map((item, index) => (
+                      <tr
+                        onClick={() =>
+                          selectedRow == index
+                            ? SetSelectedRow(null)
+                            : SetSelectedRow(index)
+                        }
+                        className={`${selectedRow == index && "bg-amber-200"}`}
+                      >
+                        <td
+                          className={`${
+                            selectedRow == index
+                              ? "bg-gray-100"
+                              : "bg-custom-accent"
+                          } border border-gray-100  text-left w-48 h-8 pl-2`}
+                        >
+                          {item.date.split("T")[0]}
+                        </td>
+                        <td
+                          className={`${
+                            selectedRow == index
+                              ? "bg-gray-100"
+                              : "bg-custom-accent"
+                          } border border-gray-100  text-left w-48 h-8 pl-2`}
+                        >
+                          {item.name}
+                        </td>
+                        <td
+                          className={`${
+                            selectedRow == index
+                              ? "bg-gray-100"
+                              : "bg-custom-accent"
+                          } border border-gray-100  text-left w-28 h-8 pl-2`}
+                        >
+                          {"$" + item.total}
+                        </td>
+                        <td
+                          className={`${
+                            selectedRow == index
+                              ? "bg-gray-100"
+                              : "bg-custom-accent"
+                          } border border-gray-100  text-left w-28 h-8 pl-2`}
+                        >
+                          {item.verifiedOn == null
+                            ? null
+                            : item.verifiedOn.split("T")[0]}
+                        </td>
+                        <td
+                          className={`${
+                            selectedRow == index
+                              ? "bg-gray-100"
+                              : "bg-custom-accent"
+                          } border border-gray-100  relative inset-0 w-32 h-8 pl-2`}
+                        >
+                          {item.status == "OPEN" ? "" : "Verified"}
+                        </td>
+                        <td
+                          className={`${
+                            selectedRow == index
+                              ? "bg-gray-100"
+                              : "bg-custom-accent"
+                          } border border-gray-100  text-left w-32 h-8 pl-2`}
+                        >
+                          {item.verifiedBy}
+                        </td>
+                      </tr>
+                    ))}
+                  <tr>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td colSpan="3"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+
+                  <tr>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div>
+                <Button
+                  type="submit"
+                  value="submit"
+                  label="Verify Deposit"
+                  rounded
+                  size="small"
+                  disabled={
+                    selectedRow == null ||
+                    records[selectedRow].status == "CLOSED" ||
+                    records[selectedRow].status == "ABORTED"
+                  }
+                  className="p-button-primary p-button-raised"
+                  onClick={(e) => setShowConfirm(true)}
+                  style={{ width: "250px", marginRight: "1rem" }}
+                />
+                <Button
+                  label="Export to Excel"
+                  icon="pi pi-file-excel"
+                  className="p-button-primary p-button-raised"
+                  size="small"
+                  rounded
+                  onClick={onDownload}
+                  style={{ marginRight: "1rem" }}
+                />
+                <Button
+                  label="Export to PDF"
+                  icon="pi pi-file-pdf"
+                  className="p-button-primary p-button-raised"
+                  size="small"
+                  rounded
+                  onClick={downloadPDF}
+                  style={{ marginRight: "1rem" }}
+                />
+              </div>
+
+              {showConfirm && (
+                <div className="report-overlay">
+                  <div className="report-container">
+                    Are you sure you want to Verify this deposit?
+                    <br />
+                    <br />
+                    <button
+                      className="flex w-32 float-left justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      onClick={Submit}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      className="flex w-32 float-right justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      onClick={() => setShowConfirm(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

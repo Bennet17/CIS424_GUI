@@ -7,33 +7,34 @@ import HorizotalNav from "./HorizontalNav";
 import StoreTable from "./StoreTable.jsx";
 
 const StoreManagementPage = () => {
-
   return (
-
-<div className="flex min-h-screen bg-custom-accent">
-  <SideBar currentPage={20} />
-  <div className="flex flex-col w-full">
-    <HorizotalNav />
-    <h2 className="text-xl font-bold text-navy-gray mt-8 px-6 ml-8">
-         Store Management</h2>
-        <div className="flex flex-col items-center justify-center px-6">
-          {" "}
-          {/* Added items-center justify-center */}
-          <div className="w-full max-w-screen-lg">
+    <div className="flex min-h-screen min-w-fit bg-custom-accent">
+      <SideBar currentPage={20} />
+      <div className="flex flex-col w-full">
+        <HorizotalNav />
+        <div className="flex flex-col mx-8 mt-6">
+          <h1 className="text-3xl font-bold text-navy-gray">
+            Store Management
+          </h1>
+          <br />
+          <div className="flex flex-col">
             {" "}
-            {/* Limiting width to maintain responsiveness */}
-            <div className="flex justify-center mt-4">
+            {/* Added items-center justify-center */}
+            <div className="w-full max-w-screen-lg">
               {" "}
-              {/* Centering horizontally */}
-              <div style={{ width: "100%" }}>
-                <StoreTable />
+              {/* Limiting width to maintain responsiveness */}
+              <div className="flex justify-center">
+                {" "}
+                {/* Centering horizontally */}
+                <div style={{ width: "100%" }}>
+                  <StoreTable />
+                </div>
               </div>
             </div>
           </div>
         </div>
-  </div>
-</div>
-
+      </div>
+    </div>
   );
 };
 

@@ -71,15 +71,16 @@ const UserManagementPage = () => {
 
   //return the pages child components
   return (
-    <div className="flex mi-h-screen bg-custom-accent">
+    <div className="flex mi-h-screen min-w-fit bg-custom-accent">
       <SideBar currentPage={8} />
       <div className="flex flex-col w-full">
         <HorizontalNav />
-        <div className="flex flex-col mt-4 px-6 ml-8">
-          <h2 className="text-xl text-navy-gray font-bold mt-4 mb-2 ">
-            Users at Plato's Closet: {curStoreName}
-          </h2>
-          <div>
+        <div className="flex flex-col mt-6  mx-8">
+          <h1 className="text-3xl text-navy-gray font-bold ">
+            Users at {curStoreName}
+          </h1>
+          <br />
+          <div className="">
             {" "}
             <EmployeeTable storeArray={storeArray}></EmployeeTable>
           </div>
