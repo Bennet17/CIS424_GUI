@@ -140,6 +140,7 @@ const EditUser = (user) => {
             })
           .then((response) => {
             if (response.data.response == "Disabled") {
+              toast.success("User deactivated");
               window.location.reload(); // This will refresh the page
             }
             else {
@@ -148,7 +149,7 @@ const EditUser = (user) => {
           })
           .catch((error) => {
             console.error("API request failed:", error);
-            setResult("Request Failed. Try again.")
+            toast.error("Request Failed. Try again.")
           });
       }
     }
@@ -165,7 +166,7 @@ const EditUser = (user) => {
           console.log(response.data.response);
 
           if (response.data.response == "Enabled") {
-            //console.log("User enabled");
+            toast.success("User Activated");
             window.location.reload(); // This will refresh the page
           } else {
             console.error("Failed to enable user");
@@ -173,7 +174,7 @@ const EditUser = (user) => {
         })
         .catch((error) => {
           console.error("API request failed:", error);
-          setResult("Request Failed. Try again.")
+          toast.error("Request Failed. Try again.")
         });
     }
 
@@ -202,22 +203,22 @@ const EditUser = (user) => {
         //the following line indicates a successful entry
         if (response.data.response === "User Updated successfully.") {
           closeModal();
-          setResult("User Successfully edited.")
+          toast.success("User Successfully edited.")
           window.location.reload(); // This will refresh the page
         }
         //if this response comes in, the user tried to change their username to a different username
         else if (response.data.response === "Please choose a different username.") {
-          setResult("This username is taken. Please choose a different one.");
+          toast.error("This username is taken. Please choose a different one.");
 
         } else {
           // a valid api request but error occurred          
-          setResult("Request Failed. Try again.")
+          toast.error("Request Failed. Try again.")
         }
       })
       //error if the API request failed
       .catch((error) => {
         console.error("API request failed:", error);
-        setResult("Request Failed. Try again.")
+        toast.error("Request Failed. Try again.")
       });
   };
 

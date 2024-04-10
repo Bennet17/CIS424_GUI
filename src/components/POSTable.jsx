@@ -11,6 +11,8 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
 import EditPOS from './EditPos.jsx';
+import { Toaster, toast } from "sonner";
+
 
 
 function POSTable() {
@@ -81,14 +83,21 @@ function POSTable() {
           "alias": nickname
         })
       .then((response) => {
-        //setResult("POS created successfully");
-        setShowModal(false);
-        window.location.reload(); // This will refresh the page
+       // console.log(response.data.response);
+        if(response.data.response === "Register limit (15) reached"){
+          toast.error("Register Limit Reached. Cannot create new POS register.");
+          setShowModal(false);
+        }
+        else{
+          toast.success("POS created successfully");
+          setShowModal(false);
+          window.location.reload(); // This will refresh the page
+        }
 
       })
       .catch((error) => {
         console.error("API request failed:", error);
-        setResult("Request Failed. Try again.")
+        toast.error("Request Failed. Try again.")
       });
   }
 
@@ -98,7 +107,7 @@ function POSTable() {
     if (pos.enabled == true) {
       //first, check if the register is open
       if (pos.opened == true) {
-        setResult("Cannot disable an open register. Please close and try again.")
+        toast.error("Cannot disable an open register. Please close and try again.")
       }
       else {
         //create a disable POS request; send POS ID to disable
@@ -110,18 +119,18 @@ function POSTable() {
           .then((response) => {
 
             if (response.data.response == "Disabled") {
-              console.log("Register successfully disabled");
+              //toast.success("Register successfully disabled");
               window.location.reload(); // This will refresh the page
 
             } else {
-              setResult("Disable failed");
+              toast.error("Disable failed");
               console.error("Failed to disable register");
             }
 
           })
           .catch((error) => {
             console.error("API request failed:", error);
-            setResult("Request Failed. Try again.")
+            toast.error("Request Failed. Try again.")
           });
       }
     }
@@ -136,16 +145,16 @@ function POSTable() {
           })
         .then((response) => {
           if (response.data.response == "Enabled") {
-            console.log("Register enabled");
+            //toast.success("Register enabled");
             window.location.reload(); // This will refresh the page
           } else {
             console.error("Failed to enable register");
-            setResult("Failed to enable the register. Try Again");
+            toast.error("Failed to enable the register. Try Again");
           }
         })
         .catch((error) => {
           console.error("API request failed:", error);
-          setResult("Request Failed. Try again.")
+          toast.error("Request Failed. Try again.")
         });
     }
 
@@ -181,6 +190,14 @@ function POSTable() {
 
   return (
     <div>
+         <Toaster
+        richColors
+        position="top-center"
+        expand={true}
+        duration={5000}
+        pauseWhenPageIsHidden={true}
+      />
+
       {showModal && (
         <div className="fixed z-50 inset-0 overflow-y-auto">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
