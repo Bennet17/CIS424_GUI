@@ -33,7 +33,7 @@ const POSManagementPage = () => {
         <HorizotalNav />
         <div className="flex flex-col mx-8 mt-6">
           <h1 className="text-3xl font-bold text-navy-gray ">
-            POS Registers at Plato's Closet: {curStoreName}
+            POS Registers at {curStoreName}
           </h1>
           <br />
           <div className="">

@@ -302,7 +302,7 @@ function POSTable() {
           </tbody>
         </table>
       </div>
-      <div className="flex flex-row-reverse mt-4 ">
+      <div className="flex flex-row-reverse my-4 ">
         <Button
           onClick={onDownload}
           label="Export to Excel"

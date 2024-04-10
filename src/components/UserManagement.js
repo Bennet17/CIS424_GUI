@@ -77,7 +77,7 @@ const UserManagementPage = () => {
         <HorizontalNav />
         <div className="flex flex-col mt-6  mx-8">
           <h1 className="text-3xl text-navy-gray font-bold ">
-            Users at Plato's Closet: {curStoreName}
+            Users at {curStoreName}
           </h1>
           <br />
           <div className="">
