@@ -183,9 +183,12 @@ const AddUserForm = () => {
           closeModal();
           window.location.reload(); // This will refresh the page
 
-        } else {
+        } else if(response.data.response == "Username already exists. Please choose a different username.") {
           //a valid API request but user was not created because there was already a user with that username
-          toast.error("Username already taken. Try again");
+          toast.error("Username already exists. Please choose a different username.");
+        }
+        else{
+          toast.error("An error occurred. Try again later");
         }
       })
       //error if the API request failed
