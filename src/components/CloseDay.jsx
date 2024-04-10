@@ -476,6 +476,8 @@ const CloseDayPage = () => {
             setPostSuccess(false);
             toast.error(poss[currentPosIndex].name + " failed to close!");
           }
+
+          setShowConfirm(false);
         })
         .catch((error) => {
           toast.error(
