@@ -14,7 +14,6 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 
 // USD Icon imports
 import BillHundred from "../usd_icons/bills/BillHundred.svg";
@@ -27,7 +26,6 @@ import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
 import CoinOne from "../usd_icons/coins/CoinOne.svg";
 import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
-import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
 import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
 import CoinDime from "../usd_icons/coins/CoinDime.svg";
 import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
@@ -108,7 +106,6 @@ const FundsTransferPage = () => {
           }
         })
         .catch((error) => {
-          console.error(error);
           setArrSources([]);
         });
     }
@@ -427,8 +424,6 @@ const FundsTransferPage = () => {
         ...currencyFields,
       };
 
-      console.log(request);
-
       // Submit the form data
       const response = await axios.post(FundTransferURL, request);
 
@@ -446,7 +441,6 @@ const FundsTransferPage = () => {
         return false;
       }
     } catch (error) {
-      console.error(error);
       toast.error(
         "A server error occurred during submission. Please try again later."
       );

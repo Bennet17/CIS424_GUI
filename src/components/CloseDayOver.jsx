@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
 
+import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/mira/theme.css";
+import "primeicons/primeicons.css";
 
 const CloseDayOver = ({ onClose, details, isSafe }) => {
-    console.log(isSafe)
-    useEffect(() => {
-        console.log(isSafe)
-    }, []);
     return (
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-8 rounded-lg shadow-lg">
@@ -45,10 +44,15 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                         </ul>
                     </>
                 )}
-                
-                <button onClick={onClose} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Close
-                </button>
+
+                <Button
+                    onClick={onClose}
+                    label="Close"
+                    rounded
+                    icon="pi pi-times"
+                    size="small"
+                    className="p-button-secondary p-button-raised"
+                />
             </div>
         </div>
     );

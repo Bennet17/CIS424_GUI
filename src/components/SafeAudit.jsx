@@ -23,7 +23,6 @@ import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
 import CoinOne from "../usd_icons/coins/CoinOne.svg";
 import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
-import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
 import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
 import CoinDime from "../usd_icons/coins/CoinDime.svg";
 import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
@@ -146,7 +145,6 @@ const SafeAuditPage = () => {
                   SetExpectedDenominations(data);
                 })
                 .catch((error) => {
-                  console.log(error);
                 });
             } else {
               // Display a warning message if the safe is not open
@@ -159,7 +157,6 @@ const SafeAuditPage = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
         });
     }
 
@@ -292,21 +289,16 @@ const SafeAuditPage = () => {
       ...currencyFields,
     };
 
-    console.log(request);
-
     // POST the cash count to the server
     axios
       .post(CreateCashCountURL, request)
       .then((response) => {
-        console.log(response);
-
         // Check if the count was successful
         if (response.status == 200)
           toast.success("Safe count submitted successfully.");
         else toast.error("Failed to submit safe count.");
       })
       .catch((error) => {
-        console.error(error);
         toast.error(
           "A server error occurred during submission. Please try again later."
         );

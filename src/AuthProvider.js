@@ -26,7 +26,6 @@ const AuthProvider = ({ children }) => {
             //setToken(response.token);
             //setCookie("user", response.data.user, { path: "/" });
             //localStorage.setItem("site", cookie);
-            console.log(response.data.user);
             
             if (response.data.user.storeID_CSV.length === 1) {
               setCookie(
@@ -47,9 +46,6 @@ const AuthProvider = ({ children }) => {
               navigate(routes.selectstore);
             }
 
-            console.log("cookie user");
-              console.log(cookie.user);
-
             resolve(response.data);
           } else {
             //invalid credentials
@@ -68,8 +64,6 @@ const AuthProvider = ({ children }) => {
     viewingStoreID,
     viewingStoreLocation
   ) => {
-    console.log("Viewing store location was set.");
-    console.log(viewingStoreLocation);
     setCookie(
       "user",
       {

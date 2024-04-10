@@ -25,7 +25,6 @@ import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
 import CoinOne from "../usd_icons/coins/CoinOne.svg";
 import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
-import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
 import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
 import CoinDime from "../usd_icons/coins/CoinDime.svg";
 import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
@@ -184,11 +183,6 @@ const CloseDayPage = () => {
 
   //call on component load AND when the currently-selected pos has refreshed
   useEffect(() => {
-    console.log(
-      "setting pos array index to " + currentPosIndex + ", see below"
-    );
-    console.log(poss[currentPosIndex]);
-
     //update the expected total amount
     GetExpectedCount();
   }, [currentPosIndex]);
@@ -257,7 +251,6 @@ const CloseDayPage = () => {
           `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`
         )
         .then((response) => {
-          console.log(response);
           //set the pos information data
           setPoss(response.data);
           setPostSuccess(false); //reset status on page refresh
@@ -287,9 +280,6 @@ const CloseDayPage = () => {
           `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`
         )
         .then((response) => {
-          console.log("Getting cash count for " + posName);
-          console.log(response);
-
           //set denominations and total values
           setExpectedAmount(response.data.total);
           setElm100DollarExpected(response.data.hundred);
@@ -331,7 +321,6 @@ const CloseDayPage = () => {
       `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`
     );
     const thresholds = thresholdsResponse.data;
-    console.log(thresholds);
 
     let info = {
       hundred: 0,
@@ -467,7 +456,6 @@ const CloseDayPage = () => {
           }
         )
         .then((response) => {
-          console.log(response);
           if (response.status === 200) {
             //close POS
             setPostSuccess(true);
@@ -539,7 +527,6 @@ const CloseDayPage = () => {
           }
         )
         .then((response) => {
-          console.log(response);
           if (response.status === 200) {
             //close POS
             setPostSuccess(true);
@@ -1429,20 +1416,10 @@ const CloseDayPage = () => {
         {showConfirm && (
           <div className="report-overlay">
             <div className="report-container">
-              You are about to perform a closeday with more than a $
+              You are about to perform a close day with more than a $
               {colorChangeThreshold} variance. Are you sure?
               <br />
               <br />
-              <Button
-                type="button"
-                value="button"
-                label="Confirm"
-                rounded
-                icon="pi pi-check"
-                size="small"
-                className="p-button-raised p-button-primary"
-                onClick={Submit}
-              />
               <Button
                 type="button"
                 value="button"
@@ -1450,8 +1427,20 @@ const CloseDayPage = () => {
                 rounded
                 icon="pi pi-times"
                 size="small"
-                className="p-button-raised p-button-secondary"
+                className="p-button-secondary p-button-raised"
                 onClick={() => setShowConfirm(false)}
+                style={{ marginRight: "1rem" }}
+              />
+              <Button
+                type="button"
+                value="button"
+                label="Confirm"
+                rounded
+                icon="pi pi-check"
+                size="small"
+                className="p-button-primary p-button-raised"
+                onClick={Submit}
+                style={{ marginRight: "1rem" }}
               />
             </div>
           </div>
