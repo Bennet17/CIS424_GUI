@@ -180,21 +180,27 @@ const VarianceTable = () => {
                 .then((response) => {
                     // If the response contains data, set the array of variances to the response data
                     if (response.data && response.data.length > 0) {
-                        // Set the array of variances after sorting by date
-                        setArrVariances(response.data.sort((a, b) => new Date(a.Date) - new Date(b.Date)));
+                        // Calculate totals
+                        const totals = CalculateTotal(response.data);
+                        
+                        // Append totals to the data array
+                        const dataWithTotals = [...response.data, totals];
 
+                        // Set the array of variances after sorting by date
+                        setArrVariances(dataWithTotals.sort((a, b) => new Date(a.Date) - new Date(b.Date)));
+                        
                         // Calculate the number of empty rows to fill the last page of the table
                         // Prime react datatable doesn't lock the number of rows to the page size so
                         // the paginator jumps up and down when the number of variances changes.
                         // This fixes that by adding empty rows to the last page since there's no 
                         // way to lock the number of rows :(.
-                        const remainingEmptyRows = rowCount - (response.data.length % rowCount);
+                        const remainingEmptyRows = rowCount - (arrVariances.length % rowCount);
 
                         // Create an array of empty rows to fill the last page of the table
                         let emptyRows = [];
 
                         // Check if there are remaining empty rows to fill, and if the number of data rows is not a multiple of rowCount
-                        if (remainingEmptyRows > 0 && response.data.length % rowCount !== 0) {
+                        if (remainingEmptyRows > 0 && arrVariances.length % rowCount !== 0) {
                             emptyRows = Array.from({ length: remainingEmptyRows }, () => ({
                                 Date: null,
                                 amountExpected: null,
@@ -335,7 +341,8 @@ const VarianceTable = () => {
         // Iterate over arrVariances to calculate totals and insert rows
         arrVariances.forEach(variance => {
             // If the date changes, insert the total row for the previous date
-            if (variance.Date !== currentDate) {
+            if (variance.Date !== currentDate && variance.Date !== 'Totals:') {
+                // Calculate and push the total row for the previous date group
                 if (totalRow && Object.keys(totalRow).length > 0 && !isTotalRow) {
                     // Push total row to tableData with "Totals" label
                     const formattedTotalRow = ['Totals', ...Object.values(totalRow).map(value => {
@@ -350,39 +357,42 @@ const VarianceTable = () => {
                 isTotalRow = false; // Reset isTotalRow flag
             }
 
-            // Calculate totals for each column
-            varianceColumns.forEach(column => {
-                if (!totalRow[column.field]) {
-                    // Initialize total to an empty string for excluded columns
-                    totalRow[column.field] = ["POSName", "OpenerName", "CloserName"].includes(column.field) ? "" : 0;
-                }
-                if (!isNaN(variance[column.field])) {
-                    if (!["POSName", "OpenerName", "CloserName"].includes(column.field)) {
-                        totalRow[column.field] += variance[column.field];
+            // Calculate totals for each column is the current row is not the complete summation row
+            if (variance.Date !== 'Totals:') {
+                varianceColumns.forEach(column => {
+                    if (!totalRow[column.field]) {
+                        // Initialize total to an empty string for excluded columns
+                        totalRow[column.field] = ["POSName", "OpenerName", "CloserName"].includes(column.field) ? "" : 0;
                     }
-                } else {
-                    // Reset the total to an empty string for excluded columns
-                    if (["POSName", "OpenerName", "CloserName"].includes(column.field)) {
-                        totalRow[column.field] = "";
+                    if (!isNaN(variance[column.field])) {
+                        if (!["POSName", "OpenerName", "CloserName"].includes(column.field)) {
+                            totalRow[column.field] += variance[column.field];
+                        }
+                    } else {
+                        // Reset the total to an empty string for excluded columns
+                        if (["POSName", "OpenerName", "CloserName"].includes(column.field)) {
+                            totalRow[column.field] = "";
+                        }
                     }
-                }
-            });
+                });
+            }
 
-            // Push current variance data to tableData
             const rowData = [
-                FormatDate(variance.Date), // Include the date column
+                FormatDate(variance.Date),
                 ...varianceColumns.map(column => {
-                    
                     // Apply formatting functions to other columns
                     if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
                         return variance[column.field] == null ? '-' : FormatCurrency(variance[column.field]); // Currency formatting
-                    } else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
+                    } 
+                    else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
                         return variance[column.field] == null ? '-' : VariancePositiveNegative(variance[column.field], true); // Variance formatting
-                    } else {
+                    } 
+                    else {
                         return variance[column.field]; // No formatting for other columns
                     }
                 })
             ];
+
             tableData.push(rowData); // Insert row data
             
             // Check if the current row is a totals row
@@ -409,6 +419,12 @@ const VarianceTable = () => {
             tableData.push([]); // Add an empty row after the totals row
         }
 
+        // Shifts Totals: row to the end of the table
+        const totalsIndex = tableData.findIndex(row => row[0] === 'Totals:');
+        if (totalsIndex > -1) {
+            const totalsRow = tableData.splice(totalsIndex, 1);
+            tableData.push(totalsRow[0]);
+        }
 
         // Include the date column header in the head array
         const head = ["Date", ...varianceColumns.map(column => column.header)];
@@ -424,7 +440,6 @@ const VarianceTable = () => {
         doc.save(`${GetFileName()}.pdf`);
     };
 
-
     // Function to get the file name for the exported CSV file
     function GetFileName() {
         // Get the start date and end date from the form data
@@ -437,12 +452,24 @@ const VarianceTable = () => {
 
     // Function to format the date
     const FormatDate = (dateStr) => {
+        // Check if dateStr is null or undefined
+        if (!dateStr) 
+            return ""; // or return a default value
+        else if (dateStr === "Totals:")
+            return dateStr;
+
         // Convert the date string to a Date object
         const date = new Date(dateStr);
+
+        // Check if the date is valid
+        if (isNaN(date.getTime())) {
+            return "Invalid Date"; // or return a default value
+        }
 
         // Return the formatted date
         return format(date, "yyyy-MM-dd");
     };
+
 
     // Function to format negative values in parentheses as currency
     const FormatCurrency = (value) => {
@@ -531,14 +558,61 @@ const VarianceTable = () => {
         </div>
     )
 
+    // Calculates the sum total for the column
+    const CalculateGroupTotal = (columnName, date) => {
+        // Filter rows with the specified date
+        const filteredRows = arrVariances.filter(row => row.Date === date);
+
+        // Sum up values for the specified column
+        return filteredRows.reduce((total, row) => total + row[columnName], 0);
+    };
+
+    // Function to calculate the totals for each column
+    function CalculateTotal(data) {
+        // Initialize total object
+        const total = {
+            Date: "Totals:",
+            POSName: "",
+            OpenerName: "",
+            OpenExpected: 0,
+            OpenActual: 0,
+            OpenVariance: 0,
+            CloserName: "",
+            CloseExpected: 0,
+            CloseActual: 0,
+            CloseVariance: 0,
+            CashToSafe: 0,
+            CloseCreditActual: 0,
+            CloseCreditExpected: 0,
+            CreditVariance: 0,
+            TotalCashVariance: 0,
+            TotalVariance: 0
+        };
+    
+        // Iterate over data to calculate totals
+        data.forEach(row => {
+            total.OpenExpected += row.OpenExpected;
+            total.OpenActual += row.OpenActual;
+            total.OpenVariance += row.OpenVariance;
+            total.CloseExpected += row.CloseExpected;
+            total.CloseActual += row.CloseActual;
+            total.CloseVariance += row.CloseVariance;
+            total.CashToSafe += row.CashToSafe;
+            total.CloseCreditActual += row.CloseCreditActual;
+            total.CloseCreditExpected += row.CloseCreditExpected;
+            total.CreditVariance += row.CreditVariance;
+            total.TotalCashVariance += row.TotalCashVariance;
+            total.TotalVariance += row.TotalVariance;
+        });
+        
+        return total;
+    }
+
     // Row group header based on the date
     const rowHeader = (data) => {
-        if (data.Date === null) {
-            return (
-                <div className="flex align-items-center gap-2">
-                    <span className="font-bold"></span>
-                </div>
-            )
+        // If the date is Totals, return a bolded row
+        if (data.Date === "Totals:") {
+            return null;
         }
         else {
             return (
@@ -549,16 +623,7 @@ const VarianceTable = () => {
         }
     }
 
-    // Calculates the sum total for the column
-    const CalculateTotal = (columnName, date) => {
-        // Filter rows with the specified date
-        const filteredRows = arrVariances.filter(row => row.Date === date);
-
-        // Sum up values for the specified column
-        return filteredRows.reduce((total, row) => total + row[columnName], 0);
-    };
-
-    // Row group footer that adds the amounts from each row
+    // Row group footer that adds the amounts from each row with the same date
     const rowFooter = (data) => {
         if (!data || data.Date === null)
             return null;
@@ -569,21 +634,21 @@ const VarianceTable = () => {
                     {visibleColumns.map(column => (
                         <td key={column.field}>
                             <strong>
-                                {column.field === "POSName" && "Total:"}
+                                {column.field === "POSName" && data.Date === "Totals:" ? "Totals:" : column.field === "POSName" && "Total:"}
                                 {column.field === "OpenerName" && ""}
-                                {column.field === "OpenExpected" && FormatCurrency(CalculateTotal("OpenExpected", date))}
-                                {column.field === "OpenActual" && FormatCurrency(CalculateTotal("OpenActual", date))}
-                                {column.field === "OpenVariance" && VariancePositiveNegative(CalculateTotal("OpenVariance", date), false)}
+                                {column.field === "OpenExpected" && FormatCurrency(CalculateGroupTotal("OpenExpected", date))}
+                                {column.field === "OpenActual" && FormatCurrency(CalculateGroupTotal("OpenActual", date))}
+                                {column.field === "OpenVariance" && VariancePositiveNegative(CalculateGroupTotal("OpenVariance", date), false)}
                                 {column.field === "CloserName" && ""}
-                                {column.field === "CloseExpected" && FormatCurrency(CalculateTotal("CloseExpected", date))}
-                                {column.field === "CloseActual" && FormatCurrency(CalculateTotal("CloseActual", date))}
-                                {column.field === "CloseVariance" && VariancePositiveNegative(CalculateTotal("CloseVariance", date), false)}
-                                {column.field === "CashToSafe" && FormatCurrency(CalculateTotal("CashToSafe", date))}
-                                {column.field === "CloseCreditActual" && FormatCurrency(CalculateTotal("CloseCreditActual", date))}
-                                {column.field === "CloseCreditExpected" && FormatCurrency(CalculateTotal("CloseCreditExpected", date))}
-                                {column.field === "CreditVariance" && VariancePositiveNegative(CalculateTotal("CreditVariance", date), false)}
-                                {column.field === "TotalCashVariance" && VariancePositiveNegative(CalculateTotal("TotalCashVariance", date), false)}
-                                {column.field === "TotalVariance" && VariancePositiveNegative(CalculateTotal("TotalVariance", date), false)}
+                                {column.field === "CloseExpected" && FormatCurrency(CalculateGroupTotal("CloseExpected", date))}
+                                {column.field === "CloseActual" && FormatCurrency(CalculateGroupTotal("CloseActual", date))}
+                                {column.field === "CloseVariance" && VariancePositiveNegative(CalculateGroupTotal("CloseVariance", date), false)}
+                                {column.field === "CashToSafe" && FormatCurrency(CalculateGroupTotal("CashToSafe", date))}
+                                {column.field === "CloseCreditActual" && FormatCurrency(CalculateGroupTotal("CloseCreditActual", date))}
+                                {column.field === "CloseCreditExpected" && FormatCurrency(CalculateGroupTotal("CloseCreditExpected", date))}
+                                {column.field === "CreditVariance" && VariancePositiveNegative(CalculateGroupTotal("CreditVariance", date), false)}
+                                {column.field === "TotalCashVariance" && VariancePositiveNegative(CalculateGroupTotal("TotalCashVariance", date), false)}
+                                {column.field === "TotalVariance" && VariancePositiveNegative(CalculateGroupTotal("TotalVariance", date), false)}
                             </strong>
                         </td>
                     ))}
@@ -649,6 +714,7 @@ const VarianceTable = () => {
                                 name="startDate"
                                 className="variance-date"
                                 date={formData.startDate}
+                                min="1900-01-01"
                                 max={maxDate}
                                 onChange={HandleChange}
                             />
@@ -715,6 +781,11 @@ const VarianceTable = () => {
                                     style={{ minWidth: "9em" }}
                                     sortable 
                                     body={(rowData) => {
+                                        // Check if the date is set to Totals:
+                                        if (rowData.Date === "Totals:") {
+                                            console.log(rowData);
+                                            return <span className="invisible-row">-</span>;
+                                        }
                                         // Check if the column is a currency column
                                         if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
                                             // Check if the value is null or undefined

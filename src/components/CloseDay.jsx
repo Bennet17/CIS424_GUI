@@ -49,6 +49,11 @@ const CloseDayPage = () => {
   const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("Show Extras ▼");
   //let currentPosIndex = -1;
 
+  // TM: Title will change with entity selection
+  const [titleText, setTitleText] = useState(
+    `Close Day for ${auth.cookie.user.viewingStoreLocation}`
+  );
+
   //dom fields
   const [elmPennies, setElmPennies] = useState(0);
   const [elmNickles, setElmNickles] = useState(0);
@@ -182,6 +187,15 @@ const CloseDayPage = () => {
     GetExpectedCount();
   }, [currentPosIndex]);
 
+  // TM: Title change useEffect to update on entity selection
+  useEffect(() => {
+    if (posHasLoaded) {
+      setTitleText(
+        `Close Day for ${auth.cookie.user.viewingStoreLocation} - Counting ${poss[currentPosIndex].name} Denominations`
+      );
+    }
+  }, [posHasLoaded]);
+
   //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
   //(also change arrow text thing)
   function ToggleExtraChange() {
@@ -221,7 +235,7 @@ const CloseDayPage = () => {
     if (poss.length > 0) {
       //update current pos. Initialize it to the first pos that is closed, otherwise, default to safe
       let posIndex = FirstPosIndexEnabled();
-      if (posIndex < 0){
+      if (posIndex < 0) {
         posIndex = 0;
       }
       setCurrentPosIndex(posIndex);
@@ -564,17 +578,17 @@ const CloseDayPage = () => {
     return disable;
   }
 
-    // gets the first pos index in the poss array that should be selectable
-    // skip the safe since otherwise it will always be selected instead of the other
-    //poss despite the poss being the ones we want to select
-    function FirstPosIndexEnabled(){
-        for (let i = 1; i < poss.length; i ++){
-          if (poss[i].opened){
-            return i;
-          }
-        }
-        return -1;
+  // gets the first pos index in the poss array that should be selectable
+  // skip the safe since otherwise it will always be selected instead of the other
+  //poss despite the poss being the ones we want to select
+  function FirstPosIndexEnabled() {
+    for (let i = 1; i < poss.length; i++) {
+      if (poss[i].opened) {
+        return i;
       }
+    }
+    return -1;
+  }
 
   return (
     <div className="flex min-h-screen min-w-fit bg-custom-accent">
@@ -588,90 +602,92 @@ const CloseDayPage = () => {
       <SideBar currentPage={2} />
       <div className="w-full">
         <HorizontalNav />
-        <div className="text-main-color float-left ml-8 mt-4">
-          <p className="text-2xl w-44 mb-2">Select POS/Safe to Close</p>
-          {posHasLoaded ? (
-            <>
-              {poss.map((item, index) => (
-                <>
-                  <label className="flex items-center space-x-2 my-0">
-                    <input
-                      key={item.name}
-                      defaultChecked={FirstPosIndexEnabled() >= 0 ? FirstPosIndexEnabled() === index : index === 0}
-                      onChange={(e) => setCurrentPosIndex(index)}
-                      disabled={
-                        !item.opened || IfAllOtherPOSsAreDisabled(index === 0)
-                      }
-                      type="radio"
-                      name="POS"
-                      value={item.name}
-                      className="h-4 w-4 my-2"
-                    />
-                    {item.name === "SAFE" ? (
-                      <Vault className="h-6 w-6" />
-                    ) : (
-                      <CreditCard className="h-6 w-6" />
-                    )}
-                    <div className="flex flex-row">
-                      {item.name} -{" "}
-                      {item.opened ? (
-                        <div className="pl-1 flex flex-row items-center">
-                          Open
-                          <PackageOpen className="ml-1 h-5 w-5" />
-                        </div>
+        <div className="text-main-color float-left ml-8 mt-6">
+          <h1 className="text-3xl font-bold">{titleText}</h1>
+          <br />
+          <div>
+            {posHasLoaded ? (
+              <>
+                {poss.map((item, index) => (
+                  <>
+                    <label className="flex items-center space-x-2 my-0">
+                      <input
+                        key={item.name}
+                        defaultChecked={
+                          FirstPosIndexEnabled() >= 0
+                            ? FirstPosIndexEnabled() === index
+                            : index === 0
+                        }
+                        onChange={(e) => setCurrentPosIndex(index)}
+                        disabled={
+                          !item.opened || IfAllOtherPOSsAreDisabled(index === 0)
+                        }
+                        type="radio"
+                        name="POS"
+                        value={item.name}
+                        className="h-4 w-4 my-2"
+                      />
+                      {item.name === "SAFE" ? (
+                        <Vault className="h-6 w-6" />
                       ) : (
-                        <div className="pl-1 flex flex-row items-center">
-                          Closed
-                          <Package className="ml-1 h-5 w-5 text-button-blue-light" />
-                        </div>
+                        <CreditCard className="h-6 w-6" />
                       )}
-                    </div>
-                  </label>
-                </>
-              ))}
-            </>
-          ) : (
-            <p>Loading...</p>
-          )}
+                      <div className="flex flex-row">
+                        {item.name} -{" "}
+                        {item.opened ? (
+                          <div className="pl-1 flex flex-row items-center">
+                            Open
+                            <PackageOpen className="ml-1 h-5 w-5" />
+                          </div>
+                        ) : (
+                          <div className="pl-1 flex flex-row items-center">
+                            Closed
+                            <Package className="ml-1 h-5 w-5 text-button-blue-light" />
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                  </>
+                ))}
+              </>
+            ) : (
+              <p>Loading...</p>
+            )}
+          </div>
         </div>
         <div className="text-main-color float-left ml-16 mt-4">
           {posHasLoaded ? (
-            <div className="flex flex-row justify-between">
-              <p className="text-xl mb-2">
-                {poss[currentPosIndex].name} Denominations
-              </p>
-              <div className="flex flex-row">
-                <div>
-                  <label className="text-xl">
-                    {" "}
-                    Current Total:
-                    <input
-                      value={"$" + totalAmount}
-                      className={actualAmountStyle + " rounded-md"}
-                      type="text"
-                      disabled={true}
-                    />
-                  </label>
-                </div>
-                <div>
-                  <label className="text-xl">
-                    {" "}
-                    Expected Total:
-                    <input
-                      value={"$" + expectedAmount}
-                      onChange={(e) =>
-                        setExpectedAmount(
-                          clamp(e.target.value.toString().substring(1))
-                        )
-                      }
-                      disabled={currentPosIndex === 0}
-                      className={`rounded-md box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 ${
-                        currentPosIndex === 0 ? "bg-nav-bg" : "bg-white"
-                      } `}
-                      type="text"
-                    />
-                  </label>
-                </div>
+            <div className="flex flex-row justify-center">
+              <div>
+                <label className="text-xl">
+                  {" "}
+                  Current Total:
+                  <input
+                    value={"$" + totalAmount}
+                    className={actualAmountStyle + " rounded-md"}
+                    type="text"
+                    disabled={true}
+                  />
+                </label>
+              </div>
+              <div>
+                <label className="text-xl">
+                  {" "}
+                  Expected Total:
+                  <input
+                    value={"$" + expectedAmount}
+                    onChange={(e) =>
+                      setExpectedAmount(
+                        clamp(e.target.value.toString().substring(1))
+                      )
+                    }
+                    disabled={currentPosIndex === 0}
+                    className={`rounded-md box-border text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 ${
+                      currentPosIndex === 0 ? "bg-nav-bg" : "bg-white"
+                    } `}
+                    type="text"
+                  />
+                </label>
               </div>
             </div>
           ) : (
@@ -679,7 +695,7 @@ const CloseDayPage = () => {
           )}
 
           {posHasLoaded && currentPosIndex !== 0 && (
-            <div className="flex flex-row justify-end">
+            <div className="flex flex-row justify-center">
               <div className="flex flex-row">
                 <div>
                   <label className="text-xl">
@@ -1287,7 +1303,7 @@ const CloseDayPage = () => {
                 </tr> */}
               </tbody>
             </table>
-            <div>
+            <div className="mb-4">
               <Button
                 type="button"
                 value="button"
@@ -1306,7 +1322,11 @@ const CloseDayPage = () => {
                 icon="pi pi-check"
                 size="small"
                 className="p-button-raised p-button-primary"
-                style={{ width: "125px", marginLeft: "1rem", marginRight: "1rem" }}
+                style={{
+                  width: "125px",
+                  marginLeft: "1rem",
+                  marginRight: "1rem",
+                }}
               />
               <ToggleButton
                 checked={showExtraChange}
@@ -1404,18 +1424,26 @@ const CloseDayPage = () => {
               {colorChangeThreshold} variance. Are you sure?
               <br />
               <br />
-              <button
-                className="flex w-32 float-left justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              <Button
+                type="button"
+                value="button"
+                label="Confirm"
+                rounded
+                icon="pi pi-check"
+                size="small"
+                className="p-button-raised p-button-primary"
                 onClick={Submit}
-              >
-                Confirm
-              </button>
-              <button
-                className="flex w-32 float-right justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              />
+              <Button
+                type="button"
+                value="button"
+                label="Cancel"
+                rounded
+                icon="pi pi-times"
+                size="small"
+                className="p-button-raised p-button-secondary"
                 onClick={() => setShowConfirm(false)}
-              >
-                Cancel
-              </button>
+              />
             </div>
           </div>
         )}

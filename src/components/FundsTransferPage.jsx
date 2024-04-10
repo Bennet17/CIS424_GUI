@@ -242,6 +242,21 @@ const FundsTransferPage = () => {
         .classList.add("select-input-error");
     }
 
+    // If the source is bank and the destination is not safe, show an error
+    if (formData.source === "BANK" && formData.destination !== "SAFE") {
+      // Set the status message
+      blnError = true;
+      toast.warning("Cannot transfer from BANK to POS.");
+
+      // Highlight the source and destination fields with red border
+      document
+        .getElementById("source_select")
+        .classList.add("select-input-error");
+      document
+        .getElementById("destination_select")
+        .classList.add("select-input-error");
+    }
+
     // Check if any field is empty
     if (
       formData.source === "" ||
@@ -337,14 +352,6 @@ const FundsTransferPage = () => {
       )
         return;
     }
-
-    // Get the source and destination register IDs
-    const sourceRegisterID = arrSources.find(
-      (register) => register.name === source
-    ).id;
-    const destinationRegisterID = arrDestinations.find(
-      (register) => register.name === destination
-    ).id;
 
     // Submit the transfer
     if (
@@ -649,7 +656,7 @@ const FundsTransferPage = () => {
                         onChange={HandleChange}
                       >
                         <option value="">&lt;Please select a source&gt;</option>
-                        <option value="BANK">BANK</option>
+                        {registerStatus === "" && <option value="BANK">BANK</option>}
                         {arrSources.map((register, index) => {
                           return (
                             <option key={register.id} value={register.name}>
@@ -679,7 +686,7 @@ const FundsTransferPage = () => {
                         <option value="">
                           &lt;Please select a destination&gt;
                         </option>
-                        <option value="BANK">BANK</option>
+                        {registerStatus === "" && <option value="BANK">BANK</option>}
                         {arrDestinations.map((register, index) => {
                           return (
                             <option key={register.id} value={register.name}>

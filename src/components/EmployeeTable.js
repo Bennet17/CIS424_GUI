@@ -27,6 +27,8 @@ function EmployeeTable() {
   const [showAddForm, setShowAddForm] = useState(false); // State variable to manage form visibility
   const [showAllEmployees, setShowAllEmployees] = useState(false);
   const tableRef = useRef(null);
+  const [selectedRow, setSelectedRow] = useState(null);
+
 
   //create date string
   const date = new Date();
@@ -58,12 +60,16 @@ function EmployeeTable() {
       if(employee.position != "Owner"){
       setSelectedUser(employee); 
       setShowEditForm(true); 
+      setSelectedRow(employee.ID);
+
       }
 
       //if the user is an owner, allow editing on all users
       else if(auth.cookie.user.position === "Owner"){
         setSelectedUser(employee); //pass the selected owner
         setShowEditForm(true); // Show the edit form button
+        setSelectedRow(employee.ID);
+
       }
 
     };
@@ -134,21 +140,24 @@ function EmployeeTable() {
             </tr>
           </thead>
           <tbody>
-            {employees
-              .filter(employee => showAllEmployees || employee.enabled)
-              .map(employee => (
-                <tr
-                  key={employee.ID}
-                  onClick={() => handleRowClick(employee)}
-                  className={`cursor-pointer hover:bg-gray-100 ${employee.enabled ? '' : 'bg-gray-300'}`}
-                >
-                  <td className="border px-4 py-2 text-left">{employee.username}</td>
-                  <td className="border px-4 py-2 text-left">{employee.name}</td>
-                  <td className="border px-4 py-2">{employee.position}</td>
-                  <td className="border px-4 py-2">{employee.enabled ? 'Active' : 'Inactive'}</td>
-                </tr>
-              ))}
-          </tbody>
+      {employees
+        .filter(employee => showAllEmployees || employee.enabled)
+        .map(employee => (
+          <tr
+            key={employee.ID}
+            onClick={() => handleRowClick(employee)}
+            className={`cursor-pointer ${
+              selectedRow === employee.ID ? 'bg-gray-100' : (employee.enabled ? 'hover:bg-gray-100' : 'bg-gray-300')
+            }`}
+            
+                      >
+            <td className="border px-4 py-2 text-left">{employee.username}</td>
+            <td className="border px-4 py-2 text-left">{employee.name}</td>
+            <td className="border px-4 py-2">{employee.position}</td>
+            <td className="border px-4 py-2">{employee.enabled ? 'Active' : 'Inactive'}</td>
+          </tr>
+        ))}
+    </tbody>
         </table>
       </div>
     
