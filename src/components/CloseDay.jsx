@@ -221,7 +221,7 @@ const CloseDayPage = () => {
     if (poss.length > 0) {
       //update current pos. Initialize it to the first pos that is closed, otherwise, default to safe
       let posIndex = FirstPosIndexEnabled();
-      if (posIndex < 0){
+      if (posIndex < 0) {
         posIndex = 0;
       }
       setCurrentPosIndex(posIndex);
@@ -564,17 +564,17 @@ const CloseDayPage = () => {
     return disable;
   }
 
-    // gets the first pos index in the poss array that should be selectable
-    // skip the safe since otherwise it will always be selected instead of the other
-    //poss despite the poss being the ones we want to select
-    function FirstPosIndexEnabled(){
-        for (let i = 1; i < poss.length; i ++){
-          if (poss[i].opened){
-            return i;
-          }
-        }
-        return -1;
+  // gets the first pos index in the poss array that should be selectable
+  // skip the safe since otherwise it will always be selected instead of the other
+  //poss despite the poss being the ones we want to select
+  function FirstPosIndexEnabled() {
+    for (let i = 1; i < poss.length; i++) {
+      if (poss[i].opened) {
+        return i;
       }
+    }
+    return -1;
+  }
 
   return (
     <div className="flex min-h-screen min-w-fit bg-custom-accent">
@@ -597,7 +597,11 @@ const CloseDayPage = () => {
                   <label className="flex items-center space-x-2 my-0">
                     <input
                       key={item.name}
-                      defaultChecked={FirstPosIndexEnabled() >= 0 ? FirstPosIndexEnabled() === index : index === 0}
+                      defaultChecked={
+                        FirstPosIndexEnabled() >= 0
+                          ? FirstPosIndexEnabled() === index
+                          : index === 0
+                      }
                       onChange={(e) => setCurrentPosIndex(index)}
                       disabled={
                         !item.opened || IfAllOtherPOSsAreDisabled(index === 0)
@@ -1287,7 +1291,7 @@ const CloseDayPage = () => {
                 </tr> */}
               </tbody>
             </table>
-            <div>
+            <div className="mb-4">
               <Button
                 type="button"
                 value="button"
@@ -1306,7 +1310,11 @@ const CloseDayPage = () => {
                 icon="pi pi-check"
                 size="small"
                 className="p-button-raised p-button-primary"
-                style={{ width: "125px", marginLeft: "1rem", marginRight: "1rem" }}
+                style={{
+                  width: "125px",
+                  marginLeft: "1rem",
+                  marginRight: "1rem",
+                }}
               />
               <ToggleButton
                 checked={showExtraChange}

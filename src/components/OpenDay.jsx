@@ -213,7 +213,7 @@ const OpenDayPage = () => {
     if (poss.length > 0) {
       //update current pos. Initialize it to the first pos that is closed, otherwise, default to safe
       let posIndex = FirstPosIndexEnabled();
-      if (posIndex < 0){
+      if (posIndex < 0) {
         posIndex = 0;
       }
       SetCurrentPosIndex(posIndex);
@@ -352,9 +352,9 @@ const OpenDayPage = () => {
   }
 
   // gets the first pos index in the poss array that should be selectable
-  function FirstPosIndexEnabled(){
-    for (let i = 0; i < poss.length; i ++){
-      if (!poss[i].opened){
+  function FirstPosIndexEnabled() {
+    for (let i = 0; i < poss.length; i++) {
+      if (!poss[i].opened) {
         return i;
       }
     }
@@ -382,8 +382,15 @@ const OpenDayPage = () => {
                   <label className="flex items-center space-x-2 my-0">
                     <input
                       key={item.name}
-                      defaultChecked={FirstPosIndexEnabled() >= 0 ? FirstPosIndexEnabled() === index : index === 0}
-                      onChange={(e) => {SetCurrentPosIndex(index); ClearAllFields();}}
+                      defaultChecked={
+                        FirstPosIndexEnabled() >= 0
+                          ? FirstPosIndexEnabled() === index
+                          : index === 0
+                      }
+                      onChange={(e) => {
+                        SetCurrentPosIndex(index);
+                        ClearAllFields();
+                      }}
                       disabled={
                         item.opened ||
                         ((poss[0].opened ? false : true) && index > 0)
@@ -403,12 +410,12 @@ const OpenDayPage = () => {
                       {item.opened ? (
                         <div className="pl-1 flex flex-row items-center">
                           Open
-                          <PackageOpen className="ml-1 h-5 w-5" />
+                          <PackageOpen className="ml-1 h-5 w-5 text-button-blue-light" />
                         </div>
                       ) : (
                         <div className="pl-1 flex flex-row items-center">
                           Closed
-                          <Package className="ml-1 h-5 w-5 text-button-blue-light" />
+                          <Package className="ml-1 h-5 w-5" />
                         </div>
                       )}
                     </div>
@@ -1009,7 +1016,7 @@ const OpenDayPage = () => {
                 )}
               </tbody>
             </table>
-            <div>
+            <div className="mb-4">
               <Button
                 type="button"
                 value="button"
@@ -1028,7 +1035,11 @@ const OpenDayPage = () => {
                 icon="pi pi-check"
                 size="small"
                 className="p-button-raised p-button-primary"
-                style={{ width: "125px", marginLeft: "1rem", marginRight: "1rem" }}
+                style={{
+                  width: "125px",
+                  marginLeft: "1rem",
+                  marginRight: "1rem",
+                }}
               />
               <ToggleButton
                 checked={showExtraChange}
