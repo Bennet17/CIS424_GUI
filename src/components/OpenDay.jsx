@@ -24,7 +24,6 @@ import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
 import CoinOne from "../usd_icons/coins/CoinOne.svg";
 import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
-import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
 import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
 import CoinDime from "../usd_icons/coins/CoinDime.svg";
 import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
@@ -176,11 +175,6 @@ const OpenDayPage = () => {
 
   //call on component load AND when the currently-selected pos has refreshed
   useEffect(() => {
-    console.log(
-      "setting pos array index to " + currentPosIndex + ", see below"
-    );
-    console.log(poss[currentPosIndex]);
-
     //update the expected total amount
     GetExpectedCount();
   }, [currentPosIndex]);
@@ -249,7 +243,6 @@ const OpenDayPage = () => {
           `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`
         )
         .then((response) => {
-          console.log(response);
           //set the pos information data
           setPoss(response.data);
           SetPostSuccess(false);
@@ -271,13 +264,6 @@ const OpenDayPage = () => {
           `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`
         )
         .then((response) => {
-          //set the expected amount of the currently-selected pos
-          console.log(
-            "getting cash count for " +
-              poss[currentPosIndex].name +
-              ", see below"
-          );
-          console.log(response);
           setExpectedAmount(response.data.total);
           setElm100DollarExpected(response.data.hundred);
           setElm50DollarExpected(response.data.fifty);
@@ -347,7 +333,6 @@ const OpenDayPage = () => {
           }
         )
         .then((response) => {
-          console.log(response);
           if (response.status == 200) {
             //open POS
             SetPostSuccess(true);
@@ -362,7 +347,6 @@ const OpenDayPage = () => {
           setShowConfirm(false);
         })
         .catch((error) => {
-          //uh oh, fucky wucky
           console.error(error);
           toast.error("Unknown error occured");
         });
@@ -1108,20 +1092,10 @@ const OpenDayPage = () => {
         {showConfirm && (
           <div className="report-overlay">
             <div className="report-container">
-              You are about to perform an openday with more than a $
+              You are about to perform an open day with more than a $
               {colorChangeThreshold} variance. Are you sure?
               <br />
               <br />
-              <Button
-                type="button"
-                value="button"
-                label="Confirm"
-                rounded
-                icon="pi pi-check"
-                size="small"
-                className="p-button-raised p-button-primary"
-                onClick={Submit}
-              />
               <Button
                 type="button"
                 value="button"
@@ -1129,8 +1103,20 @@ const OpenDayPage = () => {
                 rounded
                 icon="pi pi-times"
                 size="small"
-                className="p-button-raised p-button-secondary"
+                className="p-button-secondary p-button-raised"
                 onClick={() => setShowConfirm(false)}
+                style={{ marginRight: "1rem" }}
+              />
+              <Button
+                type="button"
+                value="button"
+                label="Confirm"
+                rounded
+                icon="pi pi-check"
+                size="small"
+                className="p-button-primary p-button-raised"
+                onClick={Submit}
+                style={{ marginRight: "1rem" }}
               />
             </div>
           </div>
