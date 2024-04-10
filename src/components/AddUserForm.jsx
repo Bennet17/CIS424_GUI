@@ -179,7 +179,7 @@ const AddUserForm = () => {
         //the following line indicates a successful entry
         if (response.data.response == "User created successfully.") {
           //successful creation
-          toast.success("User Successfully Created.")
+          //toast.success("User Successfully Created.")
           closeModal();
           window.location.reload(); // This will refresh the page
 

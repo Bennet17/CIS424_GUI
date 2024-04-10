@@ -21,14 +21,13 @@ const AuthProvider = ({ children }) => {
           data
         )
         .then((response) => {
-          if (response.data.IsValid == true) {
+          if (response.data.IsValid == true && response.data.user.enabled == true ) {
             //setUser(response.data.user);
             //setToken(response.token);
             //setCookie("user", response.data.user, { path: "/" });
             //localStorage.setItem("site", cookie);
-            //console.log(response.data.user);
+            console.log(response.data.user);
             
-
             if (response.data.user.storeID_CSV.length === 1) {
               setCookie(
                 "user",

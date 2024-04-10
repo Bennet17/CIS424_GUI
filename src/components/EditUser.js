@@ -203,7 +203,7 @@ const EditUser = (user) => {
         //the following line indicates a successful entry
         if (response.data.response === "User Updated successfully.") {
           closeModal();
-          toast.success("User Successfully edited.")
+          //toast.success("User Successfully edited.")
           window.location.reload(); // This will refresh the page
         }
         //if this response comes in, the user tried to change their username to a different username
