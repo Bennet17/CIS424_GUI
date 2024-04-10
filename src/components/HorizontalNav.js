@@ -135,7 +135,7 @@ export default function HorizotalNav() {
                     leaveTo="transform opacity-0 scale-95"
                     style={{ zIndex: 999 }}
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2  origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="min-w-56 absolute right-0 z-10 mt-2  origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {
                         <Menu.Item key={"title"}>
                           {({ active }) => (
@@ -163,11 +163,13 @@ export default function HorizotalNav() {
                                   )
                                 }
                               >
-                                <div className="mr-4">{store.location}</div>
-                                {store.ID ===
-                                  auth.cookie.user.viewingStoreID && (
-                                  <Eye className="text-gray-500 h-5 w-5" />
-                                )}
+                                <div className="flex flex-row justify-between items-center">
+                                  <p className="max-w-48">{store.location}</p>
+                                  {store.ID ===
+                                    auth.cookie.user.viewingStoreID && (
+                                    <Eye className="min-h-6 min-w-6 ml-2 text-gray-500 h-5 w-5" />
+                                  )}
+                                </div>
                               </a>
                             )}
                           </Menu.Item>
