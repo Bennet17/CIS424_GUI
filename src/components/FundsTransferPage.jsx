@@ -338,14 +338,6 @@ const FundsTransferPage = () => {
         return;
     }
 
-    // Get the source and destination register IDs
-    const sourceRegisterID = arrSources.find(
-      (register) => register.name === source
-    ).id;
-    const destinationRegisterID = arrDestinations.find(
-      (register) => register.name === destination
-    ).id;
-
     // Submit the transfer
     if (
       await SubmitTransfer(
@@ -649,7 +641,7 @@ const FundsTransferPage = () => {
                         onChange={HandleChange}
                       >
                         <option value="">&lt;Please select a source&gt;</option>
-                        <option value="BANK">BANK</option>
+                        {registerStatus === "" && <option value="BANK">BANK</option>}
                         {arrSources.map((register, index) => {
                           return (
                             <option key={register.id} value={register.name}>
@@ -679,7 +671,7 @@ const FundsTransferPage = () => {
                         <option value="">
                           &lt;Please select a destination&gt;
                         </option>
-                        <option value="BANK">BANK</option>
+                        {registerStatus === "" && <option value="BANK">BANK</option>}
                         {arrDestinations.map((register, index) => {
                           return (
                             <option key={register.id} value={register.name}>
