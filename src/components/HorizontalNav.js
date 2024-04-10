@@ -111,18 +111,16 @@ export default function HorizotalNav() {
                 className="bg-gray-500 inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
               >
                 {/* Stores dropdown */}
-                <Menu as="div" className="relative ml-3">
+                <Menu as="div" className=" relative ml-3">
                   <div>
                     <Menu.Button
+                      tabIndex="-1"
                       className={`relative p-2 rounded-md flex ${
                         storeMenuOn
                           ? "bg-gradient-to-tr from-gray-800 to-gray-600"
                           : "hover:bg-gradient-to-tr from-gray-800 to-gray-600"
                       }`}
                     >
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">Open store menu</span>
-
                       <Store className="text-custom-accent mx-3 w-7 h-7" />
                     </Menu.Button>
                   </div>
@@ -149,26 +147,32 @@ export default function HorizotalNav() {
                       }
                       <hr className="mx-3 border-gray-300 " />
 
-                      {userAssociatedStores.map((store) => (
-                        <Menu.Item key={store.ID}>
-                          {({ active }) => (
-                            <a
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block rounded-md px-4 py-2 text-sm text-gray-700 flex justify-between mx-3 my-1 cursor-pointer"
-                              )}
-                              onClick={() =>
-                                handleSwitchviewClick(store.ID, store.location)
-                              }
-                            >
-                              <div className="mr-4">{store.location}</div>
-                              {store.ID === auth.cookie.user.viewingStoreID && (
-                                <Eye className="text-gray-500 h-5 w-5" />
-                              )}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
+                      <div className="max-h-80 overflow-y-auto">
+                        {userAssociatedStores.map((store) => (
+                          <Menu.Item key={store.ID}>
+                            {({ active }) => (
+                              <a
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block rounded-md px-4 py-2 text-sm text-gray-700 flex justify-between mx-3 my-1 cursor-pointer"
+                                )}
+                                onClick={() =>
+                                  handleSwitchviewClick(
+                                    store.ID,
+                                    store.location
+                                  )
+                                }
+                              >
+                                <div className="mr-4">{store.location}</div>
+                                {store.ID ===
+                                  auth.cookie.user.viewingStoreID && (
+                                  <Eye className="text-gray-500 h-5 w-5" />
+                                )}
+                              </a>
+                            )}
+                          </Menu.Item>
+                        ))}
+                      </div>
 
                       {auth.cookie.user.position === "Owner" && (
                         <hr className="mx-3 border-gray-300 " />
