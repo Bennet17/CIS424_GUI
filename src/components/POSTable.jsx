@@ -73,14 +73,18 @@ function POSTable() {
   function handleSubmit(event) {
     event.preventDefault(); //prevent the default refresh until the post request is done
     //send the store ID and alias if needed
-    axios
-      .post(
-        "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateRegister",
-        {
-          storeID: parseInt(curStoreID),
-          alias: nickname,
+    axios.post(
+      process.env.REACT_APP_REQUEST_URL+`CreateRegister`,
+      {
+        storeID: parseInt(curStoreID),
+        alias: nickname,
+      },
+      {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
         }
-      )
+      }
+    )
       .then((response) => {
 
        // console.log(response.data.response);
@@ -112,13 +116,16 @@ function POSTable() {
       else {
 
         //create a disable POS request; send POS ID to disable
-        axios
-          .post(
-            "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableRegister",
-            {
-              ID: pos.ID,
+        axios.post(process.env.REACT_APP_REQUEST_URL+`DisableRegister`,
+          {
+            ID: pos.ID,
+          },
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
             }
-          )
+          }
+        )
           .then((response) => {
             if (response.data.response == "Disabled") {
               //toast.success("Register successfully disabled");
@@ -139,14 +146,18 @@ function POSTable() {
     //this POS is disables, lets enable
     if (pos.enabled == false) {
       //create a disable POS request
-      axios
-        .post(
-          "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EnableRegister",
-          {
-            ID: pos.ID,
-            alias: nickname,
+      axios.post(
+        process.env.REACT_APP_REQUEST_URL+`EnableRegister`,
+        {
+          ID: pos.ID,
+          alias: nickname,
+        },
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
           }
-        )
+        }
+      )
         .then((response) => {
           if (response.data.response == "Enabled") {
             //toast.success("Register enabled");
@@ -168,10 +179,14 @@ function POSTable() {
   //this useEffect method will fire on load, it gets the POS data for the current store
   useEffect(() => {
     function fetchPosTable() {
-      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewRegistersByStoreID?storeID=${curStoreID}`;
-
-      axios
-        .get(url)
+      axios.get(
+        `${process.env.REACT_APP_REQUEST_URL}ViewRegistersByStoreID?storeID=${curStoreID}`,
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+          }
+        }
+      )
         .then((response) => {
           // Update the state variable 'pos' with the fetched data into an array to display in table
           setPosRegisters(

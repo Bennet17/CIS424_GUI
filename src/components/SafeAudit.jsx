@@ -37,9 +37,9 @@ const SafeAuditPage = () => {
   // Authentication context
   const auth = useAuth();
 
-  // Const for POST CreateCashCount request (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount)
+  // Const for POST CreateCashCount request (CreateCashCount)
   const CreateCashCountURL =
-    "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount";
+    process.env.REACT_APP_REQUEST_URL + "CreateCashCount";
 
   // Const to hold the form data
   const [formData, setFormData] = useState({
@@ -89,7 +89,6 @@ const SafeAuditPage = () => {
   const [safeStatus, setSafeStatus] = useState(false);
 
   const [showExtraChange, setShowExtraChange] = useState(false);
-  const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show Extras");
 
   function SetExpectedDenominations(data) {
     // Set the expected denominations in the form data
@@ -121,7 +120,12 @@ const SafeAuditPage = () => {
     function GetExpectedSafeCount() {
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`
+          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${formData.store}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           // Get the safe ID from the response based on the name property
@@ -136,7 +140,12 @@ const SafeAuditPage = () => {
             if (safeObject.opened) {
               axios
                 .get(
-                  `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${formData.store}`
+                  process.env.REACT_APP_REQUEST_URL + `GetCloseCount?storeID=${formData.store}`,
+                  {
+                    headers: {
+                      [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+                    }
+                  }
                 )
                 .then((response) => {
                   const data = response.data;
@@ -291,7 +300,12 @@ const SafeAuditPage = () => {
 
     // POST the cash count to the server
     axios
-      .post(CreateCashCountURL, request)
+      .post(CreateCashCountURL, request, 
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+          }
+        })
       .then((response) => {
         // Check if the count was successful
         if (response.status == 200)

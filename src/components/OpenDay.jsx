@@ -240,7 +240,12 @@ const OpenDayPage = () => {
     function Initialize() {
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`
+          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           //set the pos information data
@@ -261,7 +266,12 @@ const OpenDayPage = () => {
     if (poss.length > 0 && poss[currentPosIndex]) {
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`
+          process.env.REACT_APP_REQUEST_URL + `GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           setExpectedAmount(response.data.total);
@@ -305,7 +315,7 @@ const OpenDayPage = () => {
     if (!poss[currentPosIndex].opened) {
       axios
         .post(
-          "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount",
+          process.env.REACT_APP_REQUEST_URL + "CreateCashCount",
           {
             storeID: auth.cookie.user.viewingStoreID,
             usrID: auth.cookie.user.ID,
@@ -330,6 +340,11 @@ const OpenDayPage = () => {
             dimeRoll: elmDimesRolled,
             nickelRoll: elmNicklesRolled,
             pennyRoll: elmPenniesRolled,
+          },
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
           }
         )
         .then((response) => {

@@ -6,7 +6,7 @@ import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
 
 function EditPOS(pos) {
-    console.log(pos.pos.alias);
+    //console.log(pos.pos.alias);
 
     const [isOpen, setIsOpen] = useState(false);
     const [nickname, setNickname] = useState("");
@@ -16,15 +16,18 @@ function EditPOS(pos) {
     event.preventDefault();
 
     //create an axios POST request to create a new user with inputs from the form
-    axios
-      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateRegisterAlias",
-        {
-          "ID": pos.pos.ID,
-          "alias" : nickname
-        })
-
-
-
+    axios.post(
+      `${process.env.REACT_APP_REQUEST_URL}UpdateRegisterAlias`,
+      {
+        "ID": pos.pos.ID,
+        "alias": nickname
+      },
+      {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+        }
+      }
+    )
       .then((response) => {
         setIsOpen(false);
         window.location.reload(); // This will refresh the page

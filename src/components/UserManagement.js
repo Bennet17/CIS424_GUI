@@ -34,10 +34,14 @@ const UserManagementPage = () => {
   useEffect(() => {
     //this function will fetch all stores in the system for use in child components
     function fetchStores() {
-      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStores`;
-
-      axios
-        .get(url)
+      axios.get(
+        `${process.env.REACT_APP_REQUEST_URL}ViewStores`,
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+          }
+        }
+      )
         .then((response) => {
           // Create an array to store the updated store array
           let updatedStoreArray = [];
