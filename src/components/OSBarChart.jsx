@@ -43,7 +43,7 @@ const OSBarChart = () => {
       startDate.setDate(endDate.getDate() - 14); // Days shown in chart, should be a constant but who cares
     } else {
       startDate.setDate(1);
-      console.log(formatDate(startDate));
+      //console.log(formatDate(startDate));
     }
 
     const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${
