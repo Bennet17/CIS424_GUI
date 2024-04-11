@@ -14,7 +14,6 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 
 // USD Icon imports
 import BillHundred from "../usd_icons/bills/BillHundred.svg";
@@ -27,7 +26,6 @@ import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
 import CoinOne from "../usd_icons/coins/CoinOne.svg";
 import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
-import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
 import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
 import CoinDime from "../usd_icons/coins/CoinDime.svg";
 import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
@@ -44,7 +42,7 @@ const FundsTransferPage = () => {
 
   // Const to hold the POST request fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer)
   const FundTransferURL =
-    "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer";
+    process.env.REACT_APP_REQUEST_URL + "/CreateFundTransfer";
 
   // Const to hold the form data
   const [formData, setFormData] = useState({
@@ -90,7 +88,12 @@ const FundsTransferPage = () => {
     function Initialize() {
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`
+          process.env.REACT_APP_REQUEST_URL + `/ViewStoreObjects?storeID=${formData.store}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           // Extract register names and ID from the response and filter based on opened status
@@ -108,7 +111,6 @@ const FundsTransferPage = () => {
           }
         })
         .catch((error) => {
-          console.error(error);
           setArrSources([]);
         });
     }
@@ -427,10 +429,13 @@ const FundsTransferPage = () => {
         ...currencyFields,
       };
 
-      console.log(request);
-
       // Submit the form data
-      const response = await axios.post(FundTransferURL, request);
+      const response = await axios.post(FundTransferURL, request, 
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+          }
+        });
 
       // Check if the transfer was successful
       if (response.data.response === "Fund Transfer created successfully.") {
@@ -446,7 +451,6 @@ const FundsTransferPage = () => {
         return false;
       }
     } catch (error) {
-      console.error(error);
       toast.error(
         "A server error occurred during submission. Please try again later."
       );

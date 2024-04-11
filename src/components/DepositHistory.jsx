@@ -55,7 +55,6 @@ const DepositHistory = () => {
   //build todays date as a string that our input field will accept because i hate js why doesn't it have this built-in what the fuck
   function GetTodaysDate() {
     const date = new Date();
-    console.log(date);
     let y = date.getFullYear().toString();
 
     let m = (date.getMonth() + 1).toString();
@@ -107,16 +106,6 @@ const DepositHistory = () => {
     );
   }
 
-  //call on component load AND when we select a new row
-  useEffect(() => {
-    if (selectedRow != null) {
-      console.log("Selected row index " + selectedRow);
-      console.log(records[selectedRow]);
-    } else {
-      console.log("Deselected row");
-    }
-  }, [selectedRow]);
-
   //call on component load AND when we attempt to retrieve new records
   useEffect(() => {
     if (records != undefined && records.length > 0) {
@@ -128,14 +117,17 @@ const DepositHistory = () => {
 
   //call on component load AND when we change our date
   useEffect(() => {
-    console.log(dateStart);
     function Initialize() {
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetFundTransfersForStore?storeID=${auth.cookie.user.viewingStoreID}&startDate=${dateStart}&endDate=${dateEnd}`
+          process.env.REACT_APP_REQUEST_URL + `/GetFundTransfersForStore?storeID=${auth.cookie.user.viewingStoreID}&startDate=${dateStart}&endDate=${dateEnd}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
-          console.log(response.data);
           //set the transfer history information data
           var dataArr = [];
           for (var i = 0; i < response.data.length; i++) {
@@ -145,7 +137,6 @@ const DepositHistory = () => {
           }
 
           //set our records array after we have all of our deposits to bank
-          console.log(dataArr);
           setRecords(dataArr);
           setPostSuccess(false);
           SetSelectedRow(null);
@@ -177,14 +168,18 @@ const DepositHistory = () => {
     } else {
       axios
         .post(
-          "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/VerifyDeposit",
+          process.env.REACT_APP_REQUEST_URL + "/VerifyDeposit",
           {
             fID: records[selectedRow].fID,
             vID: auth.cookie.user.ID,
+          },
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
           }
         )
         .then((response) => {
-          console.log(response);
           if (response.status == 200) {
             toast.success("Deposit successfully updated!");
           }

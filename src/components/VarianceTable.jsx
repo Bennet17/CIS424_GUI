@@ -17,7 +17,6 @@ import "primereact/resources/themes/mira/theme.css";
 import 'primeicons/primeicons.css';
 import { classNames } from "primereact/utils";
 import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
 
 const VarianceTable = () => {
     const auth = useAuth();
@@ -154,7 +153,6 @@ const VarianceTable = () => {
                 }
             })
             .catch(error => {
-                console.error(error);
                 toast.error("A server error occurred while loading registers. Please try again later.");
             });
         }
@@ -226,7 +224,6 @@ const VarianceTable = () => {
                     }
                 })
                 .catch((error) => {
-                    //console.log(error);
                     setArrVariances([]);
                     setEmptyRows([]);
                     setRegisterName(arrRegisters.find(register => register.id === registerID).name);
@@ -783,7 +780,6 @@ const VarianceTable = () => {
                                     body={(rowData) => {
                                         // Check if the date is set to Totals:
                                         if (rowData.Date === "Totals:") {
-                                            console.log(rowData);
                                             return <span className="invisible-row">-</span>;
                                         }
                                         // Check if the column is a currency column

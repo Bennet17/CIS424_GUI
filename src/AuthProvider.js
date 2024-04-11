@@ -15,21 +15,24 @@ const AuthProvider = ({ children }) => {
   //and used for validation. Then handle tokens n stuff
   const loginAction = (data) => {
     return new Promise((resolve, reject) => {
-      axios.post(
-        process.env.REACT_APP_REQUEST_URL + 'AuthenticateUser', data,
-        {
-          headers: {
-            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+
+      axios
+        .post(
+          process.env.REACT_APP_REQUEST_URL + "/AuthenticateUser",
+          data,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
           }
-        }
-      )
+        )
+
         .then((response) => {
           if (response.data.IsValid == true && response.data.user.enabled == true ) {
             //setUser(response.data.user);
             //setToken(response.token);
             //setCookie("user", response.data.user, { path: "/" });
             //localStorage.setItem("site", cookie);
-            console.log(response.data.user);
             
             if (response.data.user.storeID_CSV.length === 1) {
               setCookie(
@@ -50,9 +53,6 @@ const AuthProvider = ({ children }) => {
               navigate(routes.selectstore);
             }
 
-            console.log("cookie user");
-              console.log(cookie.user);
-
             resolve(response.data);
           } else {
             //invalid credentials
@@ -71,8 +71,6 @@ const AuthProvider = ({ children }) => {
     viewingStoreID,
     viewingStoreLocation
   ) => {
-    console.log("Viewing store location was set.");
-    console.log(viewingStoreLocation);
     setCookie(
       "user",
       {

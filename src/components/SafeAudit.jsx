@@ -23,7 +23,6 @@ import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
 import CoinOne from "../usd_icons/coins/CoinOne.svg";
 import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
-import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
 import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
 import CoinDime from "../usd_icons/coins/CoinDime.svg";
 import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
@@ -40,7 +39,7 @@ const SafeAuditPage = () => {
 
   // Const for POST CreateCashCount request (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount)
   const CreateCashCountURL =
-    "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount";
+    process.env.REACT_APP_REQUEST_URL + "/CreateCashCount";
 
   // Const to hold the form data
   const [formData, setFormData] = useState({
@@ -122,7 +121,12 @@ const SafeAuditPage = () => {
     function GetExpectedSafeCount() {
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`
+          process.env.REACT_APP_REQUEST_URL + `/ViewStoreObjects?storeID=${formData.store}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           // Get the safe ID from the response based on the name property
@@ -137,7 +141,12 @@ const SafeAuditPage = () => {
             if (safeObject.opened) {
               axios
                 .get(
-                  `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${formData.store}`
+                  process.env.REACT_APP_REQUEST_URL + `/GetCloseCount?storeID=${formData.store}`,
+                  {
+                    headers: {
+                      [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+                    }
+                  }
                 )
                 .then((response) => {
                   const data = response.data;
@@ -146,7 +155,6 @@ const SafeAuditPage = () => {
                   SetExpectedDenominations(data);
                 })
                 .catch((error) => {
-                  console.log(error);
                 });
             } else {
               // Display a warning message if the safe is not open
@@ -159,7 +167,6 @@ const SafeAuditPage = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
         });
     }
 
@@ -292,21 +299,21 @@ const SafeAuditPage = () => {
       ...currencyFields,
     };
 
-    console.log(request);
-
     // POST the cash count to the server
     axios
-      .post(CreateCashCountURL, request)
+      .post(CreateCashCountURL, request, 
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+          }
+        })
       .then((response) => {
-        console.log(response);
-
         // Check if the count was successful
         if (response.status == 200)
           toast.success("Safe count submitted successfully.");
         else toast.error("Failed to submit safe count.");
       })
       .catch((error) => {
-        console.error(error);
         toast.error(
           "A server error occurred during submission. Please try again later."
         );

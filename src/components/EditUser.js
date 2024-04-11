@@ -84,7 +84,7 @@ const EditUser = (user) => {
     checkboxes.forEach((checkbox) => {
       // Check if the checkbox is checked
       if (checkbox.checked) {
-        console.log(`Checkbox with value ${checkbox.value} is selected.`);
+        //console.log(`Checkbox with value ${checkbox.value} is selected.`);
         temp += checkbox.value + ","
 
       }

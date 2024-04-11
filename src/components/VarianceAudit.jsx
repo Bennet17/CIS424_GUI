@@ -1,7 +1,6 @@
 import "../styles/PageStyles.css";
 import axios from "axios";
 import React, {
-  useRef,
   useState,
   useEffect,
   useLayoutEffect,
@@ -19,9 +18,6 @@ import { format, max, set } from "date-fns";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
-import { classNames } from "primereact/utils";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import { InputNumber } from "primereact/inputnumber";
 
 const VarianceAuditPage = () => {
