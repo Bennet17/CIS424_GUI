@@ -40,9 +40,9 @@ const FundsTransferPage = () => {
   // Authentication context
   const auth = useAuth();
 
-  // Const to hold the POST request fund transfer URL (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateFundTransfer)
+  // Const to hold the POST request fund transfer URL (CreateFundTransfer)
   const FundTransferURL =
-    process.env.REACT_APP_REQUEST_URL + "/CreateFundTransfer";
+    process.env.REACT_APP_REQUEST_URL + "CreateFundTransfer";
 
   // Const to hold the form data
   const [formData, setFormData] = useState({
@@ -88,7 +88,7 @@ const FundsTransferPage = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `/ViewStoreObjects?storeID=${formData.store}`,
+          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${formData.store}`,
           {
             headers: {
               [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY

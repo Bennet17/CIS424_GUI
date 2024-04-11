@@ -248,7 +248,7 @@ const CloseDayPage = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
+          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
           {
             headers: {
               [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
@@ -282,7 +282,7 @@ const CloseDayPage = () => {
 
       axios
         .get(
-          process.env.REACT_APP_HEADER + `/GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`,
+          process.env.REACT_APP_HEADER + `GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`,
           {
             headers: {
               [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
@@ -328,7 +328,7 @@ const CloseDayPage = () => {
     event.preventDefault();
 
     const thresholdsResponse = await axios.get(
-      process.env.REACT_APP_REQUEST_URL + `/ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`,
+      process.env.REACT_APP_REQUEST_URL + `ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`,
       {
         headers: {
           [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
@@ -432,7 +432,7 @@ const CloseDayPage = () => {
       if (currentPosIndex === 0) {
         axios
           .post(
-            process.env.REACT_APP_REQUEST_URL + "/CreateCashCount",
+            process.env.REACT_APP_REQUEST_URL + "CreateCashCount",
             {
               storeID: auth.cookie.user.viewingStoreID,
               usrID: auth.cookie.user.ID,
@@ -514,7 +514,7 @@ const CloseDayPage = () => {
       } else {
         axios
           .post(
-            process.env.REACT_APP_REQUEST_URL + "/CreateCashCount",
+            process.env.REACT_APP_REQUEST_URL + "CreateCashCount",
             {
               storeID: auth.cookie.user.viewingStoreID,
               usrID: auth.cookie.user.ID,
