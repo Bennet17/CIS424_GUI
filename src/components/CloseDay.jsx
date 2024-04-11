@@ -248,7 +248,12 @@ const CloseDayPage = () => {
     function Initialize() {
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`
+          process.env.REACT_APP_REQUEST_URL + `/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           //set the pos information data
@@ -277,7 +282,12 @@ const CloseDayPage = () => {
 
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`
+          process.env.REACT_APP_HEADER + `/GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           //set denominations and total values
@@ -318,7 +328,12 @@ const CloseDayPage = () => {
     event.preventDefault();
 
     const thresholdsResponse = await axios.get(
-      `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`
+      process.env.REACT_APP_REQUEST_URL + `/ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`,
+      {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+        }
+      }
     );
     const thresholds = thresholdsResponse.data;
 
@@ -417,7 +432,7 @@ const CloseDayPage = () => {
       if (currentPosIndex === 0) {
         axios
           .post(
-            "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount",
+            process.env.REACT_APP_REQUEST_URL + "/CreateCashCount",
             {
               storeID: auth.cookie.user.viewingStoreID,
               usrID: auth.cookie.user.ID,
@@ -454,6 +469,11 @@ const CloseDayPage = () => {
               dimeRollToBank: info.dimeRoll,
               nickelRollToBank: info.nickelRoll,
               pennyRollToBank: info.pennyRoll,
+            },
+            {
+              headers: {
+                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+              }
             }
           )
           .then((response) => {
@@ -494,7 +514,7 @@ const CloseDayPage = () => {
       } else {
         axios
           .post(
-            "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount",
+            process.env.REACT_APP_REQUEST_URL + "/CreateCashCount",
             {
               storeID: auth.cookie.user.viewingStoreID,
               usrID: auth.cookie.user.ID,
@@ -525,6 +545,11 @@ const CloseDayPage = () => {
               hundredToSafe: info.hundred,
               fiftyToSafe: info.fifty,
               twentyToSafe: info.twenty,
+            },
+            {
+              headers: {
+                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+              }
             }
           )
           .then((response) => {
