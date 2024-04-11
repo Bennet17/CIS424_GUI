@@ -46,12 +46,17 @@ const OSBarChart = () => {
       //console.log(formatDate(startDate));
     }
 
-    const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GeneralVariance?storeID=${
+    const url = process.env.REACT_APP_REQUEST_URL + `/GeneralVariance?storeID=${
       auth.cookie.user.viewingStoreID
     }&startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`;
 
     axios
-      .get(url)
+      .get(url,
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+          }
+        })
       .then((response) => {
         const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
 
