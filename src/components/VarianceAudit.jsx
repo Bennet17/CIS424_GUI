@@ -24,9 +24,9 @@ const VarianceAuditPage = () => {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  // API URL for the Variance Audit (VarianceAudit)
+  // API URL for the Variance Audit (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/VarianceAudit)
   const VarianceAuditURL =
-    process.env.REACT_APP_REQUEST_URL + "VarianceAudit";
+    "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/VarianceAudit";
 
   // Set the start date to 7 days ago and the end date to today
   const today = new Date();
@@ -259,12 +259,7 @@ const VarianceAuditPage = () => {
   async function SubmitAudit(request) {
     // Make a POST request to the API
     try {
-      const response = await axios.post(VarianceAuditURL, request, 
-        {
-          headers: {
-            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-          }
-        });
+      const response = await axios.post(VarianceAuditURL, request);
 
       // Check if the request was successful
       if (response.status === 200) {

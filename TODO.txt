@@ -122,4 +122,4 @@ TM: I'm using this as a rolling list of tasks that need to be closed.
     - remove employees from all stores
     - view and change rankings of employees from all stores
 - view all stores
-- basically, everything everywhere
+- basically, fucking everything everywhere
