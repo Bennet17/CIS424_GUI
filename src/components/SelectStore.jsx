@@ -20,7 +20,11 @@ function SelectStore() {
   useEffect(() => {
     // Fetch the list of stores from the API
     axios
-      .get("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStores")
+      .get(`${process.env.REACT_APP_REQUEST_URL}ViewStores`, {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+        },
+      })
       .then((response) => {
         const allStores = response.data;
         // Filter stores based on user's storeID_CSV

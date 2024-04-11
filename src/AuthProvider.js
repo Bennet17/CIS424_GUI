@@ -5,7 +5,6 @@ import axios from "axios";
 import routes from "./routes.js";
 const AuthContext = createContext();
 
-
 const AuthProvider = ({ children }) => {
   const [cookie, setCookie, removeCookie] = useCookies(["user"]);
   //const [user, setUser] = useState(null);
@@ -15,25 +14,23 @@ const AuthProvider = ({ children }) => {
   //and used for validation. Then handle tokens n stuff
   const loginAction = (data) => {
     return new Promise((resolve, reject) => {
-
       axios
-        .post(
-          process.env.REACT_APP_REQUEST_URL + "/AuthenticateUser",
-          data,
-          {
-            headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
-          }
-        )
+        .post(process.env.REACT_APP_REQUEST_URL + "AuthenticateUser", data, {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+          },
+        })
 
         .then((response) => {
-          if (response.data.IsValid == true && response.data.user.enabled == true ) {
+          if (
+            response.data.IsValid == true &&
+            response.data.user.enabled == true
+          ) {
             //setUser(response.data.user);
             //setToken(response.token);
             //setCookie("user", response.data.user, { path: "/" });
             //localStorage.setItem("site", cookie);
-            
+
             if (response.data.user.storeID_CSV.length === 1) {
               setCookie(
                 "user",
@@ -86,7 +83,6 @@ const AuthProvider = ({ children }) => {
   //use for when loading into a route. This just verifies the user's position
   //and returns if they should be allowed to have access to the page
   const CheckAuthorization = (position) => {
-
     //scan the array of allowed positions
     for (let i = 0; i < position.length; i++) {
       //check if any of them match our current position
