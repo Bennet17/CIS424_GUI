@@ -25,7 +25,7 @@ function LoginPage() {
    //this useState variable allows for conditional message to be displayed if invalid credentials are entered
   const [invalidCredential, setInvalidCredential] = useState('');
 
-  const [isLoading, setIsLoading] = useState(true); // New state for loading indicator
+  const [isLoading, setIsLoading] = useState(false); // New state for loading indicator
 
   //import the authentication function from AuthProvider.js
   const auth = useAuth();
