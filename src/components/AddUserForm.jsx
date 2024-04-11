@@ -85,7 +85,6 @@ const AddUserForm = () => {
   const validatePassword = (password) => {
     const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*+=?><:;'"|~`-])[a-zA-Z0-9!@#$%^&*+=?><:;'"|~`-]{8,}$/;
     const isValid = regex.test(password);
-    console.log(isValid);
 
     //if its not valid, set the error message to appear conditionally
     if (!isValid) {
@@ -143,7 +142,6 @@ const AddUserForm = () => {
     checkboxes.forEach((checkbox) => {
       // Check if the checkbox is checked
       if (checkbox.checked) {
-        console.log(`Checkbox with value ${checkbox.value} is selected.`);
         temp += checkbox.value + ","
       }
     });
@@ -198,9 +196,7 @@ const AddUserForm = () => {
       })
       //error if the API request failed
       .catch((error) => {
-        console.error("API request failed:", error);
-        // console.error( username+ " "+ name+ " "+password+ " "+ position +" " +storeID);
-        setResult("Request Failed. Try again.")
+        toast.error("Request Failed. Try again.")
       });
   }
 

@@ -64,7 +64,6 @@ function POSTable() {
 
   const handleRowClick = (pos) => {
     setSelectedPOS(pos);
-    // console.log(pos);
     setShowEditForm(true);
     setSelectedRow(pos.ID);
   };
@@ -87,7 +86,6 @@ function POSTable() {
     )
       .then((response) => {
 
-       // console.log(response.data.response);
         if(response.data.response === "Register limit (15) reached"){
           toast.error("Register Limit Reached. Cannot create new POS register.");
           setShowModal(false);
@@ -100,7 +98,6 @@ function POSTable() {
 
       })
       .catch((error) => {
-        console.error("API request failed:", error);
         toast.error("Request Failed. Try again.")
       });
   }
@@ -132,12 +129,9 @@ function POSTable() {
               window.location.reload(); // This will refresh the page
             } else {
               toast.error("Disable failed");
-              console.error("Failed to disable register");
             }
           })
           .catch((error) => {
-            console.error("API request failed:", error);
-
             toast.error("Request Failed. Try again.")
 
           });
@@ -163,15 +157,11 @@ function POSTable() {
             //toast.success("Register enabled");
             window.location.reload(); // This will refresh the page
           } else {
-            console.error("Failed to enable register");
             toast.error("Failed to enable the register. Try Again");
           }
         })
         .catch((error) => {
-          console.error("API request failed:", error);
-
           toast.error("Request Failed. Try again.")
-
         });
     }
   };
@@ -201,7 +191,7 @@ function POSTable() {
           );
         })
         .catch((error) => {
-          console.error("Error fetching data:", error);
+          toast.error("Error fetching data");
         });
     }
 

@@ -92,7 +92,6 @@ const AddStoreForm = () => {
       window.location.reload(); // This will refresh the page
     })
     .catch((error) => {
-      console.error("API request failed:", error);
     });
   };
 

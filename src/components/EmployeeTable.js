@@ -97,7 +97,6 @@ function EmployeeTable() {
         }
       })
         .then((response) => {
-          //console.log(response);
           //map the response of employee data onto an array of employees
           setEmployees(
             response.data
@@ -134,8 +133,6 @@ function EmployeeTable() {
           localStorage.setItem("numberOfActiveOwners", numActiveOwners);
         })
         .catch((error) => {
-          //if the API request errored
-          console.error('Error fetching data:', error);
         });
     }
 

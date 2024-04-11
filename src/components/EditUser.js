@@ -84,7 +84,6 @@ const EditUser = (user) => {
     checkboxes.forEach((checkbox) => {
       // Check if the checkbox is checked
       if (checkbox.checked) {
-        //console.log(`Checkbox with value ${checkbox.value} is selected.`);
         temp += checkbox.value + ","
 
       }
@@ -150,11 +149,10 @@ const EditUser = (user) => {
               window.location.reload(); // This will refresh the page
             }
             else {
-              //console.error("Failed to disable user");
+              toast.error("Failed to disable user");
             }
           })
           .catch((error) => {
-            console.error("API request failed:", error);
             toast.error("Request Failed. Try again.")
           });
       }
@@ -175,17 +173,13 @@ const EditUser = (user) => {
       )
         .then((response) => {
 
-          console.log(response.data.response);
-
           if (response.data.response == "Enabled") {
             toast.success("User Activated");
             window.location.reload(); // This will refresh the page
           } else {
-            console.error("Failed to enable user");
           }
         })
         .catch((error) => {
-          console.error("API request failed:", error);
           toast.error("Request Failed. Try again.")
         });
     }
@@ -230,7 +224,6 @@ const EditUser = (user) => {
       })
       //error if the API request failed
       .catch((error) => {
-        console.error("API request failed:", error);
         toast.error("Request Failed. Try again.")
       });
   };

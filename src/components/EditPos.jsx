@@ -6,7 +6,6 @@ import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
 
 function EditPOS(pos) {
-    //console.log(pos.pos.alias);
 
     const [isOpen, setIsOpen] = useState(false);
     const [nickname, setNickname] = useState("");
