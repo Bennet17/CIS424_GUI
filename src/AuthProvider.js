@@ -17,8 +17,13 @@ const AuthProvider = ({ children }) => {
     return new Promise((resolve, reject) => {
       axios
         .post(
-          "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateUser",
-          data
+          process.env.REACT_APP_REQUEST_URL + "/AuthenticateUser",
+          data,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           if (response.data.IsValid == true && response.data.user.enabled == true ) {

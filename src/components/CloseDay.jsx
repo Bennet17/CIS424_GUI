@@ -248,7 +248,12 @@ const CloseDayPage = () => {
     function Initialize() {
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`
+          process.env.REACT_APP_REQUEST_URL + `/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           //set the pos information data
@@ -277,7 +282,12 @@ const CloseDayPage = () => {
 
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`
+          process.env.REACT_APP_HEADER + `/GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           //set denominations and total values
@@ -318,7 +328,12 @@ const CloseDayPage = () => {
     event.preventDefault();
 
     const thresholdsResponse = await axios.get(
-      `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`
+      process.env.REACT_APP_REQUEST_URL + `/ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`,
+      {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+        }
+      }
     );
     const thresholds = thresholdsResponse.data;
 
@@ -413,149 +428,165 @@ const CloseDayPage = () => {
     // Round the total value to the nearest cent
     totalTransferAmount = Math.round(totalTransferAmount * 100) / 100;
 
-    if (currentPosIndex === 0) {
-      axios
-        .post(
-          "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount",
-          {
-            storeID: auth.cookie.user.viewingStoreID,
-            usrID: auth.cookie.user.ID,
-            total: totalAmount,
-            type: "CLOSE",
-            itemCounted: poss[currentPosIndex].name,
-            amountExpected: expectedAmount,
-            hundred: elm100Dollar,
-            fifty: elm50Dollar,
-            twenty: elm20Dollar,
-            ten: elm10Dollar,
-            five: elm5Dollar,
-            two: elm2Dollar,
-            one: elm1Dollar,
-            dollarCoin: elm1DollarCoin,
-            halfDollar: elmHalfDollarCoin,
-            quarter: elmQuarters,
-            dime: elmDimes,
-            nickel: elmNickles,
-            penny: elmPennies,
-            quarterRoll: elmQuartersRolled,
-            dimeRoll: elmDimesRolled,
-            nickelRoll: elmNicklesRolled,
-            pennyRoll: elmPenniesRolled,
-            cashToBankTotal: totalTransferAmount,
-            hundredToBank: info.hundred,
-            fiftyToBank: info.fifty,
-            twentyToBank: info.twenty,
-            tenToBank: info.ten,
-            fiveToBank: info.five,
-            twoToBank: info.two,
-            oneToBank: info.one,
-            quarterRollToBank: info.quarterRoll,
-            dimeRollToBank: info.dimeRoll,
-            nickelRollToBank: info.nickelRoll,
-            pennyRollToBank: info.pennyRoll,
-          }
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            //close POS
-            setPostSuccess(true);
-            toast.success(poss[currentPosIndex].name + " closed successfully!");
-          } else {
+    if (poss[currentPosIndex].opened) {
+      if (currentPosIndex === 0) {
+        axios
+          .post(
+            process.env.REACT_APP_REQUEST_URL + "/CreateCashCount",
+            {
+              storeID: auth.cookie.user.viewingStoreID,
+              usrID: auth.cookie.user.ID,
+              total: totalAmount,
+              type: "CLOSE",
+              itemCounted: poss[currentPosIndex].name,
+              amountExpected: expectedAmount,
+              hundred: elm100Dollar,
+              fifty: elm50Dollar,
+              twenty: elm20Dollar,
+              ten: elm10Dollar,
+              five: elm5Dollar,
+              two: elm2Dollar,
+              one: elm1Dollar,
+              dollarCoin: elm1DollarCoin,
+              halfDollar: elmHalfDollarCoin,
+              quarter: elmQuarters,
+              dime: elmDimes,
+              nickel: elmNickles,
+              penny: elmPennies,
+              quarterRoll: elmQuartersRolled,
+              dimeRoll: elmDimesRolled,
+              nickelRoll: elmNicklesRolled,
+              pennyRoll: elmPenniesRolled,
+              cashToBankTotal: totalTransferAmount,
+              hundredToBank: info.hundred,
+              fiftyToBank: info.fifty,
+              twentyToBank: info.twenty,
+              tenToBank: info.ten,
+              fiveToBank: info.five,
+              twoToBank: info.two,
+              oneToBank: info.one,
+              quarterRollToBank: info.quarterRoll,
+              dimeRollToBank: info.dimeRoll,
+              nickelRollToBank: info.nickelRoll,
+              pennyRollToBank: info.pennyRoll,
+            },
+            {
+              headers: {
+                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+              }
+            }
+          )
+          .then((response) => {
+            if (response.status === 200) {
+              //close POS
+              setPostSuccess(true);
+              toast.success(poss[currentPosIndex].name + " closed successfully!");
+            } else {
+              setPostSuccess(false);
+              toast.error(poss[currentPosIndex].name + " failed to close!");
+            }
+
+            setShowConfirm(false);
+          })
+          .catch((error) => {
+            toast.error(
+              "Network or server error on: " + poss[currentPosIndex].name
+            );
+          });
+
+        if (totalTransferAmount > 0) {
+          setShowPopup(true);
+          setIsSafe(true);
+          setPopupInfo({
+            hundred: info.hundred,
+            fifty: info.fifty,
+            twenty: info.twenty,
+            ten: info.ten,
+            five: info.five,
+            two: info.two,
+            one: info.one,
+            quarterRoll: info.quarterRoll,
+            dimeRoll: info.dimeRoll,
+            nickelRoll: info.nickelRoll,
+            pennyRoll: info.pennyRoll,
+          });
+        }
+      } else {
+        axios
+          .post(
+            process.env.REACT_APP_REQUEST_URL + "/CreateCashCount",
+            {
+              storeID: auth.cookie.user.viewingStoreID,
+              usrID: auth.cookie.user.ID,
+              total: totalAmount,
+              type: "CLOSE",
+              itemCounted: poss[currentPosIndex].name,
+              amountExpected: expectedAmount,
+              hundred: elm100Dollar,
+              fifty: elm50Dollar,
+              twenty: elm20Dollar,
+              ten: elm10Dollar,
+              five: elm5Dollar,
+              two: elm2Dollar,
+              one: elm1Dollar,
+              dollarCoin: elm1DollarCoin,
+              halfDollar: elmHalfDollarCoin,
+              quarter: elmQuarters,
+              dime: elmDimes,
+              nickel: elmNickles,
+              penny: elmPennies,
+              quarterRoll: elmQuartersRolled,
+              dimeRoll: elmDimesRolled,
+              nickelRoll: elmNicklesRolled,
+              pennyRoll: elmPenniesRolled,
+              creditExpected: creditExpected,
+              creditActual: creditActual,
+              cashToSafeTotal: totalTransferAmount,
+              hundredToSafe: info.hundred,
+              fiftyToSafe: info.fifty,
+              twentyToSafe: info.twenty,
+            },
+            {
+              headers: {
+                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+              }
+            }
+          )
+          .then((response) => {
+            if (response.status === 200) {
+              //close POS
+              setPostSuccess(true);
+              setPosHasLoaded(false);
+              toast.success(poss[currentPosIndex].name + " closed successfully!");
+            } else {
+              setPostSuccess(false);
+              toast.error(poss[currentPosIndex].name + " failed to close!");
+            }
+
+            setShowConfirm(false);
+          })
+          .catch((error) => {
+            console.error(error);
             setPostSuccess(false);
-            toast.error(poss[currentPosIndex].name + " failed to close!");
-          }
+            toast.error(
+              "Network or server error on: " + poss[currentPosIndex].name
+            );
+          });
 
-          setShowConfirm(false);
-        })
-        .catch((error) => {
-          toast.error(
-            "Network or server error on: " + poss[currentPosIndex].name
-          );
-        });
-
-      if (totalTransferAmount > 0) {
-        setShowPopup(true);
-        setIsSafe(true);
-        setPopupInfo({
-          hundred: info.hundred,
-          fifty: info.fifty,
-          twenty: info.twenty,
-          ten: info.ten,
-          five: info.five,
-          two: info.two,
-          one: info.one,
-          quarterRoll: info.quarterRoll,
-          dimeRoll: info.dimeRoll,
-          nickelRoll: info.nickelRoll,
-          pennyRoll: info.pennyRoll,
-        });
+        if (totalTransferAmount > 0) {
+          setShowPopup(true);
+          setIsSafe(false);
+          setPopupInfo({
+            hundred: info.hundred,
+            fifty: info.fifty,
+            twenty: info.twenty,
+          });
+        }
       }
-    } else {
-      axios
-        .post(
-          "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount",
-          {
-            storeID: auth.cookie.user.viewingStoreID,
-            usrID: auth.cookie.user.ID,
-            total: totalAmount,
-            type: "CLOSE",
-            itemCounted: poss[currentPosIndex].name,
-            amountExpected: expectedAmount,
-            hundred: elm100Dollar,
-            fifty: elm50Dollar,
-            twenty: elm20Dollar,
-            ten: elm10Dollar,
-            five: elm5Dollar,
-            two: elm2Dollar,
-            one: elm1Dollar,
-            dollarCoin: elm1DollarCoin,
-            halfDollar: elmHalfDollarCoin,
-            quarter: elmQuarters,
-            dime: elmDimes,
-            nickel: elmNickles,
-            penny: elmPennies,
-            quarterRoll: elmQuartersRolled,
-            dimeRoll: elmDimesRolled,
-            nickelRoll: elmNicklesRolled,
-            pennyRoll: elmPenniesRolled,
-            creditExpected: creditExpected,
-            creditActual: creditActual,
-            cashToSafeTotal: totalTransferAmount,
-            hundredToSafe: info.hundred,
-            fiftyToSafe: info.fifty,
-            twentyToSafe: info.twenty,
-          }
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            //close POS
-            setPostSuccess(true);
-            setPosHasLoaded(false);
-            toast.success(poss[currentPosIndex].name + " closed successfully!");
-          } else {
-            setPostSuccess(false);
-            toast.error(poss[currentPosIndex].name + " failed to close!");
-          }
-
-          setShowConfirm(false);
-        })
-        .catch((error) => {
-          console.error(error);
-          setPostSuccess(false);
-          toast.error(
-            "Network or server error on: " + poss[currentPosIndex].name
-          );
-        });
-
-      if (totalTransferAmount > 0) {
-        setShowPopup(true);
-        setIsSafe(false);
-        setPopupInfo({
-          hundred: info.hundred,
-          fifty: info.fifty,
-          twenty: info.twenty,
-        });
-      }
+    }else{
+      //prevent users from opening an already-opened pos
+      toast.error(poss[currentPosIndex].name + " is already closed!");
+      setShowConfirm(false);
     }
   };
 
