@@ -136,10 +136,10 @@ const OpenDayPage = () => {
       "bg-yellow-200": CurrentIsPastThreshold() == 1,
       "text-yellow-600": CurrentIsPastThreshold() == 1,
 
-      "bg-rose-300": CurrentIsPastThreshold() == -1,
+      "bg-rose-200": CurrentIsPastThreshold() == -1,
       "text-rose-700": CurrentIsPastThreshold() == -1,
 
-      "bg-green-300": CurrentIsPastThreshold() == 0,
+      "bg-green-200": CurrentIsPastThreshold() == 0,
       "text-green-700": CurrentIsPastThreshold() == 0,
     }
   );
@@ -240,7 +240,7 @@ const OpenDayPage = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
+          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`, 
           {
             headers: {
               [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
