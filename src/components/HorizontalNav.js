@@ -37,16 +37,20 @@ export default function HorizotalNav() {
 
   const handleSwitchviewClick = (storeID, storeName) => {
     auth.setUserStores(auth.cookie.user.workingStoreID, storeID, storeName);
-    console.log("");
+    //console.log("");
     navigate(routes.home);
   };
 
   useEffect(() => {
     // Fetch all store objects
-    const url =
-      "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStores";
-    axios
-      .get(url) // fetching store data
+    axios.get(
+      `${process.env.REACT_APP_REQUEST_URL}ViewStores`,
+      {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+        }
+      }
+    )
       .then((response) => {
         setAllStores(response.data); // Set the fetched stores in the state
 

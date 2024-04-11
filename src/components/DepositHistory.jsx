@@ -120,7 +120,12 @@ const DepositHistory = () => {
     function Initialize() {
       axios
         .get(
-          `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetFundTransfersForStore?storeID=${auth.cookie.user.viewingStoreID}&startDate=${dateStart}&endDate=${dateEnd}`
+          process.env.REACT_APP_REQUEST_URL + `GetFundTransfersForStore?storeID=${auth.cookie.user.viewingStoreID}&startDate=${dateStart}&endDate=${dateEnd}`,
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
         )
         .then((response) => {
           //set the transfer history information data
@@ -163,10 +168,15 @@ const DepositHistory = () => {
     } else {
       axios
         .post(
-          "https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/VerifyDeposit",
+          process.env.REACT_APP_REQUEST_URL + "VerifyDeposit",
           {
             fID: records[selectedRow].fID,
             vID: auth.cookie.user.ID,
+          },
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
           }
         )
         .then((response) => {

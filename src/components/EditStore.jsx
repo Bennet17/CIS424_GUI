@@ -84,33 +84,45 @@ const EditStore = (store) => {
       }
       else {
         //store is closed; create a disable POS request
-        axios
-          .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableStore",
-            {
-              "ID": store.store.ID,
-            })
-          .then((response) => {
-            if (response.data.response == "Disabled") {
-              setResult("Store successfully deactivated");
-              window.location.reload(); // This will refresh the page
-            } 
-            else {
-              setResult("Failed to deactivate store");
+        axios.post(
+          process.env.REACT_APP_REQUEST_URL+`DisableStore`,
+          {
+            "ID": store.store.ID,
+          },
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
             }
-          })
-          .catch((error) => {
-            console.error("API request failed:", error);
-            setResult("Request Failed. Try again.")
-          });
+          }
+        )
+        .then((response) => {
+          if (response.data.response === "Disabled") {
+            setResult("Store successfully deactivated");
+            window.location.reload(); // This will refresh the page
+          } else {
+            setResult("Failed to deactivate store");
+          }
+        })
+        .catch((error) => {
+          console.error("API request failed:", error);
+          setResult("Request Failed. Try again.");
+        });
+        
       }
     }
     if (store.store.enabled == false) {
       //create a enable POS request if the store is disabled; pass the store ID to the DB
-      axios
-        .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EnableStore",
-          {
-            "ID": store.store.ID,
-          })
+      axios.post(
+        process.env.REACT_APP_REQUEST_URL+`EnableStore`,
+        {
+          "ID": store.store.ID,
+        },
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+          }
+        }
+      )
         .then((response) => {
           if (response.data.response == "Enabled") {
             setResult("Store enabled");
@@ -132,47 +144,50 @@ const EditStore = (store) => {
   const handleSubmit = (event) => {
     event.preventDefault(); //prevent auto refresh
 
-    //create an axios POST request to edit the store settings, also pass the ID
-    axios
-      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateMaximums",
-        {
-          "StoreId": store.store.ID,
-          "location": location,
-          "Enabled": store.store.enabled,
-          "Opened": store.store.opened,
-          "Hundred_Register": parseInt(hundredRegisterMax),
-          "Fifty_Register": parseInt(fiftyRegisterMax),
-          "Twenty_Register": parseInt(twentyRegisterMax),
-          "Hundred": parseInt(hundredMax),
-          "Fifty": parseInt(fiftyMax),
-          "Twenty": parseInt(twentyMax),
-          "Ten": parseInt(tenMax),
-          "Five": parseInt(fiveMax),
-          "Two": parseInt(twoMax),
-          "One": parseInt(oneMax),
-          "QuarterRoll": parseInt(quarterRollMax),
-          "DimeRoll": parseInt(dimeRollMax),
-          "NickelRoll": parseInt(nickelRollMax),
-          "PennyRoll": parseInt(pennyRollMax)
-
-
-        })
-      .then((response) => {
-       
-        if (response.data.Message === "Store and Totals updated successfully.") {
-          //successful edit
-          closeModal();
-          window.location.reload(); // This will refresh the page
-        } else {
-          //a valid API request but some error
-          setResult("Failed to Update Store")
+    axios.post(
+      process.env.REACT_APP_REQUEST_URL+`UpdateMaximums`,
+      {
+        "StoreId": store.store.ID,
+        "location": location,
+        "Enabled": store.store.enabled,
+        "Opened": store.store.opened,
+        "Hundred_Register": parseInt(hundredRegisterMax),
+        "Fifty_Register": parseInt(fiftyRegisterMax),
+        "Twenty_Register": parseInt(twentyRegisterMax),
+        "Hundred": parseInt(hundredMax),
+        "Fifty": parseInt(fiftyMax),
+        "Twenty": parseInt(twentyMax),
+        "Ten": parseInt(tenMax),
+        "Five": parseInt(fiveMax),
+        "Two": parseInt(twoMax),
+        "One": parseInt(oneMax),
+        "QuarterRoll": parseInt(quarterRollMax),
+        "DimeRoll": parseInt(dimeRollMax),
+        "NickelRoll": parseInt(nickelRollMax),
+        "PennyRoll": parseInt(pennyRollMax)
+      },
+      {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
         }
-      })
-      //error if the API request failed
-      .catch((error) => {
-        console.error("API request failed:", error);
-        setResult("Request Failed. Try again.")
-      });
+      }
+    )
+    .then((response) => {
+      if (response.data.Message === "Store and Totals updated successfully.") {
+        //successful edit
+        closeModal();
+        window.location.reload(); // This will refresh the page
+      } else {
+        //a valid API request but some error
+        setResult("Failed to Update Store")
+      }
+    })
+    //error if the API request failed
+    .catch((error) => {
+      console.error("API request failed:", error);
+      setResult("Request Failed. Try again.")
+    });
+    
   };
 
 
