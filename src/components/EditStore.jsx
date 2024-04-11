@@ -104,7 +104,6 @@ const EditStore = (store) => {
           }
         })
         .catch((error) => {
-          console.error("API request failed:", error);
           setResult("Request Failed. Try again.");
         });
         
@@ -134,7 +133,6 @@ const EditStore = (store) => {
 
         })
         .catch((error) => {
-          console.error("API request failed:", error);
            setResult("Request Failed. Try again.")
         });
     }
@@ -184,7 +182,6 @@ const EditStore = (store) => {
     })
     //error if the API request failed
     .catch((error) => {
-      console.error("API request failed:", error);
       setResult("Request Failed. Try again.")
     });
     

@@ -61,8 +61,6 @@ const UserManagementPage = () => {
           setStoreArray(updatedStoreArray);
         })
         .catch((error) => {
-          //could not get Store Data from API
-          console.error("Error fetching data:", error);
         });
     }
 

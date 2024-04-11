@@ -92,7 +92,6 @@ useEffect(() => {
     })
     .catch((error) => {
       //if the API request errored
-      console.error("Error fetching data:", error);
     });    
   }
   fetchStoreTable();
