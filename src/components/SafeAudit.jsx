@@ -37,7 +37,7 @@ const SafeAuditPage = () => {
   // Authentication context
   const auth = useAuth();
 
-  // Const for POST CreateCashCount request (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount)
+  // Const for POST CreateCashCount request (CreateCashCount)
   const CreateCashCountURL =
     process.env.REACT_APP_REQUEST_URL + "CreateCashCount";
 
@@ -89,7 +89,6 @@ const SafeAuditPage = () => {
   const [safeStatus, setSafeStatus] = useState(false);
 
   const [showExtraChange, setShowExtraChange] = useState(false);
-  const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("▼ Show Extras");
 
   function SetExpectedDenominations(data) {
     // Set the expected denominations in the form data
