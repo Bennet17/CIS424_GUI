@@ -43,14 +43,12 @@ export default function HorizotalNav() {
 
   useEffect(() => {
     // Fetch all store objects
-    axios.get(
-      `${process.env.REACT_APP_REQUEST_URL}ViewStores`,
-      {
+    axios
+      .get(`${process.env.REACT_APP_REQUEST_URL}ViewStores`, {
         headers: {
-          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-        }
-      }
-    )
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+        },
+      })
       .then((response) => {
         setAllStores(response.data); // Set the fetched stores in the state
 
@@ -167,7 +165,7 @@ export default function HorizotalNav() {
                                   )
                                 }
                               >
-                                <div className="flex flex-row justify-between items-center">
+                                <div className="flex flex-row justify-between w-full items-center">
                                   <p className="max-w-48">{store.location}</p>
                                   {store.ID ===
                                     auth.cookie.user.viewingStoreID && (

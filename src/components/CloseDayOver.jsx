@@ -27,7 +27,7 @@ import RollPenny from "../usd_icons/rolls/RollPenny.svg";
 const CloseDayOver = ({ onClose, details, isSafe }) => {
   return (
     <div className="text-navy-gray absolute top-0 left-0 right-0 bottom-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white text-center p-8 rounded-lg shadow-lg">
+      <div className="bg-white p-8 rounded-lg shadow-lg">
         <h2>Rule: Limit Reached</h2>
         {isSafe ? (
           <>
@@ -36,7 +36,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
 
               <h2>Please deposit the following to the bank:</h2>
             </div>
-            <div className="box-border mb-2 text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+            <div className="box-border text-center py-1 px-1 w-full border border-gray-300 hover:bg-white bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300">
               <div className="flex flex-row justify-around">
                 <ul>
                   <li>
