@@ -161,12 +161,18 @@ const EditUser = (user) => {
     }
     //this user is disables, re-enable
     if (user.user.enabled == false) {
-      //this post request sends the userID to be disabled in the DB
-      axios
-        .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EnableUser",
-          {
-            "ID": user.user.ID,
-          })
+      //this post request sends the userID to be enabled in the DB
+      axios.post(
+        process.env.REACT_APP_REQUEST_URL + 'EnableUser',
+        {
+          "ID": user.user.ID,
+        },
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+          }
+        }
+      )
         .then((response) => {
 
           console.log(response.data.response);
@@ -191,19 +197,20 @@ const EditUser = (user) => {
     event.preventDefault();
 
     //create an axios POST request to create a new user with inputs from the form
-    axios
-      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/EditUser",
-        {
-          "ID": user.user.ID,
-          "username": username,
-          "name": lastname + ", " + firstname,
-          "storeCSV": getCSV(),
-          "position": position
-        })
-
-
-
-      .then((response) => {
+    axios.post(process.env.REACT_APP_REQUEST_URL+`EditUser`,
+      {
+        "ID": user.user.ID,
+        "username": username,
+        "name": lastname + ", " + firstname,
+        "storeCSV": getCSV(),
+        "position": position
+      },
+      {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+        }
+      }
+    )      .then((response) => {
 
         //if the response data was not an API error
         //the following line indicates a successful entry
