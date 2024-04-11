@@ -133,11 +133,17 @@ const EditUser = (user) => {
       }
       else {
         //this post request sends the userID to be disabled in the DB
-        axios
-          .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/DisableUser",
-            {
-              "ID": user.user.ID,
-            })
+        axios.post(
+          process.env.REACT_APP_REQUEST_URL + 'DisableUser',
+          {
+            "ID": user.user.ID,
+          },
+          {
+            headers: {
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+            }
+          }
+        )
           .then((response) => {
             if (response.data.response == "Disabled") {
               toast.success("User deactivated");

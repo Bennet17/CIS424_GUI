@@ -162,18 +162,23 @@ const AddUserForm = () => {
     const name = lastname + ", " + firstname;
 
     //create an axios POST request to create a new user with inputs from the form
-    axios
-      .post("https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateUser",
-        {
-          "username": username,
-          "name": name,
-          "password": password,
-          "position": position,
-          "storeCSV": getCSV(),
-          "question": securityQuestion,
-          "answer": securityAnswer
-
-        })
+    axios.post(
+      process.env.REACT_APP_REQUEST_URL + 'CreateUser',
+      {
+        "username": username,
+        "name": name,
+        "password": password,
+        "position": position,
+        "storeCSV": getCSV(),
+        "question": securityQuestion,
+        "answer": securityAnswer
+      },
+      {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+        }
+      }
+    )
       .then((response) => {
         //if the response data was not an API error
         //the following line indicates a successful entry

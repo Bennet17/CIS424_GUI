@@ -15,6 +15,7 @@ const AuthProvider = ({ children }) => {
   //and used for validation. Then handle tokens n stuff
   const loginAction = (data) => {
     return new Promise((resolve, reject) => {
+
       axios
         .post(
           process.env.REACT_APP_REQUEST_URL + "/AuthenticateUser",
@@ -25,6 +26,7 @@ const AuthProvider = ({ children }) => {
             }
           }
         )
+
         .then((response) => {
           if (response.data.IsValid == true && response.data.user.enabled == true ) {
             //setUser(response.data.user);
