@@ -18,7 +18,7 @@ const AuthProvider = ({ children }) => {
 
       axios
         .post(
-          process.env.REACT_APP_REQUEST_URL + "/AuthenticateUser",
+          process.env.REACT_APP_REQUEST_URL + "AuthenticateUser",
           data,
           {
             headers: {
