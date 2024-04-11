@@ -37,7 +37,7 @@ export default function HorizotalNav() {
 
   const handleSwitchviewClick = (storeID, storeName) => {
     auth.setUserStores(auth.cookie.user.workingStoreID, storeID, storeName);
-    console.log("");
+    //console.log("");
     navigate(routes.home);
   };
 
