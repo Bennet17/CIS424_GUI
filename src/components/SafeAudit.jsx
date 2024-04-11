@@ -39,7 +39,7 @@ const SafeAuditPage = () => {
 
   // Const for POST CreateCashCount request (https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/CreateCashCount)
   const CreateCashCountURL =
-    process.env.REACT_APP_REQUEST_URL + "/CreateCashCount";
+    process.env.REACT_APP_REQUEST_URL + "CreateCashCount";
 
   // Const to hold the form data
   const [formData, setFormData] = useState({
@@ -121,7 +121,7 @@ const SafeAuditPage = () => {
     function GetExpectedSafeCount() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `/ViewStoreObjects?storeID=${formData.store}`,
+          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${formData.store}`,
           {
             headers: {
               [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
@@ -141,7 +141,7 @@ const SafeAuditPage = () => {
             if (safeObject.opened) {
               axios
                 .get(
-                  process.env.REACT_APP_REQUEST_URL + `/GetCloseCount?storeID=${formData.store}`,
+                  process.env.REACT_APP_REQUEST_URL + `GetCloseCount?storeID=${formData.store}`,
                   {
                     headers: {
                       [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY

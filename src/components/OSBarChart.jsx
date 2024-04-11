@@ -46,7 +46,7 @@ const OSBarChart = () => {
       //console.log(formatDate(startDate));
     }
 
-    const url = process.env.REACT_APP_REQUEST_URL + `/GeneralVariance?storeID=${
+    const url = process.env.REACT_APP_REQUEST_URL + `GeneralVariance?storeID=${
       auth.cookie.user.viewingStoreID
     }&startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`;
 

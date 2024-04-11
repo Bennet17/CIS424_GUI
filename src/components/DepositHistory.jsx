@@ -120,7 +120,7 @@ const DepositHistory = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `/GetFundTransfersForStore?storeID=${auth.cookie.user.viewingStoreID}&startDate=${dateStart}&endDate=${dateEnd}`,
+          process.env.REACT_APP_REQUEST_URL + `GetFundTransfersForStore?storeID=${auth.cookie.user.viewingStoreID}&startDate=${dateStart}&endDate=${dateEnd}`,
           {
             headers: {
               [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
@@ -168,7 +168,7 @@ const DepositHistory = () => {
     } else {
       axios
         .post(
-          process.env.REACT_APP_REQUEST_URL + "/VerifyDeposit",
+          process.env.REACT_APP_REQUEST_URL + "VerifyDeposit",
           {
             fID: records[selectedRow].fID,
             vID: auth.cookie.user.ID,
