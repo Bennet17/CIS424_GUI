@@ -25,7 +25,7 @@ function LoginPage() {
    //this useState variable allows for conditional message to be displayed if invalid credentials are entered
   const [invalidCredential, setInvalidCredential] = useState('');
 
-  const [isLoading, setIsLoading] = useState(false); // New state for loading indicator
+  const [isLoading, setIsLoading] = useState(true); // New state for loading indicator
 
   //import the authentication function from AuthProvider.js
   const auth = useAuth();
@@ -146,7 +146,7 @@ function LoginPage() {
       {isLoading && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <ProgressSpinner 
-              style={{ width: '50px', height: '50px' }}
+              style={{ width: '40px', height: '40px' }}
               className="custom-spinner"
               strokeWidth="4"
               animationDuration=".75s"
