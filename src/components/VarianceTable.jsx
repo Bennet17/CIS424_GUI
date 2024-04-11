@@ -127,7 +127,14 @@ const VarianceTable = () => {
         UpdateInputDates();
 
         function GetRegisters() {
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStoreObjects?storeID=${formData.store}`)
+            axios.get(
+                process.env.REACT_APP_SERVER_URL + `ViewStoreObjects?storeID=${formData.store}`,
+                {
+                  headers: {
+                    [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+                  }
+                }
+            )
             .then(response => {
                 // Extract register names and ID from the response and filter out closed registers
                 const newRegisters = response.data
@@ -174,7 +181,14 @@ const VarianceTable = () => {
             const endDate = new Date(formData.endDate).toISOString().split('T')[0];
 
             // GET request to the Register Variance API
-            axios.get(`https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/RegisterVariance?registerID=${registerID}&storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`)
+            axios.get(
+                process.env.REACT_APP_SERVER_URL + `RegisterVariance?storeID=${storeID}&registerID=${registerID}&startDate=${startDate}&endDate=${endDate}`,
+                {
+                    headers: {
+                        [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+                    }
+                }
+            )
                 .then((response) => {
                     // If the response contains data, set the array of variances to the response data
                     if (response.data && response.data.length > 0) {
