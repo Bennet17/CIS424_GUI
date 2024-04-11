@@ -54,45 +54,50 @@ function StoreTable() {
     setSelectedRow(store.ID);
   };
 
-  //useEffect will launch as soon as the component is loaded
-  useEffect(() => {
-    //this function will make a GET request to the API to return all employees in the store based on the currently viewed store
-    function fetchStoreTable() {
-      const url = `https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/ViewStores`;
-      axios
-        .get(url)
-        .then((response) => {
-          //map the response of employee data onto an array of employees
-          setStores(
-            response.data.map((store) => ({
-              ID: store.ID,
-              location: store.location,
-              enabled: store.enabled,
-              opened: store.opened,
-              hundredRegisterMax: store.hundredRegisterMax,
-              fiftyRegisterMax: store.fiftyRegisterMax,
-              twentyRegisterMax: store.twentyRegisterMax,
-              hundredMax: store.hundredMax,
-              fiftyMax: store.fiftyMax,
-              twentyMax: store.twentyMax,
-              tenMax: store.tenMax,
-              fiveMax: store.fiveMax,
-              twoMax: store.twoMax,
-              oneMax: store.oneMax,
-              quarterRollMax: store.quarterRollMax,
-              dimeRollMax: store.dimeRollMax,
-              nickelRollMax: store.nickelRollMax,
-              pennyRollMax: store.pennyRollMax,
-            }))
-          );
-        })
-        .catch((error) => {
-          //if the API request errored
-          console.error("Error fetching data:", error);
-        });
-    }
-    fetchStoreTable();
-  }, []);
+//useEffect will launch as soon as the component is loaded
+useEffect(() => {
+  //this function will make a GET request to the API to return all employees in the store based on the currently viewed store
+  function fetchStoreTable() {
+    axios.get(
+      process.env.REACT_APP_REQUEST_URL+`ViewStores`,
+      {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+        }
+      }
+    )
+    .then((response) => {
+      setStores(
+        response.data.map((store) => ({
+          ID: store.ID,
+          location: store.location,
+          enabled: store.enabled,
+          opened: store.opened,
+          hundredRegisterMax: store.hundredRegisterMax,
+          fiftyRegisterMax: store.fiftyRegisterMax,
+          twentyRegisterMax: store.twentyRegisterMax,
+          hundredMax: store.hundredMax,
+          fiftyMax: store.fiftyMax,
+          twentyMax: store.twentyMax,
+          tenMax: store.tenMax,
+          fiveMax: store.fiveMax,
+          twoMax: store.twoMax,
+          oneMax: store.oneMax,
+          quarterRollMax: store.quarterRollMax,
+          dimeRollMax: store.dimeRollMax,
+          nickelRollMax: store.nickelRollMax,
+          pennyRollMax: store.pennyRollMax,
+        }))
+      );
+    })
+    .catch((error) => {
+      //if the API request errored
+      console.error("Error fetching data:", error);
+    });    
+  }
+  fetchStoreTable();
+}, []);
+
 
   return (
     <div className="min-w-full">
