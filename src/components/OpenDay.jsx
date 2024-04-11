@@ -240,7 +240,7 @@ const OpenDayPage = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `/ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
+          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
           {
             headers: {
               [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
@@ -266,7 +266,7 @@ const OpenDayPage = () => {
     if (poss.length > 0 && poss[currentPosIndex]) {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `/GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`,
+          process.env.REACT_APP_REQUEST_URL + `GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`,
           {
             headers: {
               [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
@@ -315,7 +315,7 @@ const OpenDayPage = () => {
     if (!poss[currentPosIndex].opened) {
       axios
         .post(
-          process.env.REACT_APP_REQUEST_URL + "/SVSU_CIS424/CreateCashCount",
+          process.env.REACT_APP_REQUEST_URL + "CreateCashCount",
           {
             storeID: auth.cookie.user.viewingStoreID,
             usrID: auth.cookie.user.ID,
