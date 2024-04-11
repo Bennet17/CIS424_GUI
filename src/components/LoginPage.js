@@ -7,6 +7,7 @@ import Logo from "../newLogo.png"; // Adjust the path accordingly
 import routes from "../routes.js";
 import { Button } from "primereact/button";
 import { Password } from 'primereact/password';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
@@ -24,6 +25,8 @@ function LoginPage() {
    //this useState variable allows for conditional message to be displayed if invalid credentials are entered
   const [invalidCredential, setInvalidCredential] = useState('');
 
+  const [isLoading, setIsLoading] = useState(false); // New state for loading indicator
+
   //import the authentication function from AuthProvider.js
   const auth = useAuth();
 
@@ -34,6 +37,7 @@ function LoginPage() {
   //function to handle Submit button pressed logic
   function Submit(event) {
     event.preventDefault();
+    setIsLoading(true); // Set loading state to true when submitting
 
       //pass in the object with username and password values to authentication method
       //LoginAction method will return an error promise if the user credentials are invalid
@@ -47,6 +51,9 @@ function LoginPage() {
     .catch(error => {
       //use state variable to set conditional message to invalid alert
       setInvalidCredential("Invalid Credentials. Try Again.") ;
+    })
+    .finally(() => {
+      setIsLoading(false); // Set loading state to false after response is received
     });
 
   }  
@@ -130,8 +137,22 @@ function LoginPage() {
             />
           </div>
         </form>
-        {invalidCredential && <p className="block text-sm font-medium leading-6 text-red-600">{invalidCredential}</p>}
+        {invalidCredential && (
+          <p className="block text-sm font-medium leading-6 text-red-600 absolute mb-4 mt-2">
+            {invalidCredential}
+          </p>
+        )}
       </div>
+      {isLoading && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <ProgressSpinner 
+              style={{ width: '50px', height: '50px' }}
+              className="custom-spinner"
+              strokeWidth="4"
+              animationDuration=".75s"
+            />
+          </div>
+        )}
     </div>
   );
 }
