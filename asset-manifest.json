@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/CIS424_GUI/static/css/main.c75cc5cb.css",
-    "main.js": "/CIS424_GUI/static/js/main.65ea8114.js",
+    "main.css": "/CIS424_GUI/static/css/main.e33a5c07.css",
+    "main.js": "/CIS424_GUI/static/js/main.ba4ab612.js",
     "static/js/498.c0ed5838.chunk.js": "/CIS424_GUI/static/js/498.c0ed5838.chunk.js",
     "static/js/703.c7562ad2.chunk.js": "/CIS424_GUI/static/js/703.c7562ad2.chunk.js",
     "static/js/379.47ac7823.chunk.js": "/CIS424_GUI/static/js/379.47ac7823.chunk.js",
@@ -20,7 +20,6 @@
     "static/media/primeicons.woff2": "/CIS424_GUI/static/media/primeicons.78172950b335ccdb94e2.woff2",
     "static/media/BillHundred.svg": "/CIS424_GUI/static/media/BillHundred.5eb67863b625d2ece6b05d201c38ddaf.svg",
     "static/media/RollQuarter.svg": "/CIS424_GUI/static/media/RollQuarter.5313d1a95cb7c885fd160c7e7cc9d587.svg",
-    "static/media/CoinHalf_Dollar.svg": "/CIS424_GUI/static/media/CoinHalf_Dollar.cfc867a02efc05aa6f391f72996979a7.svg",
     "static/media/CoinHalf.svg": "/CIS424_GUI/static/media/CoinHalf.f7fa0cd51a8d0308a0d8ff228f9881d3.svg",
     "static/media/CoinQuarter.svg": "/CIS424_GUI/static/media/CoinQuarter.3d21ae71ad5f23e13818a9cda7e5fb55.svg",
     "static/media/BillTwenty.svg": "/CIS424_GUI/static/media/BillTwenty.7438cf2cb5aab8936522818a0841a185.svg",
@@ -37,14 +36,14 @@
     "static/media/CoinPenny.svg": "/CIS424_GUI/static/media/CoinPenny.a58eb5bae46c8310de869e9ef37f6029.svg",
     "static/media/BillOne.svg": "/CIS424_GUI/static/media/BillOne.a650a717afe9268797f4e40f4a57bcad.svg",
     "index.html": "/CIS424_GUI/index.html",
-    "main.c75cc5cb.css.map": "/CIS424_GUI/static/css/main.c75cc5cb.css.map",
-    "main.65ea8114.js.map": "/CIS424_GUI/static/js/main.65ea8114.js.map",
+    "main.e33a5c07.css.map": "/CIS424_GUI/static/css/main.e33a5c07.css.map",
+    "main.ba4ab612.js.map": "/CIS424_GUI/static/js/main.ba4ab612.js.map",
     "498.c0ed5838.chunk.js.map": "/CIS424_GUI/static/js/498.c0ed5838.chunk.js.map",
     "703.c7562ad2.chunk.js.map": "/CIS424_GUI/static/js/703.c7562ad2.chunk.js.map",
     "379.47ac7823.chunk.js.map": "/CIS424_GUI/static/js/379.47ac7823.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c75cc5cb.css",
-    "static/js/main.65ea8114.js"
+    "static/css/main.e33a5c07.css",
+    "static/js/main.ba4ab612.js"
   ]
 }
