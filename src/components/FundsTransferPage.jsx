@@ -758,6 +758,7 @@ const FundsTransferPage = () => {
                         src={BillHundred}
                         alt="100's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Hundred Dollar Bill"
                       />
                     </label>
                     <input
@@ -790,6 +791,7 @@ const FundsTransferPage = () => {
                         src={RollQuarter}
                         alt="Quarter Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Quarter Roll"
                       />
                     </label>
                     <input
@@ -822,6 +824,7 @@ const FundsTransferPage = () => {
                         src={CoinQuarter}
                         alt="Quarters"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Quarter Coin"
                       />
                     </label>
                     <input
@@ -856,6 +859,7 @@ const FundsTransferPage = () => {
                         src={BillFifty}
                         alt="50's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Fifty Dollar Bill"
                       />
                     </label>
                     <input
@@ -888,6 +892,7 @@ const FundsTransferPage = () => {
                         src={RollDime}
                         alt="Dime Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Dime Roll"
                       />
                     </label>
                     <input
@@ -920,6 +925,7 @@ const FundsTransferPage = () => {
                         src={CoinDime}
                         alt="Dimes"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Dime Coin"
                       />
                     </label>
                     <input
@@ -954,6 +960,7 @@ const FundsTransferPage = () => {
                         src={BillTwenty}
                         alt="20's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Twenty Dollar Bill"
                       />
                     </label>
                     <input
@@ -986,6 +993,7 @@ const FundsTransferPage = () => {
                         src={RollNickel}
                         alt="Nickel Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Nickel Roll"
                       />
                     </label>
                     <input
@@ -1018,6 +1026,7 @@ const FundsTransferPage = () => {
                         src={CoinNickel}
                         alt="Nickels"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Nickel Coin"
                       />
                     </label>
                     <input
@@ -1052,6 +1061,7 @@ const FundsTransferPage = () => {
                         src={BillTen}
                         alt="10's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Ten Dollar Bill"
                       />
                     </label>
                     <input
@@ -1084,6 +1094,7 @@ const FundsTransferPage = () => {
                         src={RollPenny}
                         alt="Penny Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Penny Roll"
                       />
                     </label>
                     <input
@@ -1116,6 +1127,7 @@ const FundsTransferPage = () => {
                         src={CoinPenny}
                         alt="Pennies"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Penny Coin"
                       />
                     </label>
                     <input
@@ -1150,6 +1162,7 @@ const FundsTransferPage = () => {
                         src={BillFive}
                         alt="5's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Five Dollar Bill"
                       />
                     </label>
                     <input
@@ -1176,7 +1189,7 @@ const FundsTransferPage = () => {
                     />
                   </td>
                   {/* Extras Column */}
-                  {showExtraChange == true && (
+                  {showExtraChange === true && (
                     <>
                       <td className="flex items-center">
                         <label htmlFor="oneCoin_input">
@@ -1184,6 +1197,7 @@ const FundsTransferPage = () => {
                             src={CoinOne}
                             alt="Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
+                            alt="One Dollar Coin"
                           />
                         </label>
                         <input
@@ -1215,6 +1229,7 @@ const FundsTransferPage = () => {
                             src={BillTwo}
                             alt="2's"
                             className="inline-block align-middle w-12 h-12"
+                            alt="Two Dollar Bill"
                           />
                         </label>
                         <input
@@ -1251,6 +1266,7 @@ const FundsTransferPage = () => {
                         src={BillOne}
                         alt="1's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="One Dollar Bill"
                       />
                     </label>
                     <input
@@ -1277,7 +1293,7 @@ const FundsTransferPage = () => {
                     />
                   </td>
                   {/* Extras Column */}
-                  {showExtraChange == true && (
+                  {showExtraChange === true && (
                     <>
                       <td className="flex items-center">
                         <label htmlFor="halfDollar_input">
@@ -1285,6 +1301,7 @@ const FundsTransferPage = () => {
                             src={CoinHalf}
                             alt="Half Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
+                            alt="Half Dollar Coin"
                           />
                         </label>
                         <input

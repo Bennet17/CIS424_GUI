@@ -45,7 +45,6 @@ const CloseDayPage = () => {
   const [showExtraChange, setShowExtraChange] = useState(false);
   const [creditExpected, setCreditExpected] = useState(0);
   const [creditActual, setCreditActual] = useState(0);
-  const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("Show Extras ▼");
   //let currentPosIndex = -1;
 
   // TM: Title will change with entity selection
@@ -141,14 +140,14 @@ const CloseDayPage = () => {
     "border-2",
     "bg-white",
     {
-      "bg-yellow-200": CurrentIsPastThreshold() == 1,
-      "text-yellow-600": CurrentIsPastThreshold() == 1,
+      "bg-yellow-200": CurrentIsPastThreshold() === 1,
+      "text-yellow-600": CurrentIsPastThreshold() === 1,
 
-      "bg-rose-200": CurrentIsPastThreshold() == -1,
-      "text-rose-700": CurrentIsPastThreshold() == -1,
+      "bg-rose-200": CurrentIsPastThreshold() === -1,
+      "text-rose-700": CurrentIsPastThreshold() === -1,
 
-      "bg-green-200": CurrentIsPastThreshold() == 0,
-      "text-green-700": CurrentIsPastThreshold() == 0,
+      "bg-green-200": CurrentIsPastThreshold() === 0,
+      "text-green-700": CurrentIsPastThreshold() === 0,
     }
   );
 
@@ -200,11 +199,6 @@ const CloseDayPage = () => {
   //(also change arrow text thing)
   function ToggleExtraChange() {
     setShowExtraChange(!showExtraChange);
-    if (!showExtraChange) {
-      setShowExtraChangeTxt("Hide Extras ▲");
-    } else {
-      setShowExtraChangeTxt("Show Extras ▼");
-    }
   }
 
   //clears all the inpout fields to default values
@@ -773,7 +767,7 @@ const CloseDayPage = () => {
             className="mt-2"
             onKeyDown={PreventKeyDown}
             onSubmit={(e) =>
-              CurrentIsPastThreshold() == 0 ? Submit(e) : setShowConfirm(true)
+              CurrentIsPastThreshold() === 0 ? Submit(e) : setShowConfirm(true)
             }
           >
             <table>
@@ -793,6 +787,7 @@ const CloseDayPage = () => {
                         src={BillHundred}
                         alt="100's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="100 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -821,6 +816,7 @@ const CloseDayPage = () => {
                         src={RollQuarter}
                         alt="Quarter Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Roll of Quarters"
                       />
                     </label>
                   </td>
@@ -853,6 +849,7 @@ const CloseDayPage = () => {
                         src={BillFifty}
                         alt="50's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="50 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -881,6 +878,7 @@ const CloseDayPage = () => {
                         src={RollDime}
                         alt="Dime Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Roll of Dimes"
                       />
                     </label>
                   </td>
@@ -911,6 +909,7 @@ const CloseDayPage = () => {
                         src={BillTwenty}
                         alt="20's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="20 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -939,6 +938,7 @@ const CloseDayPage = () => {
                         src={RollNickel}
                         alt="Nickel Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Roll of Nickels"
                       />
                     </label>
                   </td>
@@ -971,6 +971,7 @@ const CloseDayPage = () => {
                         src={BillTen}
                         alt="10's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="10 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -999,6 +1000,7 @@ const CloseDayPage = () => {
                         src={RollPenny}
                         alt="Penny Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Roll of Pennies"
                       />
                     </label>
                   </td>
@@ -1031,6 +1033,7 @@ const CloseDayPage = () => {
                         src={BillFive}
                         alt="5's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="5 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -1059,6 +1062,7 @@ const CloseDayPage = () => {
                         src={CoinQuarter}
                         alt="Quarters"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Quarter Coin"
                       />
                     </label>
                   </td>
@@ -1089,6 +1093,7 @@ const CloseDayPage = () => {
                         src={BillOne}
                         alt="1's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="1 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -1117,6 +1122,7 @@ const CloseDayPage = () => {
                         src={CoinDime}
                         alt="Dimes"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Dime Coin"
                       />
                     </label>
                   </td>
@@ -1141,7 +1147,7 @@ const CloseDayPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  {showExtraChange == true ? (
+                  {showExtraChange === true ? (
                     <>
                       <td className="text-2xl">Other</td>
                       <td></td>
@@ -1160,6 +1166,7 @@ const CloseDayPage = () => {
                         src={CoinNickel}
                         alt="Nickels"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Nickel Coin"
                       />
                     </label>
                   </td>
@@ -1184,7 +1191,7 @@ const CloseDayPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  {showExtraChange == true ? (
+                  {showExtraChange === true ? (
                     <>
                       <td>
                         <label>
@@ -1192,6 +1199,7 @@ const CloseDayPage = () => {
                             src={CoinOne}
                             alt="Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
+                            alt="1 Dollar Coin"
                           />
                         </label>
                       </td>
@@ -1230,6 +1238,7 @@ const CloseDayPage = () => {
                         src={CoinPenny}
                         alt="Pennies"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Penny Coin"
                       />
                     </label>
                   </td>
@@ -1253,7 +1262,7 @@ const CloseDayPage = () => {
                     />
                   </td>
                 </tr>
-                {showExtraChange == true && (
+                {showExtraChange === true && (
                   <tr>
                     <td>
                       <label>
@@ -1261,6 +1270,7 @@ const CloseDayPage = () => {
                           src={BillTwo}
                           alt="2's"
                           className="inline-block align-middle w-12 h-12"
+                          alt="2 Dollar Bill"
                         />
                       </label>
                     </td>
@@ -1285,7 +1295,7 @@ const CloseDayPage = () => {
                     </td>
                   </tr>
                 )}
-                {showExtraChange == true && (
+                {showExtraChange === true && (
                   <tr>
                     <td>
                       <label>
@@ -1293,6 +1303,7 @@ const CloseDayPage = () => {
                           src={CoinHalf}
                           alt="Half Dollar Coins"
                           className="inline-block align-middle w-12 h-12"
+                          alt="Half Dollar Coin"
                         />
                       </label>
                     </td>
@@ -1319,39 +1330,6 @@ const CloseDayPage = () => {
                     </td>
                   </tr>
                 )}
-                {/* <tr>
-                  <td colSpan="3">
-                    <p
-                      className="rounded mt-1 py-1 cursor-pointer w-full mb-4 text-center border-2 border-gray-300 hover:border-button-blue-light bg-white text-xl"
-                      onClick={ToggleExtraChange}
-                    >
-                      {showExtraChangeTxt}
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td>
-                    <button
-                      type="submit"
-                      value="submit"
-                      min="0"
-                      className="mb-4 mt-1 flex w-full justify-center rounded-full border-2 border-button-blue bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-blue-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-blue"
-                    >
-                      Close
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      onClick={ClearAllFields}
-                      type="button"
-                      value="button"
-                      className="mb-4 mt-1 flex w-full justify-center rounded-full border-2 border-button-gray bg-button-gray px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-gray-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-gray"
-                    >
-                      Clear All Fields
-                    </button>
-                  </td>
-                </tr> */}
               </tbody>
             </table>
             <div className="mb-4">

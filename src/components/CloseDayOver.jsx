@@ -10,14 +10,14 @@ import BillTwenty from "../usd_icons/bills/BillTwenty.svg";
 import BillTen from "../usd_icons/bills/BillTen.svg";
 import BillFive from "../usd_icons/bills/BillFive.svg";
 import BillOne from "../usd_icons/bills/BillOne.svg";
-import BillTwo from "../usd_icons/bills/BillTwo.svg";
+// import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
-import CoinOne from "../usd_icons/coins/CoinOne.svg";
-import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
-import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
-import CoinDime from "../usd_icons/coins/CoinDime.svg";
-import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
-import CoinPenny from "../usd_icons/coins/CoinPenny.svg";
+// import CoinOne from "../usd_icons/coins/CoinOne.svg";
+// import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
+// import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
+// import CoinDime from "../usd_icons/coins/CoinDime.svg";
+// import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
+// import CoinPenny from "../usd_icons/coins/CoinPenny.svg";
 
 import RollQuarter from "../usd_icons/rolls/RollQuarter.svg";
 import RollDime from "../usd_icons/rolls/RollDime.svg";
@@ -44,6 +44,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={BillHundred}
                       alt="100's"
                       className="inline-block align-middle w-12 h-12"
+                      alt="100 Dollar Bill"
                     />{" "}
                     {details.hundred}
                   </li>
@@ -52,6 +53,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={BillFifty}
                       alt="50's"
                       className="inline-block align-middle w-12 h-12"
+                      alt="50 Dollar Bill"
                     />{" "}
                     {details.fifty}
                   </li>
@@ -60,6 +62,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={BillTwenty}
                       alt="20's"
                       className="inline-block align-middle w-12 h-12"
+                      alt="20 Dollar Bill"
                     />{" "}
                     {details.twenty}
                   </li>
@@ -68,6 +71,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={BillTen}
                       alt="10's"
                       className="inline-block align-middle w-12 h-12"
+                      alt="10 Dollar Bill"
                     />{" "}
                     {details.ten}
                   </li>
@@ -76,6 +80,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={BillFive}
                       alt="5's"
                       className="inline-block align-middle w-12 h-12"
+                      alt="5 Dollar Bill"
                     />{" "}
                     {details.five}
                   </li>
@@ -84,6 +89,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={BillOne}
                       alt="1's"
                       className="inline-block align-middle w-12 h-12"
+                      alt="1 Dollar Bill"
                     />{" "}
                     {details.one}
                   </li>
@@ -94,6 +100,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={RollQuarter}
                       alt="Quarter Rolls"
                       className="inline-block align-middle w-12 h-12"
+                      alt="Quarter Roll"
                     />{" "}
                     {details.quarterRoll}
                   </li>
@@ -102,6 +109,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={RollDime}
                       alt="Dime Rolls"
                       className="inline-block align-middle w-12 h-12"
+                      alt="Dime Roll"
                     />{" "}
                     {details.dimeRoll}
                   </li>
@@ -110,6 +118,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={RollNickel}
                       alt="Nickel Rolls"
                       className="inline-block align-middle w-12 h-12"
+                      alt="Nickel Roll"
                     />{" "}
                     {details.nickelRoll}
                   </li>
@@ -118,6 +127,7 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                       src={RollPenny}
                       alt="Penny Rolls"
                       className="inline-block align-middle w-12 h-12"
+                      alt="Penny Roll"
                     />{" "}
                     {details.pennyRoll}
                   </li>
