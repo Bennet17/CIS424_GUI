@@ -308,7 +308,7 @@ const SafeAuditPage = () => {
         })
       .then((response) => {
         // Check if the count was successful
-        if (response.status == 200)
+        if (response.status === 200)
           toast.success("Safe count submitted successfully.");
         else toast.error("Failed to submit safe count.");
       })
@@ -546,6 +546,7 @@ const SafeAuditPage = () => {
                         <img
                           src={BillHundred}
                           className="inline-block align-middle w-12 h-12"
+                          alt="100 Dollar Bill"
                         />
                       </label>
                     </td>
@@ -596,6 +597,7 @@ const SafeAuditPage = () => {
                         <img
                           src={RollQuarter}
                           className="inline-block align-middle w-12 h-12"
+                          alt="Quarter Roll"
                         />
                       </label>
                     </td>
@@ -646,6 +648,7 @@ const SafeAuditPage = () => {
                         <img
                           src={CoinQuarter}
                           className="inline-block align-middle w-12 h-12"
+                          alt="Quarter Coin"
                         />
                       </label>
                     </td>
@@ -699,6 +702,7 @@ const SafeAuditPage = () => {
                         <img
                           src={BillFifty}
                           className="inline-block align-middle w-12 h-12"
+                          alt="50 Dollar Bill"
                         />
                       </label>
                     </td>
@@ -749,6 +753,7 @@ const SafeAuditPage = () => {
                         <img
                           src={RollDime}
                           className="inline-block align-middle w-12 h-12"
+                          alt="Dime Roll"
                         />
                       </label>
                     </td>
@@ -799,6 +804,7 @@ const SafeAuditPage = () => {
                         <img
                           src={CoinDime}
                           className="inline-block align-middle w-12 h-12"
+                          alt="Dime Coin"
                         />
                       </label>
                     </td>
@@ -852,6 +858,7 @@ const SafeAuditPage = () => {
                         <img
                           src={BillTwenty}
                           className="inline-block align-middle w-12 h-12"
+                          alt="20 Dollar Bill"
                         />
                       </label>
                     </td>
@@ -902,6 +909,7 @@ const SafeAuditPage = () => {
                         <img
                           src={RollNickel}
                           className="inline-block align-middle w-12 h-12"
+                          alt="Nickel Roll"
                         />
                       </label>
                     </td>
@@ -952,6 +960,7 @@ const SafeAuditPage = () => {
                         <img
                           src={CoinNickel}
                           className="inline-block align-middle w-12 h-12"
+                          alt="Nickel Coin"
                         />
                       </label>
                     </td>
@@ -1005,6 +1014,7 @@ const SafeAuditPage = () => {
                         <img
                           src={BillTen}
                           className="inline-block align-middle w-12 h-12"
+                          alt="10 Dollar Bill"
                         />
                       </label>
                     </td>
@@ -1055,6 +1065,7 @@ const SafeAuditPage = () => {
                         <img
                           src={RollPenny}
                           className="inline-block align-middle w-12 h-12"
+                          alt="Penny Roll"
                         />
                       </label>
                     </td>
@@ -1105,6 +1116,7 @@ const SafeAuditPage = () => {
                         <img
                           src={CoinPenny}
                           className="inline-block align-middle w-12 h-12"
+                          alt="Penny Coin"
                         />
                       </label>
                     </td>
@@ -1158,6 +1170,7 @@ const SafeAuditPage = () => {
                         <img
                           src={BillFive}
                           className="inline-block align-middle w-12 h-12"
+                          alt="5 Dollar Bill"
                         />
                       </label>
                     </td>
@@ -1203,13 +1216,14 @@ const SafeAuditPage = () => {
                       />
                     </td>
                     {/* Extras Column */}
-                    {showExtraChange == true && (
+                    {showExtraChange === true && (
                       <>
                         <td>
                           <label htmlFor="oneCoin_input">
                             <img
                               src={CoinOne}
                               className="inline-block align-middle w-12 h-12"
+                              alt="Dollar Coin"
                             />
                           </label>
                         </td>
@@ -1260,6 +1274,7 @@ const SafeAuditPage = () => {
                             <img
                               src={BillTwo}
                               className="inline-block align-middle w-12 h-12"
+                              alt="2 Dollar Bill"
                             />
                           </label>
                         </td>
@@ -1315,6 +1330,7 @@ const SafeAuditPage = () => {
                         <img
                           src={BillOne}
                           className="inline-block align-middle w-12 h-12"
+                          alt="1 Dollar Bill"
                         />
                       </label>
                     </td>
@@ -1360,13 +1376,14 @@ const SafeAuditPage = () => {
                       />
                     </td>
                     {/* Extras Column */}
-                    {showExtraChange == true && (
+                    {showExtraChange === true && (
                       <>
                         <td>
                           <label htmlFor="halfDollar_input">
                             <img
                               src={CoinHalf}
                               className="inline-block align-middle w-12 h-12"
+                              alt="Half Dollar Coin"
                             />
                           </label>
                         </td>

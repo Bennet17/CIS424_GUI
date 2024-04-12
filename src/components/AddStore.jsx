@@ -16,13 +16,13 @@ import BillFive from "../usd_icons/bills/BillFive.svg";
 import BillOne from "../usd_icons/bills/BillOne.svg";
 import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
-import CoinOne from "../usd_icons/coins/CoinOne.svg";
-import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
-import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
-import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
-import CoinDime from "../usd_icons/coins/CoinDime.svg";
-import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
-import CoinPenny from "../usd_icons/coins/CoinPenny.svg";
+// import CoinOne from "../usd_icons/coins/CoinOne.svg";
+// import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
+// import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
+// import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
+// import CoinDime from "../usd_icons/coins/CoinDime.svg";
+// import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
+// import CoinPenny from "../usd_icons/coins/CoinPenny.svg";
 
 import RollQuarter from "../usd_icons/rolls/RollQuarter.svg";
 import RollDime from "../usd_icons/rolls/RollDime.svg";
@@ -147,6 +147,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillHundred}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Hundred Dollar Bill"
                     />
                   </label>
                   <input
@@ -167,6 +168,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillFifty}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Fifty Dollar Bill"
                     />
                   </label>
                   <input
@@ -187,6 +189,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillTwenty}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Twenty Dollar Bill"
                     />
                   </label>
                   <input
@@ -212,6 +215,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillHundred}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Hundred Dollar Bill"
                     />
                   </label>
                   <input
@@ -232,6 +236,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillFifty}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Fifty Dollar Bill"
                     />
                   </label>
                   <input
@@ -252,6 +257,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillTwenty}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Twenty Dollar Bill"
                     />
                   </label>
                   <input
@@ -272,6 +278,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillTen}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Ten Dollar Bill"
                     />
                   </label>
                   <input
@@ -292,6 +299,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillFive}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Five Dollar Bill"
                     />
                   </label>
                   <input
@@ -312,6 +320,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillTwo}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Two Dollar Bill"
                     />
                   </label>
                   <input
@@ -332,6 +341,7 @@ const AddStoreForm = () => {
                     <img
                       src={BillOne}
                       className="inline-block align-middle w-12 h-12"
+                      alt="One Dollar Bill"
                     />
                   </label>
                   <input
@@ -352,6 +362,7 @@ const AddStoreForm = () => {
                     <img
                       src={RollQuarter}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Quarter Roll"
                     />
                   </label>
                   <input
@@ -372,6 +383,7 @@ const AddStoreForm = () => {
                     <img
                       src={RollNickel}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Nickel Roll"
                     />
                   </label>
                   <input
@@ -392,6 +404,7 @@ const AddStoreForm = () => {
                     <img
                       src={RollDime}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Dime Roll"
                     />
                   </label>
                   <input
@@ -412,6 +425,7 @@ const AddStoreForm = () => {
                     <img
                       src={RollPenny}
                       className="inline-block align-middle w-12 h-12"
+                      alt="Penny Roll"
                     />
                   </label>
                   <input
