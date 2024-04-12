@@ -5,13 +5,13 @@ import HorizontalNav from "./HorizontalNav.js";
 import { useAuth } from "../AuthProvider.js";
 
 const HomePage = () => {
-  const auth = useAuth();
-
   return (
     <div className="flex min-h-screen min-w-fit bg-custom-accent">
+      {/* Left-side vertical site navigation menu */}
       <SideBar currentPage={0} />
 
       <div className="flex flex-col w-full">
+        {/* Top horizontal status & location navigation header */}
         <div>
           <HorizontalNav />
         </div>

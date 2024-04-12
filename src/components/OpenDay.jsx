@@ -160,8 +160,8 @@ const OpenDayPage = () => {
   //keep values clamped between a minimum and maxium value
   function clamp(value, min = 0, max = 100000) {
     //first check if value is a number
-    if (isNaN(Number(value))){
-        return min;
+    if (isNaN(Number(value))) {
+      return min;
     }
 
     //if all is ok, do regular clamping
@@ -240,11 +240,12 @@ const OpenDayPage = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`, 
+          process.env.REACT_APP_REQUEST_URL +
+            `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -266,11 +267,12 @@ const OpenDayPage = () => {
     if (poss.length > 0 && poss[currentPosIndex]) {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`,
+          process.env.REACT_APP_REQUEST_URL +
+            `GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`,
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -343,8 +345,8 @@ const OpenDayPage = () => {
           },
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -505,6 +507,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillHundred}
+                        alt="100's"
                         className="inline-block align-middle w-12 h-12"
                         alt="100 Dollar Bill"
                       />
@@ -534,6 +537,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollQuarter}
+                        alt="Quarter Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Quarter Roll"
                       />
@@ -567,6 +571,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillFifty}
+                        alt="50's"
                         className="inline-block align-middle w-12 h-12"
                         alt="50 Dollar Bill"
                       />
@@ -596,6 +601,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollDime}
+                        alt="Dime Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Dime Roll"
                       />
@@ -627,6 +633,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillTwenty}
+                        alt="20's"
                         className="inline-block align-middle w-12 h-12"
                         alt="20 Dollar Bill"
                       />
@@ -656,6 +663,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollNickel}
+                        alt="Nickel Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Nickel Roll"
                       />
@@ -689,6 +697,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillTen}
+                        alt="10's"
                         className="inline-block align-middle w-12 h-12"
                         alt="10 Dollar Bill"
                       />
@@ -718,6 +727,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollPenny}
+                        alt="Penny Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Penny Roll"
                       />
@@ -751,6 +761,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillFive}
+                        alt="5's"
                         className="inline-block align-middle w-12 h-12"
                         alt="5 Dollar Bill"
                       />
@@ -780,6 +791,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinQuarter}
+                        alt="Quarters"
                         className="inline-block align-middle w-12 h-12"
                         alt="Quarter Coin"
                       />
@@ -811,6 +823,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillOne}
+                        alt="1's"
                         className="inline-block align-middle w-12 h-12"
                         alt="1 Dollar Bill"
                       />
@@ -840,6 +853,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinDime}
+                        alt="Dimes"
                         className="inline-block align-middle w-12 h-12"
                         alt="Dime Coin"
                       />
@@ -884,6 +898,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinNickel}
+                        alt="Nickels"
                         className="inline-block align-middle w-12 h-12"
                         alt="Nickel Coin"
                       />
@@ -917,6 +932,7 @@ const OpenDayPage = () => {
                         <label>
                           <img
                             src={CoinOne}
+                            alt="Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
                             alt="1 Dollar Coin"
                           />
@@ -956,6 +972,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinPenny}
+                        alt="Pennies"
                         className="inline-block align-middle w-12 h-12"
                         alt="Penny Coin"
                       />
@@ -988,6 +1005,7 @@ const OpenDayPage = () => {
                       <label>
                         <img
                           src={BillTwo}
+                          alt="2's"
                           className="inline-block align-middle w-12 h-12"
                           alt="2 Dollar Bill"
                         />
@@ -1021,6 +1039,7 @@ const OpenDayPage = () => {
                       <label>
                         <img
                           src={CoinHalf}
+                          alt="Half Dollar Coins"
                           className="inline-block align-middle w-12 h-12"
                           alt="Half Dollar Coin"
                         />

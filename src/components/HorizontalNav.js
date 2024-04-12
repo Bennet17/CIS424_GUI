@@ -1,28 +1,11 @@
 import { Fragment, useState, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider.js";
 import routes from "../routes.js";
-import {
-  Store,
-  Eye,
-  MapPin,
-  MapPinned,
-  ScanEye,
-  Scan,
-  Shirt,
-} from "lucide-react";
+import { Store, Eye, MapPinned, Shirt } from "lucide-react";
 import axios from "axios";
-
-/*
-const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-]
-*/
 
 export default function HorizotalNav() {
   function classNames(...classes) {
@@ -32,7 +15,6 @@ export default function HorizotalNav() {
   const auth = useAuth();
 
   const [storeMenuOn, setStoreMenu] = useState(false);
-  const [allStores, setAllStores] = useState([]);
   const [userAssociatedStores, setUserAssociatedStores] = useState([]);
 
   const handleSwitchviewClick = (storeID, storeName) => {
@@ -50,8 +32,6 @@ export default function HorizotalNav() {
         },
       })
       .then((response) => {
-        setAllStores(response.data); // Set the fetched stores in the state
-
         // Extract user's store IDs from the CSV stored in the cookie
         const userStoreIDs = auth.cookie.user.storeID_CSV;
 
@@ -59,13 +39,6 @@ export default function HorizotalNav() {
         let userStores = response.data.filter((store) =>
           userStoreIDs.includes(store.ID.toString())
         );
-
-        // Ensure employee type can only see their working location
-        if (auth.cookie.user.position === "Employee") {
-          userStores = response.data.filter(
-            (store) => store.ID === auth.cookie.user.viewingStoreID
-          );
-        }
 
         // If there is not a store location in cookies yet, put it there
         if (!auth.cookie.user.viewingStoreLocation) {
@@ -148,7 +121,7 @@ export default function HorizotalNav() {
                         </Menu.Item>
                       }
                       <hr className="mx-3 border-gray-300 " />
-
+                      {/* User stores list */}
                       <div className="max-h-80 overflow-y-auto">
                         {userAssociatedStores.map((store) => (
                           <Menu.Item key={store.ID}>
@@ -181,6 +154,7 @@ export default function HorizotalNav() {
                       {auth.cookie.user.position === "Owner" && (
                         <hr className="mx-3 border-gray-300 " />
                       )}
+                      {/* Store management button */}
                       {auth.cookie.user.position === "Owner" && (
                         <Menu.Item key={"manage"}>
                           {({ active }) => (
