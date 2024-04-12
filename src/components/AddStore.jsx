@@ -63,36 +63,37 @@ const AddStoreForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault(); //prevent default refresh until after request is done
 
-    axios.post(process.env.REACT_APP_REQUEST_URL+`CreateStore`,
-      {
-        location: location,
-        hundredRegisterMax: hundredRegisterMax,
-        fiftyRegisterMax: fiftyRegisterMax,
-        twentyRegisterMax: twentyRegisterMax,
-        hundredMax: hundredMax,
-        fiftyMax: fiftyMax,
-        twentyMax: twentyMax,
-        tenMax: tenMax,
-        fiveMax: fiveMax,
-        twoMax: twoMax,
-        oneMax: oneMax,
-        quarterRollMax: quarterRollMax,
-        dimeRollMax: dimeRollMax,
-        nickelRollMax: nickelRollMax,
-        pennyRollMax: pennyRollMax,
-      },
-      {
-        headers: {
-          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
+    axios
+      .post(
+        process.env.REACT_APP_REQUEST_URL + `CreateStore`,
+        {
+          location: location,
+          hundredRegisterMax: hundredRegisterMax,
+          fiftyRegisterMax: fiftyRegisterMax,
+          twentyRegisterMax: twentyRegisterMax,
+          hundredMax: hundredMax,
+          fiftyMax: fiftyMax,
+          twentyMax: twentyMax,
+          tenMax: tenMax,
+          fiveMax: fiveMax,
+          twoMax: twoMax,
+          oneMax: oneMax,
+          quarterRollMax: quarterRollMax,
+          dimeRollMax: dimeRollMax,
+          nickelRollMax: nickelRollMax,
+          pennyRollMax: pennyRollMax,
+        },
+        {
+          headers: {
+            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+          },
         }
-      }
-    )
-    .then((response) => {
-      //successful post
-      window.location.reload(); // This will refresh the page
-    })
-    .catch((error) => {
-    });
+      )
+      .then((response) => {
+        //successful post
+        window.location.reload(); // This will refresh the page
+      })
+      .catch((error) => {});
   };
 
   return (
@@ -146,6 +147,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillHundred}
+                      alt="100's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -166,6 +168,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillFifty}
+                      alt="50's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -186,6 +189,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillTwenty}
+                      alt="20's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -211,6 +215,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillHundred}
+                      alt="100's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -231,6 +236,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillFifty}
+                      alt="50's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -251,6 +257,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillTwenty}
+                      alt="20's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -271,6 +278,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillTen}
+                      alt="10's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -291,6 +299,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillFive}
+                      alt="5's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -311,6 +320,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillTwo}
+                      alt="2's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -331,6 +341,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillOne}
+                      alt="1's"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -351,6 +362,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={RollQuarter}
+                      alt="Quarter Rolls"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -371,6 +383,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={RollNickel}
+                      alt="Nickel Rolls"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -391,6 +404,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={RollDime}
+                      alt="Dime Rolls"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>
@@ -411,6 +425,7 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={RollPenny}
+                      alt="Penny Rolls"
                       className="inline-block align-middle w-12 h-12"
                     />
                   </label>

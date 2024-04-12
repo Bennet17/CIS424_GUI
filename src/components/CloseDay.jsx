@@ -168,8 +168,8 @@ const CloseDayPage = () => {
   //keep values clamped between a minimum and maxium value
   function clamp(value, min = 0, max = 100000) {
     //first check if value is a number
-    if (isNaN(Number(value))){
-        return min;
+    if (isNaN(Number(value))) {
+      return min;
     }
 
     //if all is ok, do regular clamping
@@ -248,11 +248,12 @@ const CloseDayPage = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
+          process.env.REACT_APP_REQUEST_URL +
+            `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -282,11 +283,12 @@ const CloseDayPage = () => {
 
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`,
+          process.env.REACT_APP_REQUEST_URL +
+            `GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`,
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -328,11 +330,12 @@ const CloseDayPage = () => {
     event.preventDefault();
 
     const thresholdsResponse = await axios.get(
-      process.env.REACT_APP_REQUEST_URL + `ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`,
+      process.env.REACT_APP_REQUEST_URL +
+        `ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`,
       {
         headers: {
-          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-        }
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+        },
       }
     );
     const thresholds = thresholdsResponse.data;
@@ -472,15 +475,17 @@ const CloseDayPage = () => {
             },
             {
               headers: {
-                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-              }
+                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+              },
             }
           )
           .then((response) => {
             if (response.status === 200) {
               //close POS
               setPostSuccess(true);
-              toast.success(poss[currentPosIndex].name + " closed successfully!");
+              toast.success(
+                poss[currentPosIndex].name + " closed successfully!"
+              );
             } else {
               setPostSuccess(false);
               toast.error(poss[currentPosIndex].name + " failed to close!");
@@ -548,8 +553,8 @@ const CloseDayPage = () => {
             },
             {
               headers: {
-                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-              }
+                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+              },
             }
           )
           .then((response) => {
@@ -557,7 +562,9 @@ const CloseDayPage = () => {
               //close POS
               setPostSuccess(true);
               setPosHasLoaded(false);
-              toast.success(poss[currentPosIndex].name + " closed successfully!");
+              toast.success(
+                poss[currentPosIndex].name + " closed successfully!"
+              );
             } else {
               setPostSuccess(false);
               toast.error(poss[currentPosIndex].name + " failed to close!");
@@ -583,7 +590,7 @@ const CloseDayPage = () => {
           });
         }
       }
-    }else{
+    } else {
       //prevent users from opening an already-opened pos
       toast.error(poss[currentPosIndex].name + " is already closed!");
       setShowConfirm(false);
@@ -784,6 +791,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillHundred}
+                        alt="100's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -811,6 +819,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollQuarter}
+                        alt="Quarter Rolls"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -842,6 +851,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillFifty}
+                        alt="50's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -869,6 +879,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollDime}
+                        alt="Dime Rolls"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -898,6 +909,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillTwenty}
+                        alt="20's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -925,6 +937,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollNickel}
+                        alt="Nickel Rolls"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -956,6 +969,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillTen}
+                        alt="10's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -983,6 +997,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollPenny}
+                        alt="Penny Rolls"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1014,6 +1029,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillFive}
+                        alt="5's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1041,6 +1057,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinQuarter}
+                        alt="Quarters"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1070,6 +1087,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillOne}
+                        alt="1's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1097,6 +1115,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinDime}
+                        alt="Dimes"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1139,6 +1158,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinNickel}
+                        alt="Nickels"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1170,6 +1190,7 @@ const CloseDayPage = () => {
                         <label>
                           <img
                             src={CoinOne}
+                            alt="Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
                           />
                         </label>
@@ -1207,6 +1228,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinPenny}
+                        alt="Pennies"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1237,6 +1259,7 @@ const CloseDayPage = () => {
                       <label>
                         <img
                           src={BillTwo}
+                          alt="2's"
                           className="inline-block align-middle w-12 h-12"
                         />
                       </label>
@@ -1268,6 +1291,7 @@ const CloseDayPage = () => {
                       <label>
                         <img
                           src={CoinHalf}
+                          alt="Half Dollar Coins"
                           className="inline-block align-middle w-12 h-12"
                         />
                       </label>

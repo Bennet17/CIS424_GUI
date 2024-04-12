@@ -88,11 +88,12 @@ const FundsTransferPage = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${formData.store}`,
+          process.env.REACT_APP_REQUEST_URL +
+            `ViewStoreObjects?storeID=${formData.store}`,
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -383,12 +384,7 @@ const FundsTransferPage = () => {
 
       // Generate the report message
       setReport(
-        await GenerateReport(
-          source,
-          destination,
-          fltAmount,
-          newCurrencyFields
-        )
+        await GenerateReport(source, destination, fltAmount, newCurrencyFields)
       );
 
       // Show the report message
@@ -430,12 +426,11 @@ const FundsTransferPage = () => {
       };
 
       // Submit the form data
-      const response = await axios.post(FundTransferURL, request, 
-        {
-          headers: {
-            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-          }
-        });
+      const response = await axios.post(FundTransferURL, request, {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+        },
+      });
 
       // Check if the transfer was successful
       if (response.data.response === "Fund Transfer created successfully.") {
@@ -606,7 +601,7 @@ const FundsTransferPage = () => {
                   </tbody>
                 </table>
               ),
-            }
+            },
           ]}
           size="small"
           stripedRows
@@ -660,7 +655,9 @@ const FundsTransferPage = () => {
                         onChange={HandleChange}
                       >
                         <option value="">&lt;Please select a source&gt;</option>
-                        {registerStatus === "" && <option value="BANK">BANK</option>}
+                        {registerStatus === "" && (
+                          <option value="BANK">BANK</option>
+                        )}
                         {arrSources.map((register, index) => {
                           return (
                             <option key={register.id} value={register.name}>
@@ -690,7 +687,9 @@ const FundsTransferPage = () => {
                         <option value="">
                           &lt;Please select a destination&gt;
                         </option>
-                        {registerStatus === "" && <option value="BANK">BANK</option>}
+                        {registerStatus === "" && (
+                          <option value="BANK">BANK</option>
+                        )}
                         {arrDestinations.map((register, index) => {
                           return (
                             <option key={register.id} value={register.name}>
@@ -757,6 +756,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="hundred_input">
                       <img
                         src={BillHundred}
+                        alt="100's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -788,6 +788,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="quarterRoll_input">
                       <img
                         src={RollQuarter}
+                        alt="Quarter Rolls"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -819,6 +820,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="quarter_input">
                       <img
                         src={CoinQuarter}
+                        alt="Quarters"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -852,6 +854,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="fifty_input">
                       <img
                         src={BillFifty}
+                        alt="50's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -883,6 +886,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="dimeRoll_input">
                       <img
                         src={RollDime}
+                        alt="Dime Rolls"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -914,6 +918,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="dime_input">
                       <img
                         src={CoinDime}
+                        alt="Dimes"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -947,6 +952,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="twenty_input">
                       <img
                         src={BillTwenty}
+                        alt="20's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -978,6 +984,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="nickelRoll_input">
                       <img
                         src={RollNickel}
+                        alt="Nickel Rolls"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1009,6 +1016,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="nickel_input">
                       <img
                         src={CoinNickel}
+                        alt="Nickels"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1042,6 +1050,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="ten_input">
                       <img
                         src={BillTen}
+                        alt="10's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1073,6 +1082,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="pennyRoll_input">
                       <img
                         src={RollPenny}
+                        alt="Penny Rolls"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1104,6 +1114,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="penny_input">
                       <img
                         src={CoinPenny}
+                        alt="Pennies"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1137,6 +1148,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="five_input">
                       <img
                         src={BillFive}
+                        alt="5's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1170,6 +1182,7 @@ const FundsTransferPage = () => {
                         <label htmlFor="oneCoin_input">
                           <img
                             src={CoinOne}
+                            alt="Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
                           />
                         </label>
@@ -1200,6 +1213,7 @@ const FundsTransferPage = () => {
                         <label htmlFor="">
                           <img
                             src={BillTwo}
+                            alt="2's"
                             className="inline-block align-middle w-12 h-12"
                           />
                         </label>
@@ -1235,6 +1249,7 @@ const FundsTransferPage = () => {
                     <label htmlFor="one_input">
                       <img
                         src={BillOne}
+                        alt="1's"
                         className="inline-block align-middle w-12 h-12"
                       />
                     </label>
@@ -1268,6 +1283,7 @@ const FundsTransferPage = () => {
                         <label htmlFor="halfDollar_input">
                           <img
                             src={CoinHalf}
+                            alt="Half Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
                           />
                         </label>
