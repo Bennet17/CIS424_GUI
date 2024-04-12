@@ -43,20 +43,20 @@ const OSBarChart = () => {
       startDate.setDate(endDate.getDate() - 14); // Days shown in chart, should be a constant but who cares
     } else {
       startDate.setDate(1);
-      //console.log(formatDate(startDate));
     }
 
-    const url = process.env.REACT_APP_REQUEST_URL + `GeneralVariance?storeID=${
-      auth.cookie.user.viewingStoreID
-    }&startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`;
+    const url =
+      process.env.REACT_APP_REQUEST_URL +
+      `GeneralVariance?storeID=${
+        auth.cookie.user.viewingStoreID
+      }&startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`;
 
     axios
-      .get(url,
-        {
-          headers: {
-            [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-          }
-        })
+      .get(url, {
+        headers: {
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+        },
+      })
       .then((response) => {
         const data = response.data; // Response data is array of objects with amountExpected, total, Variance, and Date
 
@@ -82,9 +82,13 @@ const OSBarChart = () => {
           categories: [
             ...data.map((weekday) => {
               const date = new Date(weekday.date); // Get date from data
+
+              // If you want days of week in category labeling:
+              // `````
               // const dayOfWeek = date.toLocaleDateString("en-US", {
               //   weekday: "short",
               // }); // Get the short day name (e.g., "Mon")
+
               const formattedDate = date.toLocaleDateString("en-US", {
                 month: "numeric",
                 day: "2-digit",
@@ -112,6 +116,7 @@ const OSBarChart = () => {
       toolbar: {
         show: true, // Display the toolbar with the hamburger menu
         export: {
+          // How the downloaded chart files will be named
           svg: {
             filename:
               chartVersion === 0
@@ -188,7 +193,7 @@ const OSBarChart = () => {
         colors: ["#616161"],
       },
       formatter: function (value) {
-        // This wizardry shows no datalabel if it is 0, () if it is negative, and normal otherwise (all to 2 decimal places)
+        // This wizardry shows () if it is negative, and normal otherwise (all to 2 decimal places)
         return value < 0 ? `(${Math.ceil(Math.abs(value))})` : Math.ceil(value);
       },
     },
@@ -271,6 +276,7 @@ const OSBarChart = () => {
       <div className=" w-full">
         <Chart options={options} series={series} type="bar" height={350} />
 
+        {/* Append to bottom of chart for toggling mode */}
         {chartVersion === 0 && (
           <div className="flex flex-row justify-end items-center">
             <p className="mr-2 text-xs font-bold text-gray-500 ">
