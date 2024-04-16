@@ -66,11 +66,13 @@ function SelectStore() {
       });
   }, []); // Run only once on component mount
 
+  // Maintain record of the store selected
   function handleStoreSelection(storeID, storeName) {
     setSelectedStoreID(storeID);
     setSelectedStoreName(storeName);
   }
 
+  // Change store-relevant info in the cookie and proceed to homepage
   function handleSubmit(event) {
     event.preventDefault();
 

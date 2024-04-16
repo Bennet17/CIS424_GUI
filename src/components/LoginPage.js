@@ -146,7 +146,7 @@ function LoginPage() {
       {isLoading && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <ProgressSpinner 
-              style={{ width: '50px', height: '50px' }}
+              style={{ width: '40px', height: '40px' }}
               className="custom-spinner"
               strokeWidth="4"
               animationDuration=".75s"

@@ -45,7 +45,6 @@ const CloseDayPage = () => {
   const [showExtraChange, setShowExtraChange] = useState(false);
   const [creditExpected, setCreditExpected] = useState(0);
   const [creditActual, setCreditActual] = useState(0);
-  const [showExtraChangeTxt, setShowExtraChangeTxt] = useState("Show Extras ▼");
   //let currentPosIndex = -1;
 
   // TM: Title will change with entity selection
@@ -141,14 +140,14 @@ const CloseDayPage = () => {
     "border-2",
     "bg-white",
     {
-      "bg-yellow-200": CurrentIsPastThreshold() == 1,
-      "text-yellow-600": CurrentIsPastThreshold() == 1,
+      "bg-yellow-200": CurrentIsPastThreshold() === 1,
+      "text-yellow-600": CurrentIsPastThreshold() === 1,
 
-      "bg-rose-300": CurrentIsPastThreshold() == -1,
-      "text-rose-700": CurrentIsPastThreshold() == -1,
+      "bg-rose-200": CurrentIsPastThreshold() === -1,
+      "text-rose-700": CurrentIsPastThreshold() === -1,
 
-      "bg-green-300": CurrentIsPastThreshold() == 0,
-      "text-green-700": CurrentIsPastThreshold() == 0,
+      "bg-green-200": CurrentIsPastThreshold() === 0,
+      "text-green-700": CurrentIsPastThreshold() === 0,
     }
   );
 
@@ -168,8 +167,8 @@ const CloseDayPage = () => {
   //keep values clamped between a minimum and maxium value
   function clamp(value, min = 0, max = 100000) {
     //first check if value is a number
-    if (isNaN(Number(value))){
-        return min;
+    if (isNaN(Number(value))) {
+      return min;
     }
 
     //if all is ok, do regular clamping
@@ -200,11 +199,6 @@ const CloseDayPage = () => {
   //(also change arrow text thing)
   function ToggleExtraChange() {
     setShowExtraChange(!showExtraChange);
-    if (!showExtraChange) {
-      setShowExtraChangeTxt("Hide Extras ▲");
-    } else {
-      setShowExtraChangeTxt("Show Extras ▼");
-    }
   }
 
   //clears all the inpout fields to default values
@@ -248,11 +242,12 @@ const CloseDayPage = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
+          process.env.REACT_APP_REQUEST_URL +
+            `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -282,11 +277,12 @@ const CloseDayPage = () => {
 
       axios
         .get(
-          process.env.REACT_APP_HEADER + `GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`,
+          process.env.REACT_APP_REQUEST_URL +
+            `GetCloseCount?storeID=${auth.cookie.user.viewingStoreID}`,
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -328,11 +324,12 @@ const CloseDayPage = () => {
     event.preventDefault();
 
     const thresholdsResponse = await axios.get(
-      process.env.REACT_APP_REQUEST_URL + `ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`,
+      process.env.REACT_APP_REQUEST_URL +
+        `ViewStoreThresholds?storeID=${auth.cookie.user.viewingStoreID}`,
       {
         headers: {
-          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-        }
+          [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+        },
       }
     );
     const thresholds = thresholdsResponse.data;
@@ -472,15 +469,17 @@ const CloseDayPage = () => {
             },
             {
               headers: {
-                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-              }
+                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+              },
             }
           )
           .then((response) => {
             if (response.status === 200) {
               //close POS
               setPostSuccess(true);
-              toast.success(poss[currentPosIndex].name + " closed successfully!");
+              toast.success(
+                poss[currentPosIndex].name + " closed successfully!"
+              );
             } else {
               setPostSuccess(false);
               toast.error(poss[currentPosIndex].name + " failed to close!");
@@ -548,8 +547,8 @@ const CloseDayPage = () => {
             },
             {
               headers: {
-                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-              }
+                [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+              },
             }
           )
           .then((response) => {
@@ -557,7 +556,9 @@ const CloseDayPage = () => {
               //close POS
               setPostSuccess(true);
               setPosHasLoaded(false);
-              toast.success(poss[currentPosIndex].name + " closed successfully!");
+              toast.success(
+                poss[currentPosIndex].name + " closed successfully!"
+              );
             } else {
               setPostSuccess(false);
               toast.error(poss[currentPosIndex].name + " failed to close!");
@@ -583,7 +584,7 @@ const CloseDayPage = () => {
           });
         }
       }
-    }else{
+    } else {
       //prevent users from opening an already-opened pos
       toast.error(poss[currentPosIndex].name + " is already closed!");
       setShowConfirm(false);
@@ -766,7 +767,7 @@ const CloseDayPage = () => {
             className="mt-2"
             onKeyDown={PreventKeyDown}
             onSubmit={(e) =>
-              CurrentIsPastThreshold() == 0 ? Submit(e) : setShowConfirm(true)
+              CurrentIsPastThreshold() === 0 ? Submit(e) : setShowConfirm(true)
             }
           >
             <table>
@@ -784,7 +785,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillHundred}
+                        alt="100's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="100 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -811,7 +814,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollQuarter}
+                        alt="Quarter Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Roll of Quarters"
                       />
                     </label>
                   </td>
@@ -842,7 +847,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillFifty}
+                        alt="50's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="50 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -869,7 +876,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollDime}
+                        alt="Dime Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Roll of Dimes"
                       />
                     </label>
                   </td>
@@ -898,7 +907,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillTwenty}
+                        alt="20's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="20 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -925,7 +936,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollNickel}
+                        alt="Nickel Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Roll of Nickels"
                       />
                     </label>
                   </td>
@@ -956,7 +969,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillTen}
+                        alt="10's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="10 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -983,7 +998,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollPenny}
+                        alt="Penny Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Roll of Pennies"
                       />
                     </label>
                   </td>
@@ -1014,7 +1031,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillFive}
+                        alt="5's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="5 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -1041,7 +1060,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinQuarter}
+                        alt="Quarters"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Quarter Coin"
                       />
                     </label>
                   </td>
@@ -1070,7 +1091,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillOne}
+                        alt="1's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="1 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -1097,7 +1120,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinDime}
+                        alt="Dimes"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Dime Coin"
                       />
                     </label>
                   </td>
@@ -1122,7 +1147,7 @@ const CloseDayPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  {showExtraChange == true ? (
+                  {showExtraChange === true ? (
                     <>
                       <td className="text-2xl">Other</td>
                       <td></td>
@@ -1139,7 +1164,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinNickel}
+                        alt="Nickels"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Nickel Coin"
                       />
                     </label>
                   </td>
@@ -1164,13 +1191,15 @@ const CloseDayPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  {showExtraChange == true ? (
+                  {showExtraChange === true ? (
                     <>
                       <td>
                         <label>
                           <img
                             src={CoinOne}
+                            alt="Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
+                            alt="1 Dollar Coin"
                           />
                         </label>
                       </td>
@@ -1207,7 +1236,9 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinPenny}
+                        alt="Pennies"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Penny Coin"
                       />
                     </label>
                   </td>
@@ -1231,13 +1262,15 @@ const CloseDayPage = () => {
                     />
                   </td>
                 </tr>
-                {showExtraChange == true && (
+                {showExtraChange === true && (
                   <tr>
                     <td>
                       <label>
                         <img
                           src={BillTwo}
+                          alt="2's"
                           className="inline-block align-middle w-12 h-12"
+                          alt="2 Dollar Bill"
                         />
                       </label>
                     </td>
@@ -1262,13 +1295,15 @@ const CloseDayPage = () => {
                     </td>
                   </tr>
                 )}
-                {showExtraChange == true && (
+                {showExtraChange === true && (
                   <tr>
                     <td>
                       <label>
                         <img
                           src={CoinHalf}
+                          alt="Half Dollar Coins"
                           className="inline-block align-middle w-12 h-12"
+                          alt="Half Dollar Coin"
                         />
                       </label>
                     </td>
@@ -1295,39 +1330,6 @@ const CloseDayPage = () => {
                     </td>
                   </tr>
                 )}
-                {/* <tr>
-                  <td colSpan="3">
-                    <p
-                      className="rounded mt-1 py-1 cursor-pointer w-full mb-4 text-center border-2 border-gray-300 hover:border-button-blue-light bg-white text-xl"
-                      onClick={ToggleExtraChange}
-                    >
-                      {showExtraChangeTxt}
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td>
-                    <button
-                      type="submit"
-                      value="submit"
-                      min="0"
-                      className="mb-4 mt-1 flex w-full justify-center rounded-full border-2 border-button-blue bg-button-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-blue-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-blue"
-                    >
-                      Close
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      onClick={ClearAllFields}
-                      type="button"
-                      value="button"
-                      className="mb-4 mt-1 flex w-full justify-center rounded-full border-2 border-button-gray bg-button-gray px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-button-gray-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-gray"
-                    >
-                      Clear All Fields
-                    </button>
-                  </td>
-                </tr> */}
               </tbody>
             </table>
             <div className="mb-4">

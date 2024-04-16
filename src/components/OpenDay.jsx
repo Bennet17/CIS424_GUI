@@ -133,14 +133,14 @@ const OpenDayPage = () => {
     "border-2",
     "bg-white",
     {
-      "bg-yellow-200": CurrentIsPastThreshold() == 1,
-      "text-yellow-600": CurrentIsPastThreshold() == 1,
+      "bg-yellow-200": CurrentIsPastThreshold() === 1,
+      "text-yellow-600": CurrentIsPastThreshold() === 1,
 
-      "bg-rose-300": CurrentIsPastThreshold() == -1,
-      "text-rose-700": CurrentIsPastThreshold() == -1,
+      "bg-rose-200": CurrentIsPastThreshold() === -1,
+      "text-rose-700": CurrentIsPastThreshold() === -1,
 
-      "bg-green-300": CurrentIsPastThreshold() == 0,
-      "text-green-700": CurrentIsPastThreshold() == 0,
+      "bg-green-200": CurrentIsPastThreshold() === 0,
+      "text-green-700": CurrentIsPastThreshold() === 0,
     }
   );
 
@@ -160,8 +160,8 @@ const OpenDayPage = () => {
   //keep values clamped between a minimum and maxium value
   function clamp(value, min = 0, max = 100000) {
     //first check if value is a number
-    if (isNaN(Number(value))){
-        return min;
+    if (isNaN(Number(value))) {
+      return min;
     }
 
     //if all is ok, do regular clamping
@@ -240,11 +240,12 @@ const OpenDayPage = () => {
     function Initialize() {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
+          process.env.REACT_APP_REQUEST_URL +
+            `ViewStoreObjects?storeID=${auth.cookie.user.viewingStoreID}`,
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -266,11 +267,12 @@ const OpenDayPage = () => {
     if (poss.length > 0 && poss[currentPosIndex]) {
       axios
         .get(
-          process.env.REACT_APP_REQUEST_URL + `GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`,
+          process.env.REACT_APP_REQUEST_URL +
+            `GetOpenCount?storeID=${auth.cookie.user.viewingStoreID}&registerID=${poss[currentPosIndex].regID}`,
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
@@ -343,12 +345,12 @@ const OpenDayPage = () => {
           },
           {
             headers: {
-              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
-            }
+              [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY,
+            },
           }
         )
         .then((response) => {
-          if (response.status == 200) {
+          if (response.status === 200) {
             //open POS
             SetPostSuccess(true);
             SetPosHasLoaded(false);
@@ -487,7 +489,7 @@ const OpenDayPage = () => {
             className="mt-2"
             onKeyDown={PreventKeyDown}
             onSubmit={(e) =>
-              CurrentIsPastThreshold() == 0 ? Submit(e) : setShowConfirm(true)
+              CurrentIsPastThreshold() === 0 ? Submit(e) : setShowConfirm(true)
             }
           >
             <table>
@@ -505,7 +507,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillHundred}
+                        alt="100's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="100 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -533,7 +537,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollQuarter}
+                        alt="Quarter Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Quarter Roll"
                       />
                     </label>
                   </td>
@@ -565,7 +571,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillFifty}
+                        alt="50's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="50 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -593,7 +601,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollDime}
+                        alt="Dime Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Dime Roll"
                       />
                     </label>
                   </td>
@@ -623,7 +633,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillTwenty}
+                        alt="20's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="20 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -651,7 +663,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollNickel}
+                        alt="Nickel Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Nickel Roll"
                       />
                     </label>
                   </td>
@@ -683,7 +697,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillTen}
+                        alt="10's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="10 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -711,7 +727,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollPenny}
+                        alt="Penny Rolls"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Penny Roll"
                       />
                     </label>
                   </td>
@@ -743,7 +761,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillFive}
+                        alt="5's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="5 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -771,7 +791,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinQuarter}
+                        alt="Quarters"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Quarter Coin"
                       />
                     </label>
                   </td>
@@ -801,7 +823,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillOne}
+                        alt="1's"
                         className="inline-block align-middle w-12 h-12"
+                        alt="1 Dollar Bill"
                       />
                     </label>
                   </td>
@@ -829,7 +853,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinDime}
+                        alt="Dimes"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Dime Coin"
                       />
                     </label>
                   </td>
@@ -855,7 +881,7 @@ const OpenDayPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  {showExtraChange == true ? (
+                  {showExtraChange === true ? (
                     <>
                       <td className="text-2xl">Other</td>
                       <td></td>
@@ -872,7 +898,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinNickel}
+                        alt="Nickels"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Nickel Coin"
                       />
                     </label>
                   </td>
@@ -898,13 +926,15 @@ const OpenDayPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  {showExtraChange == true ? (
+                  {showExtraChange === true ? (
                     <>
                       <td>
                         <label>
                           <img
                             src={CoinOne}
+                            alt="Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
+                            alt="1 Dollar Coin"
                           />
                         </label>
                       </td>
@@ -942,7 +972,9 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinPenny}
+                        alt="Pennies"
                         className="inline-block align-middle w-12 h-12"
+                        alt="Penny Coin"
                       />
                     </label>
                   </td>
@@ -967,13 +999,15 @@ const OpenDayPage = () => {
                     />
                   </td>
                 </tr>
-                {showExtraChange == true && (
+                {showExtraChange === true && (
                   <tr>
                     <td>
                       <label>
                         <img
                           src={BillTwo}
+                          alt="2's"
                           className="inline-block align-middle w-12 h-12"
+                          alt="2 Dollar Bill"
                         />
                       </label>
                     </td>
@@ -999,13 +1033,15 @@ const OpenDayPage = () => {
                     </td>
                   </tr>
                 )}
-                {showExtraChange == true && (
+                {showExtraChange === true && (
                   <tr>
                     <td>
                       <label>
                         <img
                           src={CoinHalf}
+                          alt="Half Dollar Coins"
                           className="inline-block align-middle w-12 h-12"
+                          alt="Half Dollar Coin"
                         />
                       </label>
                     </td>

@@ -126,7 +126,7 @@ const EditUser = (user) => {
     event.preventDefault(); //prevent default refresh until requests have been made
 
     //this pos is currently enabled. lets disable it
-    if (user.user.enabled == true) {
+    if (user.user.enabled === true) {
       if (user.user.position === "Owner" && numActiveOwners <= 1) {
         setResult("Cannot deactivate the only active owner.");
       }
@@ -144,7 +144,7 @@ const EditUser = (user) => {
           }
         )
           .then((response) => {
-            if (response.data.response == "Disabled") {
+            if (response.data.response === "Disabled") {
               toast.success("User deactivated");
               window.location.reload(); // This will refresh the page
             }
@@ -158,7 +158,7 @@ const EditUser = (user) => {
       }
     }
     //this user is disables, re-enable
-    if (user.user.enabled == false) {
+    if (user.user.enabled === false) {
       //this post request sends the userID to be enabled in the DB
       axios.post(
         process.env.REACT_APP_REQUEST_URL + 'EnableUser',
@@ -173,7 +173,7 @@ const EditUser = (user) => {
       )
         .then((response) => {
 
-          if (response.data.response == "Enabled") {
+          if (response.data.response === "Enabled") {
             toast.success("User Activated");
             window.location.reload(); // This will refresh the page
           } else {
@@ -309,7 +309,7 @@ const EditUser = (user) => {
                       />
                       <label htmlFor="Team Leader" className="mr-4">Team Leader</label>
                     </div>
-                    {auth.cookie.user.position == "Owner" && (
+                    {auth.cookie.user.position === "Owner" && (
                       <div>
                         <div className="flex items-center">
                           <input

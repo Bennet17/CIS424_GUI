@@ -128,7 +128,7 @@ const VarianceTable = () => {
 
         function GetRegisters() {
             axios.get(
-                process.env.REACT_APP_SERVER_URL + `ViewStoreObjects?storeID=${formData.store}`,
+                `${process.env.REACT_APP_REQUEST_URL}ViewStoreObjects?storeID=${formData.store}`,
                 {
                   headers: {
                     [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY
@@ -182,7 +182,7 @@ const VarianceTable = () => {
 
             // GET request to the Register Variance API
             axios.get(
-                process.env.REACT_APP_SERVER_URL + `RegisterVariance?storeID=${storeID}&registerID=${registerID}&startDate=${startDate}&endDate=${endDate}`,
+                `${process.env.REACT_APP_REQUEST_URL}RegisterVariance?registerID=${registerID}&storeID=${storeID}&startDate=${startDate}&endDate=${endDate}`,
                 {
                     headers: {
                         [process.env.REACT_APP_HEADER]: process.env.REACT_APP_API_KEY

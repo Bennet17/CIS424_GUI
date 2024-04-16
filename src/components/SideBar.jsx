@@ -13,11 +13,8 @@ import {
   ChevronRight,
   ChevronDown,
   KeyRound,
-  Vault,
   AlignHorizontalDistributeCenter,
   BookMarked,
-  DollarSign,
-  Landmark,
   Table,
   Lock,
   CreditCard,
@@ -45,6 +42,7 @@ const SideBar = (props) => {
   const USER_MANAGEMENT_PAGE_NAME = 8;
   const POS_MANAGEMENT_PAGE_NAME = 9;
 
+  // State of cash manager dropdown menu
   const [cashManagerOn, setCashManager] = useState(
     props.currentPage === SAFE_AUDIT_PAGE_NAME ||
       props.currentPage === VARIANCE_AUDIT_PAGE_NAME ||
@@ -52,6 +50,7 @@ const SideBar = (props) => {
       props.currentPage === DEPOSIT_HISTORY_PAGE_NAME
   );
 
+  // State of security dropdown menu
   const [securityOn, setSecurity] = useState(
     props.currentPage === USER_MANAGEMENT_PAGE_NAME ||
       props.currentPage === POS_MANAGEMENT_PAGE_NAME
@@ -102,6 +101,8 @@ const SideBar = (props) => {
         <ul className="flex-1 p-3">
           {/* TM: Would be otpimal to pass in children list items (for reusability) but I don't really want to. This will work just fine. */}
           <hr className="mb-3 border-gray-300" />
+
+          {/* Home page button */}
           <li
             onClick={toHome}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
@@ -115,6 +116,7 @@ const SideBar = (props) => {
             <span className="ml-3">Home</span>
           </li>
 
+          {/* Open Day page button */}
           <li
             onClick={toOpenDay}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
@@ -128,6 +130,7 @@ const SideBar = (props) => {
             <span className="ml-3">Open Day</span>
           </li>
 
+          {/* Close Day page button */}
           <li
             onClick={toCloseDay}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
@@ -141,6 +144,7 @@ const SideBar = (props) => {
             <span className="ml-3">Close Day</span>
           </li>
 
+          {/* Transfer Funds page button */}
           <li
             onClick={toTransferFunds}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
@@ -154,6 +158,7 @@ const SideBar = (props) => {
             <span className="ml-3">Transfer Funds</span>
           </li>
 
+          {/* Cash Manager dropdown menu button */}
           <li
             onClick={() => {
               if (
@@ -186,6 +191,7 @@ const SideBar = (props) => {
           </li>
 
           {cashManagerOn && <hr className="border-gray-300" />}
+          {/* Safe Audit page button */}
           {cashManagerOn && (
             <li
               onClick={toSafeAudit}
@@ -200,6 +206,7 @@ const SideBar = (props) => {
               <span className="ml-3">Safe Audit</span>
             </li>
           )}
+          {/* Variance Audit page button */}
           {cashManagerOn && (
             <li
               onClick={toVarianceAudit}
@@ -214,6 +221,7 @@ const SideBar = (props) => {
               <span className="ml-3">Variance Audit</span>
             </li>
           )}
+          {/* Variance Report page button */}
           {cashManagerOn && (
             <li
               onClick={toVarianceTable}
@@ -228,6 +236,7 @@ const SideBar = (props) => {
               <span className="ml-3">Variance Report</span>
             </li>
           )}
+          {/* Deposit History page button */}
           {cashManagerOn && (
             <li
               onClick={toDepositHistory}
@@ -244,6 +253,7 @@ const SideBar = (props) => {
           )}
           {cashManagerOn && <hr className="border-gray-300" />}
 
+          {/* Security dropdown menu button */}
           {auth.cookie.user.position !== "Team Leader" && (
             <li
               onClick={() => {
@@ -274,6 +284,7 @@ const SideBar = (props) => {
           )}
 
           {securityOn && <hr className="border-gray-300" />}
+          {/* User Management page button */}
           {securityOn && (
             <li
               onClick={toUserManagement}
@@ -288,6 +299,7 @@ const SideBar = (props) => {
               <span className="ml-3">User Management</span>
             </li>
           )}
+          {/* POS Management page button */}
           {securityOn && auth.cookie.user.position === "Owner" && (
             <li
               onClick={toPosManagement}
@@ -303,6 +315,7 @@ const SideBar = (props) => {
             </li>
           )}
           <hr className="my-3 border-gray-300" />
+          {/* Logout button */}
           <li
             onClick={signOut}
             className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer 
