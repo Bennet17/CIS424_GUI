@@ -367,6 +367,7 @@ const EditUser = (user) => {
                   rounded
                   icon="pi pi-times"
                   className="p-button-secondary p-button-raised"
+                  type='button'
                 />
                 <Button
                   type="submit"
