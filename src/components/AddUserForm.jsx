@@ -375,6 +375,7 @@ const AddUserForm = () => {
                   size="small"
                   icon="pi pi-times"
                   onClick={closeModal}
+                  type="button"
                 />
                 <Button
                   label="Add User"

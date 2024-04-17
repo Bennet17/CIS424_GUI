@@ -147,7 +147,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillHundred}
-                      alt="100's"
                       className="inline-block align-middle w-12 h-12"
                       alt="Hundred Dollar Bill"
                     />
@@ -169,7 +168,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillFifty}
-                      alt="50's"
                       className="inline-block align-middle w-12 h-12"
                       alt="Fifty Dollar Bill"
                     />
@@ -191,7 +189,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillTwenty}
-                      alt="20's"
                       className="inline-block align-middle w-12 h-12"
                       alt="Twenty Dollar Bill"
                     />
@@ -218,7 +215,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillHundred}
-                      alt="100's"
                       className="inline-block align-middle w-12 h-12"
                       alt="Hundred Dollar Bill"
                     />
@@ -240,7 +236,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillFifty}
-                      alt="50's"
                       className="inline-block align-middle w-12 h-12"
                       alt="Fifty Dollar Bill"
                     />
@@ -262,7 +257,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillTwenty}
-                      alt="20's"
                       className="inline-block align-middle w-12 h-12"
                       alt="Twenty Dollar Bill"
                     />
@@ -284,7 +278,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillTen}
-                      alt="10's"
                       className="inline-block align-middle w-12 h-12"
                       alt="Ten Dollar Bill"
                     />
@@ -306,7 +299,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillFive}
-                      alt="5's"
                       className="inline-block align-middle w-12 h-12"
                       alt="Five Dollar Bill"
                     />
@@ -328,7 +320,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillTwo}
-                      alt="2's"
                       className="inline-block align-middle w-12 h-12"
                       alt="Two Dollar Bill"
                     />
@@ -350,7 +341,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={BillOne}
-                      alt="1's"
                       className="inline-block align-middle w-12 h-12"
                       alt="One Dollar Bill"
                     />
@@ -372,7 +362,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={RollQuarter}
-                      alt="Quarter Rolls"
                       className="inline-block align-middle w-12 h-12"
                       alt="Quarter Roll"
                     />
@@ -394,7 +383,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={RollNickel}
-                      alt="Nickel Rolls"
                       className="inline-block align-middle w-12 h-12"
                       alt="Nickel Roll"
                     />
@@ -416,7 +404,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={RollDime}
-                      alt="Dime Rolls"
                       className="inline-block align-middle w-12 h-12"
                       alt="Dime Roll"
                     />
@@ -438,7 +425,6 @@ const AddStoreForm = () => {
                   >
                     <img
                       src={RollPenny}
-                      alt="Penny Rolls"
                       className="inline-block align-middle w-12 h-12"
                       alt="Penny Roll"
                     />
@@ -462,6 +448,7 @@ const AddStoreForm = () => {
                   rounded
                   icon="pi pi-times"
                   style={{ marginRight: "1rem" }}
+                  type="button"
                 />
                 <Button
                   label="Add Store"

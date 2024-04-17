@@ -60,12 +60,18 @@ function ForgotPassword() {
   function handleNewPasswordSubmit(event) {
     event.preventDefault(); //prevent refresh
     //handle new password post request
-    axios
-      .post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/UpdateUserPassword',
-        {
-          "username": username,
-          "password": newPassword
-        })
+    axios.post(
+      process.env.REACT_APP_REQUEST_URL+`UpdateUserPassword`,
+      {
+        "username": username,
+        "password": newPassword
+      },
+      {
+        headers: {
+          "API_Key": process.env.REACT_APP_API_KEY
+        }
+      }
+    )
       .then(response => {
         if (response.data.Message === 'Password updated successfully.') {
           setMessage('Password Updated!');
@@ -84,11 +90,17 @@ function ForgotPassword() {
   function handleUsernameSubmit(event) {
     event.preventDefault();
     setMessage('');
-    axios
-      .post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/GetQuestionByUsername',
-        {
-          "username": username
-        })
+    axios.post(
+      process.env.REACT_APP_REQUEST_URL+`GetQuestionByUsername`,
+      {
+        "username": username
+      },
+      {
+        headers: {
+          "API_Key": process.env.REACT_APP_API_KEY
+        }
+      }
+    )
       .then(response => {
 
         setSecurityQuestion(response.data.Question); //set the security quesiton variable to the the one returned by the request
@@ -116,12 +128,18 @@ function ForgotPassword() {
     event.preventDefault();
     setMessage('');
 
-    axios.post('https://cis424-rest-api.azurewebsites.net/SVSU_CIS424/AuthenticateQuestion', {
-
-      "username": username,
-      "answer": securityAnswer
-
-    })
+    axios.post(
+      process.env.REACT_APP_REQUEST_URL+`AuthenticateQuestion`,
+      {
+        "username": username,
+        "answer": securityAnswer
+      },
+      {
+        headers: {
+          "API_Key": process.env.REACT_APP_API_KEY
+        }
+      }
+    )
       .then(response => {
         //if the response isValid, the user is now validated and the next part of the conditional form will render
         if (response.data.IsValid == true) {
@@ -138,10 +156,26 @@ function ForgotPassword() {
       });
   }
 
+  function handleSubmit(event) {
+    event.preventDefault(); // Prevent default form submission
+  
+    // Check if the user is validated, then handle submission accordingly
+    if (userValidated) {
+      handleNewPasswordSubmit(event); // Call handleNewPasswordSubmit
+    } else if (!usernameFound) {
+      handleUsernameSubmit(event); // Call handleUsernameSubmit
+    } else {
+      handleAnswerSubmit(event); // Call handleAnswerSubmit
+    }
+  }
+  
+
+
+
   return (
     <div className="flex justify-center items-center min-h-screen min-w-fit bg-gray-200">
       <div className="w-full max-w-md">
-        <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <form  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 className="text-xl font-semibold mb-4">Forgot Password</h2>
           <h2 className="text-red-500 font-semibold mb-4">{message}</h2>
           {passwordUpdated ? (
@@ -152,6 +186,7 @@ function ForgotPassword() {
               rounded
               size="small"
               icon="pi pi-confirm"
+              type="button"
             />
           ) : (
             <>
@@ -176,14 +211,17 @@ function ForgotPassword() {
                       rounded
                       size="small"
                       icon="pi pi-times"
+                      type="button"
                     />
                     <Button
                       onClick={handleNewPasswordSubmit}
+                      type="submit"
                       label="Submit"
                       className="p-button-primary p-button-raised"
                       rounded
                       size="small"
                       icon="pi pi-check"
+                      
                     />
                   </div>
                 </>
@@ -203,6 +241,7 @@ function ForgotPassword() {
                       <div className="flex items-center justify-between">
                         <Button
                           onClick={handleCancel}
+                          type="button"
                           label="Cancel"
                           className="p-button-secondary p-button-raised"
                           rounded
@@ -211,6 +250,7 @@ function ForgotPassword() {
                         />
                         <Button
                           onClick={handleUsernameSubmit}
+                          type="submit"
                           label="Submit"
                           className="p-button-primary p-button-raised"
                           rounded
@@ -234,15 +274,17 @@ function ForgotPassword() {
                       </div>
                       <div className="flex items-center justify-between">
                         <Button
-                          onClick={handleCancel}
+                        onClick={(event) => handleCancel(event)}
                           label="Cancel"
                           className="p-button-secondary p-button-raised"
                           rounded
                           size="small"
                           icon="pi pi-times"
+                          type="button"
                         />
                         <Button
                           onClick={handleAnswerSubmit}
+                          type="submit"
                           label="Submit"
                           className="p-button-primary p-button-raised"
                           rounded

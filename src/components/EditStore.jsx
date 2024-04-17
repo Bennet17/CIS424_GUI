@@ -427,6 +427,7 @@ const EditStore = (store) => {
                   rounded
                   size="medium"
                   icon="pi pi-times"
+                  type='button'
                 />
                 <Button
                   label="Submit"
