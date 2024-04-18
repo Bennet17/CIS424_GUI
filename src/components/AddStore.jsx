@@ -16,14 +16,6 @@ import BillFive from "../usd_icons/bills/BillFive.svg";
 import BillOne from "../usd_icons/bills/BillOne.svg";
 import BillTwo from "../usd_icons/bills/BillTwo.svg";
 
-// import CoinOne from "../usd_icons/coins/CoinOne.svg";
-// import CoinHalf from "../usd_icons/coins/CoinHalf.svg";
-// import CoinHalfDollar from "../usd_icons/coins/CoinHalf_Dollar.svg";
-// import CoinQuarter from "../usd_icons/coins/CoinQuarter.svg";
-// import CoinDime from "../usd_icons/coins/CoinDime.svg";
-// import CoinNickel from "../usd_icons/coins/CoinNickel.svg";
-// import CoinPenny from "../usd_icons/coins/CoinPenny.svg";
-
 import RollQuarter from "../usd_icons/rolls/RollQuarter.svg";
 import RollDime from "../usd_icons/rolls/RollDime.svg";
 import RollNickel from "../usd_icons/rolls/RollNickel.svg";
