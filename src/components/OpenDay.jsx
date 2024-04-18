@@ -507,7 +507,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillHundred}
-                        alt="100's"
+                        //alt="100's"
                         className="inline-block align-middle w-12 h-12"
                         alt="100 Dollar Bill"
                       />
@@ -528,7 +528,7 @@ const OpenDayPage = () => {
                       value={elm100Dollar}
                       onChange={(e) => setElm100Dollar(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -537,7 +537,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollQuarter}
-                        alt="Quarter Rolls"
+                        //alt="Quarter Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Quarter Roll"
                       />
@@ -560,7 +560,7 @@ const OpenDayPage = () => {
                         setElmQuartersRolled(clamp(e.target.value))
                       }
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -571,7 +571,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillFifty}
-                        alt="50's"
+                        //alt="50's"
                         className="inline-block align-middle w-12 h-12"
                         alt="50 Dollar Bill"
                       />
@@ -592,7 +592,7 @@ const OpenDayPage = () => {
                       value={elm50Dollar}
                       onChange={(e) => setElm50Dollar(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -601,7 +601,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollDime}
-                        alt="Dime Rolls"
+                        //alt="Dime Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Dime Roll"
                       />
@@ -622,7 +622,7 @@ const OpenDayPage = () => {
                       value={elmDimesRolled}
                       onChange={(e) => setElmDimesRolled(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -633,7 +633,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillTwenty}
-                        alt="20's"
+                        //alt="20's"
                         className="inline-block align-middle w-12 h-12"
                         alt="20 Dollar Bill"
                       />
@@ -654,7 +654,7 @@ const OpenDayPage = () => {
                       value={elm20Dollar}
                       onChange={(e) => setElm20Dollar(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -663,7 +663,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollNickel}
-                        alt="Nickel Rolls"
+                        //alt="Nickel Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Nickel Roll"
                       />
@@ -686,7 +686,7 @@ const OpenDayPage = () => {
                         setElmNicklesRolled(clamp(e.target.value))
                       }
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -697,7 +697,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillTen}
-                        alt="10's"
+                        //alt="10's"
                         className="inline-block align-middle w-12 h-12"
                         alt="10 Dollar Bill"
                       />
@@ -718,7 +718,7 @@ const OpenDayPage = () => {
                       value={elm10Dollar}
                       onChange={(e) => setElm10Dollar(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -727,7 +727,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={RollPenny}
-                        alt="Penny Rolls"
+                        //alt="Penny Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Penny Roll"
                       />
@@ -750,7 +750,7 @@ const OpenDayPage = () => {
                         setElmPenniesRolled(clamp(e.target.value))
                       }
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -761,7 +761,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillFive}
-                        alt="5's"
+                        //alt="5's"
                         className="inline-block align-middle w-12 h-12"
                         alt="5 Dollar Bill"
                       />
@@ -782,7 +782,7 @@ const OpenDayPage = () => {
                       value={elm5Dollar}
                       onChange={(e) => setElm5Dollar(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -791,7 +791,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinQuarter}
-                        alt="Quarters"
+                        //alt="Quarters"
                         className="inline-block align-middle w-12 h-12"
                         alt="Quarter Coin"
                       />
@@ -812,7 +812,7 @@ const OpenDayPage = () => {
                       value={elmQuarters}
                       onChange={(e) => setElmQuarters(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -823,7 +823,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={BillOne}
-                        alt="1's"
+                        //alt="1's"
                         className="inline-block align-middle w-12 h-12"
                         alt="1 Dollar Bill"
                       />
@@ -844,7 +844,7 @@ const OpenDayPage = () => {
                       value={elm1Dollar}
                       onChange={(e) => setElm1Dollar(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -853,7 +853,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinDime}
-                        alt="Dimes"
+                        //alt="Dimes"
                         className="inline-block align-middle w-12 h-12"
                         alt="Dime Coin"
                       />
@@ -874,7 +874,7 @@ const OpenDayPage = () => {
                       value={elmDimes}
                       onChange={(e) => setElmDimes(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -898,7 +898,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinNickel}
-                        alt="Nickels"
+                        //alt="Nickels"
                         className="inline-block align-middle w-12 h-12"
                         alt="Nickel Coin"
                       />
@@ -919,7 +919,7 @@ const OpenDayPage = () => {
                       value={elmNickles}
                       onChange={(e) => setElmNickles(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -932,7 +932,7 @@ const OpenDayPage = () => {
                         <label>
                           <img
                             src={CoinOne}
-                            alt="Dollar Coins"
+                            //alt="Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
                             alt="1 Dollar Coin"
                           />
@@ -955,7 +955,7 @@ const OpenDayPage = () => {
                             setElm1DollarCoin(clamp(e.target.value))
                           }
                           min="0"
-                          className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                          className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                           type="number"
                           disabled={IsFirstPos}
                         />
@@ -972,7 +972,7 @@ const OpenDayPage = () => {
                     <label>
                       <img
                         src={CoinPenny}
-                        alt="Pennies"
+                        //alt="Pennies"
                         className="inline-block align-middle w-12 h-12"
                         alt="Penny Coin"
                       />
@@ -993,7 +993,7 @@ const OpenDayPage = () => {
                       value={elmPennies}
                       onChange={(e) => setElmPennies(clamp(e.target.value))}
                       min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                       type="number"
                       disabled={IsFirstPos}
                     />
@@ -1005,7 +1005,7 @@ const OpenDayPage = () => {
                       <label>
                         <img
                           src={BillTwo}
-                          alt="2's"
+                          //alt="2's"
                           className="inline-block align-middle w-12 h-12"
                           alt="2 Dollar Bill"
                         />
@@ -1026,7 +1026,7 @@ const OpenDayPage = () => {
                         value={elm2Dollar}
                         onChange={(e) => setElm2Dollar(clamp(e.target.value))}
                         min="0"
-                        className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                        className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                         type="number"
                         disabled={IsFirstPos}
                       />
@@ -1039,7 +1039,7 @@ const OpenDayPage = () => {
                       <label>
                         <img
                           src={CoinHalf}
-                          alt="Half Dollar Coins"
+                          //alt="Half Dollar Coins"
                           className="inline-block align-middle w-12 h-12"
                           alt="Half Dollar Coin"
                         />
@@ -1062,7 +1062,7 @@ const OpenDayPage = () => {
                           setElmHalfDollarCoin(clamp(e.target.value))
                         }
                         min="0"
-                        className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
+                        className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
                         type="number"
                         disabled={IsFirstPos}
                       />

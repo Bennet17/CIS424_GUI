@@ -785,7 +785,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillHundred}
-                        alt="100's"
+                        //alt="100's"
                         className="inline-block align-middle w-12 h-12"
                         alt="100 Dollar Bill"
                       />
@@ -814,7 +814,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollQuarter}
-                        alt="Quarter Rolls"
+                        //alt="Quarter Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Roll of Quarters"
                       />
@@ -847,7 +847,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillFifty}
-                        alt="50's"
+                        //alt="50's"
                         className="inline-block align-middle w-12 h-12"
                         alt="50 Dollar Bill"
                       />
@@ -876,7 +876,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollDime}
-                        alt="Dime Rolls"
+                        //alt="Dime Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Roll of Dimes"
                       />
@@ -907,7 +907,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillTwenty}
-                        alt="20's"
+                        //alt="20's"
                         className="inline-block align-middle w-12 h-12"
                         alt="20 Dollar Bill"
                       />
@@ -936,7 +936,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollNickel}
-                        alt="Nickel Rolls"
+                        //alt="Nickel Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Roll of Nickels"
                       />
@@ -969,7 +969,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillTen}
-                        alt="10's"
+                        //alt="10's"
                         className="inline-block align-middle w-12 h-12"
                         alt="10 Dollar Bill"
                       />
@@ -998,7 +998,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={RollPenny}
-                        alt="Penny Rolls"
+                        //alt="Penny Rolls"
                         className="inline-block align-middle w-12 h-12"
                         alt="Roll of Pennies"
                       />
@@ -1031,7 +1031,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillFive}
-                        alt="5's"
+                        //alt="5's"
                         className="inline-block align-middle w-12 h-12"
                         alt="5 Dollar Bill"
                       />
@@ -1060,7 +1060,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinQuarter}
-                        alt="Quarters"
+                        //alt="Quarters"
                         className="inline-block align-middle w-12 h-12"
                         alt="Quarter Coin"
                       />
@@ -1091,7 +1091,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={BillOne}
-                        alt="1's"
+                        //alt="1's"
                         className="inline-block align-middle w-12 h-12"
                         alt="1 Dollar Bill"
                       />
@@ -1120,7 +1120,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinDime}
-                        alt="Dimes"
+                        //alt="Dimes"
                         className="inline-block align-middle w-12 h-12"
                         alt="Dime Coin"
                       />
@@ -1164,7 +1164,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinNickel}
-                        alt="Nickels"
+                        //alt="Nickels"
                         className="inline-block align-middle w-12 h-12"
                         alt="Nickel Coin"
                       />
@@ -1197,7 +1197,7 @@ const CloseDayPage = () => {
                         <label>
                           <img
                             src={CoinOne}
-                            alt="Dollar Coins"
+                            //alt="Dollar Coins"
                             className="inline-block align-middle w-12 h-12"
                             alt="1 Dollar Coin"
                           />
@@ -1236,7 +1236,7 @@ const CloseDayPage = () => {
                     <label>
                       <img
                         src={CoinPenny}
-                        alt="Pennies"
+                        //alt="Pennies"
                         className="inline-block align-middle w-12 h-12"
                         alt="Penny Coin"
                       />
@@ -1268,7 +1268,7 @@ const CloseDayPage = () => {
                       <label>
                         <img
                           src={BillTwo}
-                          alt="2's"
+                          //alt="2's"
                           className="inline-block align-middle w-12 h-12"
                           alt="2 Dollar Bill"
                         />
@@ -1301,7 +1301,7 @@ const CloseDayPage = () => {
                       <label>
                         <img
                           src={CoinHalf}
-                          alt="Half Dollar Coins"
+                          //alt="Half Dollar Coins"
                           className="inline-block align-middle w-12 h-12"
                           alt="Half Dollar Coin"
                         />
