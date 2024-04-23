@@ -14,6 +14,7 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
 import jsPDF from "jspdf";
+import { clamp } from "../clamp.js";
 
 // USD Icon imports
 import BillHundred from "../usd_icons/bills/BillHundred.svg";
@@ -187,11 +188,12 @@ const FundsTransferPage = () => {
         .classList.remove("select-input-error");
     } else {
       // For numeric fields, parse the value to a number, defaulting to 0 for non-numeric or negative inputs
-      let parsedValue = parseFloat(value);
+      /*let parsedValue = parseFloat(value);
       if (isNaN(parsedValue) || parsedValue < 0) {
         parsedValue = 0;
         event.target.value = "0"; // Update the input field value to "0"
-      }
+      }*/
+      let parsedValue = clamp(value, 0, 100000);
       // Update the form data for numeric inputs
       setFormData((prevFormData) => ({
         ...prevFormData,
@@ -762,7 +764,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="hundred"
                       id="hundred_input"
                       step={1}
@@ -795,7 +797,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="quarterRoll"
                       id="quarterRoll_input"
                       step={1}
@@ -828,7 +830,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="quarter"
                       id="quarter_input"
                       step={1}
@@ -863,7 +865,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="fifty"
                       id="fifty_input"
                       step={1}
@@ -896,7 +898,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="dimeRoll"
                       id="dimeRoll_input"
                       step={1}
@@ -929,7 +931,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="dime"
                       id="dime_input"
                       step={1}
@@ -964,7 +966,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="twenty"
                       id="twenty_input"
                       step={1}
@@ -997,7 +999,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="nickelRoll"
                       id="nickelRoll_input"
                       step={1}
@@ -1030,7 +1032,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="nickel"
                       id="nickel_input"
                       step={1}
@@ -1065,7 +1067,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="ten"
                       id="ten_input"
                       step={1}
@@ -1098,7 +1100,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="pennyRoll"
                       id="pennyRoll_input"
                       step={1}
@@ -1131,7 +1133,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="penny"
                       id="penny_input"
                       step={1}
@@ -1166,7 +1168,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="five"
                       id="five_input"
                       step={1}
@@ -1201,7 +1203,7 @@ const FundsTransferPage = () => {
                           />
                         </label>
                         <input
-                          type="number"
+                          type="text"
                           name="dollarCoin"
                           id="oneCoin_input"
                           step={1}
@@ -1233,7 +1235,7 @@ const FundsTransferPage = () => {
                           />
                         </label>
                         <input
-                          type="number"
+                          type="text"
                           name="two"
                           id="two_input"
                           step={1}
@@ -1270,7 +1272,7 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="one"
                       id="one_input"
                       step={1}
@@ -1305,7 +1307,7 @@ const FundsTransferPage = () => {
                           />
                         </label>
                         <input
-                          type="number"
+                          type="text"
                           name="halfDollar"
                           id="halfDollar_input"
                           step={1}
