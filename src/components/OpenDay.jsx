@@ -170,6 +170,13 @@ const OpenDayPage = () => {
     } else if (Number(value) > max) {
       return max;
     }
+
+    //check if the first character in the text field is a 0. If so, and there are other
+    //characters in the text field, delete it
+    if (value.length > 1 && value.charAt(0) == "0"){
+      value = Number(value.substring(1));
+    }
+
     return Number(value);
   }
 
