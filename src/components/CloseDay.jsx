@@ -13,6 +13,7 @@ import { Button } from "primereact/button";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
+import { clamp } from "../clamp.js";
 
 // USD Icon imports
 import BillHundred from "../usd_icons/bills/BillHundred.svg";
@@ -162,22 +163,6 @@ const CloseDayPage = () => {
     ) {
       return 0;
     }
-  }
-
-  //keep values clamped between a minimum and maxium value
-  function clamp(value, min = 0, max = 100000) {
-    //first check if value is a number
-    if (isNaN(Number(value))) {
-      return min;
-    }
-
-    //if all is ok, do regular clamping
-    if (Number(value) < min) {
-      return min;
-    } else if (Number(value) > max) {
-      return max;
-    }
-    return Number(value);
   }
 
   //call on component load AND when the currently-selected pos has refreshed
@@ -797,7 +782,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElm100DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border rounded-md text-center ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -807,7 +792,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElm100Dollar(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                   <td>
@@ -826,7 +811,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElmQuartersRolledExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -838,7 +823,7 @@ const CloseDayPage = () => {
                       }
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                 </tr>
@@ -859,7 +844,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElm50DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -869,7 +854,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElm50Dollar(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                   <td>
@@ -888,7 +873,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElmDimesRolledExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -898,7 +883,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElmDimesRolled(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                 </tr>
@@ -919,7 +904,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElm20DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -929,7 +914,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElm20Dollar(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                   <td>
@@ -948,7 +933,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElmNicklesRolledExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -960,7 +945,7 @@ const CloseDayPage = () => {
                       }
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                 </tr>
@@ -981,7 +966,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElm10DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -991,7 +976,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElm10Dollar(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                   <td>
@@ -1010,7 +995,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElmPenniesRolledExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -1022,7 +1007,7 @@ const CloseDayPage = () => {
                       }
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                 </tr>
@@ -1043,7 +1028,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElm5DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -1053,7 +1038,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElm5Dollar(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                   <td>
@@ -1072,7 +1057,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElmQuartersExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -1082,7 +1067,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElmQuarters(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                 </tr>
@@ -1103,7 +1088,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElm1DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -1113,7 +1098,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElm1Dollar(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                   <td>
@@ -1132,7 +1117,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElmDimesExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -1142,7 +1127,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElmDimes(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                 </tr>
@@ -1176,7 +1161,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElmNicklesExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -1186,7 +1171,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElmNickles(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                 </tr>
@@ -1209,7 +1194,7 @@ const CloseDayPage = () => {
                           //onChange={e => setElm1DollarCoinExpected(clamp(e.target.value))}
                           min="0"
                           className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                          type="number"
+                          type="text"
                           disabled={true}
                         />
                       </td>
@@ -1221,7 +1206,7 @@ const CloseDayPage = () => {
                           }
                           min="0"
                           className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                          type="number"
+                          type="text"
                         />
                       </td>
                     </>
@@ -1248,7 +1233,7 @@ const CloseDayPage = () => {
                       //onChange={e => setElmPenniesExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -1258,7 +1243,7 @@ const CloseDayPage = () => {
                       onChange={(e) => setElmPennies(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                      type="number"
+                      type="text"
                     />
                   </td>
                 </tr>
@@ -1280,7 +1265,7 @@ const CloseDayPage = () => {
                         //onChange={e => setElm2DollarExpected(clamp(e.target.value))}
                         min="0"
                         className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                        type="number"
+                        type="text"
                         disabled={true}
                       />
                     </td>
@@ -1290,7 +1275,7 @@ const CloseDayPage = () => {
                         onChange={(e) => setElm2Dollar(clamp(e.target.value))}
                         min="0"
                         className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                        type="number"
+                        type="text"
                       />
                     </td>
                   </tr>
@@ -1313,7 +1298,7 @@ const CloseDayPage = () => {
                         //onChange={e => setElmHalfDollarCoinExpected(clamp(e.target.value))}
                         min="0"
                         className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                        type="number"
+                        type="text"
                         disabled={true}
                       />
                     </td>
@@ -1325,7 +1310,7 @@ const CloseDayPage = () => {
                         }
                         min="0"
                         className="box-border text-center rounded-md my-2 ml-6 mr-12 w-24 float-right border-border-color border-2 hover:bg-nav-bg bg-white"
-                        type="number"
+                        type="text"
                       />
                     </td>
                   </tr>

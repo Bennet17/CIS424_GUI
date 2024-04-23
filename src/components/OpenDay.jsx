@@ -12,6 +12,7 @@ import { Button } from "primereact/button";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/mira/theme.css";
 import "primeicons/primeicons.css";
+import { clamp } from "../clamp.js";
 
 // USD Icon imports
 import BillHundred from "../usd_icons/bills/BillHundred.svg";
@@ -155,29 +156,6 @@ const OpenDayPage = () => {
     ) {
       return 0;
     }
-  }
-
-  //keep values clamped between a minimum and maxium value
-  function clamp(value, min = 0, max = 100000) {
-    //first check if value is a number
-    if (isNaN(Number(value))) {
-      return min;
-    }
-
-    //if all is ok, do regular clamping
-    if (Number(value) < min) {
-      return min;
-    } else if (Number(value) > max) {
-      return max;
-    }
-
-    //check if the first character in the text field is a 0. If so, and there are other
-    //characters in the text field, delete it
-    if (value.length > 1 && value.charAt(0) == "0"){
-      value = Number(value.substring(1));
-    }
-
-    return Number(value);
   }
 
   //call on component load AND when the currently-selected pos has refreshed
@@ -462,7 +440,7 @@ const OpenDayPage = () => {
         </div>
         <div className="text-main-color float-left ml-16 mt-4">
           {posHasLoaded ? (
-            <div className="flex flex-row justify-center">
+            <div className="flex flex-row justify-left ml-32">
               <div>
                 <label className="text-xl">
                   {" "}
@@ -508,6 +486,19 @@ const OpenDayPage = () => {
                   <td className="text-2xl">Coins</td>
                   <td className="text-2xl pl-6">Expected</td>
                   <td className="text-2xl pl-6">Actual</td>
+                  {showExtraChange === true ? (
+                    <>
+                      <td className="text-2xl">Other</td>
+                      <td className="text-2xl pl-6">Expected</td>
+                      <td className="text-2xl pl-6">Actual</td>
+                    </>
+                  ) : (
+                    <>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </>
+                  )}
                 </tr>
                 <tr>
                   <td>
@@ -526,7 +517,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElm100DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border rounded-md text-center ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -536,7 +527,7 @@ const OpenDayPage = () => {
                       onChange={(e) => setElm100Dollar(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
@@ -556,7 +547,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElmQuartersRolledExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -568,10 +559,46 @@ const OpenDayPage = () => {
                       }
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
+                  {showExtraChange === true && (
+                    <>
+                      <td>
+                        <label>
+                          <img
+                            src={CoinOne}
+                            //alt="Dollar Coins"
+                            className="inline-block align-middle w-12 h-12"
+                            alt="1 Dollar Coin"
+                          />
+                        </label>
+                      </td>
+                      <td>
+                        <input
+                          value={elm1DollarCoinExpected}
+                          //onChange={e => setElm1DollarCoinExpected(clamp(e.target.value))}
+                          min="0"
+                          className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
+                          type="text"
+                          disabled={true}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          value={elm1DollarCoin}
+                          onChange={(e) =>
+                            setElm1DollarCoin(clamp(e.target.value))
+                          }
+                          min="0"
+                          className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
+                          type="text"
+                          disabled={IsFirstPos}
+                        />
+                      </td>
+                    </>
+                  )}
                 </tr>
                 <tr>
                   <td>
@@ -590,7 +617,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElm50DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -600,7 +627,7 @@ const OpenDayPage = () => {
                       onChange={(e) => setElm50Dollar(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
@@ -620,7 +647,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElmDimesRolledExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -630,10 +657,44 @@ const OpenDayPage = () => {
                       onChange={(e) => setElmDimesRolled(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
+                  {showExtraChange === true && (
+                  <>
+                    <td>
+                      <label>
+                        <img
+                          src={BillTwo}
+                          //alt="2's"
+                          className="inline-block align-middle w-12 h-12"
+                          alt="2 Dollar Bill"
+                        />
+                      </label>
+                    </td>
+                    <td>
+                      <input
+                        value={elm2DollarExpected}
+                        //onChange={e => setElm2DollarExpected(clamp(e.target.value))}
+                        min="0"
+                        className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
+                        type="text"
+                        disabled={true}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        value={elm2Dollar}
+                        onChange={(e) => setElm2Dollar(clamp(e.target.value))}
+                        min="0"
+                        className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
+                        type="text"
+                        disabled={IsFirstPos}
+                      />
+                    </td>
+                  </>
+                )}
                 </tr>
                 <tr>
                   <td>
@@ -652,7 +713,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElm20DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -662,7 +723,7 @@ const OpenDayPage = () => {
                       onChange={(e) => setElm20Dollar(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
@@ -682,7 +743,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElmNicklesRolledExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -694,10 +755,46 @@ const OpenDayPage = () => {
                       }
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
+                  {showExtraChange === true && (
+                  <>
+                    <td>
+                      <label>
+                        <img
+                          src={CoinHalf}
+                          //alt="Half Dollar Coins"
+                          className="inline-block align-middle w-12 h-12"
+                          alt="Half Dollar Coin"
+                        />
+                      </label>
+                    </td>
+                    <td>
+                      <input
+                        value={elmHalfDollarCoinExpected}
+                        //onChange={e => setElmHalfDollarCoinExpected(clamp(e.target.value))}
+                        min="0"
+                        className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
+                        type="text"
+                        disabled={true}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        value={elmHalfDollarCoin}
+                        onChange={(e) =>
+                          setElmHalfDollarCoin(clamp(e.target.value))
+                        }
+                        min="0"
+                        className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
+                        type="text"
+                        disabled={IsFirstPos}
+                      />
+                    </td>
+                  </>
+                )}
                 </tr>
                 <tr>
                   <td>
@@ -716,7 +813,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElm10DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -726,7 +823,7 @@ const OpenDayPage = () => {
                       onChange={(e) => setElm10Dollar(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
@@ -746,7 +843,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElmPenniesRolledExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -758,7 +855,7 @@ const OpenDayPage = () => {
                       }
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
@@ -780,7 +877,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElm5DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -790,7 +887,7 @@ const OpenDayPage = () => {
                       onChange={(e) => setElm5Dollar(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
@@ -810,7 +907,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElmQuartersExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -820,7 +917,7 @@ const OpenDayPage = () => {
                       onChange={(e) => setElmQuarters(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
@@ -842,7 +939,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElm1DollarExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -852,7 +949,7 @@ const OpenDayPage = () => {
                       onChange={(e) => setElm1Dollar(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
@@ -872,7 +969,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElmDimesExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -882,99 +979,15 @@ const OpenDayPage = () => {
                       onChange={(e) => setElmDimes(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
                 <tr>
-                  {showExtraChange === true ? (
-                    <>
-                      <td className="text-2xl">Other</td>
-                      <td></td>
-                      <td></td>
-                    </>
-                  ) : (
-                    <>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </>
-                  )}
-                  <td>
-                    <label>
-                      <img
-                        src={CoinNickel}
-                        //alt="Nickels"
-                        className="inline-block align-middle w-12 h-12"
-                        alt="Nickel Coin"
-                      />
-                    </label>
-                  </td>
-                  <td>
-                    <input
-                      value={elmNicklesExpected}
-                      //onChange={e => setElmNicklesExpected(clamp(e.target.value))}
-                      min="0"
-                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
-                      disabled={true}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      value={elmNickles}
-                      onChange={(e) => setElmNickles(clamp(e.target.value))}
-                      min="0"
-                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
-                      disabled={IsFirstPos}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  {showExtraChange === true ? (
-                    <>
-                      <td>
-                        <label>
-                          <img
-                            src={CoinOne}
-                            //alt="Dollar Coins"
-                            className="inline-block align-middle w-12 h-12"
-                            alt="1 Dollar Coin"
-                          />
-                        </label>
-                      </td>
-                      <td>
-                        <input
-                          value={elm1DollarCoinExpected}
-                          //onChange={e => setElm1DollarCoinExpected(clamp(e.target.value))}
-                          min="0"
-                          className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                          type="number"
-                          disabled={true}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          value={elm1DollarCoin}
-                          onChange={(e) =>
-                            setElm1DollarCoin(clamp(e.target.value))
-                          }
-                          min="0"
-                          className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                          type="number"
-                          disabled={IsFirstPos}
-                        />
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </>
-                  )}
+                  <td></td>
+                  <td></td>
+                  <td></td>
                   <td>
                     <label>
                       <img
@@ -991,7 +1004,7 @@ const OpenDayPage = () => {
                       //onChange={e => setElmPenniesExpected(clamp(e.target.value))}
                       min="0"
                       className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                      type="number"
+                      type="text"
                       disabled={true}
                     />
                   </td>
@@ -1001,81 +1014,46 @@ const OpenDayPage = () => {
                       onChange={(e) => setElmPennies(clamp(e.target.value))}
                       min="0"
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="number"
+                      type="text"
                       disabled={IsFirstPos}
                     />
                   </td>
                 </tr>
-                {showExtraChange === true && (
-                  <tr>
-                    <td>
-                      <label>
-                        <img
-                          src={BillTwo}
-                          //alt="2's"
-                          className="inline-block align-middle w-12 h-12"
-                          alt="2 Dollar Bill"
-                        />
-                      </label>
-                    </td>
-                    <td>
-                      <input
-                        value={elm2DollarExpected}
-                        //onChange={e => setElm2DollarExpected(clamp(e.target.value))}
-                        min="0"
-                        className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                        type="number"
-                        disabled={true}
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <label>
+                      <img
+                        src={CoinNickel}
+                        //alt="Nickels"
+                        className="inline-block align-middle w-12 h-12"
+                        alt="Nickel Coin"
                       />
-                    </td>
-                    <td>
-                      <input
-                        value={elm2Dollar}
-                        onChange={(e) => setElm2Dollar(clamp(e.target.value))}
-                        min="0"
-                        className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                        type="number"
-                        disabled={IsFirstPos}
-                      />
-                    </td>
-                  </tr>
-                )}
-                {showExtraChange === true && (
-                  <tr>
-                    <td>
-                      <label>
-                        <img
-                          src={CoinHalf}
-                          //alt="Half Dollar Coins"
-                          className="inline-block align-middle w-12 h-12"
-                          alt="Half Dollar Coin"
-                        />
-                      </label>
-                    </td>
-                    <td>
-                      <input
-                        value={elmHalfDollarCoinExpected}
-                        //onChange={e => setElmHalfDollarCoinExpected(clamp(e.target.value))}
-                        min="0"
-                        className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                        type="number"
-                        disabled={true}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        value={elmHalfDollarCoin}
-                        onChange={(e) =>
-                          setElmHalfDollarCoin(clamp(e.target.value))
-                        }
-                        min="0"
-                        className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                        type="number"
-                        disabled={IsFirstPos}
-                      />
-                    </td>
-                  </tr>
-                )}
+                    </label>
+                  </td>
+                  <td>
+                    <input
+                      value={elmNicklesExpected}
+                      //onChange={e => setElmNicklesExpected(clamp(e.target.value))}
+                      min="0"
+                      className="box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
+                      type="text"
+                      disabled={true}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      value={elmNickles}
+                      onChange={(e) => setElmNickles(clamp(e.target.value))}
+                      min="0"
+                      className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
+                      type="text"
+                      disabled={IsFirstPos}
+                    />
+                  </td>
+                </tr>
               </tbody>
             </table>
             <div className="mb-4">
@@ -1114,39 +1092,6 @@ const OpenDayPage = () => {
             </div>
           </form>
         </div>
-        {false && (
-          <div className="text-main-color text-2xl float-left ml-16 mt-12">
-            <div>
-              <label>
-                {" "}
-                Current Total:
-                <input
-                  value={"$" + totalAmount}
-                  className={actualAmountStyle + " rounded-md"}
-                  type="text"
-                  disabled={true}
-                />
-              </label>
-            </div>
-            <br />
-            <div>
-              <label>
-                {" "}
-                Expected Total:
-                <input
-                  value={"$" + expectedAmount}
-                  disabled={true}
-                  className="box-border rounded-md text-center mb-4 ml-6 mr-12 w-24 float-right border-border-color border-2 bg-gray-300"
-                  type="text"
-                />
-              </label>
-            </div>
-            <div>
-              {/*postSuccess == true && <p className="text-base font-bold text-green-500">{possSuccessTxt}</p>*/}
-              {/*postSuccess == false && <p className="text-base font-bold text-red-500">{possSuccessTxt}</p>*/}
-            </div>
-          </div>
-        )}
         {showConfirm && (
           <div className="report-overlay">
             <div className="report-container">
