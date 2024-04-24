@@ -524,11 +524,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elm100Dollar}
-                      onChange={(e) => setElm100Dollar(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElm100Dollar(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={1}
                     />
                   </td>
                   <td>
@@ -554,13 +559,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elmQuartersRolled}
-                      onChange={(e) =>
-                        setElmQuartersRolled(clamp(e.target.value))
-                      }
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElmQuartersRolled(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={7}
                     />
                   </td>
                   {showExtraChange === true && (
@@ -588,13 +596,16 @@ const OpenDayPage = () => {
                       <td>
                         <input
                           value={elm1DollarCoin}
-                          onChange={(e) =>
-                            setElm1DollarCoin(clamp(e.target.value))
-                          }
-                          min="0"
+                          onChange={(e) => {
+                            const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                            setElm1DollarCoin(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                          }}
+                          min={0}
+                          max={100000}
                           className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                          type="text"
+                          type="number"
                           disabled={IsFirstPos}
+                          tabIndex={15}
                         />
                       </td>
                     </>
@@ -624,11 +635,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elm50Dollar}
-                      onChange={(e) => setElm50Dollar(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElm50Dollar(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={2}
                     />
                   </td>
                   <td>
@@ -654,11 +670,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elmDimesRolled}
-                      onChange={(e) => setElmDimesRolled(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElmDimesRolled(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={8}
                     />
                   </td>
                   {showExtraChange === true && (
@@ -686,11 +707,16 @@ const OpenDayPage = () => {
                     <td>
                       <input
                         value={elm2Dollar}
-                        onChange={(e) => setElm2Dollar(clamp(e.target.value))}
-                        min="0"
+                        onChange={(e) => {
+                          const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                          setElm2Dollar(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                        }}
+                        min={0}
+                        max={100000}
                         className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                        type="text"
+                        type="number"
                         disabled={IsFirstPos}
+                        tabIndex={16}
                       />
                     </td>
                   </>
@@ -720,11 +746,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elm20Dollar}
-                      onChange={(e) => setElm20Dollar(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElm20Dollar(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={3}
                     />
                   </td>
                   <td>
@@ -750,13 +781,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elmNicklesRolled}
-                      onChange={(e) =>
-                        setElmNicklesRolled(clamp(e.target.value))
-                      }
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElmNicklesRolled(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={9}
                     />
                   </td>
                   {showExtraChange === true && (
@@ -784,13 +818,16 @@ const OpenDayPage = () => {
                     <td>
                       <input
                         value={elmHalfDollarCoin}
-                        onChange={(e) =>
-                          setElmHalfDollarCoin(clamp(e.target.value))
-                        }
-                        min="0"
+                        onChange={(e) => {
+                          const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                          setElmHalfDollarCoin(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                        }}
+                        min={0}
+                        max={100000}
                         className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                        type="text"
+                        type="number"
                         disabled={IsFirstPos}
+                        tabIndex={17}
                       />
                     </td>
                   </>
@@ -820,11 +857,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elm10Dollar}
-                      onChange={(e) => setElm10Dollar(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElm10Dollar(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={4}
                     />
                   </td>
                   <td>
@@ -850,13 +892,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elmPenniesRolled}
-                      onChange={(e) =>
-                        setElmPenniesRolled(clamp(e.target.value))
-                      }
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElmPenniesRolled(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={10}
                     />
                   </td>
                 </tr>
@@ -884,11 +929,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elm5Dollar}
-                      onChange={(e) => setElm5Dollar(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElm5Dollar(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={5}
                     />
                   </td>
                   <td>
@@ -914,11 +964,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elmQuarters}
-                      onChange={(e) => setElmQuarters(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElmQuarters(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={11}
                     />
                   </td>
                 </tr>
@@ -946,11 +1001,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elm1Dollar}
-                      onChange={(e) => setElm1Dollar(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElm1Dollar(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={6}
                     />
                   </td>
                   <td>
@@ -976,11 +1036,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elmDimes}
-                      onChange={(e) => setElmDimes(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElmDimes(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={12}
                     />
                   </td>
                 </tr>
@@ -1011,11 +1076,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elmPennies}
-                      onChange={(e) => setElmPennies(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElmPennies(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={13}
                     />
                   </td>
                 </tr>
@@ -1046,11 +1116,16 @@ const OpenDayPage = () => {
                   <td>
                     <input
                       value={elmNickles}
-                      onChange={(e) => setElmNickles(clamp(e.target.value))}
-                      min="0"
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/^0+/, ''); // Remove leading zeros
+                        setElmNickles(newValue === '' ? '0' : newValue); // If newValue is empty, set it to '0'
+                      }}
+                      min={0}
+                      max={100000}
                       className={`box-border text-center my-2 rounded-md ml-6 mr-12 w-24 float-right border-border-color border-2 ${IsFirstPos ? "bg-gray-300" : "hover:bg-nav-bg bg-white"}`}
-                      type="text"
+                      type="number"
                       disabled={IsFirstPos}
+                      tabIndex={14}
                     />
                   </td>
                 </tr>

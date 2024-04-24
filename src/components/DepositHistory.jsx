@@ -398,7 +398,7 @@ const DepositHistory = () => {
                 <Button
                   label="Export to Excel"
                   icon="pi pi-file-excel"
-                  className="p-button-primary p-button-raised"
+                  className="p-button-secondary p-button-raised"
                   size="small"
                   rounded
                   onClick={onDownload}
@@ -407,7 +407,7 @@ const DepositHistory = () => {
                 <Button
                   label="Export to PDF"
                   icon="pi pi-file-pdf"
-                  className="p-button-primary p-button-raised"
+                  className="p-button-secondary p-button-raised"
                   size="small"
                   rounded
                   onClick={downloadPDF}

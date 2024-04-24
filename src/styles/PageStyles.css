@@ -122,8 +122,8 @@
 .denomination-input {
     box-sizing: border-box;
     text-align: center;
-    margin-left: 1rem;
-    margin-right: 1rem; 
+    margin-left: .5rem;
+    margin-right: .5rem; 
     width: 5rem;
     float: right; 
     border: 2px solid rgb(57, 70, 83); 
