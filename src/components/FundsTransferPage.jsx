@@ -193,17 +193,19 @@ const FundsTransferPage = () => {
         parsedValue = 0;
         event.target.value = "0"; // Update the input field value to "0"
       }*/
-      // Numbers only
-      if (!/^\d+$/.test(value)) return;
+      
+      // Removes leading zeros from the input
+      event.target.value = event.target.value.replace(/^0+/, "");
 
-      // Clamp the value to a range of 0 to 100000
-      let parsedValue = clamp(value, 0, 100000);
+      // Parse the value to a float or default to 0 if not a valid number
+      const parsedValue = parseFloat(value) || 0;
 
       // Update the form data for numeric inputs
       setFormData((prevFormData) => ({
         ...prevFormData,
         [name]: parsedValue,
       }));
+
       // Calculate the amount based on the denomination fields
       CalculateAmount({
         ...formData,
@@ -772,11 +774,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="hundred"
                       id="hundred_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.hundred}
                       onChange={HandleChange}
@@ -805,11 +808,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="quarterRoll"
                       id="quarterRoll_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.quarterRoll}
                       onChange={HandleChange}
@@ -838,11 +842,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="quarter"
                       id="quarter_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.quarter}
                       onChange={HandleChange}
@@ -872,11 +877,12 @@ const FundsTransferPage = () => {
                         />
                       </label>
                       <input
-                        type="text"
+                        type="number"
                         name="two"
                         id="two_input"
                         step={1}
                         min={0}
+                        max={100000}
                         className="denomination-input"
                         value={formData.two}
                         onChange={HandleChange}
@@ -897,11 +903,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="fifty"
                       id="fifty_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.fifty}
                       onChange={HandleChange}
@@ -930,11 +937,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="dimeRoll"
                       id="dimeRoll_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.dimeRoll}
                       onChange={HandleChange}
@@ -963,11 +971,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="dime"
                       id="dime_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.dime}
                       onChange={HandleChange}
@@ -997,11 +1006,12 @@ const FundsTransferPage = () => {
                         />
                       </label>
                       <input
-                        type="text"
+                        type="number"
                         name="one"
                         id="one_input"
                         step={1}
                         min={0}
+                        max={100000}
                         className="denomination-input"
                         value={formData.one}
                         onChange={HandleChange}
@@ -1022,11 +1032,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="twenty"
                       id="twenty_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.twenty}
                       onChange={HandleChange}
@@ -1055,11 +1066,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="nickelRoll"
                       id="nickelRoll_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.nickelRoll}
                       onChange={HandleChange}
@@ -1088,11 +1100,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="nickel"
                       id="nickel_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.nickel}
                       onChange={HandleChange}
@@ -1122,11 +1135,12 @@ const FundsTransferPage = () => {
                         />
                       </label>
                       <input
-                        type="text"
+                        type="number"
                         name="halfDollar"
                         id="halfDollar_input"
                         step={1}
                         min={0}
+                        max={100000}
                         className="denomination-input"
                         value={formData.halfDollar}
                         onChange={HandleChange}
@@ -1147,11 +1161,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="ten"
                       id="ten_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.ten}
                       onChange={HandleChange}
@@ -1180,11 +1195,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="pennyRoll"
                       id="pennyRoll_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.pennyRoll}
                       onChange={HandleChange}
@@ -1213,11 +1229,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="penny"
                       id="penny_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.penny}
                       onChange={HandleChange}
@@ -1248,11 +1265,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="five"
                       id="five_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.five}
                       onChange={HandleChange}
@@ -1283,11 +1301,12 @@ const FundsTransferPage = () => {
                       />
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="one"
                       id="one_input"
                       step={1}
                       min={0}
+                      max={100000}
                       className="denomination-input"
                       value={formData.one}
                       onChange={HandleChange}
