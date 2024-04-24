@@ -262,6 +262,9 @@ const SafeAuditPage = () => {
       .getElementById("currentAmount_input")
       .classList.remove("safe-amount-input-error");
 
+    // Removes leading zeros from the input
+    event.target.value = event.target.value.replace(/^0+/, "");
+
     // Parse the value to a float or default to 0 if not a valid number
     const parsedValue = parseFloat(value) || 0;
 
@@ -399,6 +402,9 @@ const SafeAuditPage = () => {
   // Function to handle the cancel button and resets the form data
   const HandleCancel = (event) => {
     event.preventDefault();
+    
+    // If the current amount is empty, return
+    if (formData.currentAmount === "") return;
 
     // Reset the form data
     setFormData({
@@ -425,9 +431,26 @@ const SafeAuditPage = () => {
       dimeRoll: 0,
       nickelRoll: 0,
       pennyRoll: 0,
+      expectedHundred: formData.expectedHundred,
+      expectedFifty: formData.expectedFifty,
+      expectedTwenty: formData.expectedTwenty,
+      expectedTen: formData.expectedTen,
+      expectedFive: formData.expectedFive,
+      expectedTwo: formData.expectedTwo,
+      expectedOne: formData.expectedOne,
+      expectedDollarCoin: formData.expectedDollarCoin,
+      expectedHalfDollar: formData.expectedHalfDollar,
+      expectedQuarter: formData.expectedQuarter,
+      expectedDime: formData.expectedDime,
+      expectedNickel: formData.expectedNickel,
+      expectedPenny: formData.expectedPenny,
+      expectedQuarterRoll: formData.expectedQuarterRoll,
+      expectedDimeRoll: formData.expectedDimeRoll,
+      expectedNickelRoll: formData.expectedNickelRoll,
+      expectedPennyRoll: formData.expectedPennyRoll
     });
 
-    if (formData.currentAmount !== "") toast.info("Fields have been reset.");
+    toast.info("Fields have been reset.");
   };
 
   //toggles the variable that displays the niche changes, such as $2 bills and $1 coins
@@ -535,10 +558,18 @@ const SafeAuditPage = () => {
                     <th className="pr-2">Loose</th>
                     <th>Expected</th>
                     <th>Actual</th>
+                    <th></th>
+                    {showExtraChange && (
+                      <>
+                        <th>Extras</th>
+                        <th>Expected</th>
+                        <th>Actual</th>
+                      </>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
-                  {/* 100s, Quarter Rolled, Quarter */}
+                  {/* 100s, Quarter Rolled, Quarter, Two Extra */}
                   <tr>
                     {/* Bills Label Column */}
                     <td>
@@ -696,8 +727,64 @@ const SafeAuditPage = () => {
                         value={(formData.quarter * 0.25).toFixed(2)}
                       />
                     </td>
+                    {/* Extras Column */}
+                    {showExtraChange && (
+                      <>
+                        <td>
+                          <label htmlFor="two_input">
+                            <img
+                              src={BillTwo}
+                              //alt="2's"
+                              className="inline-block align-middle w-12 h-12"
+                              alt="Two Dollar Bill"
+                            />
+                          </label>
+                        </td>
+                        {/* Expected Twos Column */}
+                        <td>
+                          <input
+                            type="text"
+                            name="expectedTwo"
+                            id="expectedTwo_input"
+                            readOnly={true}
+                            className={`denomination-expected ${
+                              parseInt(formData.expectedTwo) > 0
+                                ? "denomination-expected-valid"
+                                : ""
+                            }`}
+                            value={formData.expectedTwo}
+                          />
+                        </td>
+                        {/* Actual Twos Column */}
+                        <td>
+                          <input
+                            type="number"
+                            name="two"
+                            id="two_input"
+                            step={1}
+                            min={0}
+                            className="denomination-input"
+                            value={formData.two}
+                            onChange={HandleChange}
+                            tabIndex={5}
+                          />
+                        </td>
+                        {/* Actual Twos Total Column */}
+                        <td>
+                          <CurrencyInput
+                            prefix="$"
+                            decimalSeparator="."
+                            groupSeparator=","
+                            placeholder="0.00"
+                            readOnly={true}
+                            className="denomination"
+                            value={(formData.two * 2).toFixed(2)}
+                          />
+                        </td>
+                      </>
+                    )}
                   </tr>
-                  {/* 50s, Dimes Rolled, Dimes */}
+                  {/* 50s, Dimes Rolled, Dimes, Dollar Coin Extra */}
                   <tr>
                     {/* Bills Label Column */}
                     <td>
@@ -855,8 +942,64 @@ const SafeAuditPage = () => {
                         value={(formData.dime * 0.1).toFixed(2)}
                       />
                     </td>
+                    {/* Extras One Coin Column */}
+                    {showExtraChange && (
+                      <>
+                        <td>
+                          <label htmlFor="oneCoin_input">
+                            <img
+                              src={CoinOne}
+                              //alt="Dollar Coins"
+                              className="inline-block align-middle w-12 h-12"
+                              alt="Dollar Coin"
+                            />
+                          </label>
+                        </td>
+                        {/* Expected Dollar Coin Column */}
+                        <td>
+                          <input
+                            type="text"
+                            name="expectedDollarCoin"
+                            id="expectedDollarCoin_input"
+                            readOnly={true}
+                            className={`denomination-expected ${
+                              parseInt(formData.expectedDollarCoin) > 0
+                                ? "denomination-expected-valid"
+                                : ""
+                            }`}
+                            value={formData.expectedDollarCoin}
+                          />
+                        </td>
+                        {/* Actual Dollar Coin Column */}
+                        <td>
+                          <input
+                            type="number"
+                            name="dollarCoin"
+                            id="oneCoin_input"
+                            step={1}
+                            min={0}
+                            className="denomination-input"
+                            value={formData.dollarCoin}
+                            onChange={HandleChange}
+                            tabIndex={11}
+                          />
+                        </td>
+                        {/* Actual Dollar Coin Total Column */}
+                        <td>
+                          <CurrencyInput
+                            prefix="$"
+                            decimalSeparator="."
+                            groupSeparator=","
+                            placeholder="0.00"
+                            readOnly={true}
+                            className="denomination"
+                            value={(formData.dollarCoin * 1).toFixed(2)}
+                          />
+                        </td>
+                      </>
+                    )}
                   </tr>
-                  {/* 20s, Nickels Rolled, Nickels */}
+                  {/* 20s, Nickels Rolled, Nickels, 50 Coin Extra */}
                   <tr>
                     {/* Bills Column */}
                     <td>
@@ -1014,6 +1157,62 @@ const SafeAuditPage = () => {
                         value={(formData.nickel * 0.05).toFixed(2)}
                       />
                     </td>
+                    {/* Extras Half Dollar Coin Column */}
+                    {showExtraChange === true && (
+                      <>
+                        <td>
+                          <label htmlFor="halfDollar_input">
+                            <img
+                              src={CoinHalf}
+                              //alt="Half Dollar Coins"
+                              className="inline-block align-middle w-12 h-12"
+                              alt="Half Dollar Coin"
+                            />
+                          </label>
+                        </td>
+                        {/* Expected Half Dollar Column */}
+                        <td>
+                          <input
+                            type="text"
+                            name="expectedHalfDollar"
+                            id="expectedHalfDollar_input"
+                            readOnly={true}
+                            className={`denomination-expected ${
+                              parseInt(formData.expectedHalfDollar) > 0
+                                ? "denomination-expected-valid"
+                                : ""
+                            }`}
+                            value={formData.expectedHalfDollar}
+                          />
+                        </td>
+                        {/* Actual Half Dollar Column */}
+                        <td>
+                          <input
+                            type="number"
+                            name="halfDollar"
+                            id="halfDollar_input"
+                            step={1}
+                            min={0}
+                            className="denomination-input"
+                            value={formData.halfDollar}
+                            onChange={HandleChange}
+                            tabIndex={12}
+                          />
+                        </td>
+                        {/* Actual Half Dollar Total Column */}
+                        <td>
+                          <CurrencyInput
+                            prefix="$"
+                            decimalSeparator="."
+                            groupSeparator=","
+                            placeholder="0.00"
+                            readOnly={true}
+                            className="denomination"
+                            value={(formData.halfDollar * 0.5).toFixed(2)}
+                          />
+                        </td>
+                      </>
+                    )}
                   </tr>
                   {/* 10s, Pennies Rolled, Pennies */}
                   <tr>
@@ -1228,116 +1427,8 @@ const SafeAuditPage = () => {
                         value={(formData.five * 5).toFixed(2)}
                       />
                     </td>
-                    {/* Extras Column */}
-                    {showExtraChange === true && (
-                      <>
-                        <td>
-                          <label htmlFor="oneCoin_input">
-                            <img
-                              src={CoinOne}
-                              //alt="Dollar Coins"
-                              className="inline-block align-middle w-12 h-12"
-                              alt="Dollar Coin"
-                            />
-                          </label>
-                        </td>
-                        {/* Expected Dollar Coin Column */}
-                        <td>
-                          <input
-                            type="text"
-                            name="expectedDollarCoin"
-                            id="expectedDollarCoin_input"
-                            readOnly={true}
-                            className={`denomination-expected ${
-                              parseInt(formData.expectedDollarCoin) > 0
-                                ? "denomination-expected-valid"
-                                : ""
-                            }`}
-                            value={formData.expectedDollarCoin}
-                          />
-                        </td>
-                        {/* Actual Dollar Coin Column */}
-                        <td>
-                          <input
-                            type="number"
-                            name="dollarCoin"
-                            id="oneCoin_input"
-                            step={1}
-                            min={0}
-                            className="denomination-input"
-                            value={formData.dollarCoin}
-                            onChange={HandleChange}
-                            tabIndex={11}
-                          />
-                        </td>
-                        {/* Actual Dollar Coin Total Column */}
-                        <td>
-                          <CurrencyInput
-                            prefix="$"
-                            decimalSeparator="."
-                            groupSeparator=","
-                            placeholder="0.00"
-                            readOnly={true}
-                            className="denomination"
-                            value={(formData.dollarCoin * 1).toFixed(2)}
-                          />
-                        </td>
-                        {/* 2s Label Column */}
-                        <td>
-                          <label htmlFor="">
-                            <img
-                              src={BillTwo}
-                              //alt="2's"
-                              className="inline-block align-middle w-12 h-12"
-                              alt="2 Dollar Bill"
-                            />
-                          </label>
-                        </td>
-                        {/* Expected Two Column */}
-                        <td>
-                          <input
-                            type="text"
-                            name="expectedTwo"
-                            id="expectedTwo_input"
-                            readOnly={true}
-                            className={`denomination-expected ${
-                              parseInt(formData.expectedTwo) > 0
-                                ? "denomination-expected-valid"
-                                : ""
-                            }`}
-                            value={formData.expectedTwo}
-                          />
-                        </td>
-                        {/* Actual Two Column */}
-                        <td>
-                          <input
-                            type="number"
-                            name="two"
-                            id="two_input"
-                            step={1}
-                            min={0}
-                            className="denomination-input"
-                            value={formData.two}
-                            onChange={HandleChange}
-                            tabIndex={17}
-                          />
-                        </td>
-                        {/* Actual Two Total Column */}
-                        <td>
-                          <CurrencyInput
-                            prefix="$"
-                            decimalSeparator="."
-                            groupSeparator=","
-                            placeholder="0.00"
-                            readOnly={true}
-                            className="denomination"
-                            value={(formData.two * 2).toFixed(2)}
-                          />
-                        </td>
-                      </>
-                    )}
                   </tr>
-                  {/* 1s, extras */}
+                  {/* 1s */}
                   <tr>
                     {/* Bills Label Column */}
                     <td>
@@ -1391,62 +1482,6 @@ const SafeAuditPage = () => {
                         value={(formData.one * 1).toFixed(2)}
                       />
                     </td>
-                    {/* Extras Column */}
-                    {showExtraChange === true && (
-                      <>
-                        <td>
-                          <label htmlFor="halfDollar_input">
-                            <img
-                              src={CoinHalf}
-                              //alt="Half Dollar Coins"
-                              className="inline-block align-middle w-12 h-12"
-                              alt="Half Dollar Coin"
-                            />
-                          </label>
-                        </td>
-                        {/* Expected Half Dollar Column */}
-                        <td>
-                          <input
-                            type="text"
-                            name="expectedHalfDollar"
-                            id="expectedHalfDollar_input"
-                            readOnly={true}
-                            className={`denomination-expected ${
-                              parseInt(formData.expectedHalfDollar) > 0
-                                ? "denomination-expected-valid"
-                                : ""
-                            }`}
-                            value={formData.expectedHalfDollar}
-                          />
-                        </td>
-                        {/* Actual Half Dollar Column */}
-                        <td>
-                          <input
-                            type="number"
-                            name="halfDollar"
-                            id="halfDollar_input"
-                            step={1}
-                            min={0}
-                            className="denomination-input"
-                            value={formData.halfDollar}
-                            onChange={HandleChange}
-                            tabIndex={12}
-                          />
-                        </td>
-                        {/* Actual Half Dollar Total Column */}
-                        <td>
-                          <CurrencyInput
-                            prefix="$"
-                            decimalSeparator="."
-                            groupSeparator=","
-                            placeholder="0.00"
-                            readOnly={true}
-                            className="denomination"
-                            value={(formData.halfDollar * 0.5).toFixed(2)}
-                          />
-                        </td>
-                      </>
-                    )}
                   </tr>
                 </tbody>
               </table>

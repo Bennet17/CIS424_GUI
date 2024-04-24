@@ -193,7 +193,12 @@ const FundsTransferPage = () => {
         parsedValue = 0;
         event.target.value = "0"; // Update the input field value to "0"
       }*/
+      // Numbers only
+      if (!/^\d+$/.test(value)) return;
+
+      // Clamp the value to a range of 0 to 100000
       let parsedValue = clamp(value, 0, 100000);
+
       // Update the form data for numeric inputs
       setFormData((prevFormData) => ({
         ...prevFormData,
@@ -749,6 +754,9 @@ const FundsTransferPage = () => {
                   <th></th>
                   <th>Loose Coins</th>
                   <th></th>
+                  {showExtraChange && (
+                    <th>Extras</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -852,6 +860,30 @@ const FundsTransferPage = () => {
                       value={(formData.quarter * 0.25).toFixed(2)}
                     />
                   </td>
+                  {/* Extras Column */}
+                  {showExtraChange && (
+                    <td className="flex items-center">
+                      <label htmlFor="two_input">
+                        <img
+                          src={BillTwo}
+                          //alt="2's"
+                          className="inline-block align-middle w-12 h-12"
+                          alt="Two Dollar Bill"
+                        />
+                      </label>
+                      <input
+                        type="text"
+                        name="two"
+                        id="two_input"
+                        step={1}
+                        min={0}
+                        className="denomination-input"
+                        value={formData.two}
+                        onChange={HandleChange}
+                        tabIndex={17}
+                      />
+                    </td>
+                  )}
                 </tr>
                 <tr>
                   {/* Bills Column */}
@@ -953,6 +985,30 @@ const FundsTransferPage = () => {
                       value={(formData.dime * 0.1).toFixed(2)}
                     />
                   </td>
+                  {/* Extras Column */}
+                  {showExtraChange && (
+                    <td className="flex items-center">
+                      <label htmlFor="one_input">
+                        <img
+                          src={BillOne}
+                          //alt="1's"
+                          className="inline-block align-middle w-12 h-12"
+                          alt="One Dollar Bill"
+                        />
+                      </label>
+                      <input
+                        type="text"
+                        name="one"
+                        id="one_input"
+                        step={1}
+                        min={0}
+                        className="denomination-input"
+                        value={formData.one}
+                        onChange={HandleChange}
+                        tabIndex={18}
+                      />
+                    </td>
+                  )}
                 </tr>
                 <tr>
                   {/* Bills Column */}
@@ -1054,6 +1110,30 @@ const FundsTransferPage = () => {
                       value={(formData.nickel * 0.05).toFixed(2)}
                     />
                   </td>
+                  {/* Extras Column */}
+                  {showExtraChange && (
+                    <td className="flex items-center">
+                      <label htmlFor="halfDollar_input">
+                        <img
+                          src={CoinHalf}
+                          //alt="Half Dollars"
+                          className="inline-block align-middle w-12 h-12"
+                          alt="Half Dollar Coin"
+                        />
+                      </label>
+                      <input
+                        type="text"
+                        name="halfDollar"
+                        id="halfDollar_input"
+                        step={1}
+                        min={0}
+                        className="denomination-input"
+                        value={formData.halfDollar}
+                        onChange={HandleChange}
+                        tabIndex={19}
+                      />
+                    </td>
+                  )}
                 </tr>
                 <tr>
                   {/* Bills Column */}
@@ -1190,75 +1270,6 @@ const FundsTransferPage = () => {
                       value={(formData.five * 5).toFixed(2)}
                     />
                   </td>
-                  {/* Extras Column */}
-                  {showExtraChange === true && (
-                    <>
-                      <td className="flex items-center">
-                        <label htmlFor="oneCoin_input">
-                          <img
-                            src={CoinOne}
-                            //alt="Dollar Coins"
-                            className="inline-block align-middle w-12 h-12"
-                            alt="One Dollar Coin"
-                          />
-                        </label>
-                        <input
-                          type="text"
-                          name="dollarCoin"
-                          id="oneCoin_input"
-                          step={1}
-                          min={0}
-                          className="denomination-input"
-                          value={formData.dollarCoin}
-                          onChange={HandleChange}
-                          tabIndex={12}
-                        />
-                      </td>
-                      <td>
-                        <CurrencyInput
-                          prefix="$"
-                          decimalSeparator="."
-                          groupSeparator=","
-                          placeholder="0.00"
-                          readOnly={true}
-                          className="denomination"
-                          value={(formData.dollarCoin * 1).toFixed(2)}
-                        />
-                      </td>
-                      <td className="flex items-center">
-                        <label htmlFor="">
-                          <img
-                            src={BillTwo}
-                            //alt="2's"
-                            className="inline-block align-middle w-12 h-12"
-                            alt="Two Dollar Bill"
-                          />
-                        </label>
-                        <input
-                          type="text"
-                          name="two"
-                          id="two_input"
-                          step={1}
-                          min={0}
-                          className="denomination-input"
-                          value={formData.two}
-                          onChange={HandleChange}
-                          tabIndex={17}
-                        />
-                      </td>
-                      <td>
-                        <CurrencyInput
-                          prefix="$"
-                          decimalSeparator="."
-                          groupSeparator=","
-                          placeholder="0.00"
-                          readOnly={true}
-                          className="denomination"
-                          value={(formData.two * 2).toFixed(2)}
-                        />
-                      </td>
-                    </>
-                  )}
                 </tr>
                 <tr>
                   {/* Bills Column */}
@@ -1294,43 +1305,6 @@ const FundsTransferPage = () => {
                       value={(formData.one * 1).toFixed(2)}
                     />
                   </td>
-                  {/* Extras Column */}
-                  {showExtraChange === true && (
-                    <>
-                      <td className="flex items-center">
-                        <label htmlFor="halfDollar_input">
-                          <img
-                            src={CoinHalf}
-                            //alt="Half Dollar Coins"
-                            className="inline-block align-middle w-12 h-12"
-                            alt="Half Dollar Coin"
-                          />
-                        </label>
-                        <input
-                          type="text"
-                          name="halfDollar"
-                          id="halfDollar_input"
-                          step={1}
-                          min={0}
-                          className="denomination-input"
-                          value={formData.halfDollar}
-                          onChange={HandleChange}
-                          tabIndex={12}
-                        />
-                      </td>
-                      <td>
-                        <CurrencyInput
-                          prefix="$"
-                          decimalSeparator="."
-                          groupSeparator=","
-                          placeholder="0.00"
-                          readOnly={true}
-                          className="denomination"
-                          value={(formData.halfDollar * 0.5).toFixed(2)}
-                        />
-                      </td>
-                    </>
-                  )}
                 </tr>
               </tbody>
             </table>
