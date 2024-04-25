@@ -418,40 +418,71 @@ const CloseDayPage = () => {
       let roundValue = 0;
       let totalAtNearest20 = totalTransferAmount;
 
-      // Round value will be what we break down for denominations + penny rolls
-      // TotalAtNearest20 will be the total once we round up
-      while (totalAtNearest20 % 20 != 0) {
-        roundValue += 0.5;
-        totalAtNearest20 += 0.5;
-      }
-
       // Denominations needed to get rounded up to the nearest $20
       let roundTens = 0;
       let roundFives = 0;
       let roundOnes = 0;
       let roundPennyRolls = 0;
 
-      //Get the number of 10's needed to round to the nearest $20
-      roundTens = Math.floor(roundValue / 10);
-      info.ten += roundTens;
-      roundValue -= (10 * roundTens);
-      
-      // Check for the number of 5's needed
-      roundFives = Math.floor(roundValue / 5);
-      info.five += roundFives;
-      roundValue -= (5 * roundFives);
-  
-      // Check if we need a penny roll or not
-      if (roundValue % 1 != 0) { // $2.50
-        roundPennyRolls += 1; // 1
-        info.pennyRoll += roundPennyRolls; // However many rolls we have + 1
-        roundValue -= (roundPennyRolls * 0.5); // $2.50 - 0.5 = $2
+      // Round value will be what we break down for denominations + penny rolls
+      // TotalAtNearest20 will be the total once we round up
+      while (totalAtNearest20 % 20 != 0) {
+        roundValue += Number(0.5);
+        totalAtNearest20 += Number(0.5);
       }
 
-      // Get any last ones
-      roundOnes = roundValue;
-      info.one += roundOnes;
-      roundValue -= roundOnes;
+      // Check if we need to round up or down
+      // Round down if we need more than $10 to round up
+      if (roundValue <= 10) {
+
+        //Get the number of 10's needed to round to the nearest $20
+        roundTens = Math.floor(roundValue / 10);
+        info.ten += roundTens;
+        roundValue -= (10 * roundTens);
+
+        // Check for the number of 5's needed
+        roundFives = Math.floor(roundValue / 5);
+        info.five += roundFives;
+        roundValue -= (5 * roundFives);
+    
+        // Check if we need a penny roll or not
+        if (roundValue % 1 != 0) { // $2.50
+          roundPennyRolls += 1; // 1
+          info.pennyRoll += roundPennyRolls; // However many rolls we have + 1
+          roundValue -= (roundPennyRolls * 0.5); // $2.50 - 0.5 = $2
+        }
+    
+        // Get any last ones
+        roundOnes = roundValue;
+        info.one += roundOnes;
+        roundValue -= roundOnes;
+
+      } else if (roundValue > 10) { // Round down when the roundValue is 10
+
+        // Roundvalue would be over 10 because we assumed we were rounding up
+        // To get the value we need to round down, subtract the roundValue from 20.
+        // If we round 16 to get from $24 to $40, roundValue would be $16.
+        // So to round down to the nearest $20, which is $20, 20-16 would give us $4 to round down.
+        roundValue = 20 - roundValue;
+        totalAtNearest20 -= Number(20);
+
+        // Check for the number of 5's needed
+        roundFives = Math.floor(roundValue / 5);
+        info.five -= roundFives;
+        roundValue -= (5 * roundFives);
+    
+        // Check if we need a penny roll or not
+        if (roundValue % 1 != 0) { // $2.50
+          roundPennyRolls += 1; // 1
+          info.pennyRoll -= roundPennyRolls; // However many rolls we have + 1
+          roundValue -= (roundPennyRolls * 0.5); // $2.50 - 0.5 = $2
+        }
+    
+        // Get any last ones
+        roundOnes = roundValue;
+        info.one -= roundOnes;
+        roundValue -= roundOnes;
+      }
       
       totalTransferAmount = totalAtNearest20;
     }
