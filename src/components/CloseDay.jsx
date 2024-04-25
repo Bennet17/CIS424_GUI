@@ -409,6 +409,53 @@ const CloseDayPage = () => {
 
     // Round the total value to the nearest cent
     totalTransferAmount = Math.round(totalTransferAmount * 100) / 100;
+      
+    
+    // Make sure to only round if the safe is being closed
+    // And we only need to round if the total isn't a multiple of $20
+    if (currentPosIndex === 0 && totalTransferAmount % 20 != 0) {
+
+      let roundValue = 0;
+      let totalAtNearest20 = totalTransferAmount;
+
+      // Round value will be what we break down for denominations + penny rolls
+      // TotalAtNearest20 will be the total once we round up
+      while (totalAtNearest20 % 20 != 0) {
+        roundValue += 0.5;
+        totalAtNearest20 += 0.5;
+      }
+
+      // Denominations needed to get rounded up to the nearest $20
+      let roundTens = 0;
+      let roundFives = 0;
+      let roundOnes = 0;
+      let roundPennyRolls = 0;
+
+      //Get the number of 10's needed to round to the nearest $20
+      roundTens = Math.floor(roundValue / 10);
+      info.ten += roundTens;
+      roundValue -= (10 * roundTens);
+      
+      // Check for the number of 5's needed
+      roundFives = Math.floor(roundValue / 5);
+      info.five += roundFives;
+      roundValue -= (5 * roundFives);
+  
+      // Check if we need a penny roll or not
+      if (roundValue % 1 != 0) { // $2.50
+        roundPennyRolls += 1; // 1
+        info.pennyRoll += roundPennyRolls; // However many rolls we have + 1
+        roundValue -= (roundPennyRolls * 0.5); // $2.50 - 0.5 = $2
+      }
+
+      // Get any last ones
+      roundOnes = roundValue;
+      info.one += roundOnes;
+      roundValue -= roundOnes;
+      
+      totalTransferAmount = totalAtNearest20;
+    }
+  
 
     if (poss[currentPosIndex].opened) {
       if (currentPosIndex === 0) {

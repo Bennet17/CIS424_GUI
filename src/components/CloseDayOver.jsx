@@ -42,7 +42,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={BillHundred}
-                      alt="100's"
                       className="inline-block align-middle w-12 h-12"
                       alt="100 Dollar Bill"
                     />{" "}
@@ -51,7 +50,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={BillFifty}
-                      alt="50's"
                       className="inline-block align-middle w-12 h-12"
                       alt="50 Dollar Bill"
                     />{" "}
@@ -60,7 +58,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={BillTwenty}
-                      alt="20's"
                       className="inline-block align-middle w-12 h-12"
                       alt="20 Dollar Bill"
                     />{" "}
@@ -69,7 +66,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={BillTen}
-                      alt="10's"
                       className="inline-block align-middle w-12 h-12"
                       alt="10 Dollar Bill"
                     />{" "}
@@ -78,7 +74,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={BillFive}
-                      alt="5's"
                       className="inline-block align-middle w-12 h-12"
                       alt="5 Dollar Bill"
                     />{" "}
@@ -87,7 +82,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={BillOne}
-                      alt="1's"
                       className="inline-block align-middle w-12 h-12"
                       alt="1 Dollar Bill"
                     />{" "}
@@ -98,7 +92,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={RollQuarter}
-                      alt="Quarter Rolls"
                       className="inline-block align-middle w-12 h-12"
                       alt="Quarter Roll"
                     />{" "}
@@ -107,7 +100,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={RollDime}
-                      alt="Dime Rolls"
                       className="inline-block align-middle w-12 h-12"
                       alt="Dime Roll"
                     />{" "}
@@ -116,7 +108,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={RollNickel}
-                      alt="Nickel Rolls"
                       className="inline-block align-middle w-12 h-12"
                       alt="Nickel Roll"
                     />{" "}
@@ -125,7 +116,6 @@ const CloseDayOver = ({ onClose, details, isSafe }) => {
                   <li>
                     <img
                       src={RollPenny}
-                      alt="Penny Rolls"
                       className="inline-block align-middle w-12 h-12"
                       alt="Penny Roll"
                     />{" "}
