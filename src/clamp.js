@@ -8,6 +8,14 @@
  * @returns the clamped number
  */
 export function clamp(value, min = 0, max = 100000) {
+    //if the very last character is a ., then the backend will still accept it and append the 0 as needed so i don't have to do anything else
+    //so we just return the value as a string and life will be good. Any actual non-numeric inputs will still be filtered out from the small amount of
+    //testing that i did
+    if (value.toString()[value.toString().length - 1] === "."){
+
+      return value;
+    }
+
     //first check if value is a number
     if (isNaN(Number(value))) {
       return Number(min);
