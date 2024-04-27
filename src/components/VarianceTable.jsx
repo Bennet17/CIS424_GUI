@@ -41,26 +41,81 @@ const VarianceTable = () => {
     const [loading, setLoading] = useState(true); // Loading state for the table
 
     // Columns for the variance table
-    const varianceColumns = [
+    const varianceColumns = [ 
         { field: "POSName", header: "POS Name", order: 1 },
         { field: "OpenerName", header: "Opener Name", order: 2 },
         { field: "OpenExpected", header: "Open Expected", order: 3 },
         { field: "OpenActual", header: "Open Actual", order: 4 },
-        { field: "OpenVariance", header: "Open Variance", order: 5 },
-        { field: "CloserName", header: "Closer Name", order: 6 },
-        { field: "CloseExpected", header: "Close Expected", order: 7 },
-        { field: "CloseActual", header: "Close Actual", order: 8 },
-        { field: "CloseVariance", header: "Close Variance", order: 9 },
-        { field: "CashToSafe", header: "Cash to Safe", order: 10 },
-        { field: "CloseCreditActual", header: "Close Credit Actual", order: 11 },
-        { field: "CloseCreditExpected", header: "Close Credit Expected", order: 12 },
-        { field: "CreditVariance", header: "Credit Variance", order: 13 },
-        { field: "TotalCashVariance", header: "Total Cash Variance", order: 14 },
-        { field: "TotalVariance", header: "Total Variance", order: 15 }
+        { field: "CloserName", header: "Closer Name", order: 5 },
+        { field: "CloseExpected", header: "Close Expected", order: 6 },
+        { field: "CloseActual", header: "Close Actual", order: 7 },
+        { field: "CashToSafe", header: "Cash to Safe", order: 8 },
+        { field: "CloseCreditExpected", header: "Credit Expected", order: 9 },
+        { field: "CloseCreditActual", header: "Credit Actual", order: 10 },
+        { field: "OpenVariance", header: "Open Variance", order: 11 },
+        { field: "CloseVariance", header: "Close Variance", order: 12 },
+        { field: "TotalCashVariance", header: "Total Cash Variance", order: 13 },
+        { field: "CreditVariance", header: "Credit Variance", order: 14 },
+        { field: "TotalVariance", header: "Total Variance", order: 15 },
+        { field: "SafeVariance", header: "Safe Variance", order: 16 }
     ]
+
+    const columnConfigs = {
+        all : [
+            { field: "POSName", header: "POS Name", order: 1 },
+            { field: "OpenerName", header: "Opener Name", order: 2 },
+            { field: "OpenExpected", header: "Open Expected", order: 3 },
+            { field: "OpenActual", header: "Open Actual", order: 4 },
+            { field: "CloserName", header: "Closer Name", order: 5 },
+            { field: "CloseExpected", header: "Close Expected", order: 6 },
+            { field: "CloseActual", header: "Close Actual", order: 7 },
+            { field: "CashToSafe", header: "Cash to Safe", order: 8 },
+            { field: "CloseCreditExpected", header: "Credit Expected", order: 9 },
+            { field: "CloseCreditActual", header: "Credit Actual", order: 10 },
+            { field: "OpenVariance", header: "Open Variance", order: 11 },
+            { field: "CloseVariance", header: "Close Variance", order: 12 },
+            { field: "TotalCashVariance", header: "Total Cash Variance", order: 13 },
+            { field: "CreditVariance", header: "Credit Variance", order: 14 },
+            { field: "TotalVariance", header: "Total Variance", order: 15 },
+            { field: "SafeVariance", header: "Safe Variance", order: 16 }
+        ],
+        safe : [
+            { field: "OpenerName", header: "Opener Name", order: 2 },
+            { field: "OpenExpected", header: "Open Expected", order: 3 },
+            { field: "OpenActual", header: "Open Actual", order: 4 },
+            { field: "CloserName", header: "Closer Name", order: 5 },
+            { field: "CloseExpected", header: "Close Expected", order: 6 },
+            { field: "CloseActual", header: "Close Actual", order: 7 },
+            { field: "SafeAuditorName", header: "Safe Auditor Name", order: 8 },
+            { field: "SafeAuditExpected", header: "Safe Audit Expected", order: 9 },
+            { field: "SafeAuditActual", header: "Safe Audit Actual", order: 10 },
+            { field: "OpenVariance", header: "Open Variance", order: 11 },
+            { field: "SafeAuditVariance", header: "Safe Audit Variance", order: 12 },
+            { field: "CloseVariance", header: "Close Variance", order: 13 },
+            { field: "TotalCashVariance", header: "Total Cash Variance", order: 14 }
+        ],
+        pos : [
+            { field: "POSName", header: "POS Name", order: 1 },
+            { field: "OpenerName", header: "Opener Name", order: 2 },
+            { field: "OpenExpected", header: "Open Expected", order: 3 },
+            { field: "OpenActual", header: "Open Actual", order: 4 },
+            { field: "CloserName", header: "Closer Name", order: 5 },
+            { field: "CloseExpected", header: "Close Expected", order: 6 },
+            { field: "CloseActual", header: "Close Actual", order: 7 },
+            { field: "CashToSafe", header: "Cash to Safe", order: 8 },
+            { field: "CloseCreditExpected", header: "Credit Expected", order: 9 },
+            { field: "CloseCreditActual", header: "Credit Actual", order: 10 },
+            { field: "OpenVariance", header: "Open Variance", order: 11 },
+            { field: "CloseVariance", header: "Close Variance", order: 12 },
+            { field: "TotalCashVariance", header: "Total Cash Variance", order: 13 },
+            { field: "CreditVariance", header: "Credit Variance", order: 14 },
+            { field: "TotalVariance", header: "Total Variance", order: 15 }
+        ]
+    }
 
     // State to store the visible columns in the table
     const [visibleColumns, setVisibleColumns] = useState(varianceColumns);
+    const [columnOptions, setColumnOptions] = useState(varianceColumns);
 
     // Form data for the table
     const [formData, setFormData] = useState({
@@ -193,13 +248,18 @@ const VarianceTable = () => {
                     // If the response contains data, set the array of variances to the response data
                     if (response.data && response.data.length > 0) {
                         // Calculate totals
-                        const totals = CalculateTotal(response.data);
+                        if (formData.registerID === -1){
+                            const totals = CalculateTotal(response.data);
                         
-                        // Append totals to the data array
-                        const dataWithTotals = [...response.data, totals];
-
-                        // Set the array of variances after sorting by date
-                        setArrVariances(dataWithTotals.sort((a, b) => new Date(a.Date) - new Date(b.Date)));
+                            // Append totals to the data array
+                            const dataWithTotals = [...response.data, totals];
+    
+                            // Set the array of variances after sorting by date
+                            setArrVariances(dataWithTotals.sort((a, b) => new Date(a.Date) - new Date(b.Date)));
+                        } else {
+                            // Set the array of variances after sorting by date
+                            setArrVariances(response.data.sort((a, b) => new Date(a.Date) - new Date(b.Date)));
+                        }
                         
                         // Calculate the number of empty rows to fill the last page of the table
                         // Prime react datatable doesn't lock the number of rows to the page size so
@@ -267,6 +327,7 @@ const VarianceTable = () => {
 
     // Event handler for incrementing the date by one day when the right arrow button is clicked
     const HandleNextDay = (event) => {
+        setLoading(true)
         event.preventDefault();
 
         // Increment the start and end date by one day
@@ -305,22 +366,41 @@ const VarianceTable = () => {
 
     // Handles the change of the input fields
     const HandleChange = (event) => {
+        setLoading(true)
         const { name, value } = event.target;
-
-        // If the input is the register select, update the register ID
+    
+        // If the input is the register select, update the register ID and the visible columns
         if (name === "posSelect") {
+            const registerID = parseInt(value);
             setFormData((prev) => ({
                 ...prev,
-                registerID: parseInt(value)
+                registerID: registerID
             }));
+    
+            // Update visible columns based on the selected register
+            switch (registerID) {
+                case -1: // All registers
+                    setVisibleColumns(columnConfigs.all);
+                    setColumnOptions(columnConfigs.all);
+                    break;
+                case 0: // Safe
+                    setVisibleColumns(columnConfigs.safe);
+                    setColumnOptions(columnConfigs.safe);
+                    break;
+                default: // POS registers
+                    setVisibleColumns(columnConfigs.pos);
+                    setColumnOptions(columnConfigs.pos);
+                    break;
+            }
         }
         else {
+            // Handle date changes
             // Parse the string and extract year, month, and day values
             const [year, month, day] = value.split("-").map(Number);
-
+    
             // Create a new UTC Date object with the extracted values
-            const date = new Date(Date.UTC(year, month - 1, day + 1));
-
+            const date = new Date(Date.UTC(year, month - 1, day));
+    
             // Update the form data with the new value
             setFormData((prev) => ({
                 ...prev,
@@ -352,7 +432,7 @@ const VarianceTable = () => {
         // Iterate over arrVariances to calculate totals and insert rows
         arrVariances.forEach(variance => {
             // If the date changes, insert the total row for the previous date
-            if (variance.Date !== currentDate && variance.Date !== 'Totals:') {
+            if (variance.Date !== currentDate && variance.Date !== 'Totals:' && formData.registerID === -1) {
                 // Calculate and push the total row for the previous date group
                 if (totalRow && Object.keys(totalRow).length > 0 && !isTotalRow) {
                     // Push total row to tableData with "Totals" label
@@ -369,15 +449,18 @@ const VarianceTable = () => {
             }
 
             // Calculate totals for each column is the current row is not the complete summation row
-            if (variance.Date !== 'Totals:') {
-                varianceColumns.forEach(column => {
+            if (variance.Date !== 'Totals:' && formData.registerID === -1) {
+                columnOptions.forEach(column => {
                     if (!totalRow[column.field]) {
                         // Initialize total to an empty string for excluded columns
                         totalRow[column.field] = ["POSName", "OpenerName", "CloserName"].includes(column.field) ? "" : 0;
                     }
                     if (!isNaN(variance[column.field])) {
-                        if (!["POSName", "OpenerName", "CloserName"].includes(column.field)) {
+                        if (!["POSName", "OpenerName", "CloserName", "SafeVariance"].includes(column.field)) {
                             totalRow[column.field] += variance[column.field];
+                        }
+                        if (["SafeVariance"].includes(column.field)) {
+                            totalRow[column.field] = variance[column.field];
                         }
                     } else {
                         // Reset the total to an empty string for excluded columns
@@ -390,12 +473,15 @@ const VarianceTable = () => {
 
             const rowData = [
                 FormatDate(variance.Date),
-                ...varianceColumns.map(column => {
+                ...columnOptions.map(column => {
                     // Apply formatting functions to other columns
-                    if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
+                    if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected", "SafeAuditActual", "SafeAuditExpected"].includes(column.field)) {
                         return variance[column.field] == null ? '-' : FormatCurrency(variance[column.field]); // Currency formatting
                     } 
-                    else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
+                    else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance", "SafeVariance", "SafeAuditVariance"].includes(column.field)) {
+                        if (["SafeVariance"].includes(column.field) && variance.Date !== 'Totals:'){
+                            return ' '
+                        }
                         return variance[column.field] == null ? '-' : VariancePositiveNegative(variance[column.field], true); // Variance formatting
                     } 
                     else {
@@ -415,7 +501,7 @@ const VarianceTable = () => {
         // Calculate and push the total row for the last date group
         if (totalRow && Object.keys(totalRow).length > 0 && !isTotalRow) {
             // Ensure that all columns are present in the total row
-            varianceColumns.forEach(column => {
+            columnOptions.forEach(column => {
                 if (!totalRow[column.field]) {
                     totalRow[column.field] = ["POSName", "OpenerName", "CloserName"].includes(column.field) ? "" : 0;
                 }
@@ -438,7 +524,7 @@ const VarianceTable = () => {
         }
 
         // Include the date column header in the head array
-        const head = ["Date", ...varianceColumns.map(column => column.header)];
+        const head = ["Date", ...columnOptions.map(column => column.header)];
 
         // Save the PDF report with the store name and current date
         doc.autoTable({
@@ -548,7 +634,7 @@ const VarianceTable = () => {
             <h1 className="variance-header">Variances for {registerName}</h1>
             <MultiSelect 
                 value={visibleColumns} 
-                options={varianceColumns}
+                options={columnOptions}
                 optionLabel="header" 
                 filter
                 placeholder="Select columns to display"
@@ -571,35 +657,46 @@ const VarianceTable = () => {
 
     // Calculates the sum total for the column
     const CalculateGroupTotal = (columnName, date) => {
-        // Filter rows with the specified date
-        const filteredRows = arrVariances.filter(row => row.Date === date);
+        if (columnName === "SafeVariance") {
+            const entry = arrVariances.find(row => row.Date === date && row.hasOwnProperty('SafeVariance'));
+            // Return the SafeVariance value or 0 if it does not exist
+            return entry ? entry.SafeVariance : 0;
+        } else {            
+            // Filter rows with the specified date
+            const filteredRows = arrVariances.filter(row => row.Date === date);
 
-        // Sum up values for the specified column
-        return filteredRows.reduce((total, row) => total + row[columnName], 0);
+            // Sum up values for the specified column
+            return filteredRows.reduce((total, row) => total + row[columnName], 0);
+        }
     };
 
     // Function to calculate the totals for each column
     function CalculateTotal(data) {
+        
         // Initialize total object
+        
         const total = {
             Date: "Totals:",
             POSName: "",
             OpenerName: "",
             OpenExpected: 0,
             OpenActual: 0,
-            OpenVariance: 0,
             CloserName: "",
             CloseExpected: 0,
             CloseActual: 0,
-            CloseVariance: 0,
             CashToSafe: 0,
-            CloseCreditActual: 0,
             CloseCreditExpected: 0,
-            CreditVariance: 0,
+            CloseCreditActual: 0,
+            OpenVariance: 0,
+            CloseVariance: 0,
             TotalCashVariance: 0,
-            TotalVariance: 0
+            CreditVariance: 0,
+            TotalVariance: 0,
+            SafeVariance: 0
         };
-    
+        
+        const datesWithSafeVarianceAdded = new Set();
+
         // Iterate over data to calculate totals
         data.forEach(row => {
             total.OpenExpected += row.OpenExpected;
@@ -613,9 +710,17 @@ const VarianceTable = () => {
             total.CloseCreditExpected += row.CloseCreditExpected;
             total.CreditVariance += row.CreditVariance;
             total.TotalCashVariance += row.TotalCashVariance;
+            if (!datesWithSafeVarianceAdded.has(row.Date)) {
+                // Add SafeVariance to TotalVariance only if we haven't added it for this date
+                total.SafeVariance += row.SafeVariance ?? 0;
+                datesWithSafeVarianceAdded.add(row.Date);
+            }
             total.TotalVariance += row.TotalVariance;
         });
         
+        // Finally, add the summed SafeVariance to TotalVariance
+        total.TotalVariance += total.SafeVariance;
+
         return total;
     }
 
@@ -636,35 +741,38 @@ const VarianceTable = () => {
 
     // Row group footer that adds the amounts from each row with the same date
     const rowFooter = (data) => {
-        if (!data || data.Date === null)
-            return null;
-        else {
-            const date = data.Date;
-            return (
-                <>
-                    {visibleColumns.map(column => (
-                        <td key={column.field}>
-                            <strong>
-                                {column.field === "POSName" && data.Date === "Totals:" ? "Totals:" : column.field === "POSName" && "Total:"}
-                                {column.field === "OpenerName" && ""}
-                                {column.field === "OpenExpected" && FormatCurrency(CalculateGroupTotal("OpenExpected", date))}
-                                {column.field === "OpenActual" && FormatCurrency(CalculateGroupTotal("OpenActual", date))}
-                                {column.field === "OpenVariance" && VariancePositiveNegative(CalculateGroupTotal("OpenVariance", date), false)}
-                                {column.field === "CloserName" && ""}
-                                {column.field === "CloseExpected" && FormatCurrency(CalculateGroupTotal("CloseExpected", date))}
-                                {column.field === "CloseActual" && FormatCurrency(CalculateGroupTotal("CloseActual", date))}
-                                {column.field === "CloseVariance" && VariancePositiveNegative(CalculateGroupTotal("CloseVariance", date), false)}
-                                {column.field === "CashToSafe" && FormatCurrency(CalculateGroupTotal("CashToSafe", date))}
-                                {column.field === "CloseCreditActual" && FormatCurrency(CalculateGroupTotal("CloseCreditActual", date))}
-                                {column.field === "CloseCreditExpected" && FormatCurrency(CalculateGroupTotal("CloseCreditExpected", date))}
-                                {column.field === "CreditVariance" && VariancePositiveNegative(CalculateGroupTotal("CreditVariance", date), false)}
-                                {column.field === "TotalCashVariance" && VariancePositiveNegative(CalculateGroupTotal("TotalCashVariance", date), false)}
-                                {column.field === "TotalVariance" && VariancePositiveNegative(CalculateGroupTotal("TotalVariance", date), false)}
-                            </strong>
-                        </td>
-                    ))}
-                </>
-            )
+        if (formData.registerID === -1){
+            if (!data || data.Date === null)
+                return null;
+            else {
+                const date = data.Date;
+                return (
+                    <>
+                        {visibleColumns.map(column => (
+                            <td key={column.field}>
+                                <strong>
+                                    {column.field === "POSName" && data.Date === "Totals:" ? "Totals:" : column.field === "POSName" && "Total:"}
+                                    {column.field === "OpenerName" && ""}
+                                    {column.field === "OpenExpected" && FormatCurrency(CalculateGroupTotal("OpenExpected", date))}
+                                    {column.field === "OpenActual" && FormatCurrency(CalculateGroupTotal("OpenActual", date))}
+                                    {column.field === "OpenVariance" && VariancePositiveNegative(CalculateGroupTotal("OpenVariance", date), false)}
+                                    {column.field === "CloserName" && ""}
+                                    {column.field === "CloseExpected" && FormatCurrency(CalculateGroupTotal("CloseExpected", date))}
+                                    {column.field === "CloseActual" && FormatCurrency(CalculateGroupTotal("CloseActual", date))}
+                                    {column.field === "CloseVariance" && VariancePositiveNegative(CalculateGroupTotal("CloseVariance", date), false)}
+                                    {column.field === "CashToSafe" && FormatCurrency(CalculateGroupTotal("CashToSafe", date))}
+                                    {column.field === "CloseCreditActual" && FormatCurrency(CalculateGroupTotal("CloseCreditActual", date))}
+                                    {column.field === "CloseCreditExpected" && FormatCurrency(CalculateGroupTotal("CloseCreditExpected", date))}
+                                    {column.field === "CreditVariance" && VariancePositiveNegative(CalculateGroupTotal("CreditVariance", date), false)}
+                                    {column.field === "TotalCashVariance" && VariancePositiveNegative(CalculateGroupTotal("TotalCashVariance", date), false)}
+                                    {column.field === "TotalVariance" && VariancePositiveNegative(CalculateGroupTotal("TotalVariance", date) + CalculateGroupTotal("SafeVariance", date), false)}
+                                    {column.field === "SafeVariance" && VariancePositiveNegative(CalculateGroupTotal("SafeVariance", date), false)}
+                                </strong>
+                            </td>
+                        ))}
+                    </>
+                )
+            }
         }
     }
 
@@ -793,11 +901,14 @@ const VarianceTable = () => {
                                     sortable 
                                     body={(rowData) => {
                                         // Check if the date is set to Totals:
+                                        if (column.field === "SafeVariance") {
+                                            return <span className="invisible-row">-</span>;
+                                        }
                                         if (rowData.Date === "Totals:") {
                                             return <span className="invisible-row">-</span>;
                                         }
                                         // Check if the column is a currency column
-                                        if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected"].includes(column.field)) {
+                                        if (["OpenExpected", "OpenActual", "CloseExpected", "CloseActual", "CashToSafe", "CloseCreditActual", "CloseCreditExpected", "SafeAuditActual", "SafeAuditExpected"].includes(column.field)) {
                                             // Check if the value is null or undefined
                                             if (rowData[column.field] == null) 
                                                 return <span className="invisible-row">-</span>; // Display '-' for null or undefined values
@@ -805,7 +916,7 @@ const VarianceTable = () => {
                                                 return <span>{FormatCurrency(rowData[column.field])}</span>; // Format the currency value
                                         }
                                         // Check if the column is a variance column
-                                        else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance"].includes(column.field)) {
+                                        else if (["OpenVariance", "CloseVariance", "TotalCashVariance", "CreditVariance", "TotalVariance", "SafeVariance", "SafeAuditVariance"].includes(column.field)) {
                                             // Check if the value is null or undefined
                                             if (rowData[column.field] == null) {
                                                 return <span className="invisible-row">-</span>; // Display '-' for null or undefined values
