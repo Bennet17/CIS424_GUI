@@ -142,18 +142,13 @@ const VarianceTable = () => {
     
     // Update the input dates to the correct format when the form data changes
     useEffect(() => {
-        // Set the max and min date for the input fields
         if (formData.endDate instanceof Date) {
-            // Adjust the endDate for timezone offset and subtract one day
             const maxDateValue = new Date(formData.endDate.getTime() - (formData.endDate.getTimezoneOffset() * 60000));
-            maxDateValue.setDate(maxDateValue.getDate() - 1);
             setMaxDate(maxDateValue.toISOString().split('T')[0]);
         }
-
+    
         if (formData.startDate instanceof Date) {
-            // Adjust the startDate for timezone offset and add one day
             const minDateValue = new Date(formData.startDate.getTime() - (formData.startDate.getTimezoneOffset() * 60000));
-            minDateValue.setDate(minDateValue.getDate() + 1);
             setMinDate(minDateValue.toISOString().split('T')[0]);
         }
     }, [formData.startDate, formData.endDate]);
@@ -178,9 +173,6 @@ const VarianceTable = () => {
 
     // GET request to return registers for the selected store
     useEffect(() => {
-        // Set the start and end date to the correct format
-        UpdateInputDates();
-
         function GetRegisters() {
             axios.get(
                 `${process.env.REACT_APP_REQUEST_URL}ViewStoreObjects?storeID=${formData.store}`,
@@ -220,7 +212,7 @@ const VarianceTable = () => {
         }
 
         GetRegisters();
-    }, [formData.store, UpdateInputDates]);
+    }, [formData.store]);
 
     // Load the register variances when the form data changes
     useEffect(() => {
@@ -311,6 +303,7 @@ const VarianceTable = () => {
 
     // Event handler for decrementing the date by one day when the left arrow button is clicked
     const HandlePreviousDay = (event) => {
+        setLoading(true)
         event.preventDefault();
 
         // Decrement the start and end date by one day
@@ -397,9 +390,9 @@ const VarianceTable = () => {
             // Handle date changes
             // Parse the string and extract year, month, and day values
             const [year, month, day] = value.split("-").map(Number);
-    
-            // Create a new UTC Date object with the extracted values
-            const date = new Date(Date.UTC(year, month - 1, day));
+
+            // Create a new local Date object with the extracted values
+            const date = new Date(year, month - 1, day);
     
             // Update the form data with the new value
             setFormData((prev) => ({
@@ -426,13 +419,16 @@ const VarianceTable = () => {
         // Initialize variables
         const tableData = [];
         let currentDate = null;
+        let safeVarianceAdded = false;
         let totalRow = {};
+        let safeVarianceGrandTotal = 0;
         let isTotalRow = false; // Flag to track if the current row is a totals row
 
         // Iterate over arrVariances to calculate totals and insert rows
-        arrVariances.forEach(variance => {
+        arrVariances.forEach(variance => {       
             // If the date changes, insert the total row for the previous date
             if (variance.Date !== currentDate && variance.Date !== 'Totals:' && formData.registerID === -1) {
+                safeVarianceAdded = false;
                 // Calculate and push the total row for the previous date group
                 if (totalRow && Object.keys(totalRow).length > 0 && !isTotalRow) {
                     // Push total row to tableData with "Totals" label
@@ -461,6 +457,12 @@ const VarianceTable = () => {
                         }
                         if (["SafeVariance"].includes(column.field)) {
                             totalRow[column.field] = variance[column.field];
+                            if (!safeVarianceAdded) {
+                                totalRow['TotalVariance'] += variance[column.field];
+                                // Now that we've added the Safe Variance, set the flag so we don't add it again for this day
+                                safeVarianceGrandTotal += variance[column.field]
+                                safeVarianceAdded = true;
+                            }
                         }
                     } else {
                         // Reset the total to an empty string for excluded columns
@@ -516,11 +518,45 @@ const VarianceTable = () => {
             tableData.push([]); // Add an empty row after the totals row
         }
 
+        function parseCurrency(currencyString) {
+            if (typeof currencyString !== 'string') {
+                // If it's not a string, try to convert whatever it is to a string
+                currencyString = String(currencyString);
+            }
+        
+            // Remove currency symbols, commas, and parenthesis for negative values
+            let numberString = currencyString.replace(/[,$]+/g, '');
+        
+            // Check if the value is enclosed in parentheses (negative number in accounting)
+            const isNegative = currencyString.includes('(') && currencyString.includes(')');
+        
+            // Remove parentheses if present
+            numberString = numberString.replace(/[()]+/g, '');
+        
+            // Convert to a float and make negative if it was in parentheses
+            return isNegative ? -parseFloat(numberString) : parseFloat(numberString);
+        }
+
         // Shifts Totals: row to the end of the table
         const totalsIndex = tableData.findIndex(row => row[0] === 'Totals:');
         if (totalsIndex > -1) {
-            const totalsRow = tableData.splice(totalsIndex, 1);
-            tableData.push(totalsRow[0]);
+            let totalsRow = tableData.splice(totalsIndex, 1)[0];
+            
+            // Find the index for Total Variance, assume it is the second last column before Safe Variance
+            const totalVarianceIndex = totalsRow.length - 2;
+            
+            // Parse the current Total Variance and Safe Variance
+            const currentTotalVariance = parseCurrency(totalsRow[totalVarianceIndex]);
+            const safeVarianceToAdd = parseCurrency(safeVarianceGrandTotal);
+        
+            // Add the safe variance to the total variance
+            const updatedTotalVariance = currentTotalVariance + safeVarianceToAdd;
+        
+            // Format and set the updated total variance
+            totalsRow[totalVarianceIndex] = FormatCurrency(updatedTotalVariance);
+        
+            // Add the updated totals row back into the tableData
+            tableData.push(totalsRow);
         }
 
         // Include the date column header in the head array
