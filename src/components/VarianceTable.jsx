@@ -80,19 +80,19 @@ const VarianceTable = () => {
             { field: "SafeVariance", header: "Safe Variance", order: 16 }
         ],
         safe : [
-            { field: "OpenerName", header: "Opener Name", order: 2 },
-            { field: "OpenExpected", header: "Open Expected", order: 3 },
-            { field: "OpenActual", header: "Open Actual", order: 4 },
-            { field: "CloserName", header: "Closer Name", order: 5 },
-            { field: "CloseExpected", header: "Close Expected", order: 6 },
-            { field: "CloseActual", header: "Close Actual", order: 7 },
-            { field: "SafeAuditorName", header: "Safe Auditor Name", order: 8 },
-            { field: "SafeAuditExpected", header: "Safe Audit Expected", order: 9 },
-            { field: "SafeAuditActual", header: "Safe Audit Actual", order: 10 },
-            { field: "OpenVariance", header: "Open Variance", order: 11 },
-            { field: "SafeAuditVariance", header: "Safe Audit Variance", order: 12 },
-            { field: "CloseVariance", header: "Close Variance", order: 13 },
-            { field: "TotalCashVariance", header: "Total Cash Variance", order: 14 }
+            { field: "OpenerName", header: "Opener Name", order: 1 },
+            { field: "OpenExpected", header: "Open Expected", order: 2 },
+            { field: "OpenActual", header: "Open Actual", order: 3 },
+            { field: "SafeAuditorName", header: "Safe Auditor Name", order: 4 },
+            { field: "SafeAuditExpected", header: "Safe Audit Expected", order: 5 },
+            { field: "SafeAuditActual", header: "Safe Audit Actual", order: 6 },
+            { field: "CloserName", header: "Closer Name", order: 7 },
+            { field: "CloseExpected", header: "Close Expected", order: 8 },
+            { field: "CloseActual", header: "Close Actual", order: 9 },
+            { field: "OpenVariance", header: "Open Variance", order: 10 },
+            { field: "SafeAuditVariance", header: "Safe Audit Variance", order: 11 },
+            { field: "CloseVariance", header: "Close Variance", order: 12 },
+            { field: "TotalCashVariance", header: "Total Cash Variance", order: 13 }
         ],
         pos : [
             { field: "POSName", header: "POS Name", order: 1 },
